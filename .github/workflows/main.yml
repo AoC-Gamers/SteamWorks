@@ -1,111 +1,83 @@
-# This is a basic workflow to help you get started with Actions
+name: Build SteamWorks
 
-name: CI
-
-# Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
   push:
     tags:
-    - 'v*'
-
-  # Allows you to run this workflow manually from the Actions tab
+      - "v*"
   workflow_dispatch:
+    inputs:
+      sdk_name:
+        description: "Steamworks-SDK directory name to use"
+        required: true
+        default: "sdk_158a"
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: [3.8]
-        os: [ ubuntu-18.04, windows-latest, macos-latest ]
-        include:
-        - os: ubuntu-18.04
-          asset_name: 'package-linux'
-          zip_cmd: 'zip -r package.zip build/package' 
-          CC: 'clang'
-          CXX: 'clang'
+  build-linux:
+    runs-on: ubuntu-22.04
 
-        - os: windows-latest
-          asset_name: 'package-windows'
-          zip_cmd: 'powershell Compress-Archive build/package package.zip'           
-
-        - os: macos-latest
-          asset_name: 'package-macos'
-          zip_cmd: 'zip -r package.zip build/package'           
-          CC: 'clang'
-          CXX: 'clang'
     steps:
-    - uses: actions/checkout@v2
-      with:
-        path: 'sm-environment'    
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install Linux Deps
-      if: runner.os == 'Linux'
-      run: |
-        sudo apt update
-        sudo apt install -y gcc-multilib g++-multilib
-    - name: Install Windows Deps
-      if: runner.os == 'Windows'
-      uses: ilammy/msvc-dev-cmd@v1
-      with:
-        arch: x86
-    - name: Checkout AMBuild
-      uses: actions/checkout@v2
-      with:
-        repository: 'alliedmodders/ambuild'
-        path: 'ambuild'        
-    - name: Install AMBuild
-      run: |
-        cd ambuild
-        python setup.py build
-        python setup.py install
-    - name: Checkout SourceMod
-      uses: actions/checkout@v2
-      with:
-        repository: 'alliedmodders/sourcemod'
-        ref: '1.10-dev'
-        path: 'sourcemod'
-        submodules: 'recursive'
-    - name: Checkout HL2 SDK
-      uses: actions/checkout@v2
-      with:
-        repository: 'alliedmodders/hl2sdk'
-        ref: 'sdk2013'
-        path: 'hl2sdk-sdk2013'
-    - name: Checkout MM Source
-      uses: actions/checkout@v2
-      with:
-        repository: 'alliedmodders/metamod-source'
-        ref: '1.10-dev'
-        path: 'mmsource'        
-    - name: Checkout Steam Works
-      uses: actions/checkout@v2
-      with:
-       ssh-key: ${{ secrets.STEAMWORKS_PULL_KEY }}
-       repository: 'hexa-core-eu/SteamWorksSDK'
-       ref: '1.55'
-       path: 'steamworks-sdk'
-    - name: Run Build
-      shell: bash
-      working-directory: ./sm-environment
-      run: |
-        mkdir build
-        cd build
-        python ../configure.py --hl2sdk-root=$GITHUB_WORKSPACE --mms-path=$GITHUB_WORKSPACE/mmsource --sm-path=$GITHUB_WORKSPACE/sourcemod --steamworks-path=$GITHUB_WORKSPACE/steamworks-sdk --sdks=sdk2013 --enable-optimize
-        ambuild
-    - name: Zip Release
-      working-directory: ./sm-environment
-      run: ${{ matrix.zip_cmd }}                  
-    - name: Release
-      uses: svenstaro/upload-release-action@v2
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: ${{ github.workspace }}/sm-environment/package.zip
-        asset_name: ${{ matrix.asset_name }}.zip
-        tag: ${{ github.ref }}    
+      - name: Checkout SteamWorks
+        uses: actions/checkout@v4
+
+      - name: Checkout Steamworks-SDK
+        uses: actions/checkout@v4
+        with:
+          repository: AoC-Gamers/Steamworks-SDK
+          path: steamworks-sdk
+
+      - name: Resolve SDK name
+        shell: bash
+        run: |
+          SDK_NAME="${{ github.event.inputs.sdk_name }}"
+          if [[ -z "$SDK_NAME" ]]; then
+            SDK_NAME="sdk_158a"
+          fi
+
+          echo "SDK_NAME=$SDK_NAME" >> "$GITHUB_ENV"
+          echo "STEAMWORKS_SDK_DIR=$GITHUB_WORKSPACE/steamworks-sdk/$SDK_NAME" >> "$GITHUB_ENV"
+
+      - name: Validate SDK path
+        shell: bash
+        run: |
+          if [[ ! -d "$STEAMWORKS_SDK_DIR" ]]; then
+            echo "Steamworks SDK directory not found: $STEAMWORKS_SDK_DIR" >&2
+            exit 1
+          fi
+
+      - name: Install Linux dependencies
+        shell: bash
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo apt-get update
+          sudo apt-get install -y python3 python3-venv make gcc-multilib g++-multilib clang
+
+      - name: Fetch build dependencies
+        shell: bash
+        run: make deps
+
+      - name: Build extension
+        shell: bash
+        run: make build-l4d2 STEAMWORKS_SDK_DIR="$STEAMWORKS_SDK_DIR"
+
+      - name: Prepare artifact
+        shell: bash
+        run: |
+          ARTIFACT_DIR="$RUNNER_TEMP/steamworks-package"
+
+          mkdir -p "$ARTIFACT_DIR/addons/sourcemod/extensions"
+          mkdir -p "$ARTIFACT_DIR/addons/sourcemod/scripting/include"
+
+          cp ".build/linux-l4d2/package/addons/sourcemod/extensions/SteamWorks.ext.so" \
+            "$ARTIFACT_DIR/addons/sourcemod/extensions/SteamWorks.ext.so"
+
+          cp "Pawn/includes/SteamWorks.inc" \
+            "$ARTIFACT_DIR/addons/sourcemod/scripting/include/SteamWorks.inc"
+
+          find "$ARTIFACT_DIR" -type f | sort
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: steamworks-linux-${{ env.SDK_NAME }}
+          path: ${{ runner.temp }}/steamworks-package
+          if-no-files-found: error

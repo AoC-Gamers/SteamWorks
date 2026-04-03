@@ -30,6 +30,7 @@ for sdk_name in SteamWorks.sdks:
   
   if binary.compiler.target.platform == 'linux':
     binary.compiler.postlink += os.path.join(SteamWorks.steamworks_root, 'redistributable_bin', 'linux32', 'libsteam_api.so'),;
+    binary.compiler.linkflags += ['-Wl,-rpath,$ORIGIN/../../../../bin']
 	
   if binary.compiler.target.platform == 'windows':
     binary.compiler.postlink += os.path.join(SteamWorks.steamworks_root, 'redistributable_bin', 'steam_api.lib'),;

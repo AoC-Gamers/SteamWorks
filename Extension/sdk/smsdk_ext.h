@@ -43,6 +43,7 @@
 #include <sp_vm_api.h>
 #include <sm_platform.h>
 #include <ISourceMod.h>
+#include "am-string.h"
 #if defined SMEXT_ENABLE_FORWARDSYS
 #include <IForwardSys.h>
 #endif //SMEXT_ENABLE_FORWARDSYS
@@ -91,9 +92,6 @@
 #if defined SMEXT_ENABLE_TRANSLATOR
 #include <ITranslator.h>
 #endif
-#if defined SMEXT_ENABLE_NINVOKE
-#include <INativeInvoker.h>
-#endif
 #if defined SMEXT_ENABLE_ROOTCONSOLEMENU
 #include <IRootConsoleMenu.h>
 #endif
@@ -102,7 +100,11 @@
 #include <ISmmPlugin.h>
 #ifndef META_NO_HL2SDK
 #include <eiface.h>
-#endif // META_NO_HL2SDK
+#endif //META_NO_HL2SDK
+#endif
+
+#if !defined METAMOD_PLAPI_VERSION
+#include <metamod_wrappers.h>
 #endif
 
 using namespace SourceMod;
@@ -150,6 +152,15 @@ public:
 	virtual void SDK_OnDependenciesDropped();
 
 #if defined SMEXT_CONF_METAMOD
+	/**
+	 * @brief Called when Metamod is requesting the extension (ISmmPlugin) interface.
+	 *
+	 * @param mvi			Struct that contains Metamod version, SourceHook version, Plugin version and Source Engine version.
+	 * @param mli			Struct that contains the library file name and path being loaded.
+	 * @return				The ISmmPlugin interface.
+	 */
+	virtual METAMOD_PLUGIN *SDK_OnMetamodCreateInterface(const MetamodVersionInfo *mvi, const MetamodLoaderInfo *mli);
+
 	/**
 	 * @brief Called when Metamod is attached, before the extension version is called.
 	 *
@@ -306,9 +317,6 @@ extern IUserMessages *usermsgs;
 #if defined SMEXT_ENABLE_TRANSLATOR
 extern ITranslator *translator;
 #endif
-#if defined SMEXT_ENABLE_NINVOKE
-extern INativeInterface *ninvoke;
-#endif
 #if defined SMEXT_ENABLE_ROOTCONSOLEMENU
 extern IRootConsole *rootconsole;
 #endif
@@ -329,7 +337,7 @@ extern IServerGameDLL *gamedll;
 	{ \
 		if (error != NULL && maxlength) \
 		{ \
-			size_t len = snprintf(error, maxlength, "Could not find interface: %s", SMINTERFACE_##prefix##_NAME); \
+			size_t len = ke::SafeSprintf(error, maxlength, "Could not find interface: %s", SMINTERFACE_##prefix##_NAME); \
 			if (len >= maxlength) \
 			{ \
 				error[maxlength - 1] = '\0'; \
@@ -346,7 +354,7 @@ extern IServerGameDLL *gamedll;
 	{ \
 		if (error != NULL && maxlength) \
 		{ \
-			size_t len = snprintf(error, maxlength, "Could not find interface: %s", SMINTERFACE_##prefix##_NAME); \
+			size_t len = ke::SafeSprintf(error, maxlength, "Could not find interface: %s", SMINTERFACE_##prefix##_NAME); \
 			if (len >= maxlength) \
 			{ \
 				error[maxlength - 1] = '\0'; \

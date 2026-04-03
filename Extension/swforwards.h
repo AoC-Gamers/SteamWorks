@@ -31,6 +31,7 @@ class SteamWorksForwards
 
 	public:
 		void NotifyPawnValidateClient(Account_t parent, Account_t child);
+		void NotifyPawnUserInformationRequested(Account_t authid, bool started);
 		
 	private:
 		STEAM_GAMESERVER_CALLBACK(SteamWorksForwards, OnGSClientApprove, GSClientApprove_t, m_CallbackGSClientApprove);
@@ -39,6 +40,7 @@ class SteamWorksForwards
 		STEAM_GAMESERVER_CALLBACK(SteamWorksForwards, OnSteamServersConnectFailure, SteamServerConnectFailure_t, m_CallbackSteamConnectFailure);
 		STEAM_GAMESERVER_CALLBACK(SteamWorksForwards, OnSteamServersDisconnected, SteamServersDisconnected_t, m_CallbackSteamDisconnected);
 		STEAM_GAMESERVER_CALLBACK(SteamWorksForwards, OnGroupStatusResult, GSClientGroupStatus_t, m_CallbackGroupStatus);
+		STEAM_GAMESERVER_CALLBACK(SteamWorksForwards, OnPersonaStateChange, PersonaStateChange_t, m_CallbackPersonaStateChange);
 	
 	private:
 		IForward *pFOVC;	/* Forward On Validate Client */
@@ -47,4 +49,6 @@ class SteamWorksForwards
 		IForward *pFOSSCF;	/* Forward On Steam Servers Connect Failure */
 		IForward *pFOSSD;	/* Forward On Steam Servers Disconnected */
 		IForward *pFOCGS;	/* Forward On Client Group Status */
+		IForward *pFOPSC;	/* Forward On Persona State Change */
+		IForward *pFOUIR;	/* Forward On User Information Requested */
 };

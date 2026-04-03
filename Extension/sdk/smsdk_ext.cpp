@@ -32,6 +32,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "smsdk_ext.h"
+#include "am-string.h"
 
 /**
  * @file smsdk_ext.cpp
@@ -97,9 +98,6 @@ IUserMessages *usermsgs = NULL;
 #if defined SMEXT_ENABLE_TRANSLATOR
 ITranslator *translator = NULL;
 #endif
-#if defined SMEXT_ENABLE_NINVOKE
-INativeInterface *ninvoke = NULL;
-#endif
 #if defined SMEXT_ENABLE_ROOTCONSOLEMENU
 IRootConsole *rootconsole = NULL;
 #endif
@@ -131,7 +129,7 @@ bool SDKExtension::OnExtensionLoad(IExtension *me, IShareSys *sys, char *error, 
 	{
 		if (error)
 		{
-			snprintf(error, maxlength, "Metamod attach failed");
+			ke::SafeStrcpy(error, maxlength, "Metamod attach failed");
 		}
 		return false;
 	}
@@ -190,9 +188,6 @@ bool SDKExtension::OnExtensionLoad(IExtension *me, IShareSys *sys, char *error, 
 #endif
 #if defined SMEXT_ENABLE_TRANSLATOR
 	SM_GET_IFACE(TRANSLATOR, translator);
-#endif
-#if defined SMEXT_ENABLE_NINVOKE
-	SM_GET_IFACE(NINVOKE, ninvoke);
 #endif
 #if defined SMEXT_ENABLE_ROOTCONSOLEMENU
 	SM_GET_IFACE(ROOTCONSOLE, rootconsole);
@@ -302,50 +297,61 @@ void SDKExtension::SDK_OnDependenciesDropped()
 
 #if defined SMEXT_CONF_METAMOD
 
+#if defined _MSC_VER
+#define SMEXT_DLL_EXPORT				extern "C" __declspec(dllexport)
+#else
+#define SMEXT_DLL_EXPORT				extern "C" __attribute__((visibility("default")))
+#endif
+
 PluginId g_PLID = 0;						/**< Metamod plugin ID */
 ISmmPlugin *g_PLAPI = NULL;					/**< Metamod plugin API */
 SourceHook::ISourceHook *g_SHPtr = NULL;	/**< SourceHook pointer */
 ISmmAPI *g_SMAPI = NULL;					/**< SourceMM API pointer */
+
 #ifndef META_NO_HL2SDK
 IVEngineServer *engine = NULL;				/**< IVEngineServer pointer */
 IServerGameDLL *gamedll = NULL;				/**< IServerGameDLL pointer */
 #endif
 
 /** Exposes the extension to Metamod */
-SMM_API void *PL_EXPOSURE(const char *name, int *code)
+SMEXT_DLL_EXPORT METAMOD_PLUGIN *CreateInterface_MMS(const MetamodVersionInfo *mvi, const MetamodLoaderInfo *mli)
 {
-#if defined METAMOD_PLAPI_VERSION
-	if (name && !strcmp(name, METAMOD_PLAPI_NAME))
-#else
-	if (name && !strcmp(name, PLAPI_NAME))
-#endif
-	{
-		if (code)
-		{
-			*code = META_IFACE_OK;
-		}
-		return static_cast<void *>(g_pExtensionIface);
-	}
-
-	if (code)
-	{
-		*code = META_IFACE_FAILED;
-	}
-
-	return NULL;
+	return g_pExtensionIface->SDK_OnMetamodCreateInterface(mvi, mli);
 }
 
 bool SDKExtension::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bool late)
 {
 	PLUGIN_SAVEVARS();
+
 #ifndef META_NO_HL2SDK
 #if !defined METAMOD_PLAPI_VERSION
 	GET_V_IFACE_ANY(serverFactory, gamedll, IServerGameDLL, INTERFACEVERSION_SERVERGAMEDLL);
 	GET_V_IFACE_CURRENT(engineFactory, engine, IVEngineServer, INTERFACEVERSION_VENGINESERVER);
 #else
 	GET_V_IFACE_ANY(GetServerFactory, gamedll, IServerGameDLL, INTERFACEVERSION_SERVERGAMEDLL);
+#if SOURCE_ENGINE == SE_SDK2013
+	// Shim to avoid hooking shims
+	engine = (IVEngineServer *) ismm->GetEngineFactory()("VEngineServer023", nullptr);
+	if (!engine)
+	{
+		engine = (IVEngineServer *) ismm->GetEngineFactory()("VEngineServer022", nullptr);
+		if (!engine)
+		{
+			engine = (IVEngineServer *) ismm->GetEngineFactory()("VEngineServer021", nullptr);
+			if (!engine)
+			{
+				if (error && maxlen)
+				{
+					ismm->Format(error, maxlen, "Could not find interface: VEngineServer023 or VEngineServer022");
+				}
+				return false;
+			}
+		}
+	}
+#else
 	GET_V_IFACE_CURRENT(GetEngineFactory, engine, IVEngineServer, INTERFACEVERSION_VENGINESERVER);
-#endif
+#endif // TF2 / CSS / DODS / HL2DM / SDK2013
+#endif // !METAMOD_PLAPI_VERSION
 #endif //META_NO_HL2SDK
 
 	m_SourceMMLoaded = true;
@@ -359,7 +365,7 @@ bool SDKExtension::Unload(char *error, size_t maxlen)
 	{
 		if (error)
 		{
-			snprintf(error, maxlen, "This extension must be unloaded by SourceMod.");
+			ke::SafeStrcpy(error, maxlen, "This extension must be unloaded by SourceMod.");
 		}
 		return false;
 	}
@@ -373,7 +379,7 @@ bool SDKExtension::Pause(char *error, size_t maxlen)
 	{
 		if (error)
 		{
-			snprintf(error, maxlen, "This extension must be paused by SourceMod.");
+			ke::SafeStrcpy(error, maxlen, "This extension must be paused by SourceMod.");
 		}
 		return false;
 	}
@@ -389,7 +395,7 @@ bool SDKExtension::Unpause(char *error, size_t maxlen)
 	{
 		if (error)
 		{
-			snprintf(error, maxlen, "This extension must be unpaused by SourceMod.");
+			ke::SafeStrcpy(error, maxlen, "This extension must be unpaused by SourceMod.");
 		}
 		return false;
 	}
@@ -437,6 +443,11 @@ const char *SDKExtension::GetURL()
 const char *SDKExtension::GetVersion()
 {
 	return GetExtensionVerString();
+}
+
+METAMOD_PLUGIN *SDKExtension::SDK_OnMetamodCreateInterface(const MetamodVersionInfo *mvi, const MetamodLoaderInfo *mli)
+{
+	return this;
 }
 
 bool SDKExtension::SDK_OnMetamodLoad(ISmmAPI *ismm, char *error, size_t maxlength, bool late)

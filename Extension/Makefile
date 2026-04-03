@@ -14,7 +14,7 @@ HL2SDK_L4D = ../../../hl2sdk-l4d
 HL2SDK_L4D2 = ../../../hl2sdk-l4d2
 HL2SDK_CSGO = ../../../hl2sdk-csgo
 MMSOURCE19 = ../../../mmsource-1.9
-STEAMWORKS = ../../../opensteamworks
+STEAMWORKS = ../sdk
 
 #####################################
 ### EDIT BELOW FOR OTHER PROJECTS ###
@@ -249,4 +249,3 @@ clean: check
 	rm -rf $(BIN_DIR)/*.o
 	rm -rf $(BIN_DIR)/sdk/*.o
 	rm -rf $(BIN_DIR)/$(BINARY)
-

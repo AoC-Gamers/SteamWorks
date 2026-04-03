@@ -53,6 +53,7 @@ void SteamWorksGameServer::Reset(void)
 	this->m_pGameServer = NULL;
 	this->m_pUtils = NULL;
 	this->m_pNetworking = NULL;
+	this->m_pFriends = NULL;
 	this->m_pStats = NULL;
 	this->m_pHTTP = NULL;
 	this->m_pMatchmaking = NULL;
@@ -62,7 +63,9 @@ void SteamWorksGameServer::Reset(void)
 ISteamClient *SteamWorksGameServer::GetSteamClient(void)
 {
 	if (g_pSteamClientGameServer != NULL)
+	{
 		return g_pSteamClientGameServer;
+	}
 
 	/*
 		The following is assumed from an unreleased version of the SteamWorks SDK, first seen (and reversed) in CS:GO.
@@ -105,10 +108,14 @@ ISteamClient *SteamWorksGameServer::GetSteamClient(void)
 		}
 
 		if (pGSInternalCreateAddress != NULL)
+		{
 			this->m_pClient = static_cast<ISteamClient *>((*pGSInternalCreateAddress)(STEAMCLIENT_INTERFACE_VERSION));
+		}
 		
 		if (this->m_pClient == NULL && pInternalCreateAddress != NULL)
+		{
 			this->m_pClient = static_cast<ISteamClient *>((*pInternalCreateAddress)(STEAMCLIENT_INTERFACE_VERSION));
+		}
 	}
 
 	return this->m_pClient;
@@ -158,6 +165,22 @@ ISteamNetworking *SteamWorksGameServer::GetNetworking(void)
 	}
 	
 	return this->m_pNetworking;
+}
+
+ISteamFriends *SteamWorksGameServer::GetFriends(void)
+{
+	if (this->m_pFriends == NULL && this->GetSteamClient() != NULL)
+	{
+		HSteamUser hSteamUser;
+		HSteamPipe hSteamPipe;
+		GetUserAndPipe(hSteamUser, hSteamPipe);
+
+		const char *pVersion = STEAMFRIENDS_INTERFACE_VERSION;
+		GetGameSpecificConfigInterface("SteamFriendsInterfaceVersion", pVersion);
+		this->m_pFriends = this->GetSteamClient()->GetISteamFriends(hSteamUser, hSteamPipe, pVersion);
+	}
+
+	return this->m_pFriends;
 }
 
 ISteamGameServerStats *SteamWorksGameServer::GetServerStats(void)

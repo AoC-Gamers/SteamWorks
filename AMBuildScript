@@ -147,6 +147,9 @@ class SteamWorksConfig(object):
         'STEAMWORKS', 'steamworks-sdk')
       if not self.steamworks_root:
         self.steamworks_root = ResolveEnvPath(
+          'STEAMWORKS', 'sdk')
+      if not self.steamworks_root:
+        self.steamworks_root = ResolveEnvPath(
           'STEAMWORKS', 'steamworks')
       if not self.steamworks_root:
         self.steamworks_root = ResolveEnvPath(
@@ -209,7 +212,7 @@ class SteamWorksConfig(object):
       '-Wno-pointer-to-int-cast',
     ]
     cxx.cxxflags += [
-      '-std=c++11',
+      '-std=c++14',
       '-fno-exceptions',
       '-fno-threadsafe-statics',
       '-Wno-non-virtual-dtor',

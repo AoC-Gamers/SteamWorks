@@ -26,3 +26,8 @@
 [Rr]elease - */
 [Dd]ebug/
 [Rr]elease/
+.deps/
+.build/
+.output/
+sdk/
+sdk_*/

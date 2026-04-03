@@ -24,7 +24,8 @@ SteamWorksForwards::SteamWorksForwards() :
 		m_CallbackSteamConnected(this, &SteamWorksForwards::OnSteamServersConnected),
 		m_CallbackSteamConnectFailure(this, &SteamWorksForwards::OnSteamServersConnectFailure),
 		m_CallbackSteamDisconnected(this, &SteamWorksForwards::OnSteamServersDisconnected),
-		m_CallbackGroupStatus(this, &SteamWorksForwards::OnGroupStatusResult)
+		m_CallbackGroupStatus(this, &SteamWorksForwards::OnGroupStatusResult),
+		m_CallbackPersonaStateChange(this, &SteamWorksForwards::OnPersonaStateChange)
 {
 	this->pFOVC_Old = forwards->CreateForward("SW_OnValidateClient", ET_Ignore, 2, NULL, Param_Cell, Param_Cell);
 	this->pFOVC = forwards->CreateForward("SteamWorks_OnValidateClient", ET_Ignore, 2, NULL, Param_Cell, Param_Cell);
@@ -32,6 +33,8 @@ SteamWorksForwards::SteamWorksForwards() :
 	this->pFOSSCF = forwards->CreateForward("SteamWorks_SteamServersConnectFailure", ET_Ignore, 1, NULL, Param_Cell);
 	this->pFOSSD = forwards->CreateForward("SteamWorks_SteamServersDisconnected", ET_Ignore, 1, NULL, Param_Cell);
 	this->pFOCGS = forwards->CreateForward("SteamWorks_OnClientGroupStatus", ET_Ignore, 4, NULL, Param_Cell, Param_Cell, Param_Cell, Param_Cell);
+	this->pFOPSC = forwards->CreateForward("SteamWorks_OnPersonaStateChange", ET_Ignore, 2, NULL, Param_Cell, Param_Cell);
+	this->pFOUIR = forwards->CreateForward("SteamWorks_OnUserInformationRequested", ET_Ignore, 2, NULL, Param_Cell, Param_Cell);
 }
 
 SteamWorksForwards::~SteamWorksForwards()
@@ -42,6 +45,8 @@ SteamWorksForwards::~SteamWorksForwards()
 	forwards->ReleaseForward(this->pFOSSCF);
 	forwards->ReleaseForward(this->pFOSSD);
 	forwards->ReleaseForward(this->pFOCGS);
+	forwards->ReleaseForward(this->pFOPSC);
+	forwards->ReleaseForward(this->pFOUIR);
 }
 
 void SteamWorksForwards::NotifyPawnValidateClient(Account_t parent, Account_t child)
@@ -59,6 +64,18 @@ void SteamWorksForwards::NotifyPawnValidateClient(Account_t parent, Account_t ch
 		this->pFOVC->PushCell(child);
 		this->pFOVC->Execute(NULL);
 	}
+}
+
+void SteamWorksForwards::NotifyPawnUserInformationRequested(Account_t authid, bool started)
+{
+	if (this->pFOUIR->GetFunctionCount() == 0)
+	{
+		return;
+	}
+
+	this->pFOUIR->PushCell(authid);
+	this->pFOUIR->PushCell(started ? 1 : 0);
+	this->pFOUIR->Execute(NULL);
 }
 
 void SteamWorksForwards::OnGSClientApprove(GSClientApprove_t *pApprove)
@@ -115,4 +132,17 @@ void SteamWorksForwards::OnGroupStatusResult(GSClientGroupStatus_t *pResponse)
 	this->pFOCGS->PushCell(pResponse->m_bMember);
 	this->pFOCGS->PushCell(pResponse->m_bOfficer);
 	this->pFOCGS->Execute(NULL);
+}
+
+void SteamWorksForwards::OnPersonaStateChange(PersonaStateChange_t *pResponse)
+{
+	if (this->pFOPSC->GetFunctionCount() == 0)
+	{
+		return;
+	}
+
+	CSteamID steamId(pResponse->m_ulSteamID);
+	this->pFOPSC->PushCell(steamId.GetAccountID());
+	this->pFOPSC->PushCell(pResponse->m_nChangeFlags);
+	this->pFOPSC->Execute(NULL);
 }

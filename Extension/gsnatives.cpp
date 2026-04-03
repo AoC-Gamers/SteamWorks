@@ -28,6 +28,11 @@ static ISteamGameServer *GetGSPointer(void)
 	return g_SteamWorks.pSWGameServer->GetGameServer();
 }
 
+static ISteamFriends *GetFriendsPointer(void)
+{
+	return g_SteamWorks.pSWGameServer->GetFriends();
+}
+
 static CSteamID CreateCommonCSteamID(IGamePlayer *pPlayer, const cell_t *params, unsigned char universeplace = 2, unsigned char typeplace = 3)
 {
 	return g_SteamWorks.CreateCommonCSteamID(pPlayer, params, universeplace, typeplace);
@@ -277,6 +282,296 @@ static cell_t sm_GetUserGroupStatusAuthID(IPluginContext *pContext, const cell_t
 	return pServer->RequestUserGroupStatus(checkid, CSteamID(params[2], k_EUniversePublic, k_EAccountTypeClan));
 }
 
+static cell_t sm_RequestUserInformation(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamFriends *pFriends = GetFriendsPointer();
+
+	if (pFriends == NULL)
+	{
+		return 0;
+	}
+
+	int client = gamehelpers->ReferenceToIndex(params[1]);
+	IGamePlayer *pPlayer = playerhelpers->GetGamePlayer(client);
+	if (pPlayer == NULL || pPlayer->IsConnected() == false)
+	{
+		return pContext->ThrowNativeError("Client index %d is invalid", params[1]);
+	}
+
+	CSteamID checkid = CreateCommonCSteamID(pPlayer, params, 3, 4);
+	bool started = pFriends->RequestUserInformation(checkid, params[2] ? true : false) ? true : false;
+	g_SteamWorks.pSWForward->NotifyPawnUserInformationRequested(checkid.GetAccountID(), started);
+	return started ? 1 : 0;
+}
+
+static cell_t sm_RequestUserInformationAuthID(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamFriends *pFriends = GetFriendsPointer();
+
+	if (pFriends == NULL)
+	{
+		return 0;
+	}
+
+	CSteamID checkid = CreateCommonCSteamID(params[1], params, 4, 5);
+	bool started = pFriends->RequestUserInformation(checkid, params[2] ? true : false) ? true : false;
+	g_SteamWorks.pSWForward->NotifyPawnUserInformationRequested(checkid.GetAccountID(), started);
+	return started ? 1 : 0;
+}
+
+static cell_t sm_GetFriendPersonaName(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamFriends *pFriends = GetFriendsPointer();
+
+	if (pFriends == NULL)
+	{
+		return 0;
+	}
+
+	int client = gamehelpers->ReferenceToIndex(params[1]);
+	IGamePlayer *pPlayer = playerhelpers->GetGamePlayer(client);
+	if (pPlayer == NULL || pPlayer->IsConnected() == false)
+	{
+		return pContext->ThrowNativeError("Client index %d is invalid", params[1]);
+	}
+
+	CSteamID checkid = CreateCommonCSteamID(pPlayer, params, 4, 5);
+	char *buffer;
+	pContext->LocalToString(params[2], &buffer);
+
+	const char *persona = pFriends->GetFriendPersonaName(checkid);
+	if (persona == NULL)
+	{
+		buffer[0] = '\0';
+		return 0;
+	}
+
+	return g_pSM->Format(buffer, params[3], "%s", persona) + 1;
+}
+
+static cell_t sm_GetFriendPersonaNameAuthID(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamFriends *pFriends = GetFriendsPointer();
+
+	if (pFriends == NULL)
+	{
+		return 0;
+	}
+
+	CSteamID checkid = CreateCommonCSteamID(params[1], params, 4, 5);
+	char *buffer;
+	pContext->LocalToString(params[2], &buffer);
+
+	const char *persona = pFriends->GetFriendPersonaName(checkid);
+	if (persona == NULL)
+	{
+		buffer[0] = '\0';
+		return 0;
+	}
+
+	return g_pSM->Format(buffer, params[3], "%s", persona) + 1;
+}
+
+static cell_t sm_GetFriendPersonaState(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamFriends *pFriends = GetFriendsPointer();
+
+	if (pFriends == NULL)
+	{
+		return -1;
+	}
+
+	int client = gamehelpers->ReferenceToIndex(params[1]);
+	IGamePlayer *pPlayer = playerhelpers->GetGamePlayer(client);
+	if (pPlayer == NULL || pPlayer->IsConnected() == false)
+	{
+		return pContext->ThrowNativeError("Client index %d is invalid", params[1]);
+	}
+
+	CSteamID checkid = CreateCommonCSteamID(pPlayer, params, 2, 3);
+	return static_cast<cell_t>(pFriends->GetFriendPersonaState(checkid));
+}
+
+static cell_t sm_GetFriendPersonaStateAuthID(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamFriends *pFriends = GetFriendsPointer();
+
+	if (pFriends == NULL)
+	{
+		return -1;
+	}
+
+	CSteamID checkid = CreateCommonCSteamID(params[1], params, 2, 3);
+	return static_cast<cell_t>(pFriends->GetFriendPersonaState(checkid));
+}
+
+static cell_t sm_GetFriendRelationship(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamFriends *pFriends = GetFriendsPointer();
+
+	if (pFriends == NULL)
+	{
+		return -1;
+	}
+
+	int client = gamehelpers->ReferenceToIndex(params[1]);
+	IGamePlayer *pPlayer = playerhelpers->GetGamePlayer(client);
+	if (pPlayer == NULL || pPlayer->IsConnected() == false)
+	{
+		return pContext->ThrowNativeError("Client index %d is invalid", params[1]);
+	}
+
+	CSteamID checkid = CreateCommonCSteamID(pPlayer, params, 2, 3);
+	return static_cast<cell_t>(pFriends->GetFriendRelationship(checkid));
+}
+
+static cell_t sm_GetFriendRelationshipAuthID(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamFriends *pFriends = GetFriendsPointer();
+
+	if (pFriends == NULL)
+	{
+		return -1;
+	}
+
+	CSteamID checkid = CreateCommonCSteamID(params[1], params, 2, 3);
+	return static_cast<cell_t>(pFriends->GetFriendRelationship(checkid));
+}
+
+static cell_t sm_GetPlayerNickname(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamFriends *pFriends = GetFriendsPointer();
+
+	if (pFriends == NULL)
+	{
+		return 0;
+	}
+
+	int client = gamehelpers->ReferenceToIndex(params[1]);
+	IGamePlayer *pPlayer = playerhelpers->GetGamePlayer(client);
+	if (pPlayer == NULL || pPlayer->IsConnected() == false)
+	{
+		return pContext->ThrowNativeError("Client index %d is invalid", params[1]);
+	}
+
+	CSteamID checkid = CreateCommonCSteamID(pPlayer, params, 4, 5);
+	char *buffer;
+	pContext->LocalToString(params[2], &buffer);
+
+	const char *nickname = pFriends->GetPlayerNickname(checkid);
+	if (nickname == NULL)
+	{
+		buffer[0] = '\0';
+		return 0;
+	}
+
+	return g_pSM->Format(buffer, params[3], "%s", nickname) + 1;
+}
+
+static cell_t sm_GetPlayerNicknameAuthID(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamFriends *pFriends = GetFriendsPointer();
+
+	if (pFriends == NULL)
+	{
+		return 0;
+	}
+
+	CSteamID checkid = CreateCommonCSteamID(params[1], params, 4, 5);
+	char *buffer;
+	pContext->LocalToString(params[2], &buffer);
+
+	const char *nickname = pFriends->GetPlayerNickname(checkid);
+	if (nickname == NULL)
+	{
+		buffer[0] = '\0';
+		return 0;
+	}
+
+	return g_pSM->Format(buffer, params[3], "%s", nickname) + 1;
+}
+
+static cell_t sm_GetFriendGamePlayed(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamFriends *pFriends = GetFriendsPointer();
+
+	if (pFriends == NULL)
+	{
+		return 0;
+	}
+
+	int client = gamehelpers->ReferenceToIndex(params[1]);
+	IGamePlayer *pPlayer = playerhelpers->GetGamePlayer(client);
+	if (pPlayer == NULL || pPlayer->IsConnected() == false)
+	{
+		return pContext->ThrowNativeError("Client index %d is invalid", params[1]);
+	}
+
+	CSteamID checkid = CreateCommonCSteamID(pPlayer, params, 7, 8);
+	FriendGameInfo_t info;
+	if (!pFriends->GetFriendGamePlayed(checkid, &info))
+	{
+		return 0;
+	}
+
+	cell_t *appid, *ip, *gamePort, *queryPort, *lobbyAuthid;
+	pContext->LocalToPhysAddr(params[2], &appid);
+	pContext->LocalToPhysAddr(params[3], &ip);
+	pContext->LocalToPhysAddr(params[4], &gamePort);
+	pContext->LocalToPhysAddr(params[5], &queryPort);
+	pContext->LocalToPhysAddr(params[6], &lobbyAuthid);
+
+	*appid = static_cast<cell_t>(info.m_gameID.AppID());
+	*ip = static_cast<cell_t>(info.m_unGameIP);
+	*gamePort = static_cast<cell_t>(info.m_usGamePort);
+	*queryPort = static_cast<cell_t>(info.m_usQueryPort);
+	*lobbyAuthid = info.m_steamIDLobby.IsValid() ? static_cast<cell_t>(info.m_steamIDLobby.GetAccountID()) : 0;
+	return 1;
+}
+
+static cell_t sm_RequestClanOfficerList(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamFriends *pFriends = GetFriendsPointer();
+
+	if (pFriends == NULL)
+	{
+		return 0;
+	}
+
+	SteamAPICall_t hCall = pFriends->RequestClanOfficerList(CSteamID(params[1], k_EUniversePublic, k_EAccountTypeClan));
+	return (hCall != k_uAPICallInvalid) ? 1 : 0;
+}
+
+static cell_t sm_GetClanOfficerCount(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamFriends *pFriends = GetFriendsPointer();
+
+	if (pFriends == NULL)
+	{
+		return -1;
+	}
+
+	return static_cast<cell_t>(pFriends->GetClanOfficerCount(CSteamID(params[1], k_EUniversePublic, k_EAccountTypeClan)));
+}
+
+static cell_t sm_GetClanOfficerByIndex(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamFriends *pFriends = GetFriendsPointer();
+
+	if (pFriends == NULL)
+	{
+		return 0;
+	}
+
+	CSteamID officer = pFriends->GetClanOfficerByIndex(CSteamID(params[1], k_EUniversePublic, k_EAccountTypeClan), params[2]);
+	if (!officer.IsValid())
+	{
+		return 0;
+	}
+
+	return static_cast<cell_t>(officer.GetAccountID());
+}
+
 static sp_nativeinfo_t gsnatives[] = {
 	{"SteamWorks_IsVACEnabled",				sm_IsVACEnabled},
 	{"SteamWorks_GetPublicIP",				sm_GetPublicIP},
@@ -293,6 +588,20 @@ static sp_nativeinfo_t gsnatives[] = {
 	{"SteamWorks_GetClientSteamID",			sm_GetClientSteamID},
 	{"SteamWorks_GetUserGroupStatus",			sm_GetUserGroupStatus},
 	{"SteamWorks_GetUserGroupStatusAuthID",			sm_GetUserGroupStatusAuthID},
+	{"SteamWorks_RequestUserInformation",			sm_RequestUserInformation},
+	{"SteamWorks_RequestUserInformationAuthID",		sm_RequestUserInformationAuthID},
+	{"SteamWorks_GetFriendPersonaName",			sm_GetFriendPersonaName},
+	{"SteamWorks_GetFriendPersonaNameAuthID",		sm_GetFriendPersonaNameAuthID},
+	{"SteamWorks_GetFriendPersonaState",			sm_GetFriendPersonaState},
+	{"SteamWorks_GetFriendPersonaStateAuthID",		sm_GetFriendPersonaStateAuthID},
+	{"SteamWorks_GetFriendRelationship",			sm_GetFriendRelationship},
+	{"SteamWorks_GetFriendRelationshipAuthID",		sm_GetFriendRelationshipAuthID},
+	{"SteamWorks_GetPlayerNickname",				sm_GetPlayerNickname},
+	{"SteamWorks_GetPlayerNicknameAuthID",			sm_GetPlayerNicknameAuthID},
+	{"SteamWorks_GetFriendGamePlayed",				sm_GetFriendGamePlayed},
+	{"SteamWorks_RequestClanOfficerList",			sm_RequestClanOfficerList},
+	{"SteamWorks_GetClanOfficerCount",				sm_GetClanOfficerCount},
+	{"SteamWorks_GetClanOfficerByIndex",			sm_GetClanOfficerByIndex},
 	{NULL,											NULL}
 };
 

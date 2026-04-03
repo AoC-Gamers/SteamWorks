@@ -18,8 +18,6 @@
 
 #include "swhttprequest.h"
 
-#include <cstdio>
-
 static ISteamHTTP *GetHTTPPointer(void)
 {
 	return g_SteamWorks.pSWGameServer->GetHTTP();
