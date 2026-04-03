@@ -1,0 +1,399 @@
+name: Build SteamWorks
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      sdk_name:
+        description: "Steamworks-SDK directory name to use"
+        required: true
+        default: "sdk_158a"
+
+concurrency:
+  group: steamworks-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  prepare-deps:
+    runs-on: ubuntu-22.04
+    outputs:
+      cache-key: ${{ steps.cache-key.outputs.key }}
+
+    steps:
+      - name: Checkout SteamWorks
+        uses: actions/checkout@v4
+
+      - name: Install Linux dependencies
+        shell: bash
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo apt-get update
+          sudo apt-get install -y python3 python3-venv make gcc-multilib g++-multilib clang zip
+
+      - name: Resolve dependency cache key
+        id: cache-key
+        shell: bash
+        run: |
+          echo "key=linux-deps-${{ runner.os }}-${{ hashFiles('scripts/fetch-linux-deps.sh', 'scripts/build-linux-l4d2.sh', 'Makefile', 'configure.py') }}" >> "$GITHUB_OUTPUT"
+
+      - name: Restore dependency cache
+        id: deps-cache-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: .deps
+          key: ${{ steps.cache-key.outputs.key }}
+
+      - name: Fetch build dependencies
+        if: steps.deps-cache-restore.outputs.cache-hit != 'true'
+        shell: bash
+        run: make deps
+
+      - name: Save dependency cache
+        if: steps.deps-cache-restore.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .deps
+          key: ${{ steps.cache-key.outputs.key }}
+
+  build-linux:
+    runs-on: ubuntu-22.04
+    needs: prepare-deps
+    outputs:
+      kind: ${{ steps.artifact.outputs.kind }}
+      version: ${{ steps.artifact.outputs.version }}
+      basename: ${{ steps.artifact.outputs.basename }}
+      release-tag: ${{ steps.artifact.outputs.release_tag }}
+      release-name: ${{ steps.artifact.outputs.release_name }}
+      prerelease: ${{ steps.artifact.outputs.prerelease }}
+
+    steps:
+      - name: Checkout SteamWorks
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout Steamworks-SDK
+        uses: actions/checkout@v4
+        with:
+          repository: AoC-Gamers/Steamworks-SDK
+          ref: main
+          path: steamworks-sdk
+          token: ${{ secrets.GHCR_DEPLOY_TOKEN }}
+
+      - name: Install Linux dependencies
+        shell: bash
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo apt-get update
+          sudo apt-get install -y python3 python3-venv make gcc-multilib g++-multilib clang zip
+
+      - name: Restore dependency cache
+        uses: actions/cache/restore@v4
+        with:
+          path: .deps
+          key: ${{ needs.prepare-deps.outputs.cache-key }}
+          fail-on-cache-miss: true
+
+      - name: Resolve SDK name
+        id: sdk
+        shell: bash
+        run: |
+          SDK_NAME="${{ github.event.inputs.sdk_name }}"
+          if [[ -z "$SDK_NAME" ]]; then
+            SDK_NAME="sdk_158a"
+          fi
+
+          echo "name=$SDK_NAME" >> "$GITHUB_OUTPUT"
+          echo "dir=$GITHUB_WORKSPACE/steamworks-sdk/$SDK_NAME" >> "$GITHUB_OUTPUT"
+
+      - name: Validate SDK path
+        shell: bash
+        run: |
+          if [[ ! -d "${{ steps.sdk.outputs.dir }}" ]]; then
+            echo "Steamworks SDK directory not found: ${{ steps.sdk.outputs.dir }}" >&2
+            exit 1
+          fi
+
+      - name: Build extension
+        shell: bash
+        run: make build-l4d2 STEAMWORKS_SDK_DIR="${{ steps.sdk.outputs.dir }}"
+
+      - name: Resolve artifact channel
+        id: artifact
+        shell: bash
+        run: |
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            version="${GITHUB_REF_NAME#v}"
+            echo "kind=tag" >> "$GITHUB_OUTPUT"
+            echo "version=$version" >> "$GITHUB_OUTPUT"
+            echo "basename=steamworks-$version-linux" >> "$GITHUB_OUTPUT"
+            echo "release_tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+            echo "release_name=SteamWorks $version" >> "$GITHUB_OUTPUT"
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          case "${GITHUB_REF_NAME}" in
+            main)
+              echo "kind=channel" >> "$GITHUB_OUTPUT"
+              echo "version=latest" >> "$GITHUB_OUTPUT"
+              echo "basename=steamworks-latest-linux" >> "$GITHUB_OUTPUT"
+              echo "release_tag=channel/latest" >> "$GITHUB_OUTPUT"
+              echo "release_name=Latest" >> "$GITHUB_OUTPUT"
+              echo "prerelease=false" >> "$GITHUB_OUTPUT"
+              ;;
+            develop)
+              echo "kind=channel" >> "$GITHUB_OUTPUT"
+              echo "version=develop" >> "$GITHUB_OUTPUT"
+              echo "basename=steamworks-develop-linux" >> "$GITHUB_OUTPUT"
+              echo "release_tag=channel/develop" >> "$GITHUB_OUTPUT"
+              echo "release_name=Develop" >> "$GITHUB_OUTPUT"
+              echo "prerelease=true" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "kind=other" >> "$GITHUB_OUTPUT"
+              echo "version=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+              echo "basename=steamworks-${GITHUB_SHA::7}-linux" >> "$GITHUB_OUTPUT"
+              ;;
+          esac
+
+      - name: Prepare artifact
+        shell: bash
+        run: |
+          ARTIFACT_DIR="$RUNNER_TEMP/steamworks-package"
+
+          mkdir -p "$ARTIFACT_DIR/addons/sourcemod/extensions"
+          mkdir -p "$ARTIFACT_DIR/addons/sourcemod/scripting/include"
+
+          cp ".build/linux-l4d2/package/addons/sourcemod/extensions/steamworks.ext.so" \
+            "$ARTIFACT_DIR/addons/sourcemod/extensions/steamworks.ext.so"
+
+          cp "Pawn/includes/steamworks.inc" \
+            "$ARTIFACT_DIR/addons/sourcemod/scripting/include/steamworks.inc"
+
+          mkdir -p dist/release
+          (
+            cd "$ARTIFACT_DIR"
+            zip -r "$GITHUB_WORKSPACE/dist/release/${{ steps.artifact.outputs.basename }}.zip" addons
+          )
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.artifact.outputs.basename }}
+          path: dist/release/${{ steps.artifact.outputs.basename }}.zip
+          if-no-files-found: error
+          retention-days: 14
+
+  build-windows:
+    runs-on: windows-2022
+
+    steps:
+      - name: Checkout SteamWorks
+        uses: actions/checkout@v4
+
+      - name: Checkout Steamworks-SDK
+        uses: actions/checkout@v4
+        with:
+          repository: AoC-Gamers/Steamworks-SDK
+          ref: main
+          path: steamworks-sdk
+          token: ${{ secrets.GHCR_DEPLOY_TOKEN }}
+
+      - name: Resolve SDK name
+        id: sdk
+        shell: bash
+        run: |
+          SDK_NAME="${{ github.event.inputs.sdk_name }}"
+          if [[ -z "$SDK_NAME" ]]; then
+            SDK_NAME="sdk_158a"
+          fi
+
+          echo "name=$SDK_NAME" >> "$GITHUB_OUTPUT"
+          echo "dir=$GITHUB_WORKSPACE/steamworks-sdk/$SDK_NAME" >> "$GITHUB_OUTPUT"
+
+      - name: Validate SDK path
+        shell: bash
+        run: |
+          if [[ ! -d "${{ steps.sdk.outputs.dir }}" ]]; then
+            echo "Steamworks SDK directory not found: ${{ steps.sdk.outputs.dir }}" >&2
+            exit 1
+          fi
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up MSVC x86 environment
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x86
+
+      - name: Fetch Windows build dependencies
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force .deps | Out-Null
+
+          git clone --branch l4d2 --single-branch https://github.com/alliedmodders/hl2sdk.git .deps/hl2sdk-l4d2
+          git clone --branch 1.12-dev --single-branch https://github.com/alliedmodders/sourcemod.git .deps/sourcemod-1.12
+          git clone --branch 1.12-dev --single-branch https://github.com/alliedmodders/metamod-source.git .deps/mmsource-1.12
+          git clone --branch master --single-branch https://github.com/alliedmodders/ambuild.git .deps/ambuild
+
+          git -C .deps/sourcemod-1.12 submodule sync --recursive
+          git -C .deps/sourcemod-1.12 submodule update --init --recursive
+          git -C .deps/mmsource-1.12 submodule sync --recursive
+          git -C .deps/mmsource-1.12 submodule update --init --recursive
+
+          python -m venv .deps/.venv-windows
+          .\.deps\.venv-windows\Scripts\python.exe -m pip install --upgrade pip
+          .\.deps\.venv-windows\Scripts\python.exe -m pip install .\.deps\ambuild
+
+      - name: Build Windows extension
+        shell: pwsh
+        run: |
+          Remove-Item -Recurse -Force .build\windows-l4d2 -ErrorAction SilentlyContinue
+          New-Item -ItemType Directory -Force .build\windows-l4d2 | Out-Null
+
+          Push-Location .build\windows-l4d2
+          try {
+            ..\..\.deps\.venv-windows\Scripts\python.exe ..\..\configure.py `
+              --sdks l4d2 `
+              --hl2sdk-root ..\..\.deps `
+              --mms-path ..\..\.deps\mmsource-1.12 `
+              --sm-path ..\..\.deps\sourcemod-1.12 `
+              --steamworks-path "${{ steps.sdk.outputs.dir }}" `
+              --enable-optimize `
+              --target x86
+
+            if (-not (Test-Path .\.ambuild2\vars)) {
+              throw "AMBuild configure did not produce .ambuild2\\vars"
+            }
+
+            ..\..\.deps\.venv-windows\Scripts\ambuild.exe
+          }
+          finally {
+            Pop-Location
+          }
+
+      - name: Resolve Windows artifact name
+        id: artifact
+        shell: bash
+        run: |
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            version="${GITHUB_REF_NAME#v}"
+            echo "basename=steamworks-$version-windows" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          case "${GITHUB_REF_NAME}" in
+            main)
+              echo "basename=steamworks-latest-windows" >> "$GITHUB_OUTPUT"
+              ;;
+            develop)
+              echo "basename=steamworks-develop-windows" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "basename=steamworks-${GITHUB_SHA::7}-windows" >> "$GITHUB_OUTPUT"
+              ;;
+          esac
+
+      - name: Prepare Windows artifact
+        shell: pwsh
+        run: |
+          $artifactDir = Join-Path $env:RUNNER_TEMP "steamworks-windows-package"
+          Remove-Item -Recurse -Force $artifactDir -ErrorAction SilentlyContinue
+          New-Item -ItemType Directory -Force "$artifactDir\\addons\\sourcemod\\extensions" | Out-Null
+          New-Item -ItemType Directory -Force "$artifactDir\\addons\\sourcemod\\scripting\\include" | Out-Null
+
+          Copy-Item ".build\\windows-l4d2\\package\\addons\\sourcemod\\extensions\\steamworks.ext.dll" "$artifactDir\\addons\\sourcemod\\extensions\\steamworks.ext.dll"
+          Copy-Item "Pawn\\includes\\steamworks.inc" "$artifactDir\\addons\\sourcemod\\scripting\\include\\steamworks.inc"
+
+          New-Item -ItemType Directory -Force dist\\release | Out-Null
+          Compress-Archive -Path "$artifactDir\\addons" -DestinationPath "dist\\release\\${{ steps.artifact.outputs.basename }}.zip" -Force
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.artifact.outputs.basename }}
+          path: dist/release/${{ steps.artifact.outputs.basename }}.zip
+          if-no-files-found: error
+          retention-days: 14
+
+  publish:
+    runs-on: ubuntu-22.04
+    needs: build-linux
+    if: github.ref_type == 'branch' || (github.ref_type == 'tag' && startsWith(github.ref_name, 'v'))
+
+    steps:
+      - name: Checkout SteamWorks
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.build-linux.outputs.basename }}
+          path: dist/release
+
+      - name: Move channel tag
+        if: github.ref_type == 'branch' && (github.ref_name == 'main' || github.ref_name == 'develop')
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -f "${{ needs.build-linux.outputs.release-tag }}" "$GITHUB_SHA"
+          git push origin "refs/tags/${{ needs.build-linux.outputs.release-tag }}" --force
+
+      - name: Publish channel release
+        if: github.ref_type == 'branch' && (github.ref_name == 'main' || github.ref_name == 'develop')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          tag="${{ needs.build-linux.outputs.release-tag }}"
+          title="${{ needs.build-linux.outputs.release-name }}"
+          asset="dist/release/${{ needs.build-linux.outputs.basename }}.zip"
+
+          if gh release view "$tag" >/dev/null 2>&1; then
+            if [[ "${{ needs.build-linux.outputs.prerelease }}" == "true" ]]; then
+              gh release edit "$tag" --title "$title" --prerelease --latest=false
+            else
+              gh release edit "$tag" --title "$title" --latest
+            fi
+          else
+            if [[ "${{ needs.build-linux.outputs.prerelease }}" == "true" ]]; then
+              gh release create "$tag" --title "$title" --prerelease --latest=false --target "$GITHUB_SHA"
+            else
+              gh release create "$tag" --title "$title" --latest --target "$GITHUB_SHA"
+            fi
+          fi
+
+          gh release upload "$tag" "$asset" --clobber
+
+      - name: Publish tagged release
+        if: github.ref_type == 'tag' && startsWith(github.ref_name, 'v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          title="${{ needs.build-linux.outputs.release-name }}"
+          asset="dist/release/${{ needs.build-linux.outputs.basename }}.zip"
+
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release edit "$tag" --title "$title" --latest
+          else
+            gh release create "$tag" --title "$title" --verify-tag --latest
+          fi
+
+          gh release upload "$tag" "$asset" --clobber
