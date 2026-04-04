@@ -18,7 +18,6 @@
 
 #pragma once
 #include "smsdk_ext.h"
-#include "isteamfriends.h"
 #include "steam_gameserver.h"
 #include "isteamgamecoordinator.h"
 
@@ -37,7 +36,6 @@ class SteamWorksGameServer
 		ISteamGameServer *GetGameServer(void);
 		ISteamUtils *GetUtils(void);
 		ISteamNetworking *GetNetworking(void);
-		ISteamFriends *GetFriends(void);
 		ISteamGameServerStats *GetServerStats(void);
 		ISteamHTTP *GetHTTP(void);
 		ISteamMatchmaking *GetMatchmaking(void);
@@ -53,7 +51,6 @@ class SteamWorksGameServer
 		ISteamGameServer *m_pGameServer;
 		ISteamUtils *m_pUtils;
 		ISteamNetworking *m_pNetworking;
-		ISteamFriends *m_pFriends;
 		ISteamGameServerStats *m_pStats;
 		ISteamHTTP *m_pHTTP;
 		ISteamMatchmaking *m_pMatchmaking;

@@ -316,7 +316,11 @@ static cell_t sm_SendHTTPRequestAndStreamResponse(IPluginContext *pContext, cons
 	SteamAPICall_t hCall;
 	cell_t result = pHTTP->SendHTTPRequestAndStreamResponse(pRequest->request, &hCall) ? 1 : 0;
 
-	SetCallbacks(hCall, pRequest);
+	if (result)
+	{
+		SetCallbacks(hCall, pRequest);
+	}
+
 	return result;
 }
 
@@ -332,7 +336,11 @@ static cell_t sm_SendHTTPRequest(IPluginContext *pContext, const cell_t *params)
 	SteamAPICall_t hCall;
 	cell_t result = pHTTP->SendHTTPRequest(pRequest->request, &hCall) ? 1 : 0;
 
-	SetCallbacks(hCall, pRequest);
+	if (result)
+	{
+		SetCallbacks(hCall, pRequest);
+	}
+
 	return result;
 }
 
@@ -420,6 +428,54 @@ static cell_t sm_GetHTTPResponseBodyData(IPluginContext *pContext, const cell_t 
 	char *pBuffer;
 	pContext->LocalToString(params[2], &pBuffer);
 	return pHTTP->GetHTTPResponseBodyData(pRequest->request, reinterpret_cast<uint8_t *>(pBuffer), params[3]) ? 1 : 0;
+}
+
+static cell_t sm_GetHTTPResponseBodyString(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
+	{
+		return 0;
+	}
+
+	if (params[3] <= 0)
+	{
+		return pContext->ThrowNativeError("Buffer length must be greater than 0");
+	}
+
+	uint32_t size;
+	if (!pHTTP->GetHTTPResponseBodySize(pRequest->request, &size))
+	{
+		return 0;
+	}
+
+	cell_t *pWritten;
+	pContext->LocalToPhysAddr(params[4], &pWritten);
+
+	cell_t *pTruncated;
+	pContext->LocalToPhysAddr(params[5], &pTruncated);
+
+	char *pBuffer;
+	pContext->LocalToString(params[2], &pBuffer);
+
+	bool truncated = false;
+	uint32_t readLength = size;
+	if (readLength >= static_cast<uint32_t>(params[3]))
+	{
+		readLength = static_cast<uint32_t>(params[3] - 1);
+		truncated = true;
+	}
+
+	if (readLength > 0 && !pHTTP->GetHTTPResponseBodyData(pRequest->request, reinterpret_cast<uint8_t *>(pBuffer), readLength))
+	{
+		return 0;
+	}
+
+	pBuffer[readLength] = '\0';
+	*pWritten = static_cast<cell_t>(readLength);
+	*pTruncated = truncated ? 1 : 0;
+	return 1;
 }
 
 static cell_t sm_GetHTTPDownloadProgressPct(IPluginContext *pContext, const cell_t *params)
@@ -687,6 +743,7 @@ static sp_nativeinfo_t httpnatives[] = {
 	{"SteamWorks_GetHTTPResponseHeaderValue",				sm_GetHTTPResponseHeaderValue},
 	{"SteamWorks_GetHTTPResponseBodySize",				sm_GetHTTPResponseBodySize},
 	{"SteamWorks_GetHTTPResponseBodyData",				sm_GetHTTPResponseBodyData},
+	{"SteamWorks_GetHTTPResponseBodyString",				sm_GetHTTPResponseBodyString},
 	{"SteamWorks_GetHTTPDownloadProgressPct",				sm_GetHTTPDownloadProgressPct},
 	{"SteamWorks_GetHTTPRequestWasTimedOut",				sm_GetHTTPRequestWasTimedOut},
 	{"SteamWorks_SetHTTPRequestRawPostBody",				sm_SetHTTPRequestRawPostBody},

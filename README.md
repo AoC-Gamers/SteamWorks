@@ -131,6 +131,32 @@ Artefacto Windows del workflow:
 Fuentes de prueba como `Pawn/steamwork_test.sp` no se compilan dentro de los
 artefactos finales ni se empaquetan en CI.
 
+Limitación conocida
+-------------------
+
+La interfaz `ISteamFriends` fue evaluada específicamente para este runtime y
+no resultó utilizable desde el contexto del gameserver dedicado de L4D2, aunque
+los símbolos existan dentro de las bibliotecas de Steam.
+
+Detalle técnico:
+
+- `docs/ISteamFriends.md`
+
+Documentación técnica adicional
+-------------------------------
+
+El directorio `docs/` se usa para documentar interfaces, limitaciones del runtime
+y patrones de uso que conviene mantener explícitos.
+
+Documentos actuales:
+
+- `docs/README.md`
+- `docs/GetSchemaForGame_550.md`
+- `docs/ISteamHTTP.md`
+- `docs/ISteamFriends.md`
+- `docs/ISteamUserStats.md`
+- `docs/TestCoverage.md`
+
 Las rutas pueden sobreescribirse con variables de entorno como `DEPS_DIR`,
 `BUILD_DIR`, `HL2SDK_DIR`, `SOURCEMOD_DIR`, `MMSOURCE_DIR`,
 `STEAMWORKS_SDK_DIR`, `STEAMWORKS_SDK_NAME` y `VENV_DIR`.

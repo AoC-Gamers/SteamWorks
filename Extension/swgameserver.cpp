@@ -17,7 +17,6 @@
 */
 
 #include "swgameserver.h"
-
 static void GetGameSpecificConfigInterface(const char *pName, const char *&pVersion)
 {
 	if (g_SteamWorks.pSWGameData == NULL)
@@ -53,7 +52,6 @@ void SteamWorksGameServer::Reset(void)
 	this->m_pGameServer = NULL;
 	this->m_pUtils = NULL;
 	this->m_pNetworking = NULL;
-	this->m_pFriends = NULL;
 	this->m_pStats = NULL;
 	this->m_pHTTP = NULL;
 	this->m_pMatchmaking = NULL;
@@ -167,22 +165,6 @@ ISteamNetworking *SteamWorksGameServer::GetNetworking(void)
 	return this->m_pNetworking;
 }
 
-ISteamFriends *SteamWorksGameServer::GetFriends(void)
-{
-	if (this->m_pFriends == NULL && this->GetSteamClient() != NULL)
-	{
-		HSteamUser hSteamUser;
-		HSteamPipe hSteamPipe;
-		GetUserAndPipe(hSteamUser, hSteamPipe);
-
-		const char *pVersion = STEAMFRIENDS_INTERFACE_VERSION;
-		GetGameSpecificConfigInterface("SteamFriendsInterfaceVersion", pVersion);
-		this->m_pFriends = this->GetSteamClient()->GetISteamFriends(hSteamUser, hSteamPipe, pVersion);
-	}
-
-	return this->m_pFriends;
-}
-
 ISteamGameServerStats *SteamWorksGameServer::GetServerStats(void)
 {
 	if (this->m_pStats == NULL && this->GetSteamClient() != NULL)
@@ -225,7 +207,7 @@ ISteamMatchmaking *SteamWorksGameServer::GetMatchmaking(void)
 		
 		const char *pVersion = STEAMMATCHMAKING_INTERFACE_VERSION;
 		GetGameSpecificConfigInterface("SteamMatchmakingVersion", pVersion);
-		this->m_pMatchmaking = this->GetSteamClient()->GetISteamMatchmaking(hSteamUser, hSteamPipe, STEAMMATCHMAKING_INTERFACE_VERSION);
+		this->m_pMatchmaking = this->GetSteamClient()->GetISteamMatchmaking(hSteamUser, hSteamPipe, pVersion);
 	}
 	
 	return this->m_pMatchmaking;
@@ -241,7 +223,7 @@ ISteamGameCoordinator *SteamWorksGameServer::GetGameCoordinator(void)
 
 		const char *pVersion = STEAMGAMECOORDINATOR_INTERFACE_VERSION;
 		GetGameSpecificConfigInterface("SteamGameCoordinatorVersion", pVersion);
-		this->m_pGC = static_cast<ISteamGameCoordinator *>(this->GetSteamClient()->GetISteamGenericInterface(hSteamUser, hSteamPipe, STEAMGAMECOORDINATOR_INTERFACE_VERSION));
+		this->m_pGC = static_cast<ISteamGameCoordinator *>(this->GetSteamClient()->GetISteamGenericInterface(hSteamUser, hSteamPipe, pVersion));
 	}
 
 	return this->m_pGC;

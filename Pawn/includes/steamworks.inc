@@ -335,154 +335,6 @@ native EUserHasLicenseForAppResult SteamWorks_HasLicenseForAppId(int authid, int
 native int SteamWorks_GetClientSteamID(int client, char[] steamId, int length);
 
 /**
- * Requests profile/persona information for a connected client.
- *
- * @param client               Connected client index
- * @param requireNameOnly      true to request only the name, false to allow avatar loading as well
- * @return                     true if Steam started an async request, false if data was already cached or on error
- */
-native bool SteamWorks_RequestUserInformation(int client, bool requireNameOnly = true);
-
-/**
- * Requests profile/persona information for a user by AuthID.
- *
- * @param authid               Player account ID
- * @param requireNameOnly      true to request only the name, false to allow avatar loading as well
- * @param universe             Steam universe; defaults to public
- * @param type                 Account type; defaults to individual
- * @return                     true if Steam started an async request, false if data was already cached or on error
- */
-native bool SteamWorks_RequestUserInformationAuthID(int authid, bool requireNameOnly = true, int universe = 1, int type = 1);
-
-/**
- * Gets the persona name of a connected client from ISteamFriends.
- *
- * @param client               Connected client index
- * @param name                 Output buffer
- * @param length               Maximum buffer length
- * @param universe             Steam universe; defaults to public
- * @param type                 Account type; defaults to individual
- * @return                     Number of characters written including the null terminator; 0 on error
- */
-native int SteamWorks_GetFriendPersonaName(int client, char[] name, int length, int universe = 1, int type = 1);
-
-/**
- * Gets the persona name of a user by AuthID from ISteamFriends.
- *
- * @param authid               Player account ID
- * @param name                 Output buffer
- * @param length               Maximum buffer length
- * @param universe             Steam universe; defaults to public
- * @param type                 Account type; defaults to individual
- * @return                     Number of characters written including the null terminator; 0 on error
- */
-native int SteamWorks_GetFriendPersonaNameAuthID(int authid, char[] name, int length, int universe = 1, int type = 1);
-
-/**
- * Gets the persona/presence state for a connected client.
- *
- * @param client               Connected client index
- * @param universe             Steam universe; defaults to public
- * @param type                 Account type; defaults to individual
- * @return                     EPersonaState integer value; -1 on error
- */
-native int SteamWorks_GetFriendPersonaState(int client, int universe = 1, int type = 1);
-
-/**
- * Gets the persona/presence state for a user by AuthID.
- *
- * @param authid               Player account ID
- * @param universe             Steam universe; defaults to public
- * @param type                 Account type; defaults to individual
- * @return                     EPersonaState integer value; -1 on error
- */
-native int SteamWorks_GetFriendPersonaStateAuthID(int authid, int universe = 1, int type = 1);
-
-/**
- * Gets the relationship value for a connected client from ISteamFriends.
- *
- * @param client               Connected client index
- * @param universe             Steam universe; defaults to public
- * @param type                 Account type; defaults to individual
- * @return                     EFriendRelationship integer value; -1 on error
- */
-native int SteamWorks_GetFriendRelationship(int client, int universe = 1, int type = 1);
-
-/**
- * Gets the relationship value for a user by AuthID from ISteamFriends.
- *
- * @param authid               Player account ID
- * @param universe             Steam universe; defaults to public
- * @param type                 Account type; defaults to individual
- * @return                     EFriendRelationship integer value; -1 on error
- */
-native int SteamWorks_GetFriendRelationshipAuthID(int authid, int universe = 1, int type = 1);
-
-/**
- * Gets the locally configured nickname for a connected client, if available.
- *
- * @param client               Connected client index
- * @param name                 Output buffer
- * @param length               Maximum buffer length
- * @param universe             Steam universe; defaults to public
- * @param type                 Account type; defaults to individual
- * @return                     Number of characters written including null terminator; 0 if unavailable or on error
- */
-native int SteamWorks_GetPlayerNickname(int client, char[] name, int length, int universe = 1, int type = 1);
-
-/**
- * Gets the locally configured nickname for a user by AuthID, if available.
- *
- * @param authid               Player account ID
- * @param name                 Output buffer
- * @param length               Maximum buffer length
- * @param universe             Steam universe; defaults to public
- * @param type                 Account type; defaults to individual
- * @return                     Number of characters written including null terminator; 0 if unavailable or on error
- */
-native int SteamWorks_GetPlayerNicknameAuthID(int authid, char[] name, int length, int universe = 1, int type = 1);
-
-/**
- * Gets the current game session data for a connected client, if available.
- *
- * @param client               Connected client index
- * @param appid                Receives the current AppID
- * @param ip                   Receives the current IPv4 address as a cell
- * @param gamePort             Receives the current game port
- * @param queryPort            Receives the current query port
- * @param lobbyAuthid          Receives the current lobby account ID, or 0 if unavailable
- * @param universe             Steam universe; defaults to public
- * @param type                 Account type; defaults to individual
- * @return                     true if game data was available, false otherwise
- */
-native bool SteamWorks_GetFriendGamePlayed(int client, int &appid, int &ip, int &gamePort, int &queryPort, int &lobbyAuthid, int universe = 1, int type = 1);
-
-/**
- * Requests the officer list for a Steam clan/group.
- *
- * @param groupid              Steam group account ID
- * @return                     true if the request handle was created successfully
- */
-native bool SteamWorks_RequestClanOfficerList(int groupid);
-
-/**
- * Gets the number of cached officers for a Steam clan/group.
- *
- * @param groupid              Steam group account ID
- * @return                     Officer count, or -1 on error
- */
-native int SteamWorks_GetClanOfficerCount(int groupid);
-
-/**
- * Gets a clan officer account ID by cached index.
- *
- * @param groupid              Steam group account ID
- * @param index                Officer index in the cached list
- * @return                     Officer account ID, or 0 if unavailable
- */
-native int SteamWorks_GetClanOfficerByIndex(int groupid, int index);
-
-/**
  * Requests a player's stats from Steam using their SteamID (AuthID).
  *
  * @param authid     Player SteamID (AuthID or SteamID64)
@@ -852,14 +704,32 @@ native bool SteamWorks_GetHTTPResponseHeaderValue(Handle request, const char[] h
 native bool SteamWorks_GetHTTPResponseBodySize(Handle request, int &size);
 
 /**
- * Gets the full HTTP response body as a text string.
+ * Gets the full HTTP response body as raw bytes.
  *
  * @param request     HTTP request handle
- * @param body        Buffer that receives the response content
- * @param length      Maximum buffer length
+ * @param body        Buffer that receives the response bytes
+ * @param length      Maximum number of bytes to read
  * @return            true if retrieved successfully
  */
 native bool SteamWorks_GetHTTPResponseBodyData(Handle request, char[] body, int length);
+
+/**
+ * Gets the HTTP response body as a null-terminated string.
+ *
+ * This helper is intended for textual bodies such as JSON, HTML, or plain text.
+ * It reads up to `length - 1` bytes and always appends a null terminator.
+ * If the response body is larger than the provided buffer, the string will be truncated.
+ *
+ * This native should not be used for binary payloads.
+ *
+ * @param request     HTTP request handle
+ * @param body        Buffer that receives the string
+ * @param length      Maximum buffer length, including the null terminator
+ * @param written     Number of characters written, excluding the null terminator
+ * @param truncated   Set to true if the body did not fit in the buffer
+ * @return            true if retrieved successfully
+ */
+native bool SteamWorks_GetHTTPResponseBodyString(Handle request, char[] body, int length, int &written, bool &truncated);
 
 /**
  * Gets a fragment of the HTTP response body (for manual streaming).
@@ -976,22 +846,6 @@ forward void SteamWorks_SteamServersConnectFailure(EResult result);
 forward void SteamWorks_SteamServersDisconnected(EResult result);
 
 /**
- * Event fired when persona information changes for a known Steam account.
- *
- * @param authid               Account ID of the user whose data changed
- * @param flags                Bitmask of EPersonaChange values
- */
-forward void SteamWorks_OnPersonaStateChange(int authid, int flags);
-
-/**
- * Event fired when RequestUserInformation is invoked through the extension.
- *
- * @param authid               Account ID that was requested
- * @param started              true if Steam started an async fetch, false if data was already cached or unavailable
- */
-forward void SteamWorks_OnUserInformationRequested(int authid, bool started);
-
-/**
  * Event fired when Steam requests the server to restart.
  *
  * This can happen due to IP changes or other Steam-side conditions.
@@ -1092,20 +946,6 @@ public void __ext_SteamWorks_SetNTVOptional()
 	MarkNativeAsOptional("SteamWorks_HasLicenseForApp");
 	MarkNativeAsOptional("SteamWorks_HasLicenseForAppId");
 	MarkNativeAsOptional("SteamWorks_GetClientSteamID");
-	MarkNativeAsOptional("SteamWorks_RequestUserInformation");
-	MarkNativeAsOptional("SteamWorks_RequestUserInformationAuthID");
-	MarkNativeAsOptional("SteamWorks_GetFriendPersonaName");
-	MarkNativeAsOptional("SteamWorks_GetFriendPersonaNameAuthID");
-	MarkNativeAsOptional("SteamWorks_GetFriendPersonaState");
-	MarkNativeAsOptional("SteamWorks_GetFriendPersonaStateAuthID");
-	MarkNativeAsOptional("SteamWorks_GetFriendRelationship");
-	MarkNativeAsOptional("SteamWorks_GetFriendRelationshipAuthID");
-	MarkNativeAsOptional("SteamWorks_GetPlayerNickname");
-	MarkNativeAsOptional("SteamWorks_GetPlayerNicknameAuthID");
-	MarkNativeAsOptional("SteamWorks_GetFriendGamePlayed");
-	MarkNativeAsOptional("SteamWorks_RequestClanOfficerList");
-	MarkNativeAsOptional("SteamWorks_GetClanOfficerCount");
-	MarkNativeAsOptional("SteamWorks_GetClanOfficerByIndex");
 
 	MarkNativeAsOptional("SteamWorks_RequestStatsAuthID");
 	MarkNativeAsOptional("SteamWorks_RequestStats");
@@ -1134,6 +974,7 @@ public void __ext_SteamWorks_SetNTVOptional()
 	MarkNativeAsOptional("SteamWorks_GetHTTPResponseHeaderValue");
 	MarkNativeAsOptional("SteamWorks_GetHTTPResponseBodySize");
 	MarkNativeAsOptional("SteamWorks_GetHTTPResponseBodyData");
+	MarkNativeAsOptional("SteamWorks_GetHTTPResponseBodyString");
 	MarkNativeAsOptional("SteamWorks_GetHTTPStreamingResponseBodyData");
 	MarkNativeAsOptional("SteamWorks_GetHTTPDownloadProgressPct");
 	MarkNativeAsOptional("SteamWorks_SetHTTPRequestRawPostBody");

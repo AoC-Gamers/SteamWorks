@@ -2,6 +2,7 @@
 #include <steamworks>
 
 #define SWTEST_VERSION "1.0.0"
+#define SWTEST_STATS_POLL_DELAY 2.0
 
 public Plugin myinfo =
 {
@@ -12,16 +13,15 @@ public Plugin myinfo =
 	url = ""
 };
 
-static const int PERSONA_POLL_MAX_ATTEMPTS = 10;
-static const float PERSONA_POLL_INTERVAL = 1.0;
-
 public void OnPluginStart()
 {
+	RegAdminCmd("sm_swtest_status", Cmd_TestStatus, ADMFLAG_GENERIC, "Tests SteamWorks status natives.");
 	RegAdminCmd("sm_swtest_http", Cmd_TestHTTP, ADMFLAG_GENERIC, "Tests SteamWorks HTTP support. Usage: sm_swtest_http [url]");
-	RegAdminCmd("sm_swtest_persona", Cmd_TestPersona, ADMFLAG_GENERIC, "Tests persona natives. Usage: sm_swtest_persona <target|accountid> [nameonly 0|1]");
-	RegAdminCmd("sm_swtest_clan", Cmd_TestClan, ADMFLAG_GENERIC, "Tests clan officer natives. Usage: sm_swtest_clan <groupid>");
-	RegAdminCmd("sm_swtest_stats", Cmd_TestStats, ADMFLAG_GENERIC, "Tests stat natives. Usage: sm_swtest_stats <target>");
-	RegAdminCmd("sm_swtest_profile", Cmd_TestProfile, ADMFLAG_GENERIC, "Tests profile/friends natives. Usage: sm_swtest_profile <target>");
+	RegAdminCmd("sm_swtest_identity", Cmd_TestIdentity, ADMFLAG_GENERIC, "Tests Steam identity natives. Usage: sm_swtest_identity <target>");
+	RegAdminCmd("sm_swtest_group", Cmd_TestGroup, ADMFLAG_GENERIC, "Tests Steam group status natives. Usage: sm_swtest_group <target> <groupid>");
+	RegAdminCmd("sm_swtest_license", Cmd_TestLicense, ADMFLAG_GENERIC, "Tests license natives. Usage: sm_swtest_license <target> [appid]");
+	RegAdminCmd("sm_swtest_servermeta", Cmd_TestServerMeta, ADMFLAG_GENERIC, "Tests server metadata natives.");
+	RegAdminCmd("sm_swtest_stats", Cmd_TestStats, ADMFLAG_GENERIC, "Tests stat natives. Usage: sm_swtest_stats <target> [stat_key]");
 
 	PrintToServer("[SteamWorks Test] Loaded version %s", SWTEST_VERSION);
 }
@@ -38,84 +38,77 @@ static void SWTest_LogCommand(int client, const char[] fmt, any ...)
 	}
 }
 
-static bool SWTest_ResolveTargetOrAccountId(int issuer, const char[] input, int &target, int &accountid)
+static void SWTest_LogEvent(const char[] fmt, any ...)
 {
-	target = 0;
-	accountid = 0;
+	char buffer[256];
+	VFormat(buffer, sizeof(buffer), fmt, 2);
 
-	int parsed = StringToInt(input);
-	if (parsed > 0)
-	{
-		accountid = parsed;
-		return true;
-	}
-
-	target = FindTarget(issuer, input, true, false);
-	if (target <= 0)
-	{
-		return false;
-	}
-
-	accountid = GetSteamAccountID(target, false);
-	return (accountid > 0);
+	PrintToServer("[SteamWorks Test] %s", buffer);
+	LogMessage("[SteamWorks Test] %s", buffer);
 }
 
-static void SWTest_LogPersonaSnapshot(int issuer, int accountid)
+static void SWTest_LogHttpBody(int size, const char[] body)
 {
-	char persona[128];
-	char nickname[128];
-	int state = SteamWorks_GetFriendPersonaStateAuthID(accountid);
-	int relationship = SteamWorks_GetFriendRelationshipAuthID(accountid);
-	int personaWritten = SteamWorks_GetFriendPersonaNameAuthID(accountid, persona, sizeof(persona));
-	int nicknameWritten = SteamWorks_GetPlayerNicknameAuthID(accountid, nickname, sizeof(nickname));
-
-	SWTest_LogCommand(issuer,
-		"persona snapshot accountid=%d state=%d relationship=%d persona=%s nickname=%s",
-		accountid,
-		state,
-		relationship,
-		(personaWritten > 0 && persona[0] != '\0') ? persona : "<empty>",
-		(nicknameWritten > 0 && nickname[0] != '\0') ? nickname : "<empty>");
+	LogMessage("[SteamWorks Test] http body size=%d", size);
+	LogMessage("[SteamWorks Test] http body begin");
+	LogMessage("[SteamWorks Test] %s", body);
+	LogMessage("[SteamWorks Test] http body end");
 }
 
-static void SWTest_StartPersonaPolling(int issuer, int accountid)
+static bool SWTest_ResolveTarget(int issuer, const char[] pattern, int &target)
 {
-	DataPack pack = new DataPack();
-	pack.WriteCell(GetClientUserId(issuer));
-	pack.WriteCell(accountid);
-	pack.WriteCell(1);
-	CreateTimer(PERSONA_POLL_INTERVAL, Timer_PollPersona, pack, TIMER_FLAG_NO_MAPCHANGE);
+	target = FindTarget(issuer, pattern, true, false);
+	return (target > 0);
 }
 
-public Action Timer_PollPersona(Handle timer, DataPack pack)
+static void SWTest_LogStatRead(int client, int target, int accountid, const char[] key)
+{
+	int clientCellValue = 0;
+	int authCellValue = 0;
+	float clientFloatValue = 0.0;
+	float authFloatValue = 0.0;
+
+	bool clientCellOk = SteamWorks_GetStatCell(target, key, clientCellValue);
+	bool authCellOk = SteamWorks_GetStatAuthIDCell(accountid, key, authCellValue);
+	bool clientFloatOk = SteamWorks_GetStatFloat(target, key, clientFloatValue);
+	bool authFloatOk = SteamWorks_GetStatAuthIDFloat(accountid, key, authFloatValue);
+
+	SWTest_LogCommand(
+		client,
+		"stats key=%s clientCellOk=%d clientCell=%d authCellOk=%d authCell=%d clientFloatOk=%d clientFloat=%.3f authFloatOk=%d authFloat=%.3f",
+		key,
+		clientCellOk,
+		clientCellValue,
+		authCellOk,
+		authCellValue,
+		clientFloatOk,
+		clientFloatValue,
+		authFloatOk,
+		authFloatValue
+	);
+}
+
+public Action Timer_PollStats(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int issuerUserId = pack.ReadCell();
+	int targetUserId = pack.ReadCell();
 	int accountid = pack.ReadCell();
-	int attempt = pack.ReadCell();
-	int issuer = GetClientOfUserId(issuerUserId);
+	char key[128];
+	pack.ReadString(key, sizeof(key));
 
-	char persona[128];
-	int written = SteamWorks_GetFriendPersonaNameAuthID(accountid, persona, sizeof(persona));
-	if (written > 0 && persona[0] != '\0')
+	int client = GetClientOfUserId(issuerUserId);
+	int target = GetClientOfUserId(targetUserId);
+
+	if (target <= 0 || !IsClientInGame(target))
 	{
-		SWTest_LogCommand(issuer, "persona poll resolved accountid=%d attempt=%d persona=%s", accountid, attempt, persona);
+		SWTest_LogCommand(client, "stats poll target left before lookup key=%s accountid=%d", key, accountid);
 		delete pack;
 		return Plugin_Stop;
 	}
 
-	SWTest_LogCommand(issuer, "persona poll pending accountid=%d attempt=%d", accountid, attempt);
-	if (attempt >= PERSONA_POLL_MAX_ATTEMPTS)
-	{
-		delete pack;
-		return Plugin_Stop;
-	}
-
-	DataPack nextPack = new DataPack();
-	nextPack.WriteCell(issuerUserId);
-	nextPack.WriteCell(accountid);
-	nextPack.WriteCell(attempt + 1);
-	CreateTimer(PERSONA_POLL_INTERVAL, Timer_PollPersona, nextPack, TIMER_FLAG_NO_MAPCHANGE);
+	SWTest_LogCommand(client, "stats poll target=%N accountid=%d key=%s", target, accountid, key);
+	SWTest_LogStatRead(client, target, accountid, key);
 
 	delete pack;
 	return Plugin_Stop;
@@ -126,11 +119,35 @@ public Action Cmd_TestHTTP(int client, int args)
 	char url[256];
 	if (args >= 1)
 	{
-		GetCmdArg(1, url, sizeof(url));
+		GetCmdArgString(url, sizeof(url));
+		TrimString(url);
+
+		int length = strlen(url);
+		if (length >= 2 && url[0] == '"' && url[length - 1] == '"')
+		{
+			url[length - 1] = '\0';
+			for (int i = 1; i < length; i++)
+			{
+				url[i - 1] = url[i];
+			}
+		}
+
+		if (StrEqual(url, "http:") || StrEqual(url, "https:"))
+		{
+			SWTest_LogCommand(client, "the Source console truncates URLs on //, use quotes or omit the scheme");
+			return Plugin_Handled;
+		}
+
+		if (StrContains(url, "://") == -1)
+		{
+			char normalized[256];
+			Format(normalized, sizeof(normalized), "https://%s", url);
+			strcopy(url, sizeof(url), normalized);
+		}
 	}
 	else
 	{
-		strcopy(url, sizeof(url), "http://127.0.0.1:18080/health");
+		strcopy(url, sizeof(url), "https://example.com/");
 	}
 
 	Handle request = SteamWorks_CreateHTTPRequest(k_EHTTPMethodGET, url);
@@ -155,6 +172,29 @@ public Action Cmd_TestHTTP(int client, int args)
 	return Plugin_Handled;
 }
 
+public Action Cmd_TestStatus(int client, int args)
+{
+	int ip[4];
+	bool ipOk = SteamWorks_GetPublicIP(ip);
+	int ipCell = SteamWorks_GetPublicIPCell();
+
+	SWTest_LogCommand(
+		client,
+		"status loaded=%d connected=%d vac=%d ipOk=%d ip=%d.%d.%d.%d ipCell=%d",
+		SteamWorks_IsLoaded(),
+		SteamWorks_IsConnected(),
+		SteamWorks_IsVACEnabled(),
+		ipOk,
+		ip[0],
+		ip[1],
+		ip[2],
+		ip[3],
+		ipCell
+	);
+
+	return Plugin_Handled;
+}
+
 public void OnHTTPCompleted(Handle request, bool failure, bool success, EHTTPStatusCode code, any issuer)
 {
 	SWTest_LogCommand(issuer, "http completed failure=%d success=%d code=%d", failure, success, code);
@@ -162,115 +202,195 @@ public void OnHTTPCompleted(Handle request, bool failure, bool success, EHTTPSta
 	int size;
 	if (SteamWorks_GetHTTPResponseBodySize(request, size) && size > 0)
 	{
-		char body[256];
-		SteamWorks_GetHTTPResponseBodyData(request, body, sizeof(body));
-		SWTest_LogCommand(issuer, "http body=%s", body);
+		SWTest_LogCommand(issuer, "http body size=%d", size);
+
+		char body[2048];
+		int readLength = size;
+		if (readLength > sizeof(body) - 1)
+		{
+			readLength = sizeof(body) - 1;
+		}
+
+		if (SteamWorks_GetHTTPResponseBodyData(request, body, readLength))
+		{
+			body[readLength] = '\0';
+			SWTest_LogHttpBody(size, body);
+			if (size <= 200)
+			{
+				SWTest_LogCommand(issuer, "http body=%s", body);
+			}
+			else
+			{
+				char preview[256];
+				int previewLength = strlen(body);
+				if (previewLength > sizeof(preview) - 1)
+				{
+					previewLength = sizeof(preview) - 1;
+				}
+
+				for (int i = 0; i < previewLength; i++)
+				{
+					preview[i] = body[i];
+				}
+				preview[previewLength] = '\0';
+
+				SWTest_LogCommand(issuer, "http body preview=%s", preview);
+				SWTest_LogCommand(issuer, "http body truncated for console output");
+			}
+		}
+		else
+		{
+			SWTest_LogCommand(issuer, "http body read failed");
+		}
+	}
+	else
+	{
+		SWTest_LogCommand(issuer, "http body size=0");
 	}
 
 	CloseHandle(request);
 }
 
-public Action Cmd_TestPersona(int client, int args)
+public Action Cmd_TestIdentity(int client, int args)
 {
 	if (args < 1)
 	{
-		ReplyToCommand(client, "[SteamWorks Test] Usage: sm_swtest_persona <target|accountid> [nameonly 0|1]");
-		return Plugin_Handled;
-	}
-
-	char arg[64];
-	GetCmdArg(1, arg, sizeof(arg));
-
-	int target, accountid;
-	if (!SWTest_ResolveTargetOrAccountId(client, arg, target, accountid))
-	{
-		ReplyToCommand(client, "[SteamWorks Test] Invalid target or accountid.");
-		return Plugin_Handled;
-	}
-
-	bool nameOnly = true;
-	if (args >= 2)
-	{
-		GetCmdArg(2, arg, sizeof(arg));
-		nameOnly = StringToInt(arg) != 0;
-	}
-
-	bool started = (target > 0)
-		? SteamWorks_RequestUserInformation(target, nameOnly)
-		: SteamWorks_RequestUserInformationAuthID(accountid, nameOnly);
-
-	SWTest_LogCommand(client, "persona request accountid=%d target=%d nameonly=%d started=%d", accountid, target, nameOnly, started);
-	SWTest_LogPersonaSnapshot(client, accountid);
-	SWTest_StartPersonaPolling(client, accountid);
-	return Plugin_Handled;
-}
-
-public Action Cmd_TestProfile(int client, int args)
-{
-	if (args < 1)
-	{
-		ReplyToCommand(client, "[SteamWorks Test] Usage: sm_swtest_profile <target>");
+		ReplyToCommand(client, "[SteamWorks Test] Usage: sm_swtest_identity <target>");
 		return Plugin_Handled;
 	}
 
 	char pattern[64];
 	GetCmdArg(1, pattern, sizeof(pattern));
 
-	int target = FindTarget(client, pattern, true, false);
-	if (target <= 0)
+	int target;
+	if (!SWTest_ResolveTarget(client, pattern, target))
 	{
 		return Plugin_Handled;
 	}
 
-	int appid, ip, gamePort, queryPort, lobbyAuthid;
-	bool hasGame = SteamWorks_GetFriendGamePlayed(target, appid, ip, gamePort, queryPort, lobbyAuthid);
-
-	char nickname[128];
-	int nickWritten = SteamWorks_GetPlayerNickname(target, nickname, sizeof(nickname));
-	SWTest_LogCommand(client,
-		"profile target=%N accountid=%d state=%d relationship=%d nickname=%s game=%d appid=%d ip=%d gamePort=%d queryPort=%d lobby=%d",
+	char steamId[64];
+	int written = SteamWorks_GetClientSteamID(target, steamId, sizeof(steamId));
+	SWTest_LogCommand(
+		client,
+		"identity target=%N userid=%d accountid=%d written=%d steamid=%s",
 		target,
+		GetClientUserId(target),
 		GetSteamAccountID(target, false),
-		SteamWorks_GetFriendPersonaState(target),
-		SteamWorks_GetFriendRelationship(target),
-		(nickWritten > 0 && nickname[0] != '\0') ? nickname : "<empty>",
-		hasGame,
-		appid,
-		ip,
-		gamePort,
-		queryPort,
-		lobbyAuthid);
+		written,
+		(written > 0 && steamId[0] != '\0') ? steamId : "<empty>"
+	);
+
 	return Plugin_Handled;
 }
 
-public Action Cmd_TestClan(int client, int args)
+public Action Cmd_TestGroup(int client, int args)
 {
-	if (args < 1)
+	if (args < 2)
 	{
-		ReplyToCommand(client, "[SteamWorks Test] Usage: sm_swtest_clan <groupid>");
+		ReplyToCommand(client, "[SteamWorks Test] Usage: sm_swtest_group <target> <groupid>");
 		return Plugin_Handled;
 	}
 
-	char arg[32];
-	GetCmdArg(1, arg, sizeof(arg));
-	int groupid = StringToInt(arg);
+	char pattern[64];
+	char groupArg[32];
+	GetCmdArg(1, pattern, sizeof(pattern));
+	GetCmdArg(2, groupArg, sizeof(groupArg));
+
+	int groupid = StringToInt(groupArg);
 	if (groupid <= 0)
 	{
 		ReplyToCommand(client, "[SteamWorks Test] Invalid groupid.");
 		return Plugin_Handled;
 	}
 
-	bool started = SteamWorks_RequestClanOfficerList(groupid);
-	int count = SteamWorks_GetClanOfficerCount(groupid);
-	SWTest_LogCommand(client, "clan request groupid=%d started=%d cachedCount=%d", groupid, started, count);
-
-	if (count > 0)
+	int target;
+	if (!SWTest_ResolveTarget(client, pattern, target))
 	{
-		for (int i = 0; i < count; i++)
+		return Plugin_Handled;
+	}
+
+	int accountid = GetSteamAccountID(target, false);
+	bool byClient = SteamWorks_GetUserGroupStatus(target, groupid);
+	bool byAuthid = SteamWorks_GetUserGroupStatusAuthID(accountid, groupid);
+	SWTest_LogCommand(
+		client,
+		"group target=%N accountid=%d groupid=%d byClient=%d byAuthid=%d",
+		target,
+		accountid,
+		groupid,
+		byClient,
+		byAuthid
+	);
+
+	return Plugin_Handled;
+}
+
+public Action Cmd_TestLicense(int client, int args)
+{
+	if (args < 1)
+	{
+		ReplyToCommand(client, "[SteamWorks Test] Usage: sm_swtest_license <target> [appid]");
+		return Plugin_Handled;
+	}
+
+	char pattern[64];
+	char appArg[32];
+	GetCmdArg(1, pattern, sizeof(pattern));
+
+	int appid = 550;
+	if (args >= 2)
+	{
+		GetCmdArg(2, appArg, sizeof(appArg));
+		int parsed = StringToInt(appArg);
+		if (parsed > 0)
 		{
-			SWTest_LogCommand(client, "clan officer[%d]=%d", i, SteamWorks_GetClanOfficerByIndex(groupid, i));
+			appid = parsed;
 		}
 	}
+
+	int target;
+	if (!SWTest_ResolveTarget(client, pattern, target))
+	{
+		return Plugin_Handled;
+	}
+
+	int accountid = GetSteamAccountID(target, false);
+	EUserHasLicenseForAppResult byClient = SteamWorks_HasLicenseForApp(target, appid);
+	EUserHasLicenseForAppResult byAuthid = SteamWorks_HasLicenseForAppId(accountid, appid);
+	SWTest_LogCommand(
+		client,
+		"license target=%N accountid=%d appid=%d byClient=%d byAuthid=%d",
+		target,
+		accountid,
+		appid,
+		byClient,
+		byAuthid
+	);
+
+	return Plugin_Handled;
+}
+
+public Action Cmd_TestServerMeta(int client, int args)
+{
+	char mapName[64];
+	GetCurrentMap(mapName, sizeof(mapName));
+
+	bool gameDataOk = SteamWorks_SetGameData("steamworks_test=1");
+	bool gameDescriptionOk = SteamWorks_SetGameDescription("SteamWorks Test Description");
+	bool mapNameOk = SteamWorks_SetMapName(mapName);
+	bool setRuleOk = SteamWorks_SetRule("steamworks_test_rule", "1");
+	bool clearRulesOk = SteamWorks_ClearRules();
+
+	SWTest_LogCommand(
+		client,
+		"servermeta gameDataOk=%d gameDescriptionOk=%d mapNameOk=%d setRuleOk=%d clearRulesOk=%d map=%s",
+		gameDataOk,
+		gameDescriptionOk,
+		mapNameOk,
+		setRuleOk,
+		clearRulesOk,
+		mapName
+	);
 
 	return Plugin_Handled;
 }
@@ -279,7 +399,8 @@ public Action Cmd_TestStats(int client, int args)
 {
 	if (args < 1)
 	{
-		ReplyToCommand(client, "[SteamWorks Test] Usage: sm_swtest_stats <target>");
+		ReplyToCommand(client, "[SteamWorks Test] Usage: sm_swtest_stats <target> [stat_key]");
+		ReplyToCommand(client, "[SteamWorks Test] Example: sm_swtest_stats veri Stat.GamesPlayed.Total");
 		return Plugin_Handled;
 	}
 
@@ -293,50 +414,61 @@ public Action Cmd_TestStats(int client, int args)
 	}
 
 	int accountid = GetSteamAccountID(target, false);
+	int userid = GetClientUserId(target);
 	bool clientReq = SteamWorks_RequestStats(target, 550);
 	bool authReq = SteamWorks_RequestStatsAuthID(accountid, 550);
-	SWTest_LogCommand(client, "stats target=%N accountid=%d clientReq=%d authReq=%d", target, accountid, clientReq, authReq);
+	SWTest_LogCommand(client, "stats target=%N userid=%d accountid=%d appid=550 clientReq=%d authReq=%d", target, userid, accountid, clientReq, authReq);
+
+	if (args >= 2)
+	{
+		char key[128];
+		GetCmdArg(2, key, sizeof(key));
+		SWTest_LogCommand(client, "stats immediate read key=%s", key);
+		SWTest_LogStatRead(client, target, accountid, key);
+
+		DataPack pack = new DataPack();
+		pack.WriteCell((client > 0) ? GetClientUserId(client) : 0);
+		pack.WriteCell(userid);
+		pack.WriteCell(accountid);
+		pack.WriteString(key);
+		CreateTimer(SWTEST_STATS_POLL_DELAY, Timer_PollStats, pack, TIMER_FLAG_NO_MAPCHANGE);
+	}
+	else
+	{
+		SWTest_LogCommand(client, "stats request sent; pass a stat key as second argument to test reads");
+		SWTest_LogCommand(client, "example: sm_swtest_stats \"%N\" Stat.GamesPlayed.Total", target);
+	}
 	return Plugin_Handled;
 }
 
 public void SteamWorks_SteamServersConnected()
 {
-	PrintToServer("[SteamWorks Test] forward SteamServersConnected loaded=%d connected=%d vac=%d", SteamWorks_IsLoaded(), SteamWorks_IsConnected(), SteamWorks_IsVACEnabled());
+	SWTest_LogEvent("forward SteamServersConnected loaded=%d connected=%d vac=%d", SteamWorks_IsLoaded(), SteamWorks_IsConnected(), SteamWorks_IsVACEnabled());
 }
 
 public void SteamWorks_SteamServersConnectFailure(EResult result)
 {
-	PrintToServer("[SteamWorks Test] forward SteamServersConnectFailure result=%d", result);
+	SWTest_LogEvent("forward SteamServersConnectFailure result=%d", result);
 }
 
 public void SteamWorks_SteamServersDisconnected(EResult result)
 {
-	PrintToServer("[SteamWorks Test] forward SteamServersDisconnected result=%d", result);
+	SWTest_LogEvent("forward SteamServersDisconnected result=%d", result);
 }
 
 public Action SteamWorks_RestartRequested()
 {
-	PrintToServer("[SteamWorks Test] forward RestartRequested");
+	SWTest_LogEvent("forward RestartRequested");
 	return Plugin_Continue;
 }
 
 public void SteamWorks_TokenRequested(char[] token, int maxlen)
 {
 	strcopy(token, maxlen, "STEAMWORKS_TEST_TOKEN");
-	PrintToServer("[SteamWorks Test] forward TokenRequested");
+	SWTest_LogEvent("forward TokenRequested");
 }
 
 public void SteamWorks_OnClientGroupStatus(int authid, int groupid, bool isMember, bool isOfficer)
 {
-	PrintToServer("[SteamWorks Test] forward ClientGroupStatus authid=%d groupid=%d member=%d officer=%d", authid, groupid, isMember, isOfficer);
-}
-
-public void SteamWorks_OnPersonaStateChange(int authid, int flags)
-{
-	PrintToServer("[SteamWorks Test] forward PersonaStateChange authid=%d flags=%d", authid, flags);
-}
-
-public void SteamWorks_OnUserInformationRequested(int authid, bool started)
-{
-	PrintToServer("[SteamWorks Test] forward UserInformationRequested authid=%d started=%d", authid, started);
+	SWTest_LogEvent("forward ClientGroupStatus authid=%d groupid=%d member=%d officer=%d", authid, groupid, isMember, isOfficer);
 }
