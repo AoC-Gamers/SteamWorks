@@ -24,22 +24,22 @@ class GCTokenSection
 public:
 	GCTokenSection(CBlob &blob)
 	{
-		blob.Read(this->length);
+		blob.Read(length);
 		
-		if (this->length != this->expectedlen)
+		if (length != expectedlen)
 		{
-			this->bValid = false;
+			bValid = false;
 			return;
 		}
 		
-		blob.Read(this->token);
-		blob.Read(this->steamid);
-		this->bValid = blob.Read(this->generation);
+		blob.Read(token);
+		blob.Read(steamid);
+		bValid = blob.Read(generation);
 	};
 public:
-	bool IsValid(void)
+	bool IsValid() const
 	{
-		return this->bValid;
+		return bValid;
 	}
 
 public:  /* No ideal packing, but it saves us from having to comment. */
@@ -56,25 +56,25 @@ class SessionSection
 public:
 	SessionSection(CBlob &blob)
 	{
-		blob.Read(this->length);
+		blob.Read(length);
 		
-		if (this->length != this->expectedlen)
+		if (length != expectedlen)
 		{
-			this->bValid = false;
+			bValid = false;
 			return;
 		}
 		
-		blob.Read(this->unk1);
-		blob.Read(this->unk2);
-		blob.Read(this->externalip);
-		blob.Read(this->filler);
-		blob.Read(this->timestamp);
-		this->bValid = blob.Read(this->connectioncount);
+		blob.Read(unk1);
+		blob.Read(unk2);
+		blob.Read(externalip);
+		blob.Read(filler);
+		blob.Read(timestamp);
+		bValid = blob.Read(connectioncount);
 	}
 public:
-	bool IsValid(void)
+	bool IsValid() const
 	{
-		return this->bValid;
+		return bValid;
 	}
 
 public:
@@ -92,30 +92,31 @@ public:
 class DLCInfo
 {
 public:
-	DLCInfo() : pSub(NULL)
+	DLCInfo() : pSub(nullptr)
 	{
 	};
 	
 	~DLCInfo()
 	{
-		delete [] this->pSub;
+		delete [] pSub;
 	};
 public:
 	void TakeBlob(CBlob &blob)
 	{
-		blob.Read(this->appid);
-		blob.Read(this->subcount);
+		blob.Read(appid);
+		blob.Read(subcount);
 		
-		this->pSub = new uint32[this->subcount];
+		delete [] pSub;
+		pSub = new uint32[subcount];
 
-		if (this->pSub == NULL)
+		if (pSub == nullptr)
 		{
 			return;
 		}
 
-		for (size_t iter = 0; iter < this->subcount; ++iter)
+		for (size_t iter = 0; iter < subcount; ++iter)
 		{
-			blob.Read(this->pSub[iter]);
+			blob.Read(pSub[iter]);
 		}
 	}
 public:
@@ -129,67 +130,67 @@ class OwnershipSection
 public:
 	OwnershipSection(CBlob &blob)
 	{
-		blob.Read(this->length);
+		blob.Read(length);
 		
-		if (this->length == 0)
+		if (length == 0)
 		{
-			this->pLicense = NULL;
-			this->pDLC = NULL;
-			this->bValid = false;
+			pLicense = nullptr;
+			pDLC = nullptr;
+			bValid = false;
 			return;
 		}
 		
-		blob.Read(this->length);
-		blob.Read(this->version);
-		blob.Read(this->steamid);
-		blob.Read(this->appid);
-		blob.Read(this->externalIP);
-		blob.Read(this->internalIP);
-		blob.Read(this->ownershipFlags);
-		blob.Read(this->ticketGeneration);
-		blob.Read(this->ticketExpiration);
-		blob.Read(this->licenseCount);
+		blob.Read(length);
+		blob.Read(version);
+		blob.Read(steamid);
+		blob.Read(appid);
+		blob.Read(externalIP);
+		blob.Read(internalIP);
+		blob.Read(ownershipFlags);
+		blob.Read(ticketGeneration);
+		blob.Read(ticketExpiration);
+		blob.Read(licenseCount);
 		
-		this->pLicense = new uint32[this->licenseCount];
+		pLicense = new uint32[licenseCount];
 
-		if (this->pLicense == NULL)
+		if (pLicense == nullptr)
 		{
-			this->pDLC = NULL;
-			this->bValid = false;
+			pDLC = nullptr;
+			bValid = false;
 			return;
 		}
 
-		for (size_t iter = 0; iter < this->licenseCount; ++iter)
+		for (size_t iter = 0; iter < licenseCount; ++iter)
 		{
-			blob.Read(this->pLicense[iter]);
+			blob.Read(pLicense[iter]);
 		}
 		
-		blob.Read(this->dlcCount);
-		this->pDLC = new DLCInfo[this->dlcCount];
-		if (this->pDLC == NULL)
+		blob.Read(dlcCount);
+		pDLC = new DLCInfo[dlcCount];
+		if (pDLC == nullptr)
 		{
-			this->bValid = false;
+			bValid = false;
 			return;
 		}
 		
-		for (size_t iter = 0; iter < this->dlcCount; ++iter)
+		for (size_t iter = 0; iter < dlcCount; ++iter)
 		{
-			this->pDLC[iter].TakeBlob(blob);
+			pDLC[iter].TakeBlob(blob);
 		}
 		
-		blob.Read(this->reserved);
-		bValid = blob.Read(this->signature, sizeof(this->signature));
+		blob.Read(reserved);
+		bValid = blob.Read(signature, sizeof(signature));
 	};
 	
 	~OwnershipSection()
 	{
-		delete [] this->pLicense;
-		delete [] this->pDLC;
+		delete [] pLicense;
+		delete [] pDLC;
 	}
 public:
-	bool IsValid(void)
+	bool IsValid() const
 	{
-		return this->bValid;
+		return bValid;
 	}
 
 public:
@@ -217,11 +218,11 @@ public:
 	AuthBlob(const void *pAuthTicket, int cbAuthTicket)
 	{
 		CBlob blob(pAuthTicket, cbAuthTicket);
-		this->pGCTokenSection = new GCTokenSection(blob);
-		this->pSessionSection = new SessionSection(blob);
-		this->pOwnershipSection = new OwnershipSection(blob);
+		pGCTokenSection = new GCTokenSection(blob);
+		pSessionSection = new SessionSection(blob);
+		pOwnershipSection = new OwnershipSection(blob);
 		
-		this->bExpectedTicket = (this->pGCTokenSection->IsValid() && this->pSessionSection->IsValid() && this->pOwnershipSection->IsValid());
+		bExpectedTicket = (pGCTokenSection->IsValid() && pSessionSection->IsValid() && pOwnershipSection->IsValid());
 	}
 	
 	~AuthBlob()
@@ -231,8 +232,8 @@ public:
 		delete pOwnershipSection;
 	}
 public:
-	GCTokenSection *pGCTokenSection;
-	SessionSection *pSessionSection;
-	OwnershipSection *pOwnershipSection;
-	bool bExpectedTicket;
+	GCTokenSection *pGCTokenSection = nullptr;
+	SessionSection *pSessionSection = nullptr;
+	OwnershipSection *pOwnershipSection = nullptr;
+	bool bExpectedTicket = false;
 };

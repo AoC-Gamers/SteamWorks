@@ -37,6 +37,12 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
   - compilación Linux
   - compilación Windows
   - publicación de releases
+- Se ajustó el workflow para separar explícitamente:
+  - `prepare-deps-linux`
+  - `prepare-deps-windows`
+  - `build-linux`
+  - `build-windows`
+- Se actualizaron las versiones de GitHub Actions usadas por CI.
 - Se limitó el artefacto oficial de release Linux a:
   - `addons/sourcemod/extensions/steamworks.ext.so`
   - `addons/sourcemod/scripting/include/steamworks.inc`
@@ -62,6 +68,22 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
   - las bibliotecas requeridas en runtime
   - el contenido de los artefactos de CI
   - la cobertura actual de pruebas
+- Se estandarizó internamente `extension/` con una pasada conservadora sobre:
+  - lifecycle de la extensión
+  - forwards
+  - game server
+  - requests HTTP
+  - game data
+  - hooks y detours
+  - natives
+  - utilidades de memoria
+  - parsing de tickets Steam
+- Se homogeneizó el código interno para usar:
+  - `nullptr`
+  - inicialización de miembros en headers
+  - helpers pequeños de cleanup/release
+  - menos duplicación en callbacks y lifecycle
+- Se corrigió el rename real de `Extension/` a `extension/` para evitar fallos de CI en Linux por diferencias de mayúsculas/minúsculas.
 - Se tradujeron y normalizaron los comentarios y nombres de parámetros en `steamworks.inc`.
 
 ### Eliminado

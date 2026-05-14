@@ -17,19 +17,20 @@
 */
 
 #pragma once
+
 #include "smsdk_ext.h"
-#include "steam_gameserver.h"
 #include "CDetour/detours.h"
+#include "steam_gameserver.h"
 
 class SteamWorksGSDetours
 {
-	public:
-		SteamWorksGSDetours();
-		~SteamWorksGSDetours();
-		
-	private:
-		CDetour *m_pSafeInitDetour;
-		CDetour *m_pShutdownDetour;
+public:
+	SteamWorksGSDetours();
+	~SteamWorksGSDetours();
+
+private:
+	CDetour *m_pSafeInitDetour = nullptr;
+	CDetour *m_pShutdownDetour = nullptr;
 };
 
 #include "extension.h"

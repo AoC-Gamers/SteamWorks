@@ -23,7 +23,7 @@ class SteamWorksMemUtils
 {
 	public:
 		void *ResolveSymbolInt(void *pBase, const char *pSymbol);
-		size_t GetOffsetFromVTable(void *pInterface, void *pToFindFunc, const char *pClassSig = NULL, size_t version = 0);
+		size_t GetOffsetFromVTable(void *pInterface, void *pToFindFunc, const char *pClassSig = nullptr, size_t version = 0);
 };
 
 #include "extension.h"

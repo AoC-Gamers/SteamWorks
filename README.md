@@ -47,7 +47,7 @@ La versión objetivo usada por este proyecto es Steamworks SDK `1.58a`.
 
 Importante:
 
-- los scripts `make deps`, `make deps-linux` y `make deps-windows` no descargan
+- los scripts `make deps-linux` y `make deps-windows` no descargan
   el Steamworks SDK
 - el SDK de SteamWorks debe colocarse manualmente en el repo
 - ejemplos de directorios locales validos:
@@ -104,7 +104,7 @@ Pero no descargan el Steamworks SDK.
 Comandos:
 
 ```bash
-make deps
+make deps-linux
 make build-linux
 make build-linux STEAMWORKS_SDK_NAME=sdk_158a
 ```
@@ -163,7 +163,7 @@ El workflow principal hace lo siguiente:
 - clona este repositorio
 - clona `AoC-Gamers/Steamworks-SDK`
 - usa una carpeta SDK como `sdk_158a`
-- ejecuta `make deps`
+- ejecuta `make deps-linux`
 - ejecuta `make build-linux`
 
 Artefacto Linux del workflow:

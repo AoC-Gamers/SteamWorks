@@ -17,8 +17,33 @@
 */
 
 #include "swhttprequest.h"
+#include <cerrno>
+#include <cstdio>
 
-static ISteamHTTP *GetHTTPPointer(void)
+namespace {
+
+void ReleaseForward(IChangeableForward*& forward)
+{
+	if (forward == nullptr) {
+		return;
+	}
+
+	forwards->ReleaseForward(forward);
+	forward = nullptr;
+}
+
+uint64_t PackContextValue(cell_t high, cell_t low)
+{
+	return (static_cast<uint64_t>(high) << 32) | static_cast<uint32_t>(low);
+}
+
+void PushContextValue(IChangeableForward* forward, uint64_t contextValue)
+{
+	forward->PushCell(contextValue >> 32);
+	forward->PushCell(contextValue & 0x00000000FFFFFFFF);
+}
+
+ISteamHTTP *GetHTTPPointer(void)
 {
 	return g_SteamWorks.pSWGameServer->GetHTTP();
 }
@@ -31,9 +56,9 @@ static HandleType_t GetSteamHTTPHandle(void)
 static SteamWorksHTTPRequest *GetRequestPointer(ISteamHTTP *&pHTTP, IPluginContext *pContext, cell_t Handle)
 {
 	pHTTP = GetHTTPPointer();
-	if (pHTTP == NULL)
+	if (pHTTP == nullptr)
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	HandleError err;
@@ -44,80 +69,78 @@ static SteamWorksHTTPRequest *GetRequestPointer(ISteamHTTP *&pHTTP, IPluginConte
 		!= HandleError_None)
 	{
 		pContext->ThrowNativeError("Invalid Handle %x (error: %d)", Handle, err);
-		return NULL;
+		return nullptr;
 	}
 
 	return pRequest;
 }
 
-SteamWorksHTTPRequest::SteamWorksHTTPRequest() : request(INVALID_HTTPREQUEST_HANDLE), handle(BAD_HANDLE), pCompletedForward(NULL), pHeadersReceivedForward(NULL), pDataReceivedForward(NULL)
+}  // namespace
+
+SteamWorksHTTPRequest::SteamWorksHTTPRequest()
+	: request(INVALID_HTTPREQUEST_HANDLE),
+	  handle(BAD_HANDLE),
+	  pCompletedForward(nullptr),
+	  pHeadersReceivedForward(nullptr),
+	  pDataReceivedForward(nullptr)
 {
-};
+}
 
 SteamWorksHTTPRequest::~SteamWorksHTTPRequest()
 {
 	ISteamHTTP *pHTTP = GetHTTPPointer();
-	if (pHTTP != NULL)
+	if (pHTTP != nullptr)
 	{
-		pHTTP->ReleaseHTTPRequest(this->request);
-		this->request = INVALID_HTTPREQUEST_HANDLE;
+		pHTTP->ReleaseHTTPRequest(request);
+		request = INVALID_HTTPREQUEST_HANDLE;
 	}
 
-	forwards->ReleaseForward(this->pCompletedForward);
-	this->pCompletedForward = NULL;
-
-	forwards->ReleaseForward(this->pHeadersReceivedForward);
-	this->pHeadersReceivedForward = NULL;
-
-	forwards->ReleaseForward(this->pDataReceivedForward);
-	this->pDataReceivedForward = NULL;
+	ReleaseForward(pCompletedForward);
+	ReleaseForward(pHeadersReceivedForward);
+	ReleaseForward(pDataReceivedForward);
 }
 
-/* We pay the Iron Price. */
 void SteamWorksHTTPRequest::OnHTTPRequestCompleted(HTTPRequestCompleted_t *pRequest, bool bFailed)
 {
-	if (this->pCompletedForward == NULL || this->pCompletedForward->GetFunctionCount() == 0)
+	if (pCompletedForward == nullptr || pCompletedForward->GetFunctionCount() == 0)
 	{
 		return;
 	}
 
-	this->pCompletedForward->PushCell(this->handle);
-	this->pCompletedForward->PushCell(bFailed);
-	this->pCompletedForward->PushCell(pRequest->m_bRequestSuccessful);
-	this->pCompletedForward->PushCell(pRequest->m_eStatusCode);
-	this->pCompletedForward->PushCell(pRequest->m_ulContextValue >> 32);
-	this->pCompletedForward->PushCell((pRequest->m_ulContextValue & 0x00000000FFFFFFFF));
-	this->pCompletedForward->Execute(NULL);
+	pCompletedForward->PushCell(handle);
+	pCompletedForward->PushCell(bFailed);
+	pCompletedForward->PushCell(pRequest->m_bRequestSuccessful);
+	pCompletedForward->PushCell(pRequest->m_eStatusCode);
+	PushContextValue(pCompletedForward, pRequest->m_ulContextValue);
+	pCompletedForward->Execute(nullptr);
 }
 
 void SteamWorksHTTPRequest::OnHTTPHeadersReceived(HTTPRequestHeadersReceived_t *pRequest, bool bFailed)
 {
-	if (this->pHeadersReceivedForward == NULL || this->pHeadersReceivedForward->GetFunctionCount() == 0)
+	if (pHeadersReceivedForward == nullptr || pHeadersReceivedForward->GetFunctionCount() == 0)
 	{
 		return;
 	}
 
-	this->pHeadersReceivedForward->PushCell(this->handle);
-	this->pHeadersReceivedForward->PushCell(bFailed);
-	this->pHeadersReceivedForward->PushCell(pRequest->m_ulContextValue >> 32);
-	this->pHeadersReceivedForward->PushCell((pRequest->m_ulContextValue & 0x00000000FFFFFFFF));
-	this->pHeadersReceivedForward->Execute(NULL);
+	pHeadersReceivedForward->PushCell(handle);
+	pHeadersReceivedForward->PushCell(bFailed);
+	PushContextValue(pHeadersReceivedForward, pRequest->m_ulContextValue);
+	pHeadersReceivedForward->Execute(nullptr);
 }
 
 void SteamWorksHTTPRequest::OnHTTPDataReceived(HTTPRequestDataReceived_t *pRequest, bool bFailed)
 {
-	if (this->pDataReceivedForward == NULL || this->pDataReceivedForward->GetFunctionCount() == 0)
+	if (pDataReceivedForward == nullptr || pDataReceivedForward->GetFunctionCount() == 0)
 	{
 		return;
 	}
 
-	this->pDataReceivedForward->PushCell(this->handle);
-	this->pDataReceivedForward->PushCell(bFailed);
-	this->pDataReceivedForward->PushCell(pRequest->m_cOffset);
-	this->pDataReceivedForward->PushCell(pRequest->m_cBytesReceived);
-	this->pDataReceivedForward->PushCell(pRequest->m_ulContextValue >> 32);
-	this->pDataReceivedForward->PushCell((pRequest->m_ulContextValue & 0x00000000FFFFFFFF));
-	this->pDataReceivedForward->Execute(NULL);
+	pDataReceivedForward->PushCell(handle);
+	pDataReceivedForward->PushCell(bFailed);
+	pDataReceivedForward->PushCell(pRequest->m_cOffset);
+	pDataReceivedForward->PushCell(pRequest->m_cBytesReceived);
+	PushContextValue(pDataReceivedForward, pRequest->m_ulContextValue);
+	pDataReceivedForward->Execute(nullptr);
 }
 
 static cell_t sm_CreateHTTPRequest(IPluginContext *pContext, const cell_t *params)
@@ -161,7 +184,7 @@ static cell_t sm_SetHTTPRequestContextValue(IPluginContext *pContext, const cell
 		return 0;
 	}
 
-	return pHTTP->SetHTTPRequestContextValue(pRequest->request, (static_cast<uint64_t>(params[2]) << 32 | static_cast<uint32_t>(params[3]))) ? 1 : 0;
+	return pHTTP->SetHTTPRequestContextValue(pRequest->request, PackContextValue(params[2], params[3])) ? 1 : 0;
 }
 
 static cell_t sm_SetHTTPRequestNetworkActivityTimeout(IPluginContext *pContext, const cell_t *params)

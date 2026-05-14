@@ -17,9 +17,9 @@
 */
 
 #pragma once
+
 #include "steam_gameserver.h"
 #include "isteamgamecoordinator.h"
-
 #include "smsdk_ext.h"
 
 #ifdef _WIN32
@@ -28,9 +28,9 @@
 
 class SteamWorksGCNatives
 {
-	public:
-		SteamWorksGCNatives();
-		~SteamWorksGCNatives();
+public:
+	SteamWorksGCNatives();
+	~SteamWorksGCNatives();
 };
 
 #include "extension.h"

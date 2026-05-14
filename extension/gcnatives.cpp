@@ -18,15 +18,17 @@
 
 #include "gcnatives.h"
 
-static ISteamGameCoordinator *GetSteamGCPointer(void)
+namespace {
+
+ISteamGameCoordinator *GetSteamGCPointer(void)
 {
 	return g_SteamWorks.pSWGameServer->GetGameCoordinator();
 }
 
-static cell_t sm_GCSendMessage(IPluginContext *pContext, const cell_t *params)
+cell_t sm_GCSendMessage(IPluginContext *pContext, const cell_t *params)
 {
 	ISteamGameCoordinator *pGC = GetSteamGCPointer();
-	if (pGC == NULL)
+	if (pGC == nullptr)
 	{
 		return static_cast<cell_t>(k_EGCResultNotLoggedOn);
 	}
@@ -39,8 +41,10 @@ static cell_t sm_GCSendMessage(IPluginContext *pContext, const cell_t *params)
 
 static sp_nativeinfo_t gcnatives[] = {
 	{"SteamWorks_SendMessageToGC",				sm_GCSendMessage},
-	{NULL,											NULL}
+	{nullptr,											nullptr}
 };
+
+}  // namespace
 
 SteamWorksGCNatives::SteamWorksGCNatives()
 {
@@ -49,5 +53,4 @@ SteamWorksGCNatives::SteamWorksGCNatives()
 
 SteamWorksGCNatives::~SteamWorksGCNatives()
 {
-	/* We tragically can't remove ourselves... hopefully no one uses this class, you know, like a class. */
 }

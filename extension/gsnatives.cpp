@@ -17,31 +17,48 @@
 */
 
 #include "gsnatives.h"
-static bool IsSteamWorksLoaded(void)
+
+namespace {
+
+bool IsSteamWorksLoaded(void)
 {
-	return (g_SteamWorks.pSWGameServer->GetSteamClient() != NULL);
+	return g_SteamWorks.pSWGameServer->GetSteamClient() != nullptr;
 }
 
-static ISteamGameServer *GetGSPointer(void)
+ISteamGameServer *GetGSPointer(void)
 {
 	return g_SteamWorks.pSWGameServer->GetGameServer();
 }
 
-static CSteamID CreateCommonCSteamID(IGamePlayer *pPlayer, const cell_t *params, unsigned char universeplace = 2, unsigned char typeplace = 3)
+CSteamID CreateCommonCSteamID(IGamePlayer *pPlayer, const cell_t *params, unsigned char universeplace = 2, unsigned char typeplace = 3)
 {
 	return g_SteamWorks.CreateCommonCSteamID(pPlayer, params, universeplace, typeplace);
 }
 
-static CSteamID CreateCommonCSteamID(uint32_t authid, const cell_t *params, unsigned char universeplace = 2, unsigned char typeplace = 3)
+CSteamID CreateCommonCSteamID(uint32_t authid, const cell_t *params, unsigned char universeplace = 2, unsigned char typeplace = 3)
 {
 	return g_SteamWorks.CreateCommonCSteamID(authid, params, universeplace, typeplace);
 }
 
-static cell_t sm_IsVACEnabled(IPluginContext *pContext, const cell_t *params)
+IGamePlayer* GetConnectedPlayerOrError(IPluginContext* pContext, cell_t clientRef)
 {
+	int client = gamehelpers->ReferenceToIndex(clientRef);
+	IGamePlayer* pPlayer = playerhelpers->GetGamePlayer(client);
+	if (pPlayer == nullptr || !pPlayer->IsConnected()) {
+		pContext->ThrowNativeError("Client index %d is invalid", clientRef);
+		return nullptr;
+	}
+
+	return pPlayer;
+}
+
+cell_t sm_IsVACEnabled(IPluginContext *pContext, const cell_t *params)
+{
+	(void)pContext;
+	(void)params;
 	ISteamGameServer *pServer = GetGSPointer();
 	
-	if (pServer == NULL)
+	if (pServer == nullptr)
 	{
 		return 0;
 	}
@@ -53,7 +70,7 @@ static cell_t sm_GetPublicIP(IPluginContext *pContext, const cell_t *params)
 {
 	ISteamGameServer *pServer = GetGSPointer();
 	
-	if (pServer == NULL)
+	if (pServer == nullptr)
 	{
 		return 0;
 	}
@@ -70,7 +87,7 @@ static cell_t sm_GetPublicIP(IPluginContext *pContext, const cell_t *params)
 	pContext->LocalToPhysAddr(params[1], &addr);
 	for (char iter = 3; iter > -1; --iter)
 	{
-		addr[(~iter) & 0x03] = (static_cast<unsigned char>(ipaddr >> (iter * 8)) & 0xFF); /* I hate you; SteamTools. */
+		addr[(~iter) & 0x03] = (static_cast<unsigned char>(ipaddr >> (iter * 8)) & 0xFF);
 	}
 	
 	return 1;
@@ -78,9 +95,11 @@ static cell_t sm_GetPublicIP(IPluginContext *pContext, const cell_t *params)
 
 static cell_t sm_GetPublicIPCell(IPluginContext *pContext, const cell_t *params)
 {
+	(void)pContext;
+	(void)params;
 	ISteamGameServer *pServer = GetGSPointer();
 
-	if (pServer == NULL)
+	if (pServer == nullptr)
 	{
 		return 0;
 	}
@@ -103,7 +122,7 @@ static cell_t sm_SetGameData(IPluginContext *pContext, const cell_t *params)
 {
 	ISteamGameServer *pServer = GetGSPointer();
 
-	if (pServer == NULL)
+	if (pServer == nullptr)
 	{
 		return 0;
 	}
@@ -119,7 +138,7 @@ static cell_t sm_SetGameDescription(IPluginContext *pContext, const cell_t *para
 {
 	ISteamGameServer *pServer = GetGSPointer();
 
-	if (pServer == NULL)
+	if (pServer == nullptr)
 	{
 		return 0;
 	}
@@ -135,7 +154,7 @@ static cell_t sm_SetMapName(IPluginContext *pContext, const cell_t *params)
 {
 	ISteamGameServer *pServer = GetGSPointer();
 
-	if (pServer == NULL)
+	if (pServer == nullptr)
 	{
 		return 0;
 	}
@@ -149,9 +168,11 @@ static cell_t sm_SetMapName(IPluginContext *pContext, const cell_t *params)
 
 static cell_t sm_IsConnected(IPluginContext *pContext, const cell_t *params)
 {
+	(void)pContext;
+	(void)params;
 	ISteamGameServer *pServer = GetGSPointer();
 
-	if (pServer == NULL)
+	if (pServer == nullptr)
 	{
 		return 0;
 	}
@@ -163,7 +184,7 @@ static cell_t sm_SetRule(IPluginContext *pContext, const cell_t *params)
 {
 	ISteamGameServer *pServer = GetGSPointer();
 
-	if (pServer == NULL)
+	if (pServer == nullptr)
 	{
 		return 0;
 	}
@@ -178,9 +199,11 @@ static cell_t sm_SetRule(IPluginContext *pContext, const cell_t *params)
 
 static cell_t sm_ClearRules(IPluginContext *pContext, const cell_t *params)
 {
+	(void)pContext;
+	(void)params;
 	ISteamGameServer *pServer = GetGSPointer();
 
-	if (pServer == NULL)
+	if (pServer == nullptr)
 	{
 		return 0;
 	}
@@ -193,16 +216,14 @@ static cell_t sm_UserHasLicenseForApp(IPluginContext *pContext, const cell_t *pa
 {
 	ISteamGameServer *pServer = GetGSPointer();
 
-	if (pServer == NULL)
+	if (pServer == nullptr)
 	{
 		return k_EUserHasLicenseResultNoAuth;
 	}
 	
-	int client = gamehelpers->ReferenceToIndex(params[1]);
-	IGamePlayer *pPlayer = playerhelpers->GetGamePlayer(client); /* Man, including GameHelpers and PlayerHelpers for this native :(. */
-	if (pPlayer == NULL || pPlayer->IsConnected() == false)
-	{
-		return pContext->ThrowNativeError("Client index %d is invalid", params[1]);
+	IGamePlayer* pPlayer = GetConnectedPlayerOrError(pContext, params[1]);
+	if (pPlayer == nullptr) {
+		return 0;
 	}
 	
 	CSteamID checkid = CreateCommonCSteamID(pPlayer, params, 3, 4);
@@ -211,9 +232,10 @@ static cell_t sm_UserHasLicenseForApp(IPluginContext *pContext, const cell_t *pa
 
 static cell_t sm_UserHasLicenseForAppId(IPluginContext *pContext, const cell_t *params)
 {
+	(void)pContext;
 	ISteamGameServer *pServer = GetGSPointer();
 
-	if (pServer == NULL)
+	if (pServer == nullptr)
 	{
 		return k_EUserHasLicenseResultNoAuth;
 	}
@@ -224,12 +246,9 @@ static cell_t sm_UserHasLicenseForAppId(IPluginContext *pContext, const cell_t *
 
 static cell_t sm_GetClientSteamID(IPluginContext *pContext, const cell_t *params)
 {
-	int client = gamehelpers->ReferenceToIndex(params[1]);
-	IGamePlayer *pPlayer = playerhelpers->GetGamePlayer(client);
-
-	if (pPlayer == NULL || pPlayer->IsConnected() == false)
-	{
-		return pContext->ThrowNativeError("Client index %d is invalid", params[1]);
+	IGamePlayer* pPlayer = GetConnectedPlayerOrError(pContext, params[1]);
+	if (pPlayer == nullptr) {
+		return 0;
 	}
 
 	CSteamID steamId = CreateCommonCSteamID(pPlayer, params, 4, 5);
@@ -247,16 +266,14 @@ static cell_t sm_GetUserGroupStatus(IPluginContext *pContext, const cell_t *para
 {
 	ISteamGameServer *pServer = GetGSPointer();
 
-	if (pServer == NULL)
+	if (pServer == nullptr)
 	{
 		return false;
 	}
 
-	int client = gamehelpers->ReferenceToIndex(params[1]);
-	IGamePlayer *pPlayer = playerhelpers->GetGamePlayer(client); /* Man, including GameHelpers and PlayerHelpers for this native :(. */
-	if (pPlayer == NULL || pPlayer->IsConnected() == false)
-	{
-		return pContext->ThrowNativeError("Client index %d is invalid", params[1]);
+	IGamePlayer* pPlayer = GetConnectedPlayerOrError(pContext, params[1]);
+	if (pPlayer == nullptr) {
+		return 0;
 	}
 
 	CSteamID checkid = CreateCommonCSteamID(pPlayer, params, 3, 4);
@@ -265,9 +282,10 @@ static cell_t sm_GetUserGroupStatus(IPluginContext *pContext, const cell_t *para
 
 static cell_t sm_GetUserGroupStatusAuthID(IPluginContext *pContext, const cell_t *params)
 {
+	(void)pContext;
 	ISteamGameServer *pServer = GetGSPointer();
 
-	if (pServer == NULL)
+	if (pServer == nullptr)
 	{
 		return false;
 	}
@@ -292,8 +310,10 @@ static sp_nativeinfo_t gsnatives[] = {
 	{"SteamWorks_GetClientSteamID",			sm_GetClientSteamID},
 	{"SteamWorks_GetUserGroupStatus",			sm_GetUserGroupStatus},
 	{"SteamWorks_GetUserGroupStatusAuthID",			sm_GetUserGroupStatusAuthID},
-	{NULL,											NULL}
+	{nullptr,											nullptr}
 };
+
+}  // namespace
 
 SteamWorksGSNatives::SteamWorksGSNatives()
 {
@@ -302,5 +322,4 @@ SteamWorksGSNatives::SteamWorksGSNatives()
 
 SteamWorksGSNatives::~SteamWorksGSNatives()
 {
-	/* We tragically can't remove ourselves... hopefully no one uses this class, you know, like a class. */
 }

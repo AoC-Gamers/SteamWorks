@@ -43,10 +43,10 @@ class SteamWorksGCHooks
 		EGCResults RetrieveMessage(uint32 *punMsgType, void *pubDest, uint32 cubDest, uint32 *pcubMsgSize);
 
 	private:
-		IForward *pGCSendMsg;
-		IForward *pGCMsgAvail;
-		IForward *pGCRetMsg;
-		unsigned char uHooked;
+		IForward *pGCSendMessageForward = nullptr;
+		IForward *pGCMessageAvailableForward = nullptr;
+		IForward *pGCRetrieveMessageForward = nullptr;
+		unsigned char uHooked = 0;
 };
 
 void OurGCGameFrameHook(bool simulating);

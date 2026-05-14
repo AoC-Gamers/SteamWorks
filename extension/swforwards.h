@@ -17,34 +17,36 @@
 */
 
 #pragma once
+
 #include "isteamgameserver.h"
-#include "steam_gameserver.h"
 #include "smsdk_ext.h"
+#include "steam_gameserver.h"
 
 typedef uint32_t Account_t;
 
 class SteamWorksForwards
 {
-	public:
-		SteamWorksForwards();
-		~SteamWorksForwards();
+public:
+	SteamWorksForwards();
+	~SteamWorksForwards();
 
-	public:
-		void NotifyPawnValidateClient(Account_t parent, Account_t child);
-		
-	private:
-		STEAM_GAMESERVER_CALLBACK(SteamWorksForwards, OnGSClientApprove, GSClientApprove_t, m_CallbackGSClientApprove);
-		STEAM_GAMESERVER_CALLBACK(SteamWorksForwards, OnValidateTicket, ValidateAuthTicketResponse_t, m_CallbackValidateTicket);
-		STEAM_GAMESERVER_CALLBACK(SteamWorksForwards, OnSteamServersConnected, SteamServersConnected_t, m_CallbackSteamConnected);
-		STEAM_GAMESERVER_CALLBACK(SteamWorksForwards, OnSteamServersConnectFailure, SteamServerConnectFailure_t, m_CallbackSteamConnectFailure);
-		STEAM_GAMESERVER_CALLBACK(SteamWorksForwards, OnSteamServersDisconnected, SteamServersDisconnected_t, m_CallbackSteamDisconnected);
-		STEAM_GAMESERVER_CALLBACK(SteamWorksForwards, OnGroupStatusResult, GSClientGroupStatus_t, m_CallbackGroupStatus);
-	
-	private:
-		IForward *pFOVC;	/* Forward On Validate Client */
-		IForward *pFOVC_Old;	/* OLD Forward On Validate Client */
-		IForward *pFOSSC;	/* Forward On Steam Servers Connected */
-		IForward *pFOSSCF;	/* Forward On Steam Servers Connect Failure */
-		IForward *pFOSSD;	/* Forward On Steam Servers Disconnected */
-		IForward *pFOCGS;	/* Forward On Client Group Status */
+	void NotifyPawnValidateClient(Account_t parent, Account_t child);
+
+private:
+	void ExecuteValidateClientForward(IForward* forward, Account_t parent, Account_t child);
+	void ExecuteSteamServerResultForward(IForward* forward, cell_t result);
+
+	STEAM_GAMESERVER_CALLBACK(SteamWorksForwards, OnGSClientApprove, GSClientApprove_t, m_CallbackGSClientApprove);
+	STEAM_GAMESERVER_CALLBACK(SteamWorksForwards, OnValidateTicket, ValidateAuthTicketResponse_t, m_CallbackValidateTicket);
+	STEAM_GAMESERVER_CALLBACK(SteamWorksForwards, OnSteamServersConnected, SteamServersConnected_t, m_CallbackSteamConnected);
+	STEAM_GAMESERVER_CALLBACK(SteamWorksForwards, OnSteamServersConnectFailure, SteamServerConnectFailure_t, m_CallbackSteamConnectFailure);
+	STEAM_GAMESERVER_CALLBACK(SteamWorksForwards, OnSteamServersDisconnected, SteamServersDisconnected_t, m_CallbackSteamDisconnected);
+	STEAM_GAMESERVER_CALLBACK(SteamWorksForwards, OnGroupStatusResult, GSClientGroupStatus_t, m_CallbackGroupStatus);
+
+	IForward* pValidateClientForward = nullptr;
+	IForward* pLegacyValidateClientForward = nullptr;
+	IForward* pSteamServersConnectedForward = nullptr;
+	IForward* pSteamServersConnectFailureForward = nullptr;
+	IForward* pSteamServersDisconnectedForward = nullptr;
+	IForward* pClientGroupStatusForward = nullptr;
 };

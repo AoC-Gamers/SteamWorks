@@ -17,41 +17,36 @@
 */
 
 #pragma once
+
 #include "isteamgameserver.h"
-#include "steam_gameserver.h"
 #include "smsdk_ext.h"
+#include "steam_gameserver.h"
 
 class SteamWorksHTTPRequest
 {
-	public:
-		SteamWorksHTTPRequest();
-		~SteamWorksHTTPRequest();
+public:
+	SteamWorksHTTPRequest();
+	~SteamWorksHTTPRequest();
 
-	public:
-		HTTPRequestHandle request;
-		Handle_t handle;
+	void OnHTTPRequestCompleted(HTTPRequestCompleted_t *pRequest, bool bFailed);
+	void OnHTTPHeadersReceived(HTTPRequestHeadersReceived_t *pRequest, bool bFailed);
+	void OnHTTPDataReceived(HTTPRequestDataReceived_t *pRequest, bool bFailed);
 
-	public:
-		void OnHTTPRequestCompleted(HTTPRequestCompleted_t *pRequest, bool bFailed);
-		void OnHTTPHeadersReceived(HTTPRequestHeadersReceived_t *pRequest, bool bFailed);
-		void OnHTTPDataReceived(HTTPRequestDataReceived_t *pRequest, bool bFailed);
-
-	public:
-		CCallResult<SteamWorksHTTPRequest, HTTPRequestCompleted_t> CompletedCallResult;
-		CCallResult<SteamWorksHTTPRequest, HTTPRequestHeadersReceived_t> HeadersCallResult;
-		CCallResult<SteamWorksHTTPRequest, HTTPRequestDataReceived_t> DataCallResult;
-
-	public:
-		IChangeableForward *pCompletedForward;
-		IChangeableForward *pHeadersReceivedForward;
-		IChangeableForward *pDataReceivedForward;
+	HTTPRequestHandle request;
+	Handle_t handle;
+	CCallResult<SteamWorksHTTPRequest, HTTPRequestCompleted_t> CompletedCallResult;
+	CCallResult<SteamWorksHTTPRequest, HTTPRequestHeadersReceived_t> HeadersCallResult;
+	CCallResult<SteamWorksHTTPRequest, HTTPRequestDataReceived_t> DataCallResult;
+	IChangeableForward *pCompletedForward;
+	IChangeableForward *pHeadersReceivedForward;
+	IChangeableForward *pDataReceivedForward;
 };
 
 class SteamWorksHTTPNatives
 {
-	public:
-		SteamWorksHTTPNatives();
-		~SteamWorksHTTPNatives();
+public:
+	SteamWorksHTTPNatives();
+	~SteamWorksHTTPNatives();
 };
 
 #include "extension.h"

@@ -54,7 +54,7 @@ jobs:
       - name: Fetch build dependencies
         if: steps.deps-cache-restore.outputs.cache-hit != 'true'
         shell: bash
-        run: make deps
+        run: make deps-linux
 
       - name: Save dependency cache
         if: steps.deps-cache-restore.outputs.cache-hit != 'true'

@@ -18,6 +18,20 @@
 
 #include "swforwards.h"
 
+namespace {
+
+void ReleaseForward(IForward*& forward)
+{
+	if (forward == nullptr) {
+		return;
+	}
+
+	forwards->ReleaseForward(forward);
+	forward = nullptr;
+}
+
+}  // namespace
+
 SteamWorksForwards::SteamWorksForwards() :
 		m_CallbackGSClientApprove(this, &SteamWorksForwards::OnGSClientApprove),
 		m_CallbackValidateTicket(this, &SteamWorksForwards::OnValidateTicket),
@@ -26,39 +40,49 @@ SteamWorksForwards::SteamWorksForwards() :
 		m_CallbackSteamDisconnected(this, &SteamWorksForwards::OnSteamServersDisconnected),
 		m_CallbackGroupStatus(this, &SteamWorksForwards::OnGroupStatusResult)
 {
-	this->pFOVC_Old = forwards->CreateForward("SW_OnValidateClient", ET_Ignore, 2, NULL, Param_Cell, Param_Cell);
-	this->pFOVC = forwards->CreateForward("SteamWorks_OnValidateClient", ET_Ignore, 2, NULL, Param_Cell, Param_Cell);
-	this->pFOSSC = forwards->CreateForward("SteamWorks_SteamServersConnected", ET_Ignore, 0, NULL);
-	this->pFOSSCF = forwards->CreateForward("SteamWorks_SteamServersConnectFailure", ET_Ignore, 1, NULL, Param_Cell);
-	this->pFOSSD = forwards->CreateForward("SteamWorks_SteamServersDisconnected", ET_Ignore, 1, NULL, Param_Cell);
-	this->pFOCGS = forwards->CreateForward("SteamWorks_OnClientGroupStatus", ET_Ignore, 4, NULL, Param_Cell, Param_Cell, Param_Cell, Param_Cell);
+	pLegacyValidateClientForward = forwards->CreateForward("SW_OnValidateClient", ET_Ignore, 2, nullptr, Param_Cell, Param_Cell);
+	pValidateClientForward = forwards->CreateForward("SteamWorks_OnValidateClient", ET_Ignore, 2, nullptr, Param_Cell, Param_Cell);
+	pSteamServersConnectedForward = forwards->CreateForward("SteamWorks_SteamServersConnected", ET_Ignore, 0, nullptr);
+	pSteamServersConnectFailureForward = forwards->CreateForward("SteamWorks_SteamServersConnectFailure", ET_Ignore, 1, nullptr, Param_Cell);
+	pSteamServersDisconnectedForward = forwards->CreateForward("SteamWorks_SteamServersDisconnected", ET_Ignore, 1, nullptr, Param_Cell);
+	pClientGroupStatusForward = forwards->CreateForward("SteamWorks_OnClientGroupStatus", ET_Ignore, 4, nullptr, Param_Cell, Param_Cell, Param_Cell, Param_Cell);
 }
 
 SteamWorksForwards::~SteamWorksForwards()
 {
-	forwards->ReleaseForward(this->pFOVC_Old);
-	forwards->ReleaseForward(this->pFOVC);
-	forwards->ReleaseForward(this->pFOSSC);
-	forwards->ReleaseForward(this->pFOSSCF);
-	forwards->ReleaseForward(this->pFOSSD);
-	forwards->ReleaseForward(this->pFOCGS);
+	ReleaseForward(pLegacyValidateClientForward);
+	ReleaseForward(pValidateClientForward);
+	ReleaseForward(pSteamServersConnectedForward);
+	ReleaseForward(pSteamServersConnectFailureForward);
+	ReleaseForward(pSteamServersDisconnectedForward);
+	ReleaseForward(pClientGroupStatusForward);
+}
+
+void SteamWorksForwards::ExecuteValidateClientForward(IForward* forward, Account_t parent, Account_t child)
+{
+	if (forward == nullptr || forward->GetFunctionCount() == 0) {
+		return;
+	}
+
+	forward->PushCell(parent);
+	forward->PushCell(child);
+	forward->Execute(nullptr);
+}
+
+void SteamWorksForwards::ExecuteSteamServerResultForward(IForward* forward, cell_t result)
+{
+	if (forward == nullptr || forward->GetFunctionCount() == 0) {
+		return;
+	}
+
+	forward->PushCell(result);
+	forward->Execute(nullptr);
 }
 
 void SteamWorksForwards::NotifyPawnValidateClient(Account_t parent, Account_t child)
 {
-	if (this->pFOVC_Old->GetFunctionCount() != 0)
-	{
-		this->pFOVC_Old->PushCell(parent);
-		this->pFOVC_Old->PushCell(child);
-		this->pFOVC_Old->Execute(NULL);
-	}
-
-	if (this->pFOVC->GetFunctionCount() != 0)
-	{
-		this->pFOVC->PushCell(parent);
-		this->pFOVC->PushCell(child);
-		this->pFOVC->Execute(NULL);
-	}
+	ExecuteValidateClientForward(pLegacyValidateClientForward, parent, child);
+	ExecuteValidateClientForward(pValidateClientForward, parent, child);
 }
 
 void SteamWorksForwards::OnGSClientApprove(GSClientApprove_t *pApprove)
@@ -73,46 +97,33 @@ void SteamWorksForwards::OnValidateTicket(ValidateAuthTicketResponse_t *pTicket)
 
 void SteamWorksForwards::OnSteamServersConnected(SteamServersConnected_t *pResponse)
 {
-	if (this->pFOSSC->GetFunctionCount() == 0)
-	{
+	(void)pResponse;
+	if (pSteamServersConnectedForward == nullptr || pSteamServersConnectedForward->GetFunctionCount() == 0) {
 		return;
 	}
-	
-	this->pFOSSC->Execute(NULL);
+
+	pSteamServersConnectedForward->Execute(nullptr);
 }
 
 void SteamWorksForwards::OnSteamServersConnectFailure(SteamServerConnectFailure_t *pResponse)
 {
-	if (this->pFOSSCF->GetFunctionCount() == 0)
-	{
-		return;
-	}
-	
-	this->pFOSSCF->PushCell(pResponse->m_eResult);
-	this->pFOSSCF->Execute(NULL);
+	ExecuteSteamServerResultForward(pSteamServersConnectFailureForward, pResponse->m_eResult);
 }
 
 void SteamWorksForwards::OnSteamServersDisconnected(SteamServersDisconnected_t *pResponse)
 {
-	if (this->pFOSSD->GetFunctionCount() == 0)
-	{
-		return;
-	}
-	
-	this->pFOSSD->PushCell(pResponse->m_eResult);
-	this->pFOSSD->Execute(NULL);
+	ExecuteSteamServerResultForward(pSteamServersDisconnectedForward, pResponse->m_eResult);
 }
 
 void SteamWorksForwards::OnGroupStatusResult(GSClientGroupStatus_t *pResponse)
 {
-	if (this->pFOCGS->GetFunctionCount() == 0)
-	{
+	if (pClientGroupStatusForward == nullptr || pClientGroupStatusForward->GetFunctionCount() == 0) {
 		return;
 	}
 
-	this->pFOCGS->PushCell(pResponse->m_SteamIDUser.GetAccountID());
-	this->pFOCGS->PushCell(pResponse->m_SteamIDGroup.GetAccountID());
-	this->pFOCGS->PushCell(pResponse->m_bMember);
-	this->pFOCGS->PushCell(pResponse->m_bOfficer);
-	this->pFOCGS->Execute(NULL);
+	pClientGroupStatusForward->PushCell(pResponse->m_SteamIDUser.GetAccountID());
+	pClientGroupStatusForward->PushCell(pResponse->m_SteamIDGroup.GetAccountID());
+	pClientGroupStatusForward->PushCell(pResponse->m_bMember);
+	pClientGroupStatusForward->PushCell(pResponse->m_bOfficer);
+	pClientGroupStatusForward->Execute(nullptr);
 }

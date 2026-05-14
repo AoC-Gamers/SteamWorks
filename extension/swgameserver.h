@@ -17,45 +17,44 @@
 */
 
 #pragma once
+
 #include "smsdk_ext.h"
-#include "steam_gameserver.h"
 #include "isteamgamecoordinator.h"
+#include "steam_gameserver.h"
 
 #if defined(STEAM_API_INTERNAL_H) || !defined(STEAM_API_EXPORTS)
-	S_API ISteamClient *g_pSteamClientGameServer; /* This is awful. */
+	S_API ISteamClient *g_pSteamClientGameServer;
 #endif
 
 class SteamWorksGameServer
 {
-	public:
-		SteamWorksGameServer();
-		~SteamWorksGameServer();
+public:
+	SteamWorksGameServer();
+	~SteamWorksGameServer();
 
-	public:
-		ISteamClient *GetSteamClient(void);
-		ISteamGameServer *GetGameServer(void);
-		ISteamUtils *GetUtils(void);
-		ISteamNetworking *GetNetworking(void);
-		ISteamGameServerStats *GetServerStats(void);
-		ISteamHTTP *GetHTTP(void);
-		ISteamMatchmaking *GetMatchmaking(void);
-		ISteamGameCoordinator *GetGameCoordinator(void);
+	ISteamClient *GetSteamClient(void);
+	ISteamGameServer *GetGameServer(void);
+	ISteamUtils *GetUtils(void);
+	ISteamNetworking *GetNetworking(void);
+	ISteamGameServerStats *GetServerStats(void);
+	ISteamHTTP *GetHTTP(void);
+	ISteamMatchmaking *GetMatchmaking(void);
+	ISteamGameCoordinator *GetGameCoordinator(void);
 
-	public:
-		void Reset(void);
-		const char *GetLibraryPath(void);
-	private:
-		void GetUserAndPipe(HSteamUser &hSteamUser, HSteamPipe &hSteamPipe);
-	private:
-		ISteamClient *m_pClient;
-		ISteamGameServer *m_pGameServer;
-		ISteamUtils *m_pUtils;
-		ISteamNetworking *m_pNetworking;
-		ISteamGameServerStats *m_pStats;
-		ISteamHTTP *m_pHTTP;
-		ISteamMatchmaking *m_pMatchmaking;
-		ISteamGameCoordinator *m_pGC;
-		bool loaded;
+	void Reset(void);
+	const char *GetLibraryPath(void);
+
+private:
+	void GetUserAndPipe(HSteamUser &hSteamUser, HSteamPipe &hSteamPipe);
+
+	ISteamClient *m_pClient = nullptr;
+	ISteamGameServer *m_pGameServer = nullptr;
+	ISteamUtils *m_pUtils = nullptr;
+	ISteamNetworking *m_pNetworking = nullptr;
+	ISteamGameServerStats *m_pStats = nullptr;
+	ISteamHTTP *m_pHTTP = nullptr;
+	ISteamMatchmaking *m_pMatchmaking = nullptr;
+	ISteamGameCoordinator *m_pGC = nullptr;
 };
 
 #include "extension.h"

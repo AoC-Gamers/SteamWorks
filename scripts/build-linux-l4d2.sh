@@ -48,7 +48,7 @@ case "$(uname -s)" in
     ;;
   *)
     echo "This build script targets Linux L4D2 extensions and must be run on Linux." >&2
-    echo "Use make deps on any platform, but run make build-linux inside a Linux environment with 32-bit toolchain support." >&2
+    echo "Use make deps-linux on any platform, but run make build-linux inside a Linux environment with 32-bit toolchain support." >&2
     exit 1
     ;;
 esac

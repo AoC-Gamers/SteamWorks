@@ -33,10 +33,10 @@ class SteamWorksHTTP :
 		bool GetHandleApproxSize(HandleType_t type, void *object, unsigned int *pSize);
 		
 	public:
-		HandleType_t GetHTTPHandle(void);
+		HandleType_t GetHTTPHandle() const;
 
 	private:
-		HandleType_t typeHTTP;
+		HandleType_t typeHTTP = 0;
 };
 
 #include "swhttprequest.h"

@@ -17,31 +17,30 @@
 */
 
 #pragma once
+
 #include "isteamgameserver.h"
-#include "steam_gameserver.h"
 #include "smsdk_ext.h"
 #include "sourcehook.h"
+#include "steam_gameserver.h"
 
 class SteamWorksGSHooks
 {
-	public:
-		SteamWorksGSHooks();
-		~SteamWorksGSHooks();
-	
-	public:
-		void AddHooks(ISteamGameServer *pGameServer);
-		void RemoveHooks(ISteamGameServer *pGameServer, bool destroyed = false);
-	
-	public:
-		bool WasRestartRequested(void);
-		void LogOnAnonymous(void);
-		EBeginAuthSessionResult BeginAuthSession(const void*, int, CSteamID);
-		
-	private:
-		IForward *pFORR; /* On Restart Requested. */
-		IForward *pFOTR; /* On Token Requested. */
-		IForward *pOBAS; /* On Begin Auth Session. */
-		unsigned char uHooked;
+public:
+	SteamWorksGSHooks();
+	~SteamWorksGSHooks();
+
+	void AddHooks(ISteamGameServer *pGameServer);
+	void RemoveHooks(ISteamGameServer *pGameServer, bool destroyed = false);
+
+	bool WasRestartRequested(void);
+	void LogOnAnonymous(void);
+	EBeginAuthSessionResult BeginAuthSession(const void* pAuthTicket, int cbAuthTicket, CSteamID steamID);
+
+private:
+	IForward *pRestartRequestedForward = nullptr;
+	IForward *pTokenRequestedForward = nullptr;
+	IForward *pBeginAuthSessionForward = nullptr;
+	unsigned char uHooked = 0;
 };
 
 void OurGameFrameHook(bool simulating);

@@ -26,13 +26,13 @@ void *SteamWorksMemUtils::ResolveSymbolInt(void *pBase, const char *pSymbol)
 		Dl_info info;
 		if (dladdr(pBase, &info) == 0)
 		{
-			return 0;
+			return nullptr;
 		}
 
 		void *handle = dlopen(info.dli_fname, RTLD_NOW);
-		if (handle == NULL)
+		if (handle == nullptr)
 		{
-			return 0;
+			return nullptr;
 		}
 
 		void *pAddress = memutils->ResolveSymbol(handle, &pSymbol[1]);
@@ -45,23 +45,23 @@ void *SteamWorksMemUtils::ResolveSymbolInt(void *pBase, const char *pSymbol)
 	return memutils->FindPattern(pBase, pSymbol, strlen(pSymbol)); /* strlen ??? lol. */
 }
 
-size_t SteamWorksMemUtils::GetOffsetFromVTable(void *pInterface, void *pToFindFunc, const char *pClassSig = NULL, size_t version = 0)
+size_t SteamWorksMemUtils::GetOffsetFromVTable(void *pInterface, void *pToFindFunc, const char *pClassSig, size_t version)
 {
-	void *pEndOfTable = NULL;
-	if (pClassSig != NULL)
+	void *pEndOfTable = nullptr;
+	if (pClassSig != nullptr)
 	{
 		size_t len = strlen(pClassSig) + 6;
-		ke::AutoArray<char> endoftable = new char[len+1];
+		ke::AutoArray<char> endoftable = new char[len + 1];
 		snprintf(*endoftable, len, pClassSig, 'I', version);
-		pEndOfTable = this->ResolveSymbolInt(pInterface, *endoftable);
+		pEndOfTable = ResolveSymbolInt(pInterface, *endoftable);
 	}
 
-	void **pVTable = (void **)pInterface[0];
+	void **pVTable = *reinterpret_cast<void ***>(pInterface);
 	/* 2000 is used as a guard, if there's a class inheriting this many functions, move to a new product. */
 	for (size_t iter = 2; iter < 2000; ++iter)
 	{
 		void *pFunc = pVTable[iter];
-		if (pEndOfTable != NULL && pEndOfTable == pFunc)
+		if (pEndOfTable != nullptr && pEndOfTable == pFunc)
 		{
 			break;
 		}

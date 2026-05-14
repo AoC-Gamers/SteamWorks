@@ -19,6 +19,20 @@
 #include "swgshooks.h"
 #include "steamtools/ticket.h"
 
+namespace {
+
+void ReleaseForward(IForward*& forward)
+{
+	if (forward == nullptr) {
+		return;
+	}
+
+	forwards->ReleaseForward(forward);
+	forward = nullptr;
+}
+
+}  // namespace
+
 enum
 {
 	eUnhooked = 0,
@@ -37,15 +51,15 @@ static ISteamGameServer *GetGameServerPointer()
 
 SteamWorksGSHooks::SteamWorksGSHooks()
 {
-	this->uHooked = eHooking;
-	this->pFORR = forwards->CreateForward("SteamWorks_RestartRequested", ET_Hook, 0, NULL);
-	this->pFOTR = forwards->CreateForward("SteamWorks_TokenRequested", ET_Ignore, 2, NULL, Param_String, Param_Cell);
-	this->pOBAS = forwards->CreateForward("SteamWorks_BeginAuthSession", ET_Ignore, 3, NULL, Param_Array, Param_Cell, Param_Cell);
+	uHooked = eHooking;
+	pRestartRequestedForward = forwards->CreateForward("SteamWorks_RestartRequested", ET_Hook, 0, nullptr);
+	pTokenRequestedForward = forwards->CreateForward("SteamWorks_TokenRequested", ET_Ignore, 2, nullptr, Param_String, Param_Cell);
+	pBeginAuthSessionForward = forwards->CreateForward("SteamWorks_BeginAuthSession", ET_Ignore, 3, nullptr, Param_Array, Param_Cell, Param_Cell);
 	
 	ISteamGameServer *pGameServer = GetGameServerPointer();
 	if (pGameServer)
 	{
-		this->AddHooks(pGameServer);
+		AddHooks(pGameServer);
 	}
 	else
 	{
@@ -55,33 +69,31 @@ SteamWorksGSHooks::SteamWorksGSHooks()
 
 SteamWorksGSHooks::~SteamWorksGSHooks()
 {
-	this->RemoveHooks(GetGameServerPointer(), true);
+	RemoveHooks(GetGameServerPointer(), true);
 	smutils->RemoveGameFrameHook(OurGameFrameHook);
-	forwards->ReleaseForward(this->pFORR);
-	forwards->ReleaseForward(this->pFOTR);
-	forwards->ReleaseForward(this->pOBAS);
+	ReleaseForward(pRestartRequestedForward);
+	ReleaseForward(pTokenRequestedForward);
+	ReleaseForward(pBeginAuthSessionForward);
 }
 
 void SteamWorksGSHooks::LogOnAnonymous(void)
 {
 	ISteamGameServer *pGameServer = GetGameServerPointer();
-	if (pGameServer == NULL)
+	if (pGameServer == nullptr)
 	{
-		/* Go away, this wrecks us if we want to use it later. Also; impossible. */
 		RETURN_META(MRES_SUPERCEDE);
 	}
 
-	if (this->pFOTR->GetFunctionCount() == 0)
+	if (pTokenRequestedForward == nullptr || pTokenRequestedForward->GetFunctionCount() == 0)
 	{
-		/* No plugin was loaded to handle this. Anon away; we can't break them. */
 		RETURN_META(MRES_IGNORED);
 	}
 
 	char pToken[256];
 	pToken[0] = '\0';
-	this->pFOTR->PushStringEx(pToken, sizeof(pToken), SM_PARAM_STRING_UTF8 | SM_PARAM_STRING_COPY, SM_PARAM_COPYBACK);
-	this->pFOTR->PushCell(sizeof(pToken));
-	this->pFOTR->Execute(NULL);
+	pTokenRequestedForward->PushStringEx(pToken, sizeof(pToken), SM_PARAM_STRING_UTF8 | SM_PARAM_STRING_COPY, SM_PARAM_COPYBACK);
+	pTokenRequestedForward->PushCell(sizeof(pToken));
+	pTokenRequestedForward->Execute(nullptr);
 
 	pGameServer->LogOn(pToken);
 	RETURN_META(MRES_SUPERCEDE);
@@ -89,14 +101,14 @@ void SteamWorksGSHooks::LogOnAnonymous(void)
 
 EBeginAuthSessionResult SteamWorksGSHooks::BeginAuthSession(const void *pAuthTicket, int cbAuthTicket, CSteamID steamID)
 {
-	if (this->pOBAS->GetFunctionCount() != 0)
+	if (pBeginAuthSessionForward != nullptr && pBeginAuthSessionForward->GetFunctionCount() != 0)
 	{
 		char *pszAuthTicket = reinterpret_cast<char *>(const_cast<void *>(pAuthTicket));
 
-		this->pOBAS->PushStringEx(pszAuthTicket, cbAuthTicket, SM_PARAM_STRING_BINARY | SM_PARAM_STRING_COPY, 0);
-		this->pOBAS->PushCell(cbAuthTicket);
-		this->pOBAS->PushCell(steamID.GetAccountID());
-		this->pOBAS->Execute(NULL);
+		pBeginAuthSessionForward->PushStringEx(pszAuthTicket, cbAuthTicket, SM_PARAM_STRING_BINARY | SM_PARAM_STRING_COPY, 0);
+		pBeginAuthSessionForward->PushCell(cbAuthTicket);
+		pBeginAuthSessionForward->PushCell(steamID.GetAccountID());
+		pBeginAuthSessionForward->Execute(nullptr);
 	}
 
 	RETURN_META_VALUE(MRES_IGNORED, k_EBeginAuthSessionResultOK);
@@ -105,25 +117,24 @@ EBeginAuthSessionResult SteamWorksGSHooks::BeginAuthSession(const void *pAuthTic
 bool SteamWorksGSHooks::WasRestartRequested(void) /* Mimic SteamTools. */
 {
 	bool bWasRestartRequested = SH_CALL(GetGameServerPointer(), &ISteamGameServer::WasRestartRequested)();
-	if (bWasRestartRequested && this->pFORR->GetFunctionCount() != 0)
+	if (bWasRestartRequested && pRestartRequestedForward != nullptr && pRestartRequestedForward->GetFunctionCount() != 0)
 	{
 		cell_t Result = Pl_Continue;
-		this->pFORR->Execute(&Result);
+		pRestartRequestedForward->Execute(&Result);
 		bWasRestartRequested = (Result >= Pl_Handled);
 	}
 
-	/* With how this function works, all following will be given poisoned values from SH_Call. */
 	RETURN_META_VALUE(MRES_SUPERCEDE, bWasRestartRequested); 
 }
 
 void SteamWorksGSHooks::AddHooks(ISteamGameServer *pGameServer)
 {
-	if (this->uHooked == eHooked || pGameServer == NULL)
+	if (uHooked == eHooked || pGameServer == nullptr)
 	{
 		return;
 	}
 
-	this->uHooked = eHooked;
+	uHooked = eHooked;
 	SH_ADD_HOOK(ISteamGameServer, WasRestartRequested, pGameServer, SH_MEMBER(this, &SteamWorksGSHooks::WasRestartRequested), false);
 	SH_ADD_HOOK(ISteamGameServer, LogOnAnonymous, pGameServer, SH_MEMBER(this, &SteamWorksGSHooks::LogOnAnonymous), false);
 	SH_ADD_HOOK(ISteamGameServer, BeginAuthSession, pGameServer, SH_MEMBER(this, &SteamWorksGSHooks::BeginAuthSession), false);
@@ -131,7 +142,7 @@ void SteamWorksGSHooks::AddHooks(ISteamGameServer *pGameServer)
 
 void SteamWorksGSHooks::RemoveHooks(ISteamGameServer *pGameServer, bool destroyed)
 {
-	if (this->uHooked != eHooked || pGameServer == NULL)
+	if (uHooked != eHooked || pGameServer == nullptr)
 	{
 		return;
 	}
@@ -141,18 +152,20 @@ void SteamWorksGSHooks::RemoveHooks(ISteamGameServer *pGameServer, bool destroye
 	SH_REMOVE_HOOK(ISteamGameServer, BeginAuthSession, pGameServer, SH_MEMBER(this, &SteamWorksGSHooks::BeginAuthSession), false);
 	if (destroyed)
 	{
-		this->uHooked = eUnhooked;
+		uHooked = eUnhooked;
 		return;
 	}
 
-	this->uHooked = eHooking;
+	uHooked = eHooking;
 	smutils->AddGameFrameHook(OurGameFrameHook);
 }
 
 void OurGameFrameHook(bool simulating) /* What we do for SDK independence. */
 {
+	(void)simulating;
+
 	ISteamGameServer *pGameServer = GetGameServerPointer();
-	if (pGameServer == NULL)
+	if (pGameServer == nullptr)
 	{
 		return;
 	}

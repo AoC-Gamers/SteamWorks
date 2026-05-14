@@ -20,31 +20,29 @@
 SteamWorksGameData::SteamWorksGameData()
 {
 	char buffer[PLATFORM_MAX_PATH];
-	this->pGameConf = NULL;
 	
-	/* LoadGameConfigFile will verbosely error out, we need to check this since it's optional. */
 	smutils->BuildPath(Path_SM, buffer, sizeof(buffer), "gamedata/steamworks.txt");
 	if (libsys->PathExists(buffer) && libsys->IsPathFile(buffer))
 	{
-		gameconfs->LoadGameConfigFile("steamworks", &this->pGameConf, buffer, sizeof(buffer));
+		gameconfs->LoadGameConfigFile("steamworks", &pGameConf, buffer, sizeof(buffer));
 	}
 }
 
 SteamWorksGameData::~SteamWorksGameData()
 {
-	if (this->pGameConf != NULL)
+	if (pGameConf != nullptr)
 	{
-		gameconfs->CloseGameConfigFile(this->pGameConf);
-		this->pGameConf = NULL;
+		gameconfs->CloseGameConfigFile(pGameConf);
+		pGameConf = nullptr;
 	}
 }
 
 bool SteamWorksGameData::HasGameData(void) const
 {
-	return (this->pGameConf != NULL);
+	return pGameConf != nullptr;
 }
 
 IGameConfig *SteamWorksGameData::GetGameData(void) const
 {
-	return this->pGameConf;
+	return pGameConf;
 }

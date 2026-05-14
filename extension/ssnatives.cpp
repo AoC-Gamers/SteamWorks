@@ -18,31 +18,41 @@
 
 #include "ssnatives.h"
 
-static bool IsSteamWorksLoaded(void)
-{
-	return (g_SteamWorks.pSWGameServer->GetSteamClient() != NULL);
-}
+namespace {
 
-static ISteamGameServerStats *GetServerStatsPointer(void)
+ISteamGameServerStats *GetServerStatsPointer(void)
 {
 	return g_SteamWorks.pSWGameServer->GetServerStats();
 }
 
-static CSteamID CreateCommonCSteamID(IGamePlayer *pPlayer, const cell_t *params, unsigned char universeplace = 2, unsigned char typeplace = 3)
+CSteamID CreateCommonCSteamID(IGamePlayer *pPlayer, const cell_t *params, unsigned char universeplace = 2, unsigned char typeplace = 3)
 {
 	return g_SteamWorks.CreateCommonCSteamID(pPlayer, params, universeplace, typeplace);
 }
 
-static CSteamID CreateCommonCSteamID(uint32_t authid, const cell_t *params, unsigned char universeplace = 2, unsigned char typeplace = 3)
+CSteamID CreateCommonCSteamID(uint32_t authid, const cell_t *params, unsigned char universeplace = 2, unsigned char typeplace = 3)
 {
 	return g_SteamWorks.CreateCommonCSteamID(authid, params, universeplace, typeplace);
 }
 
+IGamePlayer* GetConnectedPlayerOrError(IPluginContext* pContext, cell_t clientRef)
+{
+	int client = gamehelpers->ReferenceToIndex(clientRef);
+	IGamePlayer* pPlayer = playerhelpers->GetGamePlayer(client);
+	if (pPlayer == nullptr || !pPlayer->IsConnected()) {
+		pContext->ThrowNativeError("Client index %d is invalid", clientRef);
+		return nullptr;
+	}
+
+	return pPlayer;
+}
+
 static cell_t sm_RequestStatsAuthID(IPluginContext *pContext, const cell_t *params)
 {
+	(void)pContext;
 	ISteamGameServerStats *pStats = GetServerStatsPointer();
 	
-	if (pStats == NULL)
+	if (pStats == nullptr)
 	{
 		return 0;
 	}
@@ -55,16 +65,14 @@ static cell_t sm_RequestUserStats(IPluginContext *pContext, const cell_t *params
 {
 	ISteamGameServerStats *pStats = GetServerStatsPointer();
 
-	if (pStats == NULL)
+	if (pStats == nullptr)
 	{
 		return 0;
 	}
 
-	int client = gamehelpers->ReferenceToIndex(params[1]);
-	IGamePlayer *pPlayer = playerhelpers->GetGamePlayer(client); /* Man, including GameHelpers and PlayerHelpers for this native :(. */
-	if (pPlayer == NULL || pPlayer->IsConnected() == false)
-	{
-		return pContext->ThrowNativeError("Client index %d is invalid", params[1]);
+	IGamePlayer* pPlayer = GetConnectedPlayerOrError(pContext, params[1]);
+	if (pPlayer == nullptr) {
+		return 0;
 	}
 
 	CSteamID checkid = CreateCommonCSteamID(pPlayer, params);
@@ -75,16 +83,14 @@ static cell_t sm_GetStatCell(IPluginContext *pContext, const cell_t *params)
 {
 	ISteamGameServerStats *pStats = GetServerStatsPointer();
 
-	if (pStats == NULL)
+	if (pStats == nullptr)
 	{
 		return 0;
 	}
 
-	int client = gamehelpers->ReferenceToIndex(params[1]);
-	IGamePlayer *pPlayer = playerhelpers->GetGamePlayer(client); /* Man, including GameHelpers and PlayerHelpers for this native :(. */
-	if (pPlayer == NULL || pPlayer->IsConnected() == false)
-	{
-		return pContext->ThrowNativeError("Client index %d is invalid", params[1]);
+	IGamePlayer* pPlayer = GetConnectedPlayerOrError(pContext, params[1]);
+	if (pPlayer == nullptr) {
+		return 0;
 	}
 	
 	char *pName;
@@ -100,7 +106,7 @@ static cell_t sm_GetStatAuthIDCell(IPluginContext *pContext, const cell_t *param
 {
 	ISteamGameServerStats *pStats = GetServerStatsPointer();
 
-	if (pStats == NULL)
+	if (pStats == nullptr)
 	{
 		return 0;
 	}
@@ -118,16 +124,14 @@ static cell_t sm_GetStatFloat(IPluginContext *pContext, const cell_t *params)
 {
 	ISteamGameServerStats *pStats = GetServerStatsPointer();
 
-	if (pStats == NULL)
+	if (pStats == nullptr)
 	{
 		return 0;
 	}
 
-	int client = gamehelpers->ReferenceToIndex(params[1]);
-	IGamePlayer *pPlayer = playerhelpers->GetGamePlayer(client); /* Man, including GameHelpers and PlayerHelpers for this native :(. */
-	if (pPlayer == NULL || pPlayer->IsConnected() == false)
-	{
-		return pContext->ThrowNativeError("Client index %d is invalid", params[1]);
+	IGamePlayer* pPlayer = GetConnectedPlayerOrError(pContext, params[1]);
+	if (pPlayer == nullptr) {
+		return 0;
 	}
 	
 	char *pName;
@@ -149,7 +153,7 @@ static cell_t sm_GetStatAuthIDFloat(IPluginContext *pContext, const cell_t *para
 {
 	ISteamGameServerStats *pStats = GetServerStatsPointer();
 
-	if (pStats == NULL)
+	if (pStats == nullptr)
 	{
 		return 0;
 	}
@@ -176,8 +180,10 @@ static sp_nativeinfo_t ssnatives[] = {
 	{"SteamWorks_GetStatAuthIDCell",				sm_GetStatAuthIDCell},
 	{"SteamWorks_GetStatFloat",				sm_GetStatFloat},
 	{"SteamWorks_GetStatAuthIDFloat",				sm_GetStatAuthIDFloat},
-	{NULL,											NULL}
+	{nullptr,											nullptr}
 };
+
+}  // namespace
 
 SteamWorksSSNatives::SteamWorksSSNatives()
 {
@@ -186,5 +192,4 @@ SteamWorksSSNatives::SteamWorksSSNatives()
 
 SteamWorksSSNatives::~SteamWorksSSNatives()
 {
-	/* We tragically can't remove ourselves... hopefully no one uses this class, you know, like a class. */
 }

@@ -25,6 +25,20 @@ enum
 	eHooked
 };
 
+namespace
+{
+	void ReleaseForward(IForward*& forward)
+	{
+		if (!forward)
+		{
+			return;
+		}
+
+		forwards->ReleaseForward(forward);
+		forward = nullptr;
+	}
+}
+
 SH_DECL_HOOK3(ISteamGameCoordinator, SendMessage, SH_NOATTRIB, 0, EGCResults, uint32, const void *, uint32);
 SH_DECL_HOOK1(ISteamGameCoordinator, IsMessageAvailable, SH_NOATTRIB, 0, bool, uint32 *);
 SH_DECL_HOOK4(ISteamGameCoordinator, RetrieveMessage, SH_NOATTRIB, 0, EGCResults, uint32 *, void *, uint32, uint32 *);
@@ -36,15 +50,15 @@ static ISteamGameCoordinator *GetSteamGCPointer()
 
 SteamWorksGCHooks::SteamWorksGCHooks()
 {
-	this->uHooked = eHooking;
-	this->pGCSendMsg = forwards->CreateForward("SteamWorks_GCSendMessage", ET_Event, 3, NULL, Param_Cell, Param_String, Param_Cell);
-	this->pGCMsgAvail = forwards->CreateForward("SteamWorks_GCMsgAvailable", ET_Ignore, 1, NULL, Param_Cell);
-	this->pGCRetMsg = forwards->CreateForward("SteamWorks_GCRetrieveMessage", ET_Event, 4, NULL, Param_Cell, Param_String, Param_Cell, Param_Cell);
+	uHooked = eHooking;
+	pGCSendMessageForward = forwards->CreateForward("SteamWorks_GCSendMessage", ET_Event, 3, nullptr, Param_Cell, Param_String, Param_Cell);
+	pGCMessageAvailableForward = forwards->CreateForward("SteamWorks_GCMsgAvailable", ET_Ignore, 1, nullptr, Param_Cell);
+	pGCRetrieveMessageForward = forwards->CreateForward("SteamWorks_GCRetrieveMessage", ET_Event, 4, nullptr, Param_Cell, Param_String, Param_Cell, Param_Cell);
 	
 	ISteamGameCoordinator *pGC = GetSteamGCPointer();
 	if (pGC)
 	{
-		this->AddHooks(pGC);
+		AddHooks(pGC);
 	}
 	else
 	{
@@ -54,25 +68,25 @@ SteamWorksGCHooks::SteamWorksGCHooks()
 
 SteamWorksGCHooks::~SteamWorksGCHooks()
 {
-	this->RemoveHooks(GetSteamGCPointer(), true);
+	RemoveHooks(GetSteamGCPointer(), true);
 	smutils->RemoveGameFrameHook(OurGCGameFrameHook);
-	forwards->ReleaseForward(this->pGCSendMsg);
-	forwards->ReleaseForward(this->pGCMsgAvail);
-	forwards->ReleaseForward(this->pGCRetMsg);
+	ReleaseForward(pGCSendMessageForward);
+	ReleaseForward(pGCMessageAvailableForward);
+	ReleaseForward(pGCRetrieveMessageForward);
 }
 
 EGCResults SteamWorksGCHooks::SendMessage(uint32 unMsgType, const void *pubData, uint32 cubData)
 {
-	if (this->pGCSendMsg->GetFunctionCount() == 0)
+	if (pGCSendMessageForward->GetFunctionCount() == 0)
 	{
 		RETURN_META_VALUE(MRES_IGNORED, k_EGCResultOK);
 	}
 
 	cell_t Result = k_EGCResultOK;
-	this->pGCSendMsg->PushCell(unMsgType);
-	this->pGCSendMsg->PushStringEx(reinterpret_cast<char *>(const_cast<void *>(pubData)), cubData, SM_PARAM_STRING_BINARY | SM_PARAM_STRING_COPY, 0);
-	this->pGCSendMsg->PushCell(cubData);
-	this->pGCSendMsg->Execute(&Result);
+	pGCSendMessageForward->PushCell(unMsgType);
+	pGCSendMessageForward->PushStringEx(reinterpret_cast<char *>(const_cast<void *>(pubData)), cubData, SM_PARAM_STRING_BINARY | SM_PARAM_STRING_COPY, 0);
+	pGCSendMessageForward->PushCell(cubData);
+	pGCSendMessageForward->Execute(&Result);
 
 	if (Result != k_EGCResultOK)
 	{
@@ -89,7 +103,7 @@ EGCResults SteamWorksGCHooks::SendMessage(uint32 unMsgType, const void *pubData,
 
 bool SteamWorksGCHooks::IsMessageAvailable(uint32_t *pcubMsgSize)
 {
-	if (this->pGCMsgAvail->GetFunctionCount() == 0)
+	if (pGCMessageAvailableForward->GetFunctionCount() == 0)
 	{
 		RETURN_META_VALUE(MRES_IGNORED, false);
 	}
@@ -108,14 +122,14 @@ bool SteamWorksGCHooks::IsMessageAvailable(uint32_t *pcubMsgSize)
 		pcubMsgSize = &shill;
 	}
 
-	this->pGCMsgAvail->PushCell(*pcubMsgSize);
-	this->pGCMsgAvail->Execute(NULL);
+	pGCMessageAvailableForward->PushCell(*pcubMsgSize);
+	pGCMessageAvailableForward->Execute(nullptr);
 	RETURN_META_VALUE(MRES_IGNORED, true);
 }
 
 EGCResults SteamWorksGCHooks::RetrieveMessage(uint32 *punMsgType, void *pubDest, uint32 cubDest, uint32 *pcubMsgSize)
 {
-	if (this->pGCRetMsg->GetFunctionCount() == 0)
+	if (pGCRetrieveMessageForward->GetFunctionCount() == 0)
 	{
 		RETURN_META_VALUE(MRES_IGNORED, k_EGCResultOK);
 	}
@@ -124,23 +138,23 @@ EGCResults SteamWorksGCHooks::RetrieveMessage(uint32 *punMsgType, void *pubDest,
 	cell_t Result = k_EGCResultOK;
 	EGCResults res = SH_CALL(GetSteamGCPointer(), &ISteamGameCoordinator::RetrieveMessage)(punMsgType, pubDest, cubDest, pcubMsgSize);
 	if (punMsgType)
-		this->pGCRetMsg->PushCell(*punMsgType);
+		pGCRetrieveMessageForward->PushCell(*punMsgType);
 	else
-		this->pGCRetMsg->PushCell(0);
+		pGCRetrieveMessageForward->PushCell(0);
 
 	if (pubDest)
-		this->pGCRetMsg->PushStringEx(reinterpret_cast<char *>(pubDest), cubDest, SM_PARAM_STRING_BINARY | SM_PARAM_STRING_COPY, 0);
+		pGCRetrieveMessageForward->PushStringEx(reinterpret_cast<char *>(pubDest), cubDest, SM_PARAM_STRING_BINARY | SM_PARAM_STRING_COPY, 0);
 	else
-		this->pGCRetMsg->PushStringEx(const_cast<char *>(""), 1, SM_PARAM_STRING_BINARY | SM_PARAM_STRING_COPY, 0);
+		pGCRetrieveMessageForward->PushStringEx(const_cast<char *>(""), 1, SM_PARAM_STRING_BINARY | SM_PARAM_STRING_COPY, 0);
 
-	this->pGCRetMsg->PushCell(cubDest);
+	pGCRetrieveMessageForward->PushCell(cubDest);
 
 	if (pcubMsgSize)
-		this->pGCRetMsg->PushCell(*pcubMsgSize);
+		pGCRetrieveMessageForward->PushCell(*pcubMsgSize);
 	else
-		this->pGCRetMsg->PushCell(0);
+		pGCRetrieveMessageForward->PushCell(0);
 
-	this->pGCRetMsg->Execute(&Result);
+	pGCRetrieveMessageForward->Execute(&Result);
 
 	if (Result != k_EGCResultOK)
 	{
@@ -157,12 +171,12 @@ EGCResults SteamWorksGCHooks::RetrieveMessage(uint32 *punMsgType, void *pubDest,
 
 void SteamWorksGCHooks::AddHooks(ISteamGameCoordinator *pGC)
 {
-	if (this->uHooked == eHooked || pGC == NULL)
+	if (uHooked == eHooked || pGC == nullptr)
 	{
 		return;
 	}
 
-	this->uHooked = eHooked;
+	uHooked = eHooked;
 	SH_ADD_HOOK(ISteamGameCoordinator, SendMessage, pGC, SH_MEMBER(this, &SteamWorksGCHooks::SendMessage), false);
 	SH_ADD_HOOK(ISteamGameCoordinator, IsMessageAvailable, pGC, SH_MEMBER(this, &SteamWorksGCHooks::IsMessageAvailable), true);
 	SH_ADD_HOOK(ISteamGameCoordinator, RetrieveMessage, pGC, SH_MEMBER(this, &SteamWorksGCHooks::RetrieveMessage), false);
@@ -170,7 +184,7 @@ void SteamWorksGCHooks::AddHooks(ISteamGameCoordinator *pGC)
 
 void SteamWorksGCHooks::RemoveHooks(ISteamGameCoordinator *pGC, bool destroyed)
 {
-	if (this->uHooked != eHooked || pGC == NULL)
+	if (uHooked != eHooked || pGC == nullptr)
 	{
 		return;
 	}
@@ -181,18 +195,20 @@ void SteamWorksGCHooks::RemoveHooks(ISteamGameCoordinator *pGC, bool destroyed)
 
 	if (destroyed)
 	{
-		this->uHooked = eUnhooked;
+		uHooked = eUnhooked;
 		return;
 	}
 
-	this->uHooked = eHooking;
+	uHooked = eHooking;
 	smutils->AddGameFrameHook(OurGCGameFrameHook);
 }
 
 void OurGCGameFrameHook(bool simulating) /* What we do for SDK independence. */
 {
+	(void)simulating;
+
 	ISteamGameCoordinator *pGC = GetSteamGCPointer();
-	if (pGC == NULL)
+	if (pGC == nullptr)
 	{
 		return;
 	}

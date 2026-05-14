@@ -17,13 +17,14 @@
 */
 
 #pragma once
+
 #include "smsdk_ext.h"
 
 class SteamWorksGSNatives
 {
-	public:
-		SteamWorksGSNatives();
-		~SteamWorksGSNatives();
+public:
+	SteamWorksGSNatives();
+	~SteamWorksGSNatives();
 };
 
 #include "extension.h"

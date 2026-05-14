@@ -24,18 +24,27 @@ for sdk_name in SteamWorks.sdks:
   sdk = SteamWorks.sdks[sdk_name]
 
   binary = SteamWorks.HL2Config(project, builder.cxx, 'steamworks.ext', sdk)
-  
+
   binary.compiler.defines += ['META_NO_HL2SDK', 'SOURCEMOD_BUILD', 'VERSION_SAFE_STEAM_API_INTERFACES']
-  binary.compiler.cxxincludes += [os.path.join(SteamWorks.steamworks_root, 'public', 'steam'), os.path.join(sdk.path, 'public', 'steam')];
-  
+  binary.compiler.cxxincludes += [
+    os.path.join(SteamWorks.steamworks_root, 'public', 'steam'),
+    os.path.join(sdk.path, 'public', 'steam'),
+  ]
+
   if binary.compiler.target.platform == 'linux':
-    binary.compiler.postlink += os.path.join(SteamWorks.steamworks_root, 'redistributable_bin', 'linux32', 'libsteam_api.so'),;
+    binary.compiler.postlink += (
+      os.path.join(SteamWorks.steamworks_root, 'redistributable_bin', 'linux32', 'libsteam_api.so'),
+    )
     binary.compiler.linkflags += ['-Wl,-rpath,$ORIGIN/../../../../bin']
-	
+
   if binary.compiler.target.platform == 'windows':
-    binary.compiler.postlink += os.path.join(SteamWorks.steamworks_root, 'redistributable_bin', 'steam_api.lib'),;
-	
+    binary.compiler.postlink += (
+      os.path.join(SteamWorks.steamworks_root, 'redistributable_bin', 'steam_api.lib'),
+    )
+
   if binary.compiler.target.platform == 'mac':
-    binary.compiler.postlink += os.path.join(SteamWorks.steamworks_root, 'redistributable_bin', 'osx', 'libsteam_api.dylib'),;
+    binary.compiler.postlink += (
+      os.path.join(SteamWorks.steamworks_root, 'redistributable_bin', 'osx', 'libsteam_api.dylib'),
+    )
 
 SteamWorks.extensions += builder.Add(project)

@@ -26,6 +26,9 @@
 
 #pragma once
 
+#include <cstdint>
+#include <cstring>
+
 class CBlob
 {
 public:
@@ -41,7 +44,7 @@ private:
 	size_t m_iCurrentOffset;
 
 public:
-	inline size_t GetPosition()
+	inline size_t GetPosition() const
 	{
 		return m_iCurrentOffset;
 	}
@@ -68,27 +71,33 @@ public:
 		m_iCurrentOffset = 0;
 	}
 	
-	inline bool CanStillRead(void)
+	inline bool CanStillRead() const
 	{
-		return (m_iCurrentOffset >= m_iSize);
+		return m_iCurrentOffset < m_iSize;
 	}
 
 public:
 	template <class T>
-	T Read(bool *bError = NULL)
+	T Read(bool *bError = nullptr)
 	{
 		if ((m_iCurrentOffset + sizeof(T)) > m_iSize)
 		{
 			if (bError)
+			{
 				*bError = true;
-			return (T)0;
+			}
+
+			return T{};
 		}
 
-		T tempBuffer = *((T *)((intptr_t)m_pMessage + m_iCurrentOffset));
+		T tempBuffer;
+		std::memcpy(&tempBuffer, static_cast<const uint8_t *>(m_pMessage) + m_iCurrentOffset, sizeof(T));
 		m_iCurrentOffset += sizeof(T);
 
 		if (bError)
+		{
 			*bError = false;
+		}
 
 		return tempBuffer;
 	}
@@ -99,9 +108,9 @@ public:
 		if ((m_iCurrentOffset + sizeof(T)) > m_iSize)
 			return false;
 
-		T *pTempBuffer = (T *)((intptr_t)m_pMessage + m_iCurrentOffset);
+		const uint8_t *pTempBuffer = static_cast<const uint8_t *>(m_pMessage) + m_iCurrentOffset;
 		m_iCurrentOffset += sizeof(T);
-		memcpy(pOut, pTempBuffer, sizeof(T));
+		std::memcpy(pOut, pTempBuffer, sizeof(T));
 
 		return true;
 	}
@@ -112,9 +121,9 @@ public:
 		if ((m_iCurrentOffset + sizeof(T)) > m_iSize)
 			return false;
 
-		T *pTempBuffer = (T *)((intptr_t)m_pMessage + m_iCurrentOffset);
+		const uint8_t *pTempBuffer = static_cast<const uint8_t *>(m_pMessage) + m_iCurrentOffset;
 		m_iCurrentOffset += sizeof(T);
-		Out = *pTempBuffer;
+		std::memcpy(&Out, pTempBuffer, sizeof(T));
 
 		return true;
 	}
@@ -124,9 +133,9 @@ public:
 		if ((m_iCurrentOffset + iLength) > m_iSize)
 			return false;
 
-		void *pTempBuffer = (void *)((intptr_t)m_pMessage + m_iCurrentOffset);
+		const uint8_t *pTempBuffer = static_cast<const uint8_t *>(m_pMessage) + m_iCurrentOffset;
 		m_iCurrentOffset += iLength;
-		memcpy(pOut, pTempBuffer, iLength);
+		std::memcpy(pOut, pTempBuffer, iLength);
 
 		return true;
 	}

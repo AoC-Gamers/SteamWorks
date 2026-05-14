@@ -17,7 +17,7 @@ de CI.
 
 ```bash
 make help
-make deps
+make deps-linux
 make build-linux
 ```
 

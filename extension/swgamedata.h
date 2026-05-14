@@ -17,20 +17,20 @@
 */
 
 #pragma once
+
 #include "smsdk_ext.h"
 
 class SteamWorksGameData
 {
-	public:
-		SteamWorksGameData();
-		~SteamWorksGameData();
+public:
+	SteamWorksGameData();
+	~SteamWorksGameData();
 
-	public:
-		bool HasGameData(void) const;
-		IGameConfig *GetGameData(void) const;
+	bool HasGameData(void) const;
+	IGameConfig *GetGameData(void) const;
 
-	private:
-		IGameConfig *pGameConf;
+private:
+	IGameConfig *pGameConf = nullptr;
 };
 
 #include "extension.h"

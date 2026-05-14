@@ -18,35 +18,33 @@
 
 #include "swhttp.h"
 
-static ISteamHTTP *GetHTTPPointer()
+namespace
 {
-	return g_SteamWorks.pSWGameServer->GetHTTP();
+	void DelayedDeleteSteamWorksHTTPRequest(void *object)
+	{
+		SteamWorksHTTPRequest *pRequest = reinterpret_cast<SteamWorksHTTPRequest *>(object);
+		delete pRequest;
+	}
 }
 
 SteamWorksHTTP::SteamWorksHTTP()
 {
-	this->typeHTTP = handlesys->CreateType("HTTPHandle", this, 0, NULL, NULL, myself->GetIdentity(), NULL);
+	typeHTTP = handlesys->CreateType("HTTPHandle", this, 0, nullptr, nullptr, myself->GetIdentity(), nullptr);
 }
 
 SteamWorksHTTP::~SteamWorksHTTP()
 {
-	handlesys->RemoveType(this->typeHTTP, myself->GetIdentity());
+	handlesys->RemoveType(typeHTTP, myself->GetIdentity());
 }
 
-HandleType_t SteamWorksHTTP::GetHTTPHandle(void)
+HandleType_t SteamWorksHTTP::GetHTTPHandle() const
 {
-	return this->typeHTTP;
-}
-
-static void DelayedDeleteSteamWorksHTTPRequest(void *object)
-{
-	SteamWorksHTTPRequest *pRequest = reinterpret_cast<SteamWorksHTTPRequest *>(object);
-	delete pRequest;
+	return typeHTTP;
 }
 
 void SteamWorksHTTP::OnHandleDestroy(HandleType_t type, void *object)
 {
-	if (type == this->typeHTTP) /* Heaven forbid we ever offer another handle. */
+	if (type == typeHTTP) /* Heaven forbid we ever offer another handle. */
 	{
 		smutils->AddFrameAction(DelayedDeleteSteamWorksHTTPRequest, object);
 	}
@@ -54,7 +52,9 @@ void SteamWorksHTTP::OnHandleDestroy(HandleType_t type, void *object)
 
 bool SteamWorksHTTP::GetHandleApproxSize(HandleType_t type, void *object, unsigned int *pSize)
 {
-	if (type == this->typeHTTP && pSize) /* Heaven forbid we ever offer another handle. */
+	(void)object;
+
+	if (type == typeHTTP && pSize) /* Heaven forbid we ever offer another handle. */
 	{
 		*pSize = sizeof(SteamWorksHTTPRequest);
 		return true;
