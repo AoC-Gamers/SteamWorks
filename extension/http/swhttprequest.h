@@ -49,4 +49,4 @@ public:
 	~SteamWorksHTTPNatives();
 };
 
-#include "extension.h"
+#include "../extension.h"

@@ -17,20 +17,38 @@
 */
 
 #pragma once
-
 #include "steam_gameserver.h"
 #include "isteamgamecoordinator.h"
+
 #include "smsdk_ext.h"
+#include "sourcehook.h"
 
 #ifdef _WIN32
 #undef SendMessage
 #endif
 
-class SteamWorksGCNatives
+class SteamWorksGCHooks
 {
-public:
-	SteamWorksGCNatives();
-	~SteamWorksGCNatives();
+	public:
+		SteamWorksGCHooks();
+		~SteamWorksGCHooks();
+
+	public:
+		void AddHooks(ISteamGameCoordinator *pGC);
+		void RemoveHooks(ISteamGameCoordinator *pGC, bool destroyed = false);
+
+	public:
+		EGCResults SendMessage(uint32 unMsgType, const void *pubData, uint32 cubData);
+		bool IsMessageAvailable(uint32_t *pcubMsgSize);
+		EGCResults RetrieveMessage(uint32 *punMsgType, void *pubDest, uint32 cubDest, uint32 *pcubMsgSize);
+
+	private:
+		IForward *pGCSendMessageForward = nullptr;
+		IForward *pGCMessageAvailableForward = nullptr;
+		IForward *pGCRetrieveMessageForward = nullptr;
+		unsigned char uHooked = 0;
 };
 
-#include "extension.h"
+void OurGCGameFrameHook(bool simulating);
+
+#include "../extension.h"

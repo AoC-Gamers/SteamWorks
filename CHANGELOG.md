@@ -78,6 +78,11 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
   - natives
   - utilidades de memoria
   - parsing de tickets Steam
+- Se reorganizó físicamente `extension/` en subdirectorios semánticos:
+  - `core/`
+  - `natives/`
+  - `hooks/`
+  - `http/`
 - Se homogeneizó el código interno para usar:
   - `nullptr`
   - inicialización de miembros en headers

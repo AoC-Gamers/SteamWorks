@@ -19,18 +19,18 @@
 #pragma once
 
 #include "smsdk_ext.h"
-#include "CDetour/detours.h"
-#include "steam_gameserver.h"
 
-class SteamWorksGSDetours
+class SteamWorksGameData
 {
 public:
-	SteamWorksGSDetours();
-	~SteamWorksGSDetours();
+	SteamWorksGameData();
+	~SteamWorksGameData();
+
+	bool HasGameData(void) const;
+	IGameConfig *GetGameData(void) const;
 
 private:
-	CDetour *m_pSafeInitDetour = nullptr;
-	CDetour *m_pShutdownDetour = nullptr;
+	IGameConfig *pGameConf = nullptr;
 };
 
-#include "extension.h"
+#include "../extension.h"

@@ -5,17 +5,17 @@
 #include "isteamgameserver.h"
 #include "steam_gameserver.h"
 
-#include "swgameserver.h"
-#include "swgamedata.h"
+#include "core/swgameserver.h"
+#include "core/swgamedata.h"
 
-#include "swforwards.h"
-#include "gsnatives.h"
-#include "swgshooks.h"
-#include "swgchooks.h"
-#include "ssnatives.h"
-#include "gcnatives.h"
-#include "swgsdetours.h"
-#include "swhttp.h"
+#include "core/swforwards.h"
+#include "natives/gsnatives.h"
+#include "hooks/swgshooks.h"
+#include "hooks/swgchooks.h"
+#include "natives/ssnatives.h"
+#include "natives/gcnatives.h"
+#include "hooks/swgsdetours.h"
+#include "http/swhttp.h"
 
 /**
  * @brief Sample implementation of the SDK Extension.

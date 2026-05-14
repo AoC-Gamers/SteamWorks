@@ -17,13 +17,27 @@
 */
 
 #pragma once
+#include "isteamgameserver.h"
+#include "steam_gameserver.h"
 #include "smsdk_ext.h"
 
-class SteamWorksMemUtils
+class SteamWorksHTTP :
+	public IHandleTypeDispatch
 {
 	public:
-		void *ResolveSymbolInt(void *pBase, const char *pSymbol);
-		size_t GetOffsetFromVTable(void *pInterface, void *pToFindFunc, const char *pClassSig = nullptr, size_t version = 0);
+		SteamWorksHTTP();
+		~SteamWorksHTTP();
+
+	public:
+		void OnHandleDestroy(HandleType_t type, void *object);
+		bool GetHandleApproxSize(HandleType_t type, void *object, unsigned int *pSize);
+		
+	public:
+		HandleType_t GetHTTPHandle() const;
+
+	private:
+		HandleType_t typeHTTP = 0;
 };
 
-#include "extension.h"
+#include "swhttprequest.h"
+#include "../extension.h"

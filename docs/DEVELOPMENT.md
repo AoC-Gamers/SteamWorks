@@ -38,7 +38,13 @@ make build-windows
 
 - `AMBuildScript`: configuracion general del build
 - `extension/AMBuilder`: lista de fuentes nativas
-- `extension/`: codigo nativo C++, headers y librerias auxiliares
+- `extension/core/`: integracion base, gamedata, forwards y utilidades
+- `extension/natives/`: natives SourcePawn
+- `extension/hooks/`: hooks y detours
+- `extension/http/`: capa HTTP
+- `extension/sdk/`: bootstrap base del SDK de SourceMod
+- `extension/steamtools/`: parsing auxiliar de blobs y tickets
+- `extension/CDetour/`, `extension/asm/`: dependencias nativas auxiliares
 - `scripts/`: bootstrap y build local
 - `scripting/`: include SourcePawn
 - `scripts/steamwork_test.sp`: plugin local de pruebas

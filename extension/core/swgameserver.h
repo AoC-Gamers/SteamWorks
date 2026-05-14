@@ -57,4 +57,4 @@ private:
 	ISteamGameCoordinator *m_pGC = nullptr;
 };
 
-#include "extension.h"
+#include "../extension.h"

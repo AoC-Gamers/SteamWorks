@@ -17,7 +17,7 @@
 */
 
 #include "swgshooks.h"
-#include "steamtools/ticket.h"
+#include "../steamtools/ticket.h"
 
 namespace {
 

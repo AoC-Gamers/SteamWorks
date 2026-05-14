@@ -17,14 +17,13 @@
 */
 
 #pragma once
-
 #include "smsdk_ext.h"
 
-class SteamWorksGSNatives
+class SteamWorksMemUtils
 {
-public:
-	SteamWorksGSNatives();
-	~SteamWorksGSNatives();
+	public:
+		void *ResolveSymbolInt(void *pBase, const char *pSymbol);
+		size_t GetOffsetFromVTable(void *pInterface, void *pToFindFunc, const char *pClassSig = nullptr, size_t version = 0);
 };
 
-#include "extension.h"
+#include "../extension.h"

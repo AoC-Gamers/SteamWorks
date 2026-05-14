@@ -203,6 +203,7 @@ class SteamWorksConfig(object):
     cxx.cflags += [
       '-pipe',
       '-fno-strict-aliasing',
+      '-fPIC',
       '-Wall',
       '-Werror',
       '-Wno-unused',
@@ -215,6 +216,7 @@ class SteamWorksConfig(object):
     ]
     cxx.cxxflags += [
       '-std=c++14',
+      '-fPIC',
       '-fno-exceptions',
       '-fno-threadsafe-statics',
       '-Wno-non-virtual-dtor',

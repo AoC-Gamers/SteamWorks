@@ -18,19 +18,19 @@
 
 #pragma once
 
+#include "steam_gameserver.h"
+#include "isteamgamecoordinator.h"
 #include "smsdk_ext.h"
 
-class SteamWorksGameData
+#ifdef _WIN32
+#undef SendMessage
+#endif
+
+class SteamWorksGCNatives
 {
 public:
-	SteamWorksGameData();
-	~SteamWorksGameData();
-
-	bool HasGameData(void) const;
-	IGameConfig *GetGameData(void) const;
-
-private:
-	IGameConfig *pGameConf = nullptr;
+	SteamWorksGCNatives();
+	~SteamWorksGCNatives();
 };
 
-#include "extension.h"
+#include "../extension.h"

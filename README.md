@@ -113,6 +113,19 @@ Artefacto local:
 
 - `.build/linux-l4d2/package/addons/sourcemod/extensions/steamworks.ext.so`
 
+Estructura del código nativo
+----------------------------
+
+El código bajo `extension/` quedó agrupado por responsabilidad:
+
+- `extension/core/`: integración base de SteamWorks, forwards, gamedata y utilidades internas
+- `extension/natives/`: natives expuestos a SourcePawn
+- `extension/hooks/`: hooks y detours contra GameServer / GameCoordinator
+- `extension/http/`: capa HTTP y requests
+- `extension/sdk/`: bootstrap base del SDK de SourceMod
+- `extension/steamtools/`: parsing auxiliar de blobs y tickets
+- `extension/CDetour/` y `extension/asm/`: dependencias nativas auxiliares
+
 Dependencias en runtime dentro del gameserver
 ---------------------------------------------
 
