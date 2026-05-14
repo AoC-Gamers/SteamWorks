@@ -7,11 +7,11 @@ consideran no soportadas en este contexto.
 
 La referencia de API evaluada es:
 
-- `Pawn/includes/steamworks.inc`
+- `scripting/include/steamworks.inc`
 
 El plugin usado para la validación práctica fue:
 
-- `Pawn/steamwork_test.sp`
+- `scripts/steamwork_test.sp`
 
 ## Verificado
 

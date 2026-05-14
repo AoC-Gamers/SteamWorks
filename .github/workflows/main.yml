@@ -22,14 +22,14 @@ permissions:
   contents: write
 
 jobs:
-  prepare-deps:
+  prepare-deps-linux:
     runs-on: ubuntu-22.04
     outputs:
       cache-key: ${{ steps.cache-key.outputs.key }}
 
     steps:
       - name: Checkout SteamWorks
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install Linux dependencies
         shell: bash
@@ -46,7 +46,7 @@ jobs:
 
       - name: Restore dependency cache
         id: deps-cache-restore
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: .deps
           key: ${{ steps.cache-key.outputs.key }}
@@ -54,18 +54,18 @@ jobs:
       - name: Fetch build dependencies
         if: steps.deps-cache-restore.outputs.cache-hit != 'true'
         shell: bash
-        run: make deps
+        run: make deps-linux
 
       - name: Save dependency cache
         if: steps.deps-cache-restore.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: .deps
           key: ${{ steps.cache-key.outputs.key }}
 
   build-linux:
     runs-on: ubuntu-22.04
-    needs: prepare-deps
+    needs: prepare-deps-linux
     outputs:
       kind: ${{ steps.artifact.outputs.kind }}
       version: ${{ steps.artifact.outputs.version }}
@@ -76,12 +76,12 @@ jobs:
 
     steps:
       - name: Checkout SteamWorks
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Checkout Steamworks-SDK
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: AoC-Gamers/Steamworks-SDK
           ref: main
@@ -96,10 +96,10 @@ jobs:
           sudo apt-get install -y python3 python3-venv make gcc-multilib g++-multilib clang zip
 
       - name: Restore dependency cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: .deps
-          key: ${{ needs.prepare-deps.outputs.cache-key }}
+          key: ${{ needs.prepare-deps-linux.outputs.cache-key }}
           fail-on-cache-miss: true
 
       - name: Resolve SDK name
@@ -124,7 +124,7 @@ jobs:
 
       - name: Build extension
         shell: bash
-        run: make build-l4d2 STEAMWORKS_SDK_DIR="${{ steps.sdk.outputs.dir }}"
+        run: make build-linux STEAMWORKS_SDK_DIR="${{ steps.sdk.outputs.dir }}"
 
       - name: Resolve artifact channel
         id: artifact
@@ -176,7 +176,7 @@ jobs:
           cp ".build/linux-l4d2/package/addons/sourcemod/extensions/steamworks.ext.so" \
             "$ARTIFACT_DIR/addons/sourcemod/extensions/steamworks.ext.so"
 
-          cp "Pawn/includes/steamworks.inc" \
+          cp "scripting/include/steamworks.inc" \
             "$ARTIFACT_DIR/addons/sourcemod/scripting/include/steamworks.inc"
 
           mkdir -p dist/release
@@ -186,27 +186,74 @@ jobs:
           )
 
       - name: Upload workflow artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ steps.artifact.outputs.basename }}
           path: dist/release/${{ steps.artifact.outputs.basename }}.zip
           if-no-files-found: error
           retention-days: 14
 
-  build-windows:
+  prepare-deps-windows:
     runs-on: windows-2022
+    outputs:
+      cache-key: ${{ steps.cache-key.outputs.key }}
 
     steps:
       - name: Checkout SteamWorks
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Resolve dependency cache key
+        id: cache-key
+        shell: bash
+        run: |
+          echo "key=windows-deps-${{ runner.os }}-${{ hashFiles('scripts/fetch-windows-deps.ps1', 'scripts/build-windows-l4d2.ps1', 'Makefile', 'configure.py') }}" >> "$GITHUB_OUTPUT"
+
+      - name: Restore dependency cache
+        id: deps-cache-restore
+        uses: actions/cache/restore@v5
+        with:
+          path: .deps
+          key: ${{ steps.cache-key.outputs.key }}
+
+      - name: Fetch Windows build dependencies
+        if: steps.deps-cache-restore.outputs.cache-hit != 'true'
+        shell: pwsh
+        run: make deps-windows
+
+      - name: Save dependency cache
+        if: steps.deps-cache-restore.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v5
+        with:
+          path: .deps
+          key: ${{ steps.cache-key.outputs.key }}
+
+  build-windows:
+    runs-on: windows-2022
+    needs: prepare-deps-windows
+    outputs:
+      basename: ${{ steps.artifact.outputs.basename }}
+
+    steps:
+      - name: Checkout SteamWorks
+        uses: actions/checkout@v6
 
       - name: Checkout Steamworks-SDK
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: AoC-Gamers/Steamworks-SDK
           ref: main
           path: steamworks-sdk
           token: ${{ secrets.GHCR_DEPLOY_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
 
       - name: Resolve SDK name
         id: sdk
@@ -228,61 +275,16 @@ jobs:
             exit 1
           fi
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Restore dependency cache
+        uses: actions/cache/restore@v5
         with:
-          python-version: "3.12"
-
-      - name: Set up MSVC x86 environment
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: x86
-
-      - name: Fetch Windows build dependencies
-        shell: pwsh
-        run: |
-          New-Item -ItemType Directory -Force .deps | Out-Null
-
-          git clone --branch l4d2 --single-branch https://github.com/alliedmodders/hl2sdk.git .deps/hl2sdk-l4d2
-          git clone --branch 1.12-dev --single-branch https://github.com/alliedmodders/sourcemod.git .deps/sourcemod-1.12
-          git clone --branch 1.12-dev --single-branch https://github.com/alliedmodders/metamod-source.git .deps/mmsource-1.12
-          git clone --branch master --single-branch https://github.com/alliedmodders/ambuild.git .deps/ambuild
-
-          git -C .deps/sourcemod-1.12 submodule sync --recursive
-          git -C .deps/sourcemod-1.12 submodule update --init --recursive
-          git -C .deps/mmsource-1.12 submodule sync --recursive
-          git -C .deps/mmsource-1.12 submodule update --init --recursive
-
-          python -m venv .deps/.venv-windows
-          .\.deps\.venv-windows\Scripts\python.exe -m pip install --upgrade pip
-          .\.deps\.venv-windows\Scripts\python.exe -m pip install .\.deps\ambuild
+          path: .deps
+          key: ${{ needs.prepare-deps-windows.outputs.cache-key }}
+          fail-on-cache-miss: true
 
       - name: Build Windows extension
         shell: pwsh
-        run: |
-          Remove-Item -Recurse -Force .build\windows-l4d2 -ErrorAction SilentlyContinue
-          New-Item -ItemType Directory -Force .build\windows-l4d2 | Out-Null
-
-          Push-Location .build\windows-l4d2
-          try {
-            ..\..\.deps\.venv-windows\Scripts\python.exe ..\..\configure.py `
-              --sdks l4d2 `
-              --hl2sdk-root ..\..\.deps `
-              --mms-path ..\..\.deps\mmsource-1.12 `
-              --sm-path ..\..\.deps\sourcemod-1.12 `
-              --steamworks-path "${{ steps.sdk.outputs.dir }}" `
-              --enable-optimize `
-              --target x86
-
-            if (-not (Test-Path .\.ambuild2\vars)) {
-              throw "AMBuild configure did not produce .ambuild2\\vars"
-            }
-
-            ..\..\.deps\.venv-windows\Scripts\ambuild.exe
-          }
-          finally {
-            Pop-Location
-          }
+        run: make build-windows STEAMWORKS_SDK_DIR="${{ steps.sdk.outputs.dir }}"
 
       - name: Resolve Windows artifact name
         id: artifact
@@ -315,13 +317,13 @@ jobs:
           New-Item -ItemType Directory -Force "$artifactDir\\addons\\sourcemod\\scripting\\include" | Out-Null
 
           Copy-Item ".build\\windows-l4d2\\package\\addons\\sourcemod\\extensions\\steamworks.ext.dll" "$artifactDir\\addons\\sourcemod\\extensions\\steamworks.ext.dll"
-          Copy-Item "Pawn\\includes\\steamworks.inc" "$artifactDir\\addons\\sourcemod\\scripting\\include\\steamworks.inc"
+          Copy-Item "scripting\\include\\steamworks.inc" "$artifactDir\\addons\\sourcemod\\scripting\\include\\steamworks.inc"
 
           New-Item -ItemType Directory -Force dist\\release | Out-Null
           Compress-Archive -Path "$artifactDir\\addons" -DestinationPath "dist\\release\\${{ steps.artifact.outputs.basename }}.zip" -Force
 
       - name: Upload Windows artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ steps.artifact.outputs.basename }}
           path: dist/release/${{ steps.artifact.outputs.basename }}.zip
@@ -330,19 +332,25 @@ jobs:
 
   publish:
     runs-on: ubuntu-22.04
-    needs: build-linux
+    needs: [build-linux, build-windows]
     if: github.ref_type == 'branch' || (github.ref_type == 'tag' && startsWith(github.ref_name, 'v'))
 
     steps:
       - name: Checkout SteamWorks
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
+      - name: Download Linux build artifact
+        uses: actions/download-artifact@v8
         with:
           name: ${{ needs.build-linux.outputs.basename }}
+          path: dist/release
+
+      - name: Download Windows build artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ needs.build-windows.outputs.basename }}
           path: dist/release
 
       - name: Move channel tag
@@ -362,7 +370,8 @@ jobs:
         run: |
           tag="${{ needs.build-linux.outputs.release-tag }}"
           title="${{ needs.build-linux.outputs.release-name }}"
-          asset="dist/release/${{ needs.build-linux.outputs.basename }}.zip"
+          linux_asset="dist/release/${{ needs.build-linux.outputs.basename }}.zip"
+          windows_asset="dist/release/${{ needs.build-windows.outputs.basename }}.zip"
 
           if gh release view "$tag" >/dev/null 2>&1; then
             if [[ "${{ needs.build-linux.outputs.prerelease }}" == "true" ]]; then
@@ -378,7 +387,7 @@ jobs:
             fi
           fi
 
-          gh release upload "$tag" "$asset" --clobber
+          gh release upload "$tag" "$linux_asset" "$windows_asset" --clobber
 
       - name: Publish tagged release
         if: github.ref_type == 'tag' && startsWith(github.ref_name, 'v')
@@ -388,7 +397,8 @@ jobs:
         run: |
           tag="${GITHUB_REF_NAME}"
           title="${{ needs.build-linux.outputs.release-name }}"
-          asset="dist/release/${{ needs.build-linux.outputs.basename }}.zip"
+          linux_asset="dist/release/${{ needs.build-linux.outputs.basename }}.zip"
+          windows_asset="dist/release/${{ needs.build-windows.outputs.basename }}.zip"
 
           if gh release view "$tag" >/dev/null 2>&1; then
             gh release edit "$tag" --title "$title" --latest
@@ -396,4 +406,4 @@ jobs:
             gh release create "$tag" --title "$title" --verify-tag --latest
           fi
 
-          gh release upload "$tag" "$asset" --clobber
+          gh release upload "$tag" "$linux_asset" "$windows_asset" --clobber

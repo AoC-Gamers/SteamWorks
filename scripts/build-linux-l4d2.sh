@@ -2,6 +2,37 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ENV_FILE="${ENV_FILE:-$ROOT_DIR/.env}"
+
+load_dotenv() {
+  local env_file="$1"
+  if [[ ! -f "$env_file" ]]; then
+    return
+  fi
+
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    line="${line#"${line%%[![:space:]]*}"}"
+    line="${line%"${line##*[![:space:]]}"}"
+    [[ -z "$line" || "${line:0:1}" == "#" ]] && continue
+    [[ "$line" =~ ^[A-Za-z_][A-Za-z0-9_]*= ]] || continue
+
+    local name="${line%%=*}"
+    local value="${line#*=}"
+    value="${value#"${value%%[![:space:]]*}"}"
+    value="${value%"${value##*[![:space:]]}"}"
+    if [[ "$value" == \"*\" && "$value" == *\" ]]; then
+      value="${value:1:${#value}-2}"
+    elif [[ "$value" == \'*\' && "$value" == *\' ]]; then
+      value="${value:1:${#value}-2}"
+    fi
+    if [[ -z "${!name+x}" ]]; then
+      export "$name=$value"
+    fi
+  done < "$env_file"
+}
+
+load_dotenv "$ENV_FILE"
+
 DEPS_DIR="${DEPS_DIR:-$ROOT_DIR/.deps}"
 TARGET_SDK="${TARGET_SDK:-l4d2}"
 BUILD_DIR="${BUILD_DIR:-$ROOT_DIR/.build/linux-$TARGET_SDK}"
@@ -17,7 +48,7 @@ case "$(uname -s)" in
     ;;
   *)
     echo "This build script targets Linux L4D2 extensions and must be run on Linux." >&2
-    echo "Use make deps on any platform, but run make build inside a Linux environment with 32-bit toolchain support." >&2
+    echo "Use make deps-linux on any platform, but run make build-linux inside a Linux environment with 32-bit toolchain support." >&2
     exit 1
     ;;
 esac

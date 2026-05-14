@@ -5,7 +5,7 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 ## [Unreleased]
 
 ### Agregado
-- Se agregó `Pawn/steamwork_test.sp` como plugin local de pruebas para validación agrupada de SteamWorks.
+- Se agregó `scripts/steamwork_test.sp` como plugin local de pruebas para validación agrupada de SteamWorks.
 - Se agregaron pruebas agrupadas en `steamwork_test.sp` para:
   - estado y conectividad
   - identidad
@@ -37,6 +37,12 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
   - compilación Linux
   - compilación Windows
   - publicación de releases
+- Se ajustó el workflow para separar explícitamente:
+  - `prepare-deps-linux`
+  - `prepare-deps-windows`
+  - `build-linux`
+  - `build-windows`
+- Se actualizaron las versiones de GitHub Actions usadas por CI.
 - Se limitó el artefacto oficial de release Linux a:
   - `addons/sourcemod/extensions/steamworks.ext.so`
   - `addons/sourcemod/scripting/include/steamworks.inc`
@@ -62,13 +68,34 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
   - las bibliotecas requeridas en runtime
   - el contenido de los artefactos de CI
   - la cobertura actual de pruebas
+- Se estandarizó internamente `extension/` con una pasada conservadora sobre:
+  - lifecycle de la extensión
+  - forwards
+  - game server
+  - requests HTTP
+  - game data
+  - hooks y detours
+  - natives
+  - utilidades de memoria
+  - parsing de tickets Steam
+- Se reorganizó físicamente `extension/` en subdirectorios semánticos:
+  - `core/`
+  - `natives/`
+  - `hooks/`
+  - `http/`
+- Se homogeneizó el código interno para usar:
+  - `nullptr`
+  - inicialización de miembros en headers
+  - helpers pequeños de cleanup/release
+  - menos duplicación en callbacks y lifecycle
+- Se corrigió el rename real de `Extension/` a `extension/` para evitar fallos de CI en Linux por diferencias de mayúsculas/minúsculas.
 - Se tradujeron y normalizaron los comentarios y nombres de parámetros en `steamworks.inc`.
 
 ### Eliminado
 - Se eliminó el workflow antiguo de Travis CI.
 - Se eliminaron plugins de ejemplo heredados que ya no forman parte del paquete final:
-  - `Pawn/swag.sp`
-  - `Pawn/UpdateCheck.sp`
+  - `scripts/swag.sp`
+  - `scripts/UpdateCheck.sp`
 - Se eliminaron los natives, forwards e integración runtime no soportados de `ISteamFriends`, tras validar que la interfaz no es utilizable en el contexto del servidor dedicado de L4D2.
 - Se eliminó la lógica temporal de prueba de schema/Web API del plugin local de test, después de mover ese uso a documentación estática.
 

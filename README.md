@@ -14,12 +14,51 @@ orientados a Linux 32-bit. También existe una compilación Windows como job
 separado dentro del workflow principal, pero su artefacto no se publica en los
 releases oficiales.
 
+Compilacion Local
+-----------------
+
+### Linux
+
+Comandos:
+
+```bash
+make deps-linux
+make build-linux
+make build-linux STEAMWORKS_SDK_NAME=sdk_158a
+```
+
+### Windows
+
+Comandos:
+
+```powershell
+make deps-windows
+make build-windows
+```
+
+Para compilar en Windows necesitas una instalacion de Visual Studio / Build
+Tools con soporte C++ x86/x64. Si `cl.exe` no esta disponible en el entorno
+actual, el script intenta localizar `vcvarsall.bat` automaticamente.
+
 SDK de SteamWorks
 -----------------
 
 La versión objetivo usada por este proyecto es Steamworks SDK `1.58a`.
 
-En el flujo actual, esa versión se obtiene desde el repositorio:
+Importante:
+
+- los scripts `make deps-linux` y `make deps-windows` no descargan
+  el Steamworks SDK
+- el SDK de SteamWorks debe colocarse manualmente en el repo
+- ejemplos de directorios locales validos:
+  - `sdk`
+  - `sdk_155`
+  - `sdk_158a`
+
+El flujo asume que la version que quieras usar ya existe localmente y que luego
+la seleccionas con `STEAMWORKS_SDK_NAME` o `STEAMWORKS_SDK_DIR`.
+
+En CI, esa version se obtiene desde el repositorio:
 
 - `AoC-Gamers/Steamworks-SDK`
 - directorio `sdk_158a`
@@ -53,17 +92,39 @@ Flujo de compilación
 Este repositorio incluye scripts auxiliares para descargar las dependencias de
 compilación y luego construir la extensión con AMBuild.
 
+Los scripts descargan:
+
+- `hl2sdk`
+- `sourcemod`
+- `metamod-source`
+- `ambuild`
+
+Pero no descargan el Steamworks SDK.
+
 Comandos:
 
 ```bash
-make deps
-make build-l4d2
-make build-l4d2 STEAMWORKS_SDK_NAME=sdk_158a
+make deps-linux
+make build-linux
+make build-linux STEAMWORKS_SDK_NAME=sdk_158a
 ```
 
 Artefacto local:
 
 - `.build/linux-l4d2/package/addons/sourcemod/extensions/steamworks.ext.so`
+
+Estructura del código nativo
+----------------------------
+
+El código bajo `extension/` quedó agrupado por responsabilidad:
+
+- `extension/core/`: integración base de SteamWorks, forwards, gamedata y utilidades internas
+- `extension/natives/`: natives expuestos a SourcePawn
+- `extension/hooks/`: hooks y detours contra GameServer / GameCoordinator
+- `extension/http/`: capa HTTP y requests
+- `extension/sdk/`: bootstrap base del SDK de SourceMod
+- `extension/steamtools/`: parsing auxiliar de blobs y tickets
+- `extension/CDetour/` y `extension/asm/`: dependencias nativas auxiliares
 
 Dependencias en runtime dentro del gameserver
 ---------------------------------------------
@@ -115,8 +176,8 @@ El workflow principal hace lo siguiente:
 - clona este repositorio
 - clona `AoC-Gamers/Steamworks-SDK`
 - usa una carpeta SDK como `sdk_158a`
-- ejecuta `make deps`
-- ejecuta `make build-l4d2`
+- ejecuta `make deps-linux`
+- ejecuta `make build-linux`
 
 Artefacto Linux del workflow:
 
@@ -128,7 +189,7 @@ Artefacto Windows del workflow:
 - `addons/sourcemod/extensions/steamworks.ext.dll`
 - `addons/sourcemod/scripting/include/steamworks.inc`
 
-Fuentes de prueba como `Pawn/steamwork_test.sp` no se compilan dentro de los
+Fuentes de prueba como `scripts/steamwork_test.sp` no se compilan dentro de los
 artefactos finales ni se empaquetan en CI.
 
 Limitación conocida
@@ -161,10 +222,17 @@ Las rutas pueden sobreescribirse con variables de entorno como `DEPS_DIR`,
 `BUILD_DIR`, `HL2SDK_DIR`, `SOURCEMOD_DIR`, `MMSOURCE_DIR`,
 `STEAMWORKS_SDK_DIR`, `STEAMWORKS_SDK_NAME` y `VENV_DIR`.
 
+Los scripts tambien cargan opcionalmente un archivo `.env` en la raiz del repo
+para parametrizar rutas locales sin editar los scripts.
+
+Archivo de referencia:
+
+- `.env.example`
+
 `STEAMWORKS_SDK_NAME` usa `sdk` por defecto, así que si mantienes múltiples
 versiones extraídas del SDK dentro del repositorio puedes cambiar entre ellas
 sin editar scripts. Ejemplo:
 
 ```bash
-make build-l4d2 STEAMWORKS_SDK_NAME=sdk_158a
+make build-linux STEAMWORKS_SDK_NAME=sdk_158a
 ```

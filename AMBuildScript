@@ -126,7 +126,9 @@ class SteamWorksConfig(object):
     if builder.options.mms_path:
       self.mms_root = builder.options.mms_path
     else:
-      self.mms_root = ResolveEnvPath('MMSOURCE110', 'mmsource-1.10')
+      self.mms_root = ResolveEnvPath('MMSOURCE112', 'mmsource-1.12')
+      if not self.mms_root:
+        self.mms_root = ResolveEnvPath('MMSOURCE110', 'mmsource-1.10')
       if not self.mms_root:
         self.mms_root = ResolveEnvPath(
           'MMSOURCE_DEV', 'metamod-source')
@@ -159,7 +161,8 @@ class SteamWorksConfig(object):
     self.steamworks_root = Normalize(self.steamworks_root)
 
   def configure(self):
-    builder.AddConfigureFile('pushbuild.txt')
+    if os.path.isfile(os.path.join(builder.sourcePath, 'pushbuild.txt')):
+      builder.AddConfigureFile('pushbuild.txt')
     cxx = builder.cxx
 
     if cxx.like('gcc'):
@@ -200,6 +203,7 @@ class SteamWorksConfig(object):
     cxx.cflags += [
       '-pipe',
       '-fno-strict-aliasing',
+      '-fPIC',
       '-Wall',
       '-Werror',
       '-Wno-unused',
@@ -212,6 +216,7 @@ class SteamWorksConfig(object):
     ]
     cxx.cxxflags += [
       '-std=c++14',
+      '-fPIC',
       '-fno-exceptions',
       '-fno-threadsafe-statics',
       '-Wno-non-virtual-dtor',
@@ -412,7 +417,7 @@ SteamWorks = SteamWorksConfig()
 SteamWorks.detectSDKs()
 SteamWorks.configure()
 
-BuildScripts = ['Extension/AMBuilder']
+BuildScripts = ['extension/AMBuilder']
 
 builder.Build(BuildScripts, { 'SteamWorks': SteamWorks })
-builder.Build('buildbot/PackageScript', { 'SteamWorks': SteamWorks })
+builder.Build('PackageScript', { 'SteamWorks': SteamWorks })
