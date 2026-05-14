@@ -195,6 +195,8 @@ jobs:
 
   build-windows:
     runs-on: windows-2022
+    outputs:
+      basename: ${{ steps.artifact.outputs.basename }}
 
     steps:
       - name: Checkout SteamWorks
@@ -282,7 +284,7 @@ jobs:
 
   publish:
     runs-on: ubuntu-22.04
-    needs: build-linux
+    needs: [build-linux, build-windows]
     if: github.ref_type == 'branch' || (github.ref_type == 'tag' && startsWith(github.ref_name, 'v'))
 
     steps:
@@ -291,10 +293,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Download build artifact
+      - name: Download Linux build artifact
         uses: actions/download-artifact@v4
         with:
           name: ${{ needs.build-linux.outputs.basename }}
+          path: dist/release
+
+      - name: Download Windows build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.build-windows.outputs.basename }}
           path: dist/release
 
       - name: Move channel tag
@@ -314,7 +322,8 @@ jobs:
         run: |
           tag="${{ needs.build-linux.outputs.release-tag }}"
           title="${{ needs.build-linux.outputs.release-name }}"
-          asset="dist/release/${{ needs.build-linux.outputs.basename }}.zip"
+          linux_asset="dist/release/${{ needs.build-linux.outputs.basename }}.zip"
+          windows_asset="dist/release/${{ needs.build-windows.outputs.basename }}.zip"
 
           if gh release view "$tag" >/dev/null 2>&1; then
             if [[ "${{ needs.build-linux.outputs.prerelease }}" == "true" ]]; then
@@ -330,7 +339,7 @@ jobs:
             fi
           fi
 
-          gh release upload "$tag" "$asset" --clobber
+          gh release upload "$tag" "$linux_asset" "$windows_asset" --clobber
 
       - name: Publish tagged release
         if: github.ref_type == 'tag' && startsWith(github.ref_name, 'v')
@@ -340,7 +349,8 @@ jobs:
         run: |
           tag="${GITHUB_REF_NAME}"
           title="${{ needs.build-linux.outputs.release-name }}"
-          asset="dist/release/${{ needs.build-linux.outputs.basename }}.zip"
+          linux_asset="dist/release/${{ needs.build-linux.outputs.basename }}.zip"
+          windows_asset="dist/release/${{ needs.build-windows.outputs.basename }}.zip"
 
           if gh release view "$tag" >/dev/null 2>&1; then
             gh release edit "$tag" --title "$title" --latest
@@ -348,4 +358,4 @@ jobs:
             gh release create "$tag" --title "$title" --verify-tag --latest
           fi
 
-          gh release upload "$tag" "$asset" --clobber
+          gh release upload "$tag" "$linux_asset" "$windows_asset" --clobber

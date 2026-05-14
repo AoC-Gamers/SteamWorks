@@ -45,7 +45,20 @@ SDK de SteamWorks
 
 La versión objetivo usada por este proyecto es Steamworks SDK `1.58a`.
 
-En el flujo actual, esa versión se obtiene desde el repositorio:
+Importante:
+
+- los scripts `make deps`, `make deps-linux` y `make deps-windows` no descargan
+  el Steamworks SDK
+- el SDK de SteamWorks debe colocarse manualmente en el repo
+- ejemplos de directorios locales validos:
+  - `sdk`
+  - `sdk_155`
+  - `sdk_158a`
+
+El flujo asume que la version que quieras usar ya existe localmente y que luego
+la seleccionas con `STEAMWORKS_SDK_NAME` o `STEAMWORKS_SDK_DIR`.
+
+En CI, esa version se obtiene desde el repositorio:
 
 - `AoC-Gamers/Steamworks-SDK`
 - directorio `sdk_158a`
@@ -78,6 +91,15 @@ Flujo de compilación
 
 Este repositorio incluye scripts auxiliares para descargar las dependencias de
 compilación y luego construir la extensión con AMBuild.
+
+Los scripts descargan:
+
+- `hl2sdk`
+- `sourcemod`
+- `metamod-source`
+- `ambuild`
+
+Pero no descargan el Steamworks SDK.
 
 Comandos:
 

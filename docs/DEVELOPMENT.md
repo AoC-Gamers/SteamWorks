@@ -50,6 +50,8 @@ make build-windows
 - `.build/` no se versiona
 - `.env` es opcional y sirve para overrides locales
 - la via oficial de build es `Makefile` + scripts
+- `make deps*` no descarga el Steamworks SDK; ese contenido debe existir ya en
+  `sdk`, `sdk_155`, `sdk_158a` u otra ruta local equivalente
 
 ## Verificacion recomendada
 

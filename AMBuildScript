@@ -159,7 +159,8 @@ class SteamWorksConfig(object):
     self.steamworks_root = Normalize(self.steamworks_root)
 
   def configure(self):
-    builder.AddConfigureFile('pushbuild.txt')
+    if os.path.isfile(os.path.join(builder.sourcePath, 'pushbuild.txt')):
+      builder.AddConfigureFile('pushbuild.txt')
     cxx = builder.cxx
 
     if cxx.like('gcc'):
