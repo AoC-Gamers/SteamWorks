@@ -10,7 +10,7 @@ public Plugin myinfo =
 	author = "lechuga",
 	description = "Grouped test commands and forward logging for SteamWorks",
 	version = SWTEST_VERSION,
-	url = ""
+	url = "https://github.com/AoC-Gamers/SteamWorks"
 };
 
 public void OnPluginStart()

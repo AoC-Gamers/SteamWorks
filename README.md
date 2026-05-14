@@ -14,6 +14,32 @@ orientados a Linux 32-bit. También existe una compilación Windows como job
 separado dentro del workflow principal, pero su artefacto no se publica en los
 releases oficiales.
 
+Compilacion Local
+-----------------
+
+### Linux
+
+Comandos:
+
+```bash
+make deps-linux
+make build-linux
+make build-linux STEAMWORKS_SDK_NAME=sdk_158a
+```
+
+### Windows
+
+Comandos:
+
+```powershell
+make deps-windows
+make build-windows
+```
+
+Para compilar en Windows necesitas una instalacion de Visual Studio / Build
+Tools con soporte C++ x86/x64. Si `cl.exe` no esta disponible en el entorno
+actual, el script intenta localizar `vcvarsall.bat` automaticamente.
+
 SDK de SteamWorks
 -----------------
 
@@ -57,8 +83,8 @@ Comandos:
 
 ```bash
 make deps
-make build-l4d2
-make build-l4d2 STEAMWORKS_SDK_NAME=sdk_158a
+make build-linux
+make build-linux STEAMWORKS_SDK_NAME=sdk_158a
 ```
 
 Artefacto local:
@@ -116,7 +142,7 @@ El workflow principal hace lo siguiente:
 - clona `AoC-Gamers/Steamworks-SDK`
 - usa una carpeta SDK como `sdk_158a`
 - ejecuta `make deps`
-- ejecuta `make build-l4d2`
+- ejecuta `make build-linux`
 
 Artefacto Linux del workflow:
 
@@ -128,7 +154,7 @@ Artefacto Windows del workflow:
 - `addons/sourcemod/extensions/steamworks.ext.dll`
 - `addons/sourcemod/scripting/include/steamworks.inc`
 
-Fuentes de prueba como `Pawn/steamwork_test.sp` no se compilan dentro de los
+Fuentes de prueba como `scripts/steamwork_test.sp` no se compilan dentro de los
 artefactos finales ni se empaquetan en CI.
 
 Limitación conocida
@@ -161,10 +187,17 @@ Las rutas pueden sobreescribirse con variables de entorno como `DEPS_DIR`,
 `BUILD_DIR`, `HL2SDK_DIR`, `SOURCEMOD_DIR`, `MMSOURCE_DIR`,
 `STEAMWORKS_SDK_DIR`, `STEAMWORKS_SDK_NAME` y `VENV_DIR`.
 
+Los scripts tambien cargan opcionalmente un archivo `.env` en la raiz del repo
+para parametrizar rutas locales sin editar los scripts.
+
+Archivo de referencia:
+
+- `.env.example`
+
 `STEAMWORKS_SDK_NAME` usa `sdk` por defecto, así que si mantienes múltiples
 versiones extraídas del SDK dentro del repositorio puedes cambiar entre ellas
 sin editar scripts. Ejemplo:
 
 ```bash
-make build-l4d2 STEAMWORKS_SDK_NAME=sdk_158a
+make build-linux STEAMWORKS_SDK_NAME=sdk_158a
 ```

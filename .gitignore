@@ -29,5 +29,6 @@
 .deps/
 .build/
 .output/
+.env
 sdk/
 sdk_*/

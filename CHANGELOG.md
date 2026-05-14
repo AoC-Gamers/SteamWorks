@@ -5,7 +5,7 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 ## [Unreleased]
 
 ### Agregado
-- Se agregó `Pawn/steamwork_test.sp` como plugin local de pruebas para validación agrupada de SteamWorks.
+- Se agregó `scripts/steamwork_test.sp` como plugin local de pruebas para validación agrupada de SteamWorks.
 - Se agregaron pruebas agrupadas en `steamwork_test.sp` para:
   - estado y conectividad
   - identidad
@@ -67,8 +67,8 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 ### Eliminado
 - Se eliminó el workflow antiguo de Travis CI.
 - Se eliminaron plugins de ejemplo heredados que ya no forman parte del paquete final:
-  - `Pawn/swag.sp`
-  - `Pawn/UpdateCheck.sp`
+  - `scripts/swag.sp`
+  - `scripts/UpdateCheck.sp`
 - Se eliminaron los natives, forwards e integración runtime no soportados de `ISteamFriends`, tras validar que la interfaz no es utilizable en el contexto del servidor dedicado de L4D2.
 - Se eliminó la lógica temporal de prueba de schema/Web API del plugin local de test, después de mover ese uso a documentación estática.
 

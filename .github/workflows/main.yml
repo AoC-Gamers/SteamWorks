@@ -124,7 +124,7 @@ jobs:
 
       - name: Build extension
         shell: bash
-        run: make build-l4d2 STEAMWORKS_SDK_DIR="${{ steps.sdk.outputs.dir }}"
+        run: make build-linux STEAMWORKS_SDK_DIR="${{ steps.sdk.outputs.dir }}"
 
       - name: Resolve artifact channel
         id: artifact
@@ -176,7 +176,7 @@ jobs:
           cp ".build/linux-l4d2/package/addons/sourcemod/extensions/steamworks.ext.so" \
             "$ARTIFACT_DIR/addons/sourcemod/extensions/steamworks.ext.so"
 
-          cp "Pawn/includes/steamworks.inc" \
+          cp "scripting/include/steamworks.inc" \
             "$ARTIFACT_DIR/addons/sourcemod/scripting/include/steamworks.inc"
 
           mkdir -p dist/release
@@ -228,61 +228,13 @@ jobs:
             exit 1
           fi
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Set up MSVC x86 environment
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: x86
-
       - name: Fetch Windows build dependencies
         shell: pwsh
-        run: |
-          New-Item -ItemType Directory -Force .deps | Out-Null
-
-          git clone --branch l4d2 --single-branch https://github.com/alliedmodders/hl2sdk.git .deps/hl2sdk-l4d2
-          git clone --branch 1.12-dev --single-branch https://github.com/alliedmodders/sourcemod.git .deps/sourcemod-1.12
-          git clone --branch 1.12-dev --single-branch https://github.com/alliedmodders/metamod-source.git .deps/mmsource-1.12
-          git clone --branch master --single-branch https://github.com/alliedmodders/ambuild.git .deps/ambuild
-
-          git -C .deps/sourcemod-1.12 submodule sync --recursive
-          git -C .deps/sourcemod-1.12 submodule update --init --recursive
-          git -C .deps/mmsource-1.12 submodule sync --recursive
-          git -C .deps/mmsource-1.12 submodule update --init --recursive
-
-          python -m venv .deps/.venv-windows
-          .\.deps\.venv-windows\Scripts\python.exe -m pip install --upgrade pip
-          .\.deps\.venv-windows\Scripts\python.exe -m pip install .\.deps\ambuild
+        run: make deps-windows
 
       - name: Build Windows extension
         shell: pwsh
-        run: |
-          Remove-Item -Recurse -Force .build\windows-l4d2 -ErrorAction SilentlyContinue
-          New-Item -ItemType Directory -Force .build\windows-l4d2 | Out-Null
-
-          Push-Location .build\windows-l4d2
-          try {
-            ..\..\.deps\.venv-windows\Scripts\python.exe ..\..\configure.py `
-              --sdks l4d2 `
-              --hl2sdk-root ..\..\.deps `
-              --mms-path ..\..\.deps\mmsource-1.12 `
-              --sm-path ..\..\.deps\sourcemod-1.12 `
-              --steamworks-path "${{ steps.sdk.outputs.dir }}" `
-              --enable-optimize `
-              --target x86
-
-            if (-not (Test-Path .\.ambuild2\vars)) {
-              throw "AMBuild configure did not produce .ambuild2\\vars"
-            }
-
-            ..\..\.deps\.venv-windows\Scripts\ambuild.exe
-          }
-          finally {
-            Pop-Location
-          }
+        run: make build-windows STEAMWORKS_SDK_DIR="${{ steps.sdk.outputs.dir }}"
 
       - name: Resolve Windows artifact name
         id: artifact
@@ -315,7 +267,7 @@ jobs:
           New-Item -ItemType Directory -Force "$artifactDir\\addons\\sourcemod\\scripting\\include" | Out-Null
 
           Copy-Item ".build\\windows-l4d2\\package\\addons\\sourcemod\\extensions\\steamworks.ext.dll" "$artifactDir\\addons\\sourcemod\\extensions\\steamworks.ext.dll"
-          Copy-Item "Pawn\\includes\\steamworks.inc" "$artifactDir\\addons\\sourcemod\\scripting\\include\\steamworks.inc"
+          Copy-Item "scripting\\include\\steamworks.inc" "$artifactDir\\addons\\sourcemod\\scripting\\include\\steamworks.inc"
 
           New-Item -ItemType Directory -Force dist\\release | Out-Null
           Compress-Archive -Path "$artifactDir\\addons" -DestinationPath "dist\\release\\${{ steps.artifact.outputs.basename }}.zip" -Force

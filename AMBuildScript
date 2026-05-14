@@ -412,7 +412,7 @@ SteamWorks = SteamWorksConfig()
 SteamWorks.detectSDKs()
 SteamWorks.configure()
 
-BuildScripts = ['Extension/AMBuilder']
+BuildScripts = ['extension/AMBuilder']
 
 builder.Build(BuildScripts, { 'SteamWorks': SteamWorks })
-builder.Build('buildbot/PackageScript', { 'SteamWorks': SteamWorks })
+builder.Build('PackageScript', { 'SteamWorks': SteamWorks })

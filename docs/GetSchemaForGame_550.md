@@ -8,7 +8,7 @@ Este documento explica cómo usar:
 
 como referencia local para probar stats de Left 4 Dead 2 con:
 
-- [steamwork_test.sp](C:\GitHub\SteamWorks\Pawn\steamwork_test.sp)
+- [steamwork_test.sp](C:\GitHub\SteamWorks\scripts\steamwork_test.sp)
 
 El archivo corresponde al schema oficial de Steam para `appid=550`.
 
