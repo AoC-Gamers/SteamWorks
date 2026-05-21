@@ -47,15 +47,19 @@ principal sigue siendo Linux.
 Flujo recomendado en Linux:
 
 ```bash
-make deps-linux
-make build-linux STEAMWORKS_SDK_NAME=sdk_158a
+make deps-exts-linux
+make build-exts-linux STEAMWORKS_SDK_NAME=sdk_158a
+make package-exts-linux
+make release-linux RELEASE_BASENAME=steamworks-local-linux
 ```
 
 Flujo recomendado en Windows:
 
 ```powershell
-make deps-windows
-make build-windows STEAMWORKS_SDK_NAME=sdk_158a
+make deps-exts-windows
+make build-exts-windows STEAMWORKS_SDK_NAME=sdk_158a
+make package-exts-windows
+make release-windows RELEASE_BASENAME=steamworks-local-windows
 ```
 
 Artefacto Linux esperado:
@@ -206,8 +210,8 @@ Steamworks SDK 1.58a
 
 Importante:
 
-- `make deps-linux` no descarga el Steamworks SDK;
-- `make deps-windows` no descarga el Steamworks SDK;
+- `make deps-exts-linux` no descarga el Steamworks SDK;
+- `make deps-exts-windows` no descarga el Steamworks SDK;
 - el SDK debe colocarse manualmente dentro del repositorio o apuntarse con una variable de entorno.
 
 Directorios locales válidos:
@@ -227,13 +231,13 @@ STEAMWORKS_SDK_NAME=sdk
 Ejemplo usando SDK 1.58a:
 
 ```bash
-make build-linux STEAMWORKS_SDK_NAME=sdk_158a
+make build-exts-linux STEAMWORKS_SDK_NAME=sdk_158a
 ```
 
 También puedes apuntar directamente a una ruta:
 
 ```bash
-make build-linux STEAMWORKS_SDK_DIR=/ruta/al/steamworks-sdk
+make build-exts-linux STEAMWORKS_SDK_DIR=/ruta/al/steamworks-sdk
 ```
 
 En CI, el SDK se obtiene desde:
@@ -671,19 +675,19 @@ Si `cl.exe` no está disponible, el script intenta ubicar Visual Studio mediante
 Preparar dependencias:
 
 ```bash
-make deps-linux
+make deps-exts-linux
 ```
 
 Compilar usando SDK por defecto `sdk/`:
 
 ```bash
-make build-linux
+make build-exts-linux
 ```
 
 Compilar usando SDK `sdk_158a/`:
 
 ```bash
-make build-linux STEAMWORKS_SDK_NAME=sdk_158a
+make build-exts-linux STEAMWORKS_SDK_NAME=sdk_158a
 ```
 
 Artefactos:
@@ -698,13 +702,13 @@ Artefactos:
 Preparar dependencias:
 
 ```powershell
-make deps-windows
+make deps-exts-windows
 ```
 
 Compilar:
 
 ```powershell
-make build-windows STEAMWORKS_SDK_NAME=sdk_158a
+make build-exts-windows STEAMWORKS_SDK_NAME=sdk_158a
 ```
 
 Artefactos:
@@ -718,10 +722,14 @@ Artefactos:
 
 ```text
 make help
-make deps-linux
-make deps-windows
-make build-linux
-make build-windows
+make deps-exts-linux
+make deps-exts-windows
+make build-exts-linux
+make build-exts-windows
+make package-exts-linux
+make package-exts-windows
+make release-linux
+make release-windows
 make clean-linux
 make clean-windows
 ```
@@ -856,6 +864,13 @@ sdk_158a
 ```
 
 El release oficial se enfoca en Linux 32-bit.
+
+Para detalle del sistema de build y del empaquetado actual, ver también:
+
+```text
+docs/BUILD_SYSTEM.md
+docs/DEVELOPMENT.md
+```
 
 ## Pruebas runtime
 

@@ -29,6 +29,10 @@
 .deps/
 .build/
 .output/
+dist/
+__pycache__/
+*.pyc
+*.zip
 .env
 sdk/
 sdk_*/

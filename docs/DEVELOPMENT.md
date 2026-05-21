@@ -17,21 +17,21 @@ de CI.
 
 ```bash
 make help
-make deps-linux
-make build-linux
+make deps-exts-linux
+make build-exts-linux
 ```
 
 Si usas una version distinta del SDK de SteamWorks:
 
 ```bash
-make build-linux STEAMWORKS_SDK_NAME=sdk_158a
+make build-exts-linux STEAMWORKS_SDK_NAME=sdk_158a
 ```
 
 En Windows:
 
 ```powershell
-make deps-windows
-make build-windows
+make deps-exts-windows
+make build-exts-windows
 ```
 
 ## Estructura relevante
@@ -56,11 +56,11 @@ make build-windows
 - `.build/` no se versiona
 - `.env` es opcional y sirve para overrides locales
 - la via oficial de build es `Makefile` + scripts
-- `make deps*` no descarga el Steamworks SDK; ese contenido debe existir ya en
+- `make deps-exts-*` no descarga el Steamworks SDK; ese contenido debe existir ya en
   `sdk`, `sdk_155`, `sdk_158a` u otra ruta local equivalente
 
 ## Verificacion recomendada
 
-1. confirmar que `make build-linux` sigue compilando
+1. confirmar que `make build-exts-linux` sigue compilando
 2. revisar que el paquete final contenga `steamworks.ext.so` y `steamworks.inc`
 3. si cambias de SDK, validar el nombre o ruta efectiva de `STEAMWORKS_SDK_*`

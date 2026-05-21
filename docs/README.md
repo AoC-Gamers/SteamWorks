@@ -6,6 +6,7 @@ extensión.
 
 Documentos actuales:
 
+- [BUILD_SYSTEM](C:\GitHub\SteamWorks\docs\BUILD_SYSTEM.md)
 - [GetSchemaForGame_550](C:\GitHub\SteamWorks\docs\GetSchemaForGame_550.md)
 - [ISteamHTTP](C:\GitHub\SteamWorks\docs\ISteamHTTP.md)
 - [ISteamFriends](C:\GitHub\SteamWorks\docs\ISteamFriends.md)

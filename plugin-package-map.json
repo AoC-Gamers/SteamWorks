@@ -1,0 +1,22 @@
+{
+  "build": {
+    "extensions": {
+      "root": [
+        "steamworks"
+      ]
+    }
+  },
+  "artifact": {
+    "addons": {
+      "sourcemod": {
+        "scripting": {
+          "include": {
+            "files": [
+              "steamworks.inc"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
