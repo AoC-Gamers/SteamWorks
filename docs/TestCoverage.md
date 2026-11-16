@@ -1,10 +1,10 @@
 # Cobertura de pruebas de `steamworks.inc`
 
-La [matriz P5-R19](runtime-compatibility/p5/validation-results.json) integra las
-correcciones GC/HTTP y separa los ensayos históricos del nuevo ELF `72664c65…`.
+La [matriz P5-R20](runtime-compatibility/p5/validation-results.json) integra
+T26/T35 de R19 y separa los ensayos históricos del ELF `72664c65…`.
 **GC remoto positivo sigue pendiente; no se infiere aceptación global nueva.**
 
-Pasan 15 suites x86, API frente a P0, sanitizadores sin supresiones, 133 checks
+Se repiten y pasan 15 suites x86, API frente a P0, sanitizadores sin supresiones, 133 checks
 GC instrumentados y 33 HTTP de proveedor estricto. El build optimizado reproduce
 el binario de la [aceptación de revisión 12](runtime-compatibility/review12-srcds-acceptance.md):
 372 checks en SRCDS, HTTP real, GC real vacío/local tipado, nuevo juego y quit
@@ -18,16 +18,22 @@ Los sanitizadores y VM offline no certifican el proceso SRCDS completo.
 
 Los 33 casos aprobados y tres no aplicables del checkpoint anterior se conservan
 con su alcance y hash históricos. Los demás escenarios runtime no se repiten
-ni se transfieren automáticamente al ELF nuevo. No hay CI nuevo, Windows/x64
-runtime, OOM real ni validación de todos los métodos SDK. No se opera ningún
-servidor en esta regeneración, ni se hace commit o despliega.
+ni se transfieren automáticamente al ELF nuevo. No se certifican Windows/x64
+runtime, OOM real ni todos los métodos SDK. El CI previo de `adffed0` pasó siete
+jobs; no se repite para este seguimiento. La regeneración inicial no operó
+servidores. El
+[seguimiento T26/T35](runtime-compatibility/p5-r19-rollback-srcds-acceptance.md)
+acredita instalación del ZIP R19 local y reversión en el mismo árbol SRCDS
+aislado, con observador mínimo y restauración DEV. R20 reproduce ese payload,
+renueva los ZIP y repite el roundtrip local; no los instala en SRCDS ni opera
+servidores. No se hace commit ni despliega; GC remoto sigue pendiente.
 
 ## Referencia histórica del plugin de ejemplo
 
 Las secciones siguientes conservan observaciones previas de
 `scripting/steamwork_test.sp` contra `scripting/include/steamworks.inc`. Describen
 su ensayo original; la aceptación del candidato actual se limita a los harnesses,
-hashes y resultados y procedencia de la matriz P5-R19. Los informes y paquetes anteriores se
+hashes y resultados y procedencia de la matriz P5-R20. Los informes y paquetes anteriores se
 conservan intactos y no se transfieren entre binarios distintos.
 
 ## Verificado

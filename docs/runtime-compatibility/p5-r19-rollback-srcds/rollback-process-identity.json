@@ -1,0 +1,7 @@
+{
+  "role": "rollback_baseline",
+  "guest_pid": 46126,
+  "host_pid": 231071,
+  "host_PID_source": "docker top competitive_dev -eo pid,comm before baseline quit",
+  "argv_and_environment_omitted": true
+}

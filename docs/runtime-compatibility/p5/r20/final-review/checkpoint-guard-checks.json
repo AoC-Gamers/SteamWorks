@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "current_evidence_map_entries": 149,
+  "negative_controls": [
+    "altered_T26_T35_evidence_rejected",
+    "altered_current_R20_roundtrip_rejected"
+  ],
+  "historical_evidence_guard_kept": true,
+  "real_files_modified": false,
+  "old_reference_gap": "legacy R19 evidence map excludes later T26/T35 proof; old roundtrip reference bypasses the current R20 documentary result",
+  "product_tests_changed": false
+}

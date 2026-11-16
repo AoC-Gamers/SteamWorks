@@ -1,0 +1,18 @@
+[
+  {
+    "example": 1,
+    "source_sha256": "b982c324b7ba793749c748ea574f3bf9efe5c73503d9a0c7df91f694bd722029",
+    "compiled": true,
+    "warnings": 0,
+    "compiler_version": "SourcePawn Compiler 1.12.0.7259",
+    "runtime_executed": false
+  },
+  {
+    "example": 2,
+    "source_sha256": "cfbebdd4ae4e8fc851890c34366795cc68a343bea160508a535cf2b39a329f30",
+    "compiled": true,
+    "warnings": 0,
+    "compiler_version": "SourcePawn Compiler 1.12.0.7259",
+    "runtime_executed": false
+  }
+]

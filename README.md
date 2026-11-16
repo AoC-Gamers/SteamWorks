@@ -37,28 +37,25 @@ Left 4 Dead 2.
 
 ## Estado del proyecto
 
-[P5-R19](docs/runtime-compatibility/p5-integration.md) integra las correcciones
-GC/HTTP de revisión 12, conserva la API pública y repite la validación x86.
-El nuevo ELF tiene aceptación SRCDS de HTTP real, GC real vacío y proveedor GC
-local tipado. **Recepción positiva GC remota pendiente.** La matriz distingue
-la aceptación actual de la evidencia histórica de P5-R18; no se declara cierre
-global nuevo ni se despliega. Paquetes y reversión renovados localmente.
+[P5-R20](docs/runtime-compatibility/p5-integration.md) integra la aceptación de
+instalación/reversión del ZIP local P5-R19, repite 15 suites x86 y sanitizadores,
+y regenera documentación, cuatro paquetes y rollback por lectura. La API sigue
+intacta y ELF/include reproducen exactamente el payload aceptado.
+**Recepción positiva GC remota pendiente; no hay aceptación global nueva.**
 
-La evidencia histórica de [T25/T29](docs/runtime-compatibility/last-two-srcds-progress.md),
-[T32](docs/runtime-compatibility/connection-srcds-acceptance.md) y
-[T33](docs/runtime-compatibility/soak-srcds-acceptance.md) conserva sus hashes y
-límites originales; no se presenta como repetida con el nuevo ELF.
+[T26/T35](docs/runtime-compatibility/p5-r19-rollback-srcds-acceptance.md) acredita
+el ZIP R19 exacto en SRCDS aislado: un observador, SourceTVSupport, Steam/HTTP y
+cierre. DEV quedó restaurado y 1843 CFG intactos. El baseline salió limpio en ese
+perfil mínimo; su SIGSEGV histórico no se declara resuelto en general. El ZIP
+rollback R20 conserva exactamente los bytes aplicados, pero el ZIP candidato
+R20 nuevo solo se valida localmente.
 
-Quince suites x86, API pública y sanitizadores pasan. Se recompilan consumidores
-y 19 harnesses; las 66 pruebas Python y el build de Connect pasan. Los cuatro
-paquetes P5-R19 están en `.build/p5-r19/review/`, con manifiesto, checksums y
-reversión renovada. Los paquetes anteriores permanecen intactos. Source-review
-incluye evidencia, recetas offline y el parche completo de Connect; los SMX HTTP
-antiguos de tres argumentos requieren recompilación. La
-[reversión](docs/runtime-compatibility/p5-rollback.md) conserva los bytes ZIP ya
-ejercitados; el baseline mantiene su fallo conocido al salir. DEV original se
-comprueba por lectura antes/después, sin operaciones de servidor en esta
-actualización. Rama develop, sin commit, publicación ni despliegue.
+Los demás ensayos históricos mantienen su hash y alcance, sin atribución
+automática entre binarios. Los cuatro ZIP nuevos están en `.build/p5-r20/review/`,
+con manifiesto y checksums; los anteriores permanecen intactos. Los 66 tests y
+el build de Connect pasan sin cambios de fuentes. Sus binarios HTTP de tres
+argumentos requieren recompilación. Esta actualización no opera servidores ni
+hace commit, push o despliegue; develop conserva los cambios para revisión.
 
 El repositorio se mantiene principalmente para compilar y distribuir la extensión
 Linux de 32 bits usada por servidores dedicados de L4D2.

@@ -1,0 +1,13 @@
+{
+  "archive_sha256": "b8a4a8cd20b15572a3e2a31e7be5235d761ac7b1f0e566c05cef57939f893f9d",
+  "installed_directly_from_guest_ZIP": true,
+  "all_archive_members_verified": 1806,
+  "runtime_paths": {
+    "addons/sourcemod/extensions/steamworks.ext.so": "72664c658f6d28e78a975ec98c96879dc641f96725206f514f159ea17125fcb3",
+    "addons/sourcemod/scripting/include/steamworks.inc": "969541624a2ba2f14aa07e040f96e6a50db40503baa21cba6206e0b1bd25aad8"
+  },
+  "no_SRCDS_running_during_install": true,
+  "original_baseline_matches_rollback_ZIP": true,
+  "candidate_gamedata_absent": true,
+  "only_runtime_payload_installed": true
+}

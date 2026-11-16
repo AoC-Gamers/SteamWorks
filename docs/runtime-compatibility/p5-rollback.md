@@ -1,48 +1,58 @@
-# Reversión de P5-R19
+# Reversión de P5-R20
 
-Se renueva por lectura la captura de los archivos propios de SteamWorks en
-`competitive_dev`, sin operaciones de servidor. El ZIP
-`.build/p5-r19/review/steamworks-p5-r19-competitive-dev-rollback.zip` se contrasta
-con el candidato real en un filesystem desechable.
+La captura de archivos propios de SteamWorks se renueva por lectura desde
+`competitive_dev`, sin iniciar, detener o modificar servidores. El conjunto está
+en `.build/p5-r20/review/`; sus ZIP nuevos se validan en filesystem desechable.
 
 | Propiedad | Resultado |
 |---|---|
 | Extensión habitual | `9ca37aadcd83448d49126d6a72babcb8ec97ec5a06c171b4821ae0ee3cf05d70` |
 | Include habitual | `e51bcd397139edc3d144f130c45f0f8edbf55d12278736e0134e4c650ec64f17` |
-| Gamedata | `gamedata/steamworks.txt` ausente, ausencia restaurada |
-| SHA-256 ZIP rollback | `55153d557f3af7f71f1016c8c394dc74fe29e0cdc9511044c21de29e8bc6dffc` |
-| Roundtrip R19 | ZIP candidato→ZIP rollback; hashes/ausencias/CFG ajenos verificados localmente |
-| Ensayo en sitio | Ese ZIP baseline se aplicó en R9; no se repite en R19 |
-| Salida del baseline | SIGSEGV conocido; no se afirma cierre limpio |
+| Gamedata | `gamedata/steamworks.txt` ausente, retirada explícita al restaurar |
+| ZIP rollback R20 | `55153d557f3af7f71f1016c8c394dc74fe29e0cdc9511044c21de29e8bc6dffc` |
+| Bytes ya aplicados | Exactamente el ZIP usado en T35 R19, también idéntico al de R9 |
+| Roundtrip R20 | ZIP candidato→ZIP rollback local, hashes/ausencias y CFG/plugin ajenos preservados |
+| Ensayo runtime incorporado | R19, mismo árbol detenido, un observador y SourceTVSupport; Steam/HTTP/cierre pasan |
+| R20 en sitio | No instalado ni aplicado de nuevo en SRCDS |
+| Cierre del baseline | Quit limpio observado en el perfil mínimo R19; SIGSEGV histórico R9 no cerrado globalmente |
 
-El candidato R19 contiene el ELF `72664c65…` aceptado con alcance GC/HTTP en la
-revisión 12. Sus ZIP nuevos no se instalan. El ensayo anterior restauró archivos
-y selector con LinuxGSM; no es una aplicación del ZIP R19. Se conserva por
-separado [esa restauración](review12-srcds/cleanup.json), la
-[captura actual](p5/r19/baseline-observation.json), el
-[roundtrip actual](p5/r19/rollback-roundtrip.json) y la
-[aplicación en sitio R9](p5-r9-rollback-srcds/results.json).
+El candidato R20 contiene exactamente el ELF/include aceptados por revisión 12
+y por el [seguimiento T26/T35 R19](p5-r19-rollback-srcds-acceptance.md). El nombre
+nuevo y la documentación actualizada no equivalen a otra instalación en sitio.
+El contrato runtime del candidato sigue limitado a dos archivos; rollback no
+incluye CFG privadas, SDK, VM, helpers, SMX o datos de jugadores.
 
-El rollback incluye únicamente extensión/include habituales, sin CFG, SDK,
-bibliotecas de juego, VM, helpers, SMX o datos de jugadores. La ausencia de
-SteamWorks gamedata se restaura explícitamente; no se borra configuración ajena.
-No restaura cambios de Connect: ese consumidor necesita su propia captura
-SMX/config antes de cualquier intervención autorizada. Los binarios HTTP de tres
-argumentos siguen siendo incompatibles con el contrato de cinco argumentos.
+Se preservan la [aplicación real R19](p5-r19-rollback-srcds/applied-rollback.json),
+[restauración DEV/1843 CFG](p5-r19-rollback-srcds/cleanup.json), la
+[captura R20](p5/r20/baseline-observation.json) y el
+[roundtrip R20](p5/r20/rollback-roundtrip.json). No se reinterpreta el fallo de
+salida histórico ni se atribuye al baseline todo el comportamiento del candidato.
+GC remoto positivo sigue pendiente y no hay aceptación global nueva.
 
-## Procedimiento para una intervención futura autorizada
+La revisión final exige que el resultado local se contraste con
+`p5/r20/rollback-roundtrip.json`. En la matriz, la aplicación anterior está en
+`prior_in_place_evidence`; `current_in_place_evidence` es null porque R20 no
+aplicó el ZIP en un servidor. La identidad de bytes conserva la evidencia
+R19 sin convertirla en una nueva intervención.
 
-1. Contrastar destino, supervisor, manifiesto, `SHA256SUMS` y baseline real. Si
-   cambió, capturar otra vez los archivos propios antes de intervenir.
-2. Detener SRCDS mediante LinuxGSM y comprobar que terminó; no forzar unload
-   dentro de callbacks ni sustituir bytes de un ELF que siga mapeado.
-3. Restaurar únicamente extensión/include del ZIP y la ausencia de gamedata
-   registrada. Preservar datos, bibliotecas y configuración ajenos.
+## Procedimiento para una futura intervención autorizada
+
+1. Contrastar destino, supervisor, manifiesto, `SHA256SUMS` y baseline real; si
+   cambió, renovar la captura propia antes de intervenir.
+2. Detener SRCDS mediante LinuxGSM y comprobar que terminó. No forzar unload
+   desde callbacks ni sustituir un ELF que siga mapeado.
+3. Restaurar únicamente extensión/include desde el ZIP y la ausencia de gamedata
+   declarada. Preservar datos, bibliotecas, plugins y CFG ajenos.
 4. Restaurar selector y solo las configuraciones que se hubieran cambiado;
-   conservar flags y configuración de juego habituales. Verificar hashes.
+   conservar flags/configuración habituales. Verificar hashes y ausencias.
 5. Arrancar con LinuxGSM y comprobar módulo, Steam, consumidores y operaciones
    afectadas; conservar evidencia ante fallos.
-6. Retirar exclusivamente los temporales propios tras verificar la restauración.
+6. Retirar exclusivamente los temporales propios después de verificar el servicio.
 
-R19 solo prepara y prueba la reversión localmente. Sin commit, publicación ni
-despliegue. [Estado anterior](p5/history/p5-r18-before-review12-integration-p5-rollback.md).
+Connect no se instala ni revierte en esta actualización. Requiere su propia
+captura SMX/config antes de una intervención; el parche completo incluido en
+source-review no autoriza aplicarlo. Los consumidores HTTP de tres argumentos
+siguen requiriendo recompilación.
+
+[Estado R19 anterior](p5/history/p5-r19-with-T26-T35-acceptance-p5-rollback.md).
+Todo queda en develop, sin commit, push ni despliegue. Los ZIP anteriores se conservan.

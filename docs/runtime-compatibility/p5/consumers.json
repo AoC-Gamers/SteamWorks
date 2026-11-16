@@ -1,7 +1,7 @@
 [
   {
-    "file": ".build/p5-r19/consumers/steamwork_test.smx",
-    "sha256": "938bdf00080a1329a618c5e420479370a8cdfc4f7846ef01235377554da9b4bb",
+    "file": ".build/p5-r20/consumers/steamwork_test.smx",
+    "sha256": "390c46a46ba09951fa435ef6410f42abcddb06553b4110e2202208e76c27072d",
     "provenance": "recompiled_current_include",
     "SteamWorks_imports": [
       "SteamWorks_GetStatCell",
@@ -38,8 +38,8 @@
     "runtime_load_tested": false
   },
   {
-    "file": ".build/p5-r19/consumers/AoC.smx",
-    "sha256": "7e5bf9ae9e4f081448fecc4849554a2230067fb67482d827f0ea3b6e73bb5903",
+    "file": ".build/p5-r20/consumers/AoC.smx",
+    "sha256": "e481d92c890cc7cf123344c53cd5ac83195b423c8ea485b97415a7a13c19834a",
     "provenance": "recompiled_current_include",
     "SteamWorks_imports": [
       "SteamWorks_GetPublicIP",
@@ -50,8 +50,8 @@
     "runtime_load_tested": false
   },
   {
-    "file": ".build/p5-r19/consumers/l4d2_familyshare_core.smx",
-    "sha256": "bd3dc031c03e4bdb2b86e4c7759abedd80cf2c438940e025fd67904b165a4d88",
+    "file": ".build/p5-r20/consumers/l4d2_familyshare_core.smx",
+    "sha256": "e0a81f62a2b4bc8be2abf0891496a2bcc4a2a0c0c6f009ce224a23042243eea3",
     "provenance": "recompiled_current_include",
     "SteamWorks_imports": [
       "SteamWorks_CreateHTTPRequest",

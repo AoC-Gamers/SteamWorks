@@ -18,6 +18,22 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 
 ### Validación
 
+- Revisión final R20: guardas de evidencia/roundtrip ligadas al checkpoint R20,
+  con controles negativos en copias temporales; referencias de reversión actual
+  e histórica separadas. Artefactos previos preservados, payload/API intactos
+  y GC remoto pendiente; sin operaciones de servidor ni publicación.
+
+- P5-R20 integra T26/T35 del ZIP local R19, repite 15 suites x86 y sanitizadores
+  sin supresiones, reproduce el payload aceptado y renueva cuatro ZIP/rollback.
+  Conserva el alcance mínimo y el fallo de salida histórico del baseline sin
+  cierre general. GC remoto pendiente; sin operaciones de servidor, commit,
+  publicación ni despliegue en esta regeneración.
+
+- Seguimiento T26/T35 R19: ZIP local instalado y revertido en el mismo SRCDS
+  aislado con LinuxGSM. Candidato/baseline pasan Steam/HTTP y quit en perfil
+  mínimo; el SIGSEGV histórico del baseline no se reproduce ni se cierra globalmente.
+  DEV restaurado y 1843 CFG intactos; GC remoto pendiente y ZIP anteriores intactos.
+
 - Revisión final R19: ejemplos HTTP coherentes con lectura raw completa y
   conteos en bytes; recetas portables separadas del empaquetado local. Artefactos
   revisados y anteriores preservados, sin cambios nativos/API ni cierre GC remoto.

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scan_root_label": "GitHub",
-  "source_files_scanned": 2711,
+  "source_files_scanned": 2718,
   "excluded_directories": [
     ".git",
     "node_modules",
@@ -4209,6 +4209,40 @@
       "file_tracked_modified": false
     },
     {
+      "file": "l4d2_sourcemod/SteamWorks/docs/runtime-compatibility/p5/r19/final-review/http-doc-example-1.sp",
+      "sha256": "b982c324b7ba793749c748ea574f3bf9efe5c73503d9a0c7df91f694bd722029",
+      "hits": [
+        {
+          "symbol": "SteamWorks_GetHTTPResponseBodyString",
+          "line": 10,
+          "role": "call_or_reference",
+          "argument_count": 5
+        }
+      ],
+      "repository": "l4d2_sourcemod/SteamWorks",
+      "file_tracked_modified": false
+    },
+    {
+      "file": "l4d2_sourcemod/SteamWorks/docs/runtime-compatibility/p5/r19/final-review/http-doc-example-2.sp",
+      "sha256": "cfbebdd4ae4e8fc851890c34366795cc68a343bea160508a535cf2b39a329f30",
+      "hits": [
+        {
+          "symbol": "SteamWorks_GetHTTPResponseBodySize",
+          "line": 9,
+          "role": "call_or_reference",
+          "argument_count": 2
+        },
+        {
+          "symbol": "SteamWorks_GetHTTPResponseBodyData",
+          "line": 11,
+          "role": "call_or_reference",
+          "argument_count": 3
+        }
+      ],
+      "repository": "l4d2_sourcemod/SteamWorks",
+      "file_tracked_modified": false
+    },
+    {
       "file": "l4d2_sourcemod/SteamWorks/docs/runtime-compatibility/t20-owner-srcds/harness-before.sp",
       "sha256": "7b75ab4ecb7e5562fce03a51a7927551175e5111e67c013b77c0f1945c0e0def",
       "hits": [
@@ -4643,7 +4677,7 @@
         "different_signature_text": []
       },
       "repository": "l4d2_sourcemod/SteamWorks",
-      "file_tracked_modified": true
+      "file_tracked_modified": false
     },
     {
       "file": "l4d2_sourcemod/SteamWorks/scripting/steamwork_test.sp",
@@ -6035,7 +6069,7 @@
       "tracked_changes_present": false
     },
     "l4d2_sourcemod/SteamWorks": {
-      "commit": "a0016a23adc70dd9c1bdf2bf22bf8ae0e685dbc6",
+      "commit": "adffed0cc90cad929183b7adc896a6f86ce281da",
       "branch": "develop",
       "tracked_changes_present": true
     }

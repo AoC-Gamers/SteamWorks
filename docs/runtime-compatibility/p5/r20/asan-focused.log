@@ -1,0 +1,2 @@
+PASS: 133 hook lifecycle checks (production owners, simulated SourceHook/frames/SDK receiver)
+PASS: 33 strict HTTP text response checks (production native, exact-size SDK double)

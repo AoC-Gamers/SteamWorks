@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "baseline_commit": "a0016a23adc70dd9c1bdf2bf22bf8ae0e685dbc6",
+  "baseline_commit": "adffed0cc90cad929183b7adc896a6f86ce281da",
   "source_sha256": {
     "extension/CDetour/detourhelpers.h": "ea9e6d2866dfb4e763dc921d712f1694f47107e0faade9490ae10614f827c3a8",
     "extension/CDetour/detours.cpp": "e67c202073164a6575a33137139b454cbab250fffb5f377b4bb1929b94feeea3",

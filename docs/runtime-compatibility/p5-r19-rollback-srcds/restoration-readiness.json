@@ -1,0 +1,7 @@
+{
+  "first_probe_window_seconds": 50,
+  "first_probe_timed_out": true,
+  "retry": "Same exact cleanup/readiness/hash checks after original Steam-connected marker; recovery kept until passing",
+  "second_probe": "passed",
+  "additional_restart_or_config_edit": false
+}

@@ -1,0 +1,40 @@
+{
+  "status": "passed_scoped_T26_T35_SRCDS_x86",
+  "roles": {
+    "candidate": {
+      "PID": 44301,
+      "mapped_extension_sha256": "72664c658f6d28e78a975ec98c96879dc641f96725206f514f159ea17125fcb3",
+      "Steam_connected": true,
+      "minimal_observer_plugins": 1,
+      "HTTP_completed_and_closed": 1,
+      "quit_completed": true,
+      "crash_markers": [],
+      "SourceTVSupport_present": true
+    },
+    "rollback": {
+      "PID": 46126,
+      "mapped_extension_sha256": "9ca37aadcd83448d49126d6a72babcb8ec97ec5a06c171b4821ae0ee3cf05d70",
+      "Steam_connected": true,
+      "minimal_observer_plugins": 1,
+      "HTTP_completed_and_closed": 1,
+      "quit_completed": true,
+      "crash_markers": [],
+      "SourceTVSupport_present": true
+    }
+  },
+  "same_lab_tree_selector_through_rollback": true,
+  "global_cfg_tree_preserved": true,
+  "global_CFG_files": 1843,
+  "protected_files_preserved": 4,
+  "fixture_requests": 2,
+  "new_SRCDS_core_events_observed": 0,
+  "baseline_prior_exit_SIGSEGV": "not reproduced in this minimal observer profile; historical evidence kept; no broad closure inferred",
+  "original_DEV_restored": true,
+  "original_DEV_PID": 48073,
+  "historical_artifact_files_unchanged": 165,
+  "public_API_unchanged": true,
+  "native_source_files_unchanged": 157,
+  "GC_remote": "pending",
+  "committed": false,
+  "production_deployed": false
+}
