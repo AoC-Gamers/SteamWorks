@@ -76,7 +76,7 @@ def argument_count(source: str, start: int) -> int:
 
 
 def api_inventory(root: Path) -> dict:
-    include = root / "scripting/include/steamworks.inc"
+    include = root / "addons/sourcemod/scripting/include/steamworks.inc"
     text = mask(include.read_text())
     declarations = []
     for m in re.finditer(r"\b(native|forward)\s+(\w+)\s+(\w+)\s*\((.*?)\)\s*;", text, re.S):
@@ -127,8 +127,8 @@ def api_inventory(root: Path) -> dict:
                         mask((root / "extension/extension.cpp").read_text()))
     if library is None:
         raise ValueError("SourceMod library registration not found")
-    hashes["scripting/include/steamworks.inc"] = digest(include)
-    for relative in ("scripting/steamwork_test.sp", "extension/AMBuilder", "AMBuildScript",
+    hashes["addons/sourcemod/scripting/include/steamworks.inc"] = digest(include)
+    for relative in ("tests/runtime/steamwork_test.sp", "extension/AMBuilder", "AMBuildScript",
                      "configure.py", "Makefile", "PackageScript", "plugin-package-map.json"):
         hashes[relative] = digest(root / relative)
     return {

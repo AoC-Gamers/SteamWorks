@@ -2,7 +2,8 @@
 set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 OUTPUT_DIR="${TEST_BUILD_DIR:-$ROOT_DIR/.build/tests-binary-evidence}"
-SDK_DIR="${STEAMWORKS_SDK_DIR:-$ROOT_DIR/sdk_158a}"
+SDK_DIR="${STEAMWORKS_SDK_DIR:-$ROOT_DIR/sdk_155}"
+python3 "$ROOT_DIR/scripts/build/validate-steamworks-sdk.py" "$SDK_DIR"
 mkdir -p "$OUTPUT_DIR"
 python3 "$ROOT_DIR/tests/python/runtime_evidence_test.py"
 python3 "$ROOT_DIR/scripts/tools/validate-runtime-evidence.py" "$ROOT_DIR/tests/fixtures/runtime-profiles/linux-x86-candidate.json"

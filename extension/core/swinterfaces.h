@@ -27,7 +27,7 @@ constexpr bool SameVersion(const char* left, const char* right)
 	return *left == *right && (*left == '\0' || SameVersion(left + 1, right + 1));
 }
 
-// Explicit allowlist tied to the exact declarations audited in SDK 1.58a.
+// Explicit allowlist tied to the exact declarations audited in SDK 1.55.
 // A changed SDK macro must trigger an audit, not silently approve a new ABI.
 template <typename Interface> struct InterfaceContract;
 #define SW_INTERFACE_CONTRACT(type, id, key, literal, macro, header) \
@@ -37,7 +37,7 @@ template <typename Interface> struct InterfaceContract;
 	};
 
 SW_INTERFACE_CONTRACT(ISteamClient, Client, nullptr, "SteamClient020", STEAMCLIENT_INTERFACE_VERSION, "isteamclient.h")
-SW_INTERFACE_CONTRACT(ISteamGameServer, GameServer, "SteamGameServerInterfaceVersion", "SteamGameServer015", STEAMGAMESERVER_INTERFACE_VERSION, "isteamgameserver.h")
+SW_INTERFACE_CONTRACT(ISteamGameServer, GameServer, "SteamGameServerInterfaceVersion", "SteamGameServer014", STEAMGAMESERVER_INTERFACE_VERSION, "isteamgameserver.h")
 SW_INTERFACE_CONTRACT(ISteamUtils, Utils, "SteamUtilsInterfaceVersion", "SteamUtils010", STEAMUTILS_INTERFACE_VERSION, "isteamutils.h")
 SW_INTERFACE_CONTRACT(ISteamNetworking, Networking, "SteamNetworkingInterfaceVersion", "SteamNetworking006", STEAMNETWORKING_INTERFACE_VERSION, "isteamnetworking.h")
 SW_INTERFACE_CONTRACT(ISteamGameServerStats, Stats, "SteamGameServerStatsInterfaceVersion", "SteamGameServerStats001", STEAMGAMESERVERSTATS_INTERFACE_VERSION, "isteamgameserverstats.h")

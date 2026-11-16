@@ -86,7 +86,7 @@ def prepare(candidate, baseline, output, label="p5"):
         raise ValueError("Baseline include missing")
     output.mkdir(parents=True)
     archive(output / f"steamworks-{label}-linux-x86-candidate.zip", files)
-    rollback_zip = output / f"steamworks-{label}-competitive-dev-rollback.zip"
+    rollback_zip = output / f"steamworks-{label}-rollback.zip"
     archive(rollback_zip, {"addons/sourcemod/" + name: data for name, data in previous.items()})
     # Exercise the archived restore contract in a disposable directory, including
     # removal of a candidate-only gamedata and preservation of unrelated config.

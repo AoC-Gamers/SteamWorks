@@ -38,7 +38,7 @@ $sourcemodDir = if ($env:SOURCEMOD_DIR) { $env:SOURCEMOD_DIR } else { Join-Path 
 $mmsourceDir = if ($env:MMSOURCE_DIR) { $env:MMSOURCE_DIR } else { Join-Path $depsDir "mmsource-1.12" }
 $venvDir = if ($env:VENV_DIR) { $env:VENV_DIR } else { Join-Path $depsDir ".venv-windows" }
 $configureScript = if ($env:CONFIGURE_SCRIPT) { $env:CONFIGURE_SCRIPT } else { Join-Path $root "configure.py" }
-$steamworksSdkName = if ($env:STEAMWORKS_SDK_NAME) { $env:STEAMWORKS_SDK_NAME } else { "sdk" }
+$steamworksSdkName = if ($env:STEAMWORKS_SDK_NAME) { $env:STEAMWORKS_SDK_NAME } else { "sdk_155" }
 $steamworksSdkDir = if ($env:STEAMWORKS_SDK_DIR) { $env:STEAMWORKS_SDK_DIR } else { Join-Path $root $steamworksSdkName }
 
 $venvPython = Join-Path $venvDir "Scripts\python.exe"

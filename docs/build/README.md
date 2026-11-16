@@ -1,14 +1,14 @@
 # Compilación y empaquetado
 
 El build de producto usa AMBuild y C++ con las declaraciones auditadas del SDK
-Steamworks 1.58a. No actualices el SDK como efecto de reorganizar documentación.
+Steamworks 1.55. No actualices el SDK como efecto de reorganizar documentación.
 Consulta las [dependencias](dependencies.md) y la separación de [CI](ci.md).
 
 Desde la raíz de las fuentes, también extraídas sin `.git`:
 
 ```bash
 make deps-exts-linux
-make build-exts-linux STEAMWORKS_SDK_DIR=/ruta/al/sdk_158a
+make build-exts-linux STEAMWORKS_SDK_DIR=/ruta/al/sdk_155
 make package-exts-linux
 make release-linux
 ```
@@ -32,8 +32,27 @@ admiten `.env` local. No publiques credenciales ni dependas de una ruta privada.
 La opción `SOURCE_DATE_EPOCH` fija la fecha de compilación para reproducibilidad;
 no es la fecha de ejecución de las pruebas.
 
+Las fuentes instalables siguen `addons/sourcemod/`: el include público vive en
+`addons/sourcemod/scripting/include/steamworks.inc`. El código C++ permanece en
+`extension/` y AMBuild genera el binario en `package/addons/sourcemod/extensions/`.
+Los harnesses de diagnóstico viven en `tests/runtime/` y no se empaquetan.
+
 El staging admite solo extensión/include, activos raíz y Markdown estable de
 `docs/`, excluyendo instrucciones AGENTS. El validador rechaza SDK, tests,
 fixtures, gamedata inventado, binarios de diagnóstico y logs. Los resultados de
 validación se guardan en `.build/` y los paquetes en `dist/`, fuera de Git.
 Compilar Windows no equivale a aceptar su ejecución en SRCDS.
+
+## Selección única del SDK
+
+`steamworks-sdk.lock.json`, en las fuentes, fija 45 headers y dos bibliotecas x86
+(Linux y Windows). `scripts/build/validate-steamworks-sdk.py` comprueba el conjunto
+de headers y cada SHA256. Los headers normalizan únicamente CRLF a LF para
+comparar Linux/Windows y Git; las bibliotecas conservan comprobación byte por byte. AMBuild invoca esa comprobación antes de configurar el
+producto, tanto desde scripts como con `configure.py` directo. Los ejecutores
+que consumen SDK y la integración también la exigen.
+
+Una ruta alternativa mediante `STEAMWORKS_SDK_DIR` debe contener exactamente el
+release 1.55. Cambiar el nombre de carpeta no habilita otro release. El selector
+manual de CI solo admite `sdk_155`. El SDK y su lock son entradas de build; el
+paquete instalable no incluye headers/bibliotecas del SDK ni el lock de fuentes.

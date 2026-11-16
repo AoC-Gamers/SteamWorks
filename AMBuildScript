@@ -144,21 +144,33 @@ class SteamWorksConfig(object):
     if builder.options.steamworks_path:
       self.steamworks_root = builder.options.steamworks_path
     else:
-      self.steamworks_root = ResolveEnvPath(
-        'STEAMWORKS', 'steamworks-sdk')
+      self.steamworks_root = ResolveEnvPath('STEAMWORKS', 'sdk_155')
       if not self.steamworks_root:
-        self.steamworks_root = ResolveEnvPath(
-          'STEAMWORKS', 'sdk')
-      if not self.steamworks_root:
-        self.steamworks_root = ResolveEnvPath(
-          'STEAMWORKS', 'steamworks')
-      if not self.steamworks_root:
-        self.steamworks_root = ResolveEnvPath(
-          'STEAMWORKS', 'opensteamworks')
+        self.steamworks_root = os.path.join(builder.sourcePath, 'sdk_155')
 
     if not self.steamworks_root or not os.path.isdir(self.steamworks_root):
       raise Exception('Could not find a source copy of SteamWorks')
     self.steamworks_root = Normalize(self.steamworks_root)
+    import importlib.util
+    validator_path = os.path.join(builder.sourcePath, 'scripts', 'build', 'validate-steamworks-sdk.py')
+    lock_path = os.path.join(builder.sourcePath, 'steamworks-sdk.lock.json')
+    builder.AddConfigureFile(validator_path)
+    builder.AddConfigureFile(lock_path)
+    spec = importlib.util.spec_from_file_location('steamworks_sdk_lock', validator_path)
+    validator = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(validator)
+    try:
+      sdk_lock = validator.validate(self.steamworks_root, lock_path)
+    except (OSError, ValueError, KeyError) as error:
+      # AMBuild logs ordinary configure exceptions without a failing exit code.
+      # An invalid SDK must fail direct configure and automatic regeneration.
+      raise SystemExit(str(error))
+    # Direct AMBuild rebuilds must revalidate changed headers/libraries too.
+    # The directory stamp catches added/removed headers, including unused ones.
+    builder.AddConfigureFile(os.path.join(self.steamworks_root, 'public', 'steam'))
+    for relative in sdk_lock['files']:
+      builder.AddConfigureFile(os.path.join(self.steamworks_root, relative))
+
 
   def configure(self):
     if os.path.isfile(os.path.join(builder.sourcePath, 'pushbuild.txt')):

@@ -41,7 +41,7 @@ class ReviewArtifactsTest(unittest.TestCase):
         result = self.prepare()
         self.assertEqual(result["rollback_absent_paths"], [review.OWNED[2]])
         self.assertFalse(result["release_approved"])
-        with zipfile.ZipFile(self.output / "steamworks-p5-competitive-dev-rollback.zip") as saved:
+        with zipfile.ZipFile(self.output / "steamworks-p5-rollback.zip") as saved:
             self.assertEqual(len(saved.namelist()), 2)
             self.assertNotIn("addons/sourcemod/configs/private.cfg", saved.namelist())
 
@@ -107,7 +107,7 @@ class ReviewArtifactsTest(unittest.TestCase):
         result = review.prepare(self.candidate, self.baseline, self.output, "p5-r2")
         self.assertEqual(result["checkpoint"], "p5-r2")
         self.assertTrue((self.output / "steamworks-p5-r2-linux-x86-candidate.zip").is_file())
-        self.assertTrue((self.output / "steamworks-p5-r2-competitive-dev-rollback.zip").is_file())
+        self.assertTrue((self.output / "steamworks-p5-r2-rollback.zip").is_file())
 
     def test_label_cannot_escape_output(self):
         with self.assertRaisesRegex(ValueError, "Invalid artifact label"):

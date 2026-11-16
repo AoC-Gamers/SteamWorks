@@ -73,8 +73,12 @@ def check(root=ROOT):
             elif url.fragment and dest.suffix == '.md' and unquote(url.fragment) not in anchors(dest.read_text()):
                 errors.append(f'{page}: broken anchor {target}')
         # Exact repo code paths in prose should not silently drift.
-        for target in re.findall(r'`((?:extension|scripting|scripts|tests)/[^`\s]+)`',text):
+        for target in re.findall(r'`((?:addons|extension|scripting|scripts|tests)/[^`\s]+)`',text):
             if any(c in target for c in '*{}<>') or target.endswith('/'):
+                continue
+            # Native binaries are build outputs; only the declared extension paths
+            # may be documented before a build has populated them.
+            if target in _contract.RUNTIME and Path(target).suffix in ('.so', '.dll'):
                 continue
             if not (root / target).exists():
                 errors.append(f'{page}: missing code reference {target}')

@@ -28,17 +28,17 @@ class DocumentationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix='steamworks documentation ') as temp:
             root=Path(temp)
             # Copy just the code/documentation tree, never SDK, binaries or Git metadata.
-            for area in ('docs','tests','scripts','extension','scripting'):
+            for area in ('docs','tests','scripts','extension','addons'):
                 shutil.copytree(ROOT/area,root/area,ignore=shutil.ignore_patterns('node_modules','__pycache__'))
             for name in ('README.md','AGENTS.md','LICENSE'):
                 shutil.copy2(ROOT/name,root/name)
             self.assertEqual(docs.check(root)[0],[])
             page=root/'docs/http/README.md'
-            page.write_text(page.read_text()+'\n[bad](missing.md)\n[bad](#nonexistent-anchor)\n`extension/missing.cpp`\n')
+            page.write_text(page.read_text()+'\n[bad](missing.md)\n[bad](#nonexistent-anchor)\n`extension/missing.cpp`\n`addons/sourcemod/scripting/include/missing.inc`\n')
             (root/'docs/http/results.json').write_text('{}')
             (root/'docs/http/run-report.md').write_text('# P5-R100: execution diary')
             errors,_=docs.check(root)
-            for expected in ('missing.md','broken anchor','missing code reference','Unexpected docs payload','Execution diary'):
+            for expected in ('missing.md','broken anchor','missing code reference','Unexpected docs payload','Execution diary','addons/sourcemod/scripting/include/missing.inc'):
                 self.assertTrue(any(expected in error for error in errors),expected)
 
     def test_makefile_root_from_other_cwd_and_path_with_spaces(self):
@@ -76,7 +76,7 @@ class DocumentationTests(unittest.TestCase):
                 elf=bytearray(52);elf[:7]=b'\x7fELF\x01\x01\x01';elf[16:20]=b'\x03\x00\x03\x00'
                 extension.write_bytes(elf if platform=='linux' else b'layout fixture, not a compiled DLL')
                 include=build/'addons/sourcemod/scripting/include/steamworks.inc'
-                include.parent.mkdir(parents=True);shutil.copy2(ROOT/'scripting/include/steamworks.inc',include)
+                include.parent.mkdir(parents=True);shutil.copy2(ROOT/'addons/sourcemod/scripting/include/steamworks.inc',include)
                 staged=subprocess.run([sys.executable,str(ROOT/'scripts/package/stage-artifact.py'),str(ROOT),str(build),str(artifact)],capture_output=True,text=True,cwd=temp)
                 self.assertEqual(staged.returncode,0,staged.stderr)
                 env=os.environ.copy();env.update(EXTS_ARTIFACT_DIR=str(artifact),EXTS_PLATFORM=platform)

@@ -10,7 +10,7 @@ if [[ "${VM_TEST_VARIANT:-fixed}" != fixed ]]; then
 fi
 export SOURCEPAWN_SOURCE_DIR="${SOURCEPAWN_SOURCE_DIR:-$SOURCEMOD_DIR/sourcepawn}"
 export VM_TEST_ARCH="${VM_TEST_ARCH:-x86_64}"
-bash "$ROOT_DIR/scripts/tests/helpers/build-test-sourcepawn.sh"
+bash "$ROOT_DIR/tests/helpers/build-test-sourcepawn.sh"
 VM_TEST_BUILD_DIR="$(cd "$VM_TEST_BUILD_DIR" && pwd)"
 export CXX="${VM_TEST_CXX:-clang++}"
 case "$VM_TEST_ARCH" in
@@ -29,8 +29,8 @@ export TEST_CXXFLAGS="$vm_arch_flag -fsanitize=address -shared-libasan -fsized-d
 export ASAN_OPTIONS=detect_leaks=1:halt_on_error=1:alloc_dealloc_mismatch=1:new_delete_type_mismatch=1
 export LSAN_OPTIONS=exitcode=23
 export UBSAN_OPTIONS=halt_on_error=1:print_stacktrace=1
-TEST_BUILD_DIR="$VM_TEST_BUILD_DIR/environment-test" bash "$ROOT_DIR/scripts/tests/test-sourcepawn-environment.sh"
-TEST_BUILD_DIR="$VM_TEST_BUILD_DIR/auth-test" bash "$ROOT_DIR/scripts/tests/test-auth-forward.sh"
+TEST_BUILD_DIR="$VM_TEST_BUILD_DIR/environment-test" bash "$ROOT_DIR/tests/runners/test-sourcepawn-environment.sh"
+TEST_BUILD_DIR="$VM_TEST_BUILD_DIR/auth-test" bash "$ROOT_DIR/tests/runners/test-auth-forward.sh"
 python3 - "$VM_TEST_BUILD_DIR" <<'PY'
 from pathlib import Path
 import hashlib,json,os,sys

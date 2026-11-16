@@ -7,8 +7,11 @@ por AoC Gamers. Licencia: [GPL](LICENSE), con las excepciones indicadas en las f
 
 Necesita SourceMod, Metamod:Source y un runtime Steam compatible. La ruta acreditada
 es **L4D2 dedicado Linux x86**; compilar Windows no acredita su runtime y los
-sondeos x64 históricos no son soporte para el motor x86 de L4D2. El SDK es una
-dependencia de compilación, no un runtime que deba copiarse al servidor.
+sondeos x64 históricos no son soporte para el motor x86 de L4D2. Steamworks SDK 1.55 es la única
+dependencia Steam de compilación, no un runtime que deba copiarse al servidor.
+
+Las fuentes instalables siguen el árbol `addons/sourcemod/`; el código C++
+permanece en `extension/` y los diagnósticos en `tests/`.
 
 Instala la extensión en `addons/sourcemod/extensions/` y el include en
 `addons/sourcemod/scripting/include/`. Actualiza con el servidor detenido y una

@@ -117,7 +117,7 @@ steamworks::ISteamGameServer014* SteamWorksGameServer::GetGameServerAuth014()
 	if (m_pAuthServer014 != nullptr) { return m_pAuthServer014; }
 	const char* version = CompatibleVersion<steamworks::ISteamGameServer014>();
 	if (version == nullptr) { return nullptr; }
-	// Same factory/user as the verified engine, without casting the 015 getter.
+	// Same factory/user as the verified engine, without casting the SDK getter (also 014 under SDK 1.55).
 	m_pAuthServer014 = steamworks::ResolveGameServerAuth014(
 		&SteamInternal_FindOrCreateGameServerInterface, SteamGameServer_GetHSteamUser(), version);
 	if (m_pAuthServer014 != nullptr) {

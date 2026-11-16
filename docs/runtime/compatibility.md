@@ -15,8 +15,9 @@ históricos no acreditan el motor x86. Un perfil JSON documental no habilita ABI
   hay capacidad. El helper HTTP `written` excluye NUL.
 - El helper HTTP textual requiere cinco argumentos; la llamada antigua de tres
   se rechaza antes de leer salidas ausentes. RawData exige el tamaño completo.
-- El hook de autenticación del motor usa 014; los natives de servidor usan 015.
-  No son punteros intercambiables.
+- SDK 1.55 y el motor usan versión 014. El prefijo auditado de autenticación
+  y la interfaz SDK completa conservan tipos y rutas de resolución independientes;
+  no se convierte uno en otro por cast. La versión 015 se rechaza.
 
 ## Límites de aceptación
 
@@ -25,11 +26,43 @@ permiten validar buffers/forwards, no el protocolo remoto ni mensajes del backen
 `ISteamFriends` no está expuesta; su resultado nulo observado pertenece al
 contexto dedicado ensayado, no a todos los procesos Steam.
 
-La instalación/reversión histórica mínima con SourceTVSupport tuvo salidas
-limpias. El SIGSEGV de un baseline anterior no se reprodujo allí y no se declara
-resuelto universalmente. La pila completa de plugins exige su propia aceptación.
+Los ensayos históricos mínimos con SourceTVSupport conservaron su atribución.
+Un ensayo posterior reprodujo el SIGSEGV de salida del baseline archivado:
+un hilo Steam accedió a la interfaz de crashhandler después de descargar su
+módulo y el manejador de señal también quedó inválido. Ese baseline carece
+del finalizador cliente T08. Un baseline nuevo SDK 1.55 con ese finalizador
+pasó cualificación y reversión con cierre limpio en el perfil mínimo. No se
+declara resuelto universalmente: la pila completa exige su propia aceptación.
 No trasladar resultados entre hashes distintos por compartir nombre de candidato.
 
-El catálogo de cobertura de las fuentes conserva fecha, revisión y hash por
-observación. La [integración histórica fijada](https://github.com/AoC-Gamers/SteamWorks/blob/295e274de754fb65835188f115a2fd4dd917e289/docs/runtime-compatibility/p5-integration.md)
-explica el alcance del payload ELF `72664c65…`; no es una ejecución nueva.
+El catálogo de cobertura de las fuentes conserva fecha y hash por observación,
+con nombres genéricos para las instancias. Los resultados históricos pertenecen
+a su payload y no se presentan como una ejecución nueva ni una aceptación global.
+
+## Cambio de SDK
+
+El único SDK de compilación/enlace es 1.55, validado por contenido mediante el
+lock de fuentes. No se transfieren los ensayos históricos de otros payloads al
+binario nuevo. El payload SDK 1.55 con SHA256
+`abb4d03a47f88315950ba8a63c2a1696d8daa80cf52039c808e95569f6adad52`
+fue observado en SRCDS Linux x86 el 2026-11-16: autenticación 014 con cuenta
+autorizada, identidad, stats enteros y float, HTTP/streaming y reinicialización
+en el mismo proceso con petición pendiente, seguido de cierre limpio.
+El ensayo mínimo incluyó la extensión SourceTVSupport; no acredita su VSP
+ni emisión, toda la pila de plugins, GC remoto positivo o runtime Windows.
+La atribución completa se conserva en el catálogo de cobertura de las fuentes.
+
+El baseline nuevo de reversión tiene SHA256
+`678e334bcfae091461cf43b10ed6d487780fc34d354b9ad7c4b0826747e71bbd`.
+Usa el mismo snapshot de fuentes del candidato, compilado sin optimización;
+no representa volver a una versión funcional anterior. La aceptación en sitio
+corresponde al par ZIP ensayado; regenerar documentación cambia el ZIP completo,
+aunque ELF/include permanezcan idénticos. El baseline histórico fallido conserva
+su identidad y no queda corregido por este ensayo.
+
+Los ensayos posteriores del mismo par de payloads confirmaron instalación y
+reversión desde sus respectivos ZIP, con tres cierres limpios por ensayo. Sus
+trazas observaron el contexto cliente activo antes de finalizarlo y cerrado
+después, con GameServer detenido. Esas mediciones corresponden a los ensayos
+identificados en la cobertura de fuentes; no se atribuyen a los ciclos
+anteriores donde el pipe no se midió ni a los ZIP regenerados posteriormente.

@@ -27,10 +27,19 @@ No copies SDK, bibliotecas Steam de compilación, fixtures, SMX de pruebas o VM 
 
 ## Reversión
 
+Elige un baseline identificado por hash y validado también al salir del proceso;
+una carga correcta o un smoke HTTP no acreditan un cierre limpio. Si se prepara
+un baseline corregido, conserva la captura anterior y documenta el nuevo origen,
+SDK y opciones de build. No sustituyas sus bytes manteniendo la atribución antigua.
+
 Detén el proceso y restaura exactamente los archivos capturados. Si un archivo
 propio estaba ausente en el baseline, retira solo ese archivo; no inventes
 un gamedata ni borres configuraciones ajenas. Reinicia y verifica hashes,
-carga y funcionalidades usadas. No sobrescribas todo SourceMod para revertir
+carga, funcionalidades usadas y salida controlada en una copia aislada. Conserva
+los fallos y sus límites si el baseline no cierra limpiamente. La traza de
+lifecycle puede confirmar el cierre de un contexto cliente activo con el
+GameServer ya detenido; no fuerces un cierre sobre un GameServer activo para
+obtener esa observación. No sobrescribas todo SourceMod para revertir
 una extensión. La descarga/recarga soportada y el cambio en disco son ensayos distintos.
 
 La herramienta de fuentes `scripts/package/prepare-review-artifacts.py` prepara

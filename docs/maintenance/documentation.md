@@ -45,3 +45,13 @@ en `scripts/tools/package.json`. Instala con `npm ci --prefix scripts/tools` y
 renderiza con `python3 scripts/tools/check-documentation.py --render .build/diagrams`.
 Revisa también la representación en GitHub antes de aprobar cambios de diagramas;
 una validación sintáctica local no reemplaza esa observación.
+
+## Contenido apto para publicación
+
+Usa nombres genéricos para instancias, paquetes y rutas de ejemplo. No publiques
+nombres de contenedores o hosts propios, paths de cuentas/volúmenes locales ni
+configuraciones de una instalación concreta. Conserva autoría, licencias y URLs
+de repositorios públicos. Los fixtures que necesiten observaciones de módulos
+pueden omitir identificadores locales, documentando campos saneados y actualizando
+los hashes de documentos transitivos; no cambies medidas o flags de aceptación.
+Las recetas de harnesses reciben la configuración específica como entrada explícita.

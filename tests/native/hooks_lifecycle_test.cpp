@@ -210,10 +210,10 @@ int main() {
   Check(host.frames.size()==2 && hooks.empty(),"late load waits once per hook group");
   int added=host.frameAdds;gs.Start();gc.Start();host.Tick();Check(host.frameAdds==added,"repeat start/wait does not duplicate frame registrations");
   resolver.server=&server1;resolver.gc=&gc1;host.Tick();
-  Check(hooks.size()==3 && host.frames.size()==1,"GS group waits for missing 014 instead of binding auth to available 015");
+  Check(hooks.size()==3 && host.frames.size()==1,"GS group waits for missing 014 instead of binding auth to available SDK object");
   resolver.auth=&auth1;host.Tick();
   Check(hooks.size()==6 && host.frames.empty(),"each group installs once when runtime appears and stops polling");
-  for(auto entry:hooks) if(entry.second.method=="BeginAuthSession") Check(entry.second.target==&auth1,"auth hook targets 014 object rather than 015");
+  for(auto entry:hooks) if(entry.second.method=="BeginAuthSession") Check(entry.second.target==&auth1,"auth hook targets 014 object rather than the SDK object");
   int installed=creates;gs.Start();gc.Start();host.Tick();Check(creates==installed,"repeat successful startup does not duplicate hooks");
   auto* auth=forwards->owned["SteamWorks_BeginAuthSession"];
   Check(auth->types==std::vector<int>({Param_Array,Param_Cell,Param_Cell}),"auth forward registration and arity preserved");
@@ -277,7 +277,7 @@ int main() {
  {
   resolver.server=&server1;resolver.auth=&auth1;
   SteamWorksGSHooks owner;resolver.auth=&auth2;owner.Start();
-  for(auto entry:hooks) Check(entry.second.method=="BeginAuthSession" ? entry.second.target==&auth2 : entry.second.target==&server1,"auth-only replacement rebinds even when native 015 pointer is unchanged");
+  for(auto entry:hooks) Check(entry.second.method=="BeginAuthSession" ? entry.second.target==&auth2 : entry.second.target==&server1,"auth-only replacement rebinds even when native SDK pointer is unchanged");
  }
  Check(hooks.empty() && host.frames.empty(),"replacement group fully removed on destruction");
  for(int family=0;family<2;++family)for(int fail=1;fail<=3;++fail) {

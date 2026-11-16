@@ -3,14 +3,14 @@
   "documentation_only": true,
   "enabled": false,
   "file_name": "libsteam_api.so",
-  "origin": "competitive_dev selected by user; copied read-only from installed game",
+  "origin": "Read-only copy of a module observed in an isolated SRCDS x86 instance",
   "role": "steam-runtime",
   "format": "ELF",
   "architecture": "x86",
   "size_bytes": 420954,
   "sha256": "43fc556d8255dd17f15d7ce266c7c7bee3075499fdec350af5ed32b9b7cda0ed",
   "build_id": "0d18f257d51538a7b34c594a31e042b04001fb1c",
-  "pid_observed": 5422,
+  "pid_observed": null,
   "loaded_module_confirmed": true,
   "exports": {
     "SteamGameServer_InitSafe": [
@@ -90,12 +90,23 @@
     "Export/import/relocation presence is not proof of an executed call path or ABI.",
     "Loaded status verifies process maps device/inode; it is not a hash of mapped memory."
   ],
-  "path": "/data/serverfiles/bin/libsteam_api.so",
-  "device_major": 259,
-  "device_minor": 2,
-  "inode": 3195191,
-  "pid_namespace": "competitive_dev container",
+  "path": null,
+  "device_major": null,
+  "device_minor": null,
+  "inode": null,
+  "pid_namespace": null,
   "copy_hash_matches_mapped_file": true,
   "observation_date": "2026-11-14",
-  "observation_context": "Mapped in the first isolated SRCDS process before cleanup; process has since been stopped."
+  "observation_context": "Mapped in the first isolated SRCDS process before cleanup; process has since been stopped.",
+  "public_copy": {
+    "redacted_fields": [
+      "pid_observed",
+      "path",
+      "device_major",
+      "device_minor",
+      "inode",
+      "pid_namespace"
+    ],
+    "measured_binary_fields_unchanged": true
+  }
 }

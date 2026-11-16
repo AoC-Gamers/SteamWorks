@@ -14,7 +14,7 @@ LINUX_PACKAGE_DIR ?= $(ROOT_DIR)/.build/package-exts-linux
 WINDOWS_PACKAGE_DIR ?= $(ROOT_DIR)/.build/package-exts-windows
 LINUX_ARTIFACT_DIR ?= $(ROOT_DIR)/dist/linux/artifact
 WINDOWS_ARTIFACT_DIR ?= $(ROOT_DIR)/dist/windows/artifact
-STEAMWORKS_SDK_NAME ?= sdk
+STEAMWORKS_SDK_NAME ?= sdk_155
 LINUX_RELEASE_BASENAME ?= steamworks-local-linux
 WINDOWS_RELEASE_BASENAME ?= steamworks-local-windows
 

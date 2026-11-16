@@ -34,3 +34,8 @@ El staging y la validación final rechazan fixtures, SDK, logs y fuentes de test
 El ZIP de revisión/reversión es una operación local distinta del paquete de
 instalación; fuentes y herramientas diagnósticas nunca se mezclan con este último.
 Compilar Windows o pasar fixtures locales no acredita ejecución en Windows.
+
+El checkout del SDK está fijado al commit del lock y usa únicamente `sdk_155`.
+El job Linux ejecuta los negativos de selección; ambos builds comprueban los
+hashes antes de generar producto. El lock distingue finales de línea de texto
+de bytes binarios y entra en las claves de caché de dependencias.

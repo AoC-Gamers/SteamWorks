@@ -7,7 +7,7 @@ de partidas no permite deducir su key interna ni su tipo numérico.
 
 La copia histórica `tests/fixtures/stats/GetSchemaForGame_550.json` es una entrada
 reproducible para pruebas y para el generador
-`scripts/tests/helpers/generate-stats-acceptance-schema.py`. Vive en las fuentes,
+`tests/helpers/generate-stats-acceptance-schema.py`. Vive en las fuentes,
 no en el paquete de producto; no se actualiza como resultado de una ejecución.
 El generador selecciona claves de esa copia para un harness y escribe sus salidas
 fuera de `docs/`. El schema no acredita que una cuenta tenga un valor disponible.

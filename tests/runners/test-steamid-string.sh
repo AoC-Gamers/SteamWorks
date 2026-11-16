@@ -4,7 +4,8 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 OUTPUT_DIR="${TEST_BUILD_DIR:-$ROOT_DIR/.build/tests-steamid-string}"
 CXX="${CXX:-g++}"
-SDK_DIR="${STEAMWORKS_SDK_DIR:-$ROOT_DIR/sdk_158a}"
+SDK_DIR="${STEAMWORKS_SDK_DIR:-$ROOT_DIR/sdk_155}"
+python3 "$ROOT_DIR/scripts/build/validate-steamworks-sdk.py" "$SDK_DIR"
 AMTL_DIR="${AMTL_DIR:-${SOURCEMOD_DIR:-$ROOT_DIR/.deps/exts-linux/sourcemod-1.12}/public/amtl}"
 mkdir -p "$OUTPUT_DIR"
 if [[ ! -f "$SDK_DIR/public/steam/steamclientpublic.h" || ! -f "$AMTL_DIR/amtl/am-string.h" ]]; then

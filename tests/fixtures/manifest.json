@@ -4,15 +4,15 @@
   "files": {
     "api/api-inventory-p0.json": "9f8e0d875be6a5431fe747ae8961ec3183775d7bceb523ecbf87129f16b97ddb",
     "gameserver014-prefix.json": "18f6d25487002f73afcffc2a1c146087c661e9017731d5ce73afa5e4a2582123",
-    "runtime-profiles/competitive-dev/engine.json": "52bf82f5ba1478851cc71358d8aef33c666d76b4a2a51ead4692a89c8deec00e",
-    "runtime-profiles/competitive-dev/lifecycle-trace.json": "27640da883b77ca47c9a093183b9e235f282f91fbab11d2f434ce0e56d3bc2ca",
-    "runtime-profiles/competitive-dev/steam-runtime.json": "eb353fa759a7aea5c0e05bd7d6a41dfcf2fca657a6e67c3505f09f1a576f3cf3",
-    "runtime-profiles/competitive-dev-linux-x86.json": "77fcc37f5e92dad213120486e2326d5e46da98c630074502a05d35488bcf8f15",
     "runtime-profiles/linux-x86-candidate.json": "14210c3b341643ed5251055dd1bff06192cb815d1516ec5646bb31952ae27bbf",
     "runtime-profiles/modules/sdk_155-linux32.json": "c8018e1da9f27f7ce356ca769a49f2a8255c1a6c3855249e4bcd537273e836a2",
     "runtime-profiles/modules/sdk_158a-linux32.json": "1a2f7738c268c68c6bdfd7ce07e0b066000e5e5bbe89172da16f488c5e4ad135",
     "runtime-profiles/modules/sdk_158a-win32.json": "b5655e48f50771d53f7e7eb2695cf9149d15d1588d5df8ac0b04b5e349782f24",
-    "sdk-provenance/sdk-toolchain.json": "1a652efb9cdb71b20f18347fc2a2761972cdd42aa3c59ced1cadba01bdbc0230",
+    "runtime-profiles/observed-linux-x86.json": "898152dd26ecc20ece116b6069f4b13f93686102fc01ea403745aab5edd015c2",
+    "runtime-profiles/observed-runtime/engine.json": "5d9b9788ca4a8b571e65a873d8bf02eebe0cd1bf101f6ad0e0078c4036a39238",
+    "runtime-profiles/observed-runtime/lifecycle-trace.json": "6da38b9187e3d97fa0f213807bfaa74dd62a1b6d08ebfc033aa584a7db14ab41",
+    "runtime-profiles/observed-runtime/steam-runtime.json": "0b7ad1f31f52786d9e529a5960b40575fd5bce09688c3ddfd3ec619a657dfc54",
+    "sdk-provenance/sdk-toolchain.json": "e7fbecd1213774512a2c51d0a50666e7d7f142f50872e73fd81bc92792da9526",
     "sourcepawn/auth_forward_receiver.sp": "108e3d8dc7609cfc0486c5080f3ec9a37b34376c91c86a3e84abf1fc227e8ae0",
     "stats/GetSchemaForGame_550.json": "3f9e9bc415131265daea10084d49a70cf03303eecbbd83b623bcf77240c37f2b"
   },
@@ -22,5 +22,16 @@
       "original_sha256": "b6dfc1d312cf8ebcd5b41cbe107c37d62d73cc54317a7919d45a3410ec6b614c",
       "reason": "Only sdk.evidence relative path changed to ../sdk-provenance/sdk-toolchain.json; flags, observations and transitive evidence bytes unchanged"
     }
+  },
+  "metadata_sanitization": {
+    "reason": "Removed local environment labels, installation paths, PIDs and filesystem IDs. Binary identities, technical measurements and trace events preserved; transitive document hashes updated.",
+    "original_document_sha256": {
+      "runtime-profiles/observed-runtime/engine.json": "52bf82f5ba1478851cc71358d8aef33c666d76b4a2a51ead4692a89c8deec00e",
+      "runtime-profiles/observed-runtime/lifecycle-trace.json": "27640da883b77ca47c9a093183b9e235f282f91fbab11d2f434ce0e56d3bc2ca",
+      "runtime-profiles/observed-runtime/steam-runtime.json": "eb353fa759a7aea5c0e05bd7d6a41dfcf2fca657a6e67c3505f09f1a576f3cf3",
+      "runtime-profiles/observed-linux-x86.json": "77fcc37f5e92dad213120486e2326d5e46da98c630074502a05d35488bcf8f15",
+      "sdk-provenance/sdk-toolchain.json": "1a652efb9cdb71b20f18347fc2a2761972cdd42aa3c59ced1cadba01bdbc0230"
+    },
+    "runtime_acceptance_expanded": false
   }
 }

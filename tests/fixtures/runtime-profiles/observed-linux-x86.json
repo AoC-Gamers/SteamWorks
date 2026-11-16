@@ -10,7 +10,7 @@
     "game": "left4dead2",
     "platform": "linux",
     "architecture": "x86",
-    "container": "competitive_dev",
+    "container": null,
     "app_build_id": "23990100",
     "game_patch": "2.2.4.3",
     "exe_build": "10097 (Jun 30 2026)",
@@ -41,8 +41,8 @@
       "architecture": "x86",
       "size_bytes": 4055404,
       "loaded_module_confirmed": true,
-      "evidence_file": "competitive-dev/engine.json",
-      "evidence_sha256": "52bf82f5ba1478851cc71358d8aef33c666d76b4a2a51ead4692a89c8deec00e"
+      "evidence_file": "observed-runtime/engine.json",
+      "evidence_sha256": "5d9b9788ca4a8b571e65a873d8bf02eebe0cd1bf101f6ad0e0078c4036a39238"
     },
     {
       "module_id": "steam-runtime",
@@ -53,8 +53,8 @@
       "architecture": "x86",
       "size_bytes": 420954,
       "loaded_module_confirmed": true,
-      "evidence_file": "competitive-dev/steam-runtime.json",
-      "evidence_sha256": "eb353fa759a7aea5c0e05bd7d6a41dfcf2fca657a6e67c3505f09f1a576f3cf3"
+      "evidence_file": "observed-runtime/steam-runtime.json",
+      "evidence_sha256": "0b7ad1f31f52786d9e529a5960b40575fd5bce09688c3ddfd3ec619a657dfc54"
     }
   ],
   "entrypoints": [
@@ -82,7 +82,7 @@
       "pattern_bytes": null,
       "pattern_mask": null,
       "vtable_offset": null,
-      "trampoline_validation_evidence": "competitive-dev/lifecycle-trace.json"
+      "trampoline_validation_evidence": "observed-runtime/lifecycle-trace.json"
     },
     {
       "name": "SteamGameServer_Shutdown",
@@ -101,7 +101,7 @@
       "pattern_bytes": null,
       "pattern_mask": null,
       "vtable_offset": null,
-      "trampoline_validation_evidence": "competitive-dev/lifecycle-trace.json"
+      "trampoline_validation_evidence": "observed-runtime/lifecycle-trace.json"
     }
   ],
   "tests_executed": [
@@ -112,10 +112,14 @@
     "unknown/ambiguous/other-platform negative unit tests",
     "runtime and SDK PIC-prefix execution fixtures"
   ],
-  "trace_file": "competitive-dev/lifecycle-trace.json",
-  "trace_sha256": "27640da883b77ca47c9a093183b9e235f282f91fbab11d2f434ce0e56d3bc2ca",
+  "trace_file": "observed-runtime/lifecycle-trace.json",
+  "trace_sha256": "6da38b9187e3d97fa0f213807bfaa74dd62a1b6d08ebfc033aa584a7db14ab41",
   "sdk_target_unchanged": "1.58a",
   "approved_by": null,
   "approved_at": null,
-  "scope": "Local binary/ABI lifecycle validation, not production deployment or all Steam API acceptance. Documentary enabled=false does not toggle compiled selector."
+  "scope": "Local binary/ABI lifecycle validation, not production deployment or all Steam API acceptance. Documentary enabled=false does not toggle compiled selector.",
+  "public_copy": {
+    "environment_labels_redacted": true,
+    "operational_identity_unchanged": true
+  }
 }

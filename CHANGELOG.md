@@ -4,11 +4,44 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 
 ## [Unreleased]
 
+### SDK 1.55
+
+- SDK único con lock de headers y bibliotecas x86, guardas de selección en build,
+  pruebas y CI. Registro de servidor adaptado a 014, con prefijo de autenticación
+  independiente y controles negativos de versión/objeto equivocados.
+- API SourcePawn conservada. Aceptación Linux SRCDS x86 del payload SDK 1.55:
+  autenticación 014, identidad, stats enteros y float, HTTP/streaming,
+  reinicialización en el mismo proceso y cierre limpio en perfil mínimo.
+  GC remoto positivo y runtime Windows permanecen pendientes.
+- Reversión Linux x86 aceptada con baseline nuevo SDK 1.55 y finalizador T08:
+  instalación desde ZIP, Steam/HTTP y salida limpia del candidato y del baseline
+  restaurado. Las repeticiones con sus ZIP documentales actualizados observaron
+  además el cierre efectivo del contexto cliente activo en los tres desmontajes
+  de cada ensayo.
+  El fallo del baseline histórico conserva su propia atribución;
+  no se transfiere aceptación de instalación a nuevos ZIP documentales.
+
+### Documentación pública
+
+- Entornos, rutas y paquetes de prueba descritos con nombres genéricos; metadatos
+  de fixtures saneados con trazabilidad y sin ampliar aceptación runtime.
+
+### Estructura de instalación
+
+- Include público ubicado en `addons/sourcemod/scripting/include/`; build,
+  inventario y validación de paquetes actualizados. El diagnóstico general pasa
+  a `tests/runtime/`, conservando los bytes y la API pública.
+
+### Organización de pruebas
+
+- Fuentes, ejecutores y ayudantes reunidos en `tests/`; documentación y CI usan
+  las nuevas rutas, conservando opciones, variables y controles existentes.
+
 ### Reorganización documental y de pruebas
 
 Documentación por funcionalidad, fixtures protegidos, suites y scripts clasificados; rutas y empaquetado actualizados sin cambios de API ni lógica nativa.
 
-### Correcciones posteriores a P5-R18
+### Buffers HTTP y GC
 - GC entrega al forward un snapshot de capacidad inicializada, copiando solo
   el mensaje válido; no lee salidas no garantizadas en errores. Mantiene
   capacidad, resultados históricos, supercesión y guarda de generación.
@@ -17,180 +50,20 @@ Documentación por funcionalidad, fixtures protegidos, suites y scripts clasific
 - Regresiones previas reproducidas, proveedor HTTP estricto, matrices GC/HTTP,
   integración x86 y sanitizadores sin supresiones. Aceptación posterior SRCDS x86:
   372 checks sin fallos, HTTP real, GC real vacío y proveedor GC local tipado;
-  mensaje GC remoto positivo pendiente. Quit limpio y DEV restaurado. P5-R18
-  y OneDrive conservados como evidencia histórica.
+  mensaje GC remoto positivo pendiente. Salida limpia observada en el perfil mínimo; no amplía la aceptación a otros
+  consumidores o plataformas.
 
 ### Validación
 
-- Revisión final R20: guardas de evidencia/roundtrip ligadas al checkpoint R20,
-  con controles negativos en copias temporales; referencias de reversión actual
-  e histórica separadas. Artefactos previos preservados, payload/API intactos
-  y GC remoto pendiente; sin operaciones de servidor ni publicación.
-
-- P5-R20 integra T26/T35 del ZIP local R19, repite 15 suites x86 y sanitizadores
-  sin supresiones, reproduce el payload aceptado y renueva cuatro ZIP/rollback.
-  Conserva el alcance mínimo y el fallo de salida histórico del baseline sin
-  cierre general. GC remoto pendiente; sin operaciones de servidor, commit,
-  publicación ni despliegue en esta regeneración.
-
-- Seguimiento T26/T35 R19: ZIP local instalado y revertido en el mismo SRCDS
-  aislado con LinuxGSM. Candidato/baseline pasan Steam/HTTP y quit en perfil
-  mínimo; el SIGSEGV histórico del baseline no se reproduce ni se cierra globalmente.
-  DEV restaurado y 1843 CFG intactos; GC remoto pendiente y ZIP anteriores intactos.
-
-- Revisión final R19: ejemplos HTTP coherentes con lectura raw completa y
-  conteos en bytes; recetas portables separadas del empaquetado local. Artefactos
-  revisados y anteriores preservados, sin cambios nativos/API ni cierre GC remoto.
-
-- P5-R19 incorpora la aceptación de revisión 12, repite 15 suites x86 y
-  sanitizadores sin supresiones, reproduce el ELF aceptado y renueva cuatro ZIP
-  con reversión por lectura/roundtrip local. GC remoto positivo queda pendiente;
-  evidencia histórica separada del nuevo ELF. Sin operaciones de servidor,
-  commit, publicación ni despliegue.
-- Revisión final R18: concilia tres campos auxiliares de CI con pasos exitosos
-  de cc52305 y aclara que la comparación con fecha libre es histórica de R17.
-  Evidencia original y primeros ZIP R18 preservados; paquetes y reversión
-  comprobados de nuevo. Sin cambios nativos/de API, commit, push ni despliegue.
-- P5-R18 incorpora las correcciones Windows de macro max y enlace tier0.lib,
-  con CI de producto cc52305 verde para Linux y Windows. Repite 15 suites x86,
-  sanitizadores sin supresiones, build optimizado idéntico, 18 harnesses y
-  consumidores/Connect; conserva 33 casos aceptados y tres no aplicables al
-  perfil Linux x86. Regenera los cuatro paquetes y la captura de reversión,
-  incluye atributos de bytes auditados y parche completo de Connect contra su
-  base original. ZIP anteriores intactos; actualización sin commit/push ni
-  operación de servidores. CI Windows no implica aceptación runtime Windows.
-- CI Windows R17: tras confirmar la compilación con la macro `max`, declara
-  tier0.lib para los ocho imports de diagnóstico/allocator usados por tier1
-  ConVar. Imports contrastados con la librería SDK; build Linux repetido idéntico.
-  Sin cambios de API, runtime Linux o perfil de aceptación; sin despliegue.
-- Seguimiento CI R17: corrige colisión con la macro Windows `max` en cuatro
-  límites numéricos sin desactivar macros ni comprobaciones. Control negativo
-  reproducido y regresión x86 con la macro activa, 15 suites y build optimizado
-  idéntico pasan. Se preservan los ZIP offline anteriores al ajuste y se repite
-  CI remoto; sin operación del servidor ni ampliación de aceptación a Windows.
-- Revisión final R17 corrige reproducción del ZIP de fuentes desde extracción
-  limpia, entrada explícita de VM diagnóstica e inventario sin `.git`/HEAD ajeno;
-  concilia referencias antiguas de GC/forwards. Build idéntico y 15 suites desde
-  el ZIP, reversión real archivada en filesystem temporal y privacidad verificadas.
-  Se preservan los ZIP R17 previos y se regeneran los corregidos, sin cambios
-  nativos/de API, commit ni operación de servidor.
-- P5-R17 integra el cierre T25/T29 y conserva 33 casos aceptados/tres no aplicables
-  al perfil Linux x86. Repite 15 suites y sanitizadores sin supresiones, build
-  optimizado idéntico con fecha fijada (primer build solo fecha/build-id distinto),
-  18 harnesses, tres consumidores, cuatro fixtures Connect y 66 pruebas Python.
-  Regenera candidato/fuentes/diagnósticos/reversión, verifica ZIP extraído y
-  roundtrip local, preservando archivos anteriores. API intacta, DEV contrastado
-  por lectura; sin operación SRCDS, commit, publicación ni despliegue.
-- Cierre T25/T29 de R16: préstamo, perfil Web API y grupo reales; rechazo
-  preautenticado y control autorizado del mismo cliente. Connect externo corrige
-  la lectura HTTP de cinco argumentos, contexto SDK al arranque y propiedad del
-  reintento. 18 checks humanos/sociales, 104 checks Connect x86, 66 pruebas Python
-  y 15 suites x86 pasan; frío/HTTP/ACK/mapa aceptados. Matriz del perfil Linux x86
-  completa en sus límites, ZIP R16 intactos, DEV restaurado, sin commit ni producción.
-- T33 de R16 acepta veinte minutos de carga HTTP mixta local y ventanas de
-  reposo/recuperación: 1980 solicitudes completas/cerradas sin fallos,
-  handles cero tras cada drenaje y recursos/latencia dentro de límites registrados
-  antes del ensayo. CPU/frame medidos, quit limpio y DEV restaurado. Quince suites
-  x86 repetidas pasan y observer sin warnings. ZIP R16 intactos, evidencia/fuentes
-  separadas; T25/T29 siguen parciales, sin aceptación global ni producción/commit.
-- T32 de R16 acepta un ciclo real de desconexión y recuperación Steam sin
-  destruir runtime: mismo PID/módulos, nueve getters estables, respuesta HTTP
-  retenida y peticiones nuevas durante/después del corte. 81 checks sin fallos,
-  15 suites x86 repetidas y observer sin warnings. Filtros limitados al cgroup/UID
-  del laboratorio retirados, DEV restaurado. Tres casos abiertos: T25/T29/T33.
-  API/runtime y ZIP R16 intactos; evidencia/fuentes separadas, sin commit ni producción.
-- P5-R16 integra T25 parcial de R15: seis variantes reales/37 checks y dos
-  controles nuevos con includes antiguo/actual/22 checks humanos H08/H09.
-  Conserva pendientes externos Connect y flujos completos, T29 parcial y T32/T33.
-  Repite 15 suites x86, sanitizadores sin supresiones, build optimizado y catorce
-  harnesses. Regenera cuatro paquetes/captura de reversión solo localmente;
-  API/runtime y rollback aceptados idénticos, archivos anteriores intactos,
-  sin commit, operación del servidor ni despliegue.
-- T25 de R15 queda parcial tras probar seis variantes reales de consumidores
-  (tres SMX existentes y tres recompilados): 37 checks, más 22 checks humanos
-  H08/H09 en dos controles nuevos con includes antiguo/actual. Se repiten 15 suites
-  x86. Persisten dos llamadas incompatibles en Connect y flujos completos sin
-  cubrir; API/runtime intactos, DEV restaurado, cuatro casos abiertos y evidencia
-  separada. Sin regenerar ZIP R15, commit ni producción.
-- P5-R15 incorpora T11 aceptado para el perfil de R14: ocho interfaces disponibles,
-  Matchmaking ausente y GC local/rechazo/restauración probados; sin inferir GC
-  remoto ni todos los métodos. Repite 15 suites x86, tres consumidores, once
-  harnesses, ambos helpers y sanitizadores sin supresiones. Regenera cuatro ZIP
-  y reversión por lectura, conservando API, payload extensión/include y rollback
-  ejercitados. Cuatro casos abiertos; paquetes anteriores intactos, sin commit ni
-  despliegue.
-- T11 de R14 acepta la matriz mínima de nueve familias en SRCDS x86: ocho
-  disponibles y Matchmaking ausente para gameserver. GC local, rechazo de GC999
-  una vez y restauración pasan; 144 checks aceptados sin fallos. Se conservan los
-  intentos inválidos del harness y se repiten 15 suites x86. No se infiere GC
-  remoto; API/runtime intactos, DEV restaurado, cuatro casos abiertos. ZIP R14
-  intactos y seguimiento separado, sin commit ni producción.
-- P5-R14 integra T23 aceptado de R13 e incorpora sus fixtures y el comentario
-  corregido de RestartRequested, sin cambiar firmas ni comportamiento. Repite
-  15 suites x86, tres consumidores, diez harnesses, helper ELF32 y sanitizadores
-  sin supresiones. Regenera cuatro ZIP y reversión por lectura; ELF/rollback
-  aceptados idénticos, include con cambio documental. Cinco casos abiertos;
-  paquetes previos intactos, sin commit ni despliegue.
-- T23 de R13 acepta despacho sintético sobre los doce forwards reales en SRCDS
-  x86: 672 despachos y 4803 checks sin fallos; orden incorrecto detectado. Repite
-  14 suites x86 y añade 109 checks del mapeo del hook de reinicio. Se corrige su
-  comentario preservando firmas y convención histórica. DEV restaurado, cinco
-  casos abiertos, ZIP R13 intactos; evidencia/fuentes de seguimiento separadas.
-- P5-R13 incorpora T15 aceptado y T29 parcial de R12; seis casos globales abiertos.
-  Repite 14 suites x86, build optimizado, tres consumidores, ocho harnesses y
-  ASan/LSan/UBSan sin supresiones. Renueva cuatro ZIP y reversión por lectura,
-  conservando API, ELF y rollback aceptados. El rechazo temprano por referencia
-  inválida no acredita la rama conectada sin autorización; tampoco se acepta
-  inconsistencia/fallback validado en host real. Sin commit ni despliegue.
-- Seguimiento R12 en SRCDS x86: T15 acepta límites de buffers; T29 amplía
-  negativos y sigue parcial. Harness sin IDs en logs, 40 comprobaciones finales
-  sin fallos; quit y DEV restaurados. ZIP R12 intactos, seis casos abiertos.
-- P5-R12 incorpora la aceptación T16 y el observador independiente. Repite 14
-  suites x86, build optimizado, consumidores, siete harnesses y sanitizadores sin
-  supresiones; renueva cuatro ZIP, documentación y captura de reversión. Conserva
-  T16/T20/T26/T35 por hash y alcance, siete casos abiertos y el fallo de salida del
-  baseline. Paquetes previos intactos, sin commit ni desplegar.
-- T16 acepta carga tardía sobre gameserver conectado y dos ciclos de descarga/
-  recarga por consola sin consumidores ni peticiones: desmapeo, hooks restaurados,
-  pipes Steam y SourceTVSupport conservados, HTTP/nuevo juego/quit correctos.
-  Solo se añade un harness; DEV restaurado, API/ELF/ZIP R11 intactos, sin commit
-  ni producción. No certifica fuerza o unload desde callbacks activos.
-- P5-R11 incorpora la aceptación T20 y su harness actualizado. Repite 14 suites
-  x86, build optimizado, consumidores, seis harnesses y sanitizadores sin
-  supresiones; renueva cuatro ZIP, documentación y captura de reversión. Mantiene
-  T20/T26/T35 por hash, ocho casos globales abiertos y el fallo del baseline al
-  salir. Paquetes previos intactos, sin commit ni desplegar.
-- T20 acepta dos ciclos de descarga del plugin propietario con HTTP retenido y
-  recarga antes de liberar la respuesta antigua: handles propios reclamados,
-  probes nuevos correctos, sin callback obsoleto en siete segundos por ciclo.
-  Quit limpio y DEV restaurado; solo cambia el harness, API/extensión intactas.
-- P5-R10 concilia T26/T35 aceptados con los ZIP reales R9. Repite 14 suites x86,
-  build optimizado y sanitizadores sin supresiones; regenera documentación, cuatro
-  ZIP y captura de reversión. Runtime y ZIP rollback conservan sus hashes probados;
-  nuevo ZIP candidato solo verificado localmente. Baseline con fallo de salida y
-  pendientes globales conservados, sin commit ni desplegar.
-- P5-R9 reproduce el ELF optimizado `839ff075…` aceptado directamente en SRCDS:
-  dos reinicializaciones con SourceTVSupport, HTTP/streaming, auth/identidad/stats
-  humanos y quit limpio. Repite 14 suites x86 y sanitizadores, renueva cuatro ZIP,
-  documentación y reversión local. El seguimiento posterior acepta T26/T35 con
-  ZIP reales, restauración/arranque/Steam/HTTP; el baseline conserva su SIGSEGV al
-  salir. Aceptación global pendiente; paquetes anteriores intactos, sin commit ni
-  despliegue en producción.
-- P5-R7 concilia la aceptación humana de P5-R6 con T08 para el mismo ELF:
-  repite 14 suites x86 y sanitizadores, regenera documentación, cuatro paquetes
-  y reversión locales. Conserva paquetes previos y pendientes de aceptación global;
-  sin commit ni despliegue.
-- P5-R6 incorpora el ELF aceptado en T08 con SourceTVSupport: repite 14 suites
-  x86 y sanitizadores sin supresiones, renueva paquetes/reversión locales y
-  conserva atribución de autenticación/identidad/stats al binario anterior.
-  Sin commit ni despliegue; aceptación global todavía pendiente.
-- P5-R5 incorpora la aceptación directa de 12 claves float y claves inexistentes
-  del payload P5-R4 en SRCDS x86. T03 pasa en el alcance observado; se renuevan
-  validación local, documentación, artefactos y reversión sin despliegue ni commit.
-- P5-R3 concilia la autenticación real del adaptador 014 en su binario R3 y la
-  aceptación HTTP streaming del candidato final. Repite 13 suites x86 y regenera
-  artefactos/reversión locales; conserva pendientes por candidato y no aprueba P5
-  globalmente. Sin commit, publicación ni despliegue en esta actualización.
+- Pruebas x86 de fronteras, identidad, stats, HTTP, autenticación, lifecycle y
+  SourceHook/VM; sanitizadores sin supresiones y controles negativos conservados.
+- Instalación y reversión verificadas en un servidor aislado, con alcance ligado
+  al hash del payload y al conjunto de consumidores ensayado.
+- Build optimizado reproducible y paquetes/fuentes comprobados por separado.
+  Compilación Windows no implica aceptación de runtime Windows.
+- GC remoto positivo sigue pendiente. Una cola vacía o un proveedor local no
+  acreditan recepción del backend; el SIGSEGV histórico del baseline no se cierra
+  por una salida limpia de un perfil mínimo.
 
 ### Corregido
 - El snapshot de BeginAuthSession valida la reserva acolchada contra PTRDIFF_MAX
@@ -220,7 +93,7 @@ Documentación por funcionalidad, fixtures protegidos, suites y scripts clasific
   `PushStringEx`, con copia alineada, padding cero, longitud en bytes, AccountID
   completo y sin copyback. La API pública no cambia. Pruebas con CForward real y
   VM SourcePawn aislada pasan en x86_64/x86; no se usan tickets reales ni SRCDS.
-- P4 identifica en `competitive_dev` la entrada real `SteamInternal_GameServer_Init`
+- P4 identifica en una instancia aislada la entrada real `SteamInternal_GameServer_Init`
   y conserva su ABI legacy de seis argumentos. Un perfil Linux x86 comprueba
   build-id del engine/proveedor, exports/RVA, región ejecutable y prefijos antes
   de instalar el par de detours; no se aceptan firmas arbitrarias de gamedata.

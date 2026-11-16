@@ -4,21 +4,33 @@ La integración compara la API con un baseline independiente y ejecuta suites
 offline sin administrar servidores. Elige una carpeta **nueva** de salida:
 
 ```bash
-TEST_CXXFLAGS=-m32 bash scripts/tests/test-typed-boundary.sh
-TEST_CXXFLAGS=-m32 bash scripts/tests/test-resource-lifecycle.sh
-python3 scripts/tests/test-integration.py --output .build/test-results/mi-ejecucion
+TEST_CXXFLAGS=-m32 bash tests/runners/test-typed-boundary.sh
+TEST_CXXFLAGS=-m32 bash tests/runners/test-resource-lifecycle.sh
+python3 tests/runners/test-integration.py --output .build/test-results/mi-ejecucion
 ```
 
 Los comandos se muestran desde la raíz. Para otro cwd invoca la ruta absoluta
 del script; también se admiten rutas con espacios y fuentes sin `.git`.
-Se requiere Python 3, C++14, multilib x86/UBSan y SDK 1.58a. La suite binaria
+Se requiere Python 3, C++14, multilib x86/UBSan y SDK 1.55. La suite binaria
 requiere utilidades ELF/PE; no carga un juego. Con flags sin `-m32` su ejecución
 de instrucciones x86 se omite explícitamente; la integración predeterminada usa
 `-m32` y debe ejecutarla. La falta de una dependencia obligatoria es un error.
 
+## Estructura
+
+`tests/` reúne las fuentes y las herramientas de prueba:
+
+| Directorio | Contenido |
+|---|---|
+| `runners/` | Ejecutores de suites y orquestador de integración |
+| `helpers/` | Generadores y compilación de proveedores/VM diagnóstica |
+| `native/`, `integration/`, `python/` | Fuentes de regresión y contratos offline |
+| `support/`, `fixtures/` | Dobles compartidos y entradas protegidas |
+| `runtime/`, `diagnostics/` | Harnesses SRCDS explícitos y probes de investigación |
+
 ## Catálogo
 
-Los ejecutores siguientes están en `scripts/tests/test-<suite>.sh`.
+Los ejecutores siguientes están en `tests/runners/test-<suite>.sh`.
 
 | Suite | Propósito | Dependencia real/simulada | No demuestra |
 |---|---|---|---|
@@ -34,10 +46,12 @@ Los ejecutores siguientes están en `scripts/tests/test-<suite>.sh`.
 | debug-log | Máscara, I/O y rotación | Filesystem temporal + backend simulado | Autenticación válida |
 | http-stream-context | Dos celdas, wire independiente y negativo original | HTTP simulado con layout independiente | Entrega de un servidor remoto |
 | auth-forward | Marshalling y agregación real de forwards | VM SourcePawn real + Steam simulado; opcional | Ticket auténtico |
-| auth-binding | Hook 014 y rechazo del objetivo 015 | SourceHook real + dos proveedores simulados; opcional | Login Steam real |
+| auth-binding | Objetivo motor 014, otro objeto SDK 014 y doble 015 rechazado | SourceHook real + dos proveedores simulados; opcional | Login Steam real |
 | sourcepawn-environment | Destrucción VM y ciclos de propiedad | VM instrumentada real, ASan; opcional | VM de producción ni estabilidad SRCDS |
 
-Además, `tests/python/review_artifacts_test.py` comprueba paquetes/reversión;
+Además, `tests/python/sdk_selection_test.py` verifica el release, los 47 hashes
+y los rechazos de headers/bibliotecas cambiados o ausentes; la integración realiza
+preflight del SDK antes de ejecutar suites. `tests/python/review_artifacts_test.py` comprueba paquetes/reversión;
 `runtime_evidence_test.py` valida perfiles e identidad; `documentation_test.py`
 comprueba estructura, enlaces y rechazos de contenido. Los ejecuta la integración.
 Los negativos HTTP estricto y GC se generan con mutaciones mínimas de producción:
@@ -73,3 +87,10 @@ no se regenera a partir del estado actual para hacer pasar una comparación.
 
 Los tests no prueban por sí solos una instalación, un login real o GC remoto.
 No se acepta una revisión nueva por compartir nombre con un binario anterior.
+
+La regresión `runners/test-sdk-incremental.py` requiere además AMBuild y los
+árboles reales SourceMod/Metamod/HL2SDK. Configura y compila el producto x86,
+cambia solo copias privadas de un header, biblioteca no usada por Linux,
+header ausente y header adicional, y exige rechazo antes de reescribir el ELF.
+Restaura cada entrada y comprueba recuperación del build. CI Linux la ejecuta
+tras el build de producto; no inicia servidores ni modifica el SDK original.

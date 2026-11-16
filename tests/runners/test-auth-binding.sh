@@ -2,7 +2,8 @@
 set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 OUTPUT_DIR="${TEST_BUILD_DIR:-$ROOT_DIR/.build/tests-auth-binding}"
-SDK_DIR="${STEAMWORKS_SDK_DIR:-$ROOT_DIR/sdk_158a}"
+SDK_DIR="${STEAMWORKS_SDK_DIR:-$ROOT_DIR/sdk_155}"
+python3 "$ROOT_DIR/scripts/build/validate-steamworks-sdk.py" "$SDK_DIR"
 : "${MMSOURCE_DIR:?Set MMSOURCE_DIR to the audited Metamod checkout}"
 SH_DIR="$MMSOURCE_DIR/core/sourcehook"
 mkdir -p "$OUTPUT_DIR"
@@ -31,7 +32,7 @@ done
  "$ROOT_DIR/tests/integration/auth_binding_test.cpp" "${objects[@]}" -o "$OUTPUT_DIR/auth_binding_test"
 "$OUTPUT_DIR/auth_binding_test"
 
-# Negative control: restoring the previous 015 hook must lose the engine event.
+# Negative control: restoring the wrong SDK-object hook must lose the engine event.
 python3 - "$ROOT_DIR" "$OUTPUT_DIR" <<'PYCODE'
 from pathlib import Path
 import sys
@@ -48,10 +49,10 @@ PYCODE
  "-DAUTH_BINDING_HOOK_SOURCE=\"$OUTPUT_DIR/old-target.cpp\"" \
  "$ROOT_DIR/tests/integration/auth_binding_test.cpp" "${objects[@]}" -o "$OUTPUT_DIR/old_target_test"
 if "$OUTPUT_DIR/old_target_test" > "$OUTPUT_DIR/old-target.log" 2>&1; then
- echo "FAIL: restoring 015 hook was not detected" >&2; exit 1
+ echo "FAIL: restoring the wrong SDK-object hook was not detected" >&2; exit 1
 fi
 grep -q 'FAIL: real SourceHook delivers one forward and one original call' "$OUTPUT_DIR/old-target.log"
 if grep -Eq 'AddressSanitizer:|LeakSanitizer:|runtime error:' "$OUTPUT_DIR/old-target.log"; then
  cat "$OUTPUT_DIR/old-target.log" >&2; exit 1
 fi
-echo "PASS: negative control rejects the former 015 hook target"
+echo "PASS: negative control rejects the wrong SDK-object hook target"

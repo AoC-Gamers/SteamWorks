@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Build a private test VM from pinned sources; never replace installed runtimes.
 set -euo pipefail
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 : "${SOURCEPAWN_SOURCE_DIR:?Set SOURCEPAWN_SOURCE_DIR to the pinned SourcePawn checkout}"
 : "${VM_TEST_BUILD_DIR:?Set VM_TEST_BUILD_DIR to a new private build directory}"
 : "${AMBUILD_PYTHON:?Set AMBUILD_PYTHON to the Python interpreter with AMBuild}"

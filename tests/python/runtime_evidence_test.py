@@ -84,17 +84,17 @@ class EvidenceTests(unittest.TestCase):
             validator.validate(changed, PROFILE_DIR)
 
     def test_real_sdk_reference_exports_and_identity(self):
-        sdk = Path(os.environ.get('STEAMWORKS_SDK_DIR', ROOT / 'sdk_158a'))
+        sdk = Path(os.environ.get('STEAMWORKS_SDK_DIR', ROOT / 'sdk_155'))
         info = collector.inspect(sdk / 'redistributable_bin/linux32/libsteam_api.so', 'test SDK', 'sdk-reference')
-        reference = json.loads((PROFILE_DIR / 'modules/sdk_158a-linux32.json').read_text())
+        reference = json.loads((PROFILE_DIR / 'modules/sdk_155-linux32.json').read_text())
         for key in ('sha256', 'size_bytes', 'build_id', 'format', 'architecture', 'exports'):
             self.assertEqual(info[key], reference[key], key)
         self.assertFalse(info['loaded_module_confirmed'])
         self.assertFalse(info['abi_verified'])
         self.assertFalse(info['initialization_route_verified'])
         self.assertEqual(len(info['exports']['SteamGameServer_InitSafe']), 1)
-        self.assertEqual(info['exports']['SteamInternal_GameServer_Init'], [])
-        self.assertEqual(len(info['exports']['SteamInternal_GameServer_Init_V2']), 1)
+        self.assertEqual(len(info['exports']['SteamInternal_GameServer_Init']), 1)
+        self.assertEqual(info['exports']['SteamInternal_GameServer_Init_V2'], [])
 
     def test_reference_versions_do_not_imply_same_init_route(self):
         old = json.loads((PROFILE_DIR / 'modules/sdk_155-linux32.json').read_text())
@@ -152,7 +152,7 @@ class EvidenceTests(unittest.TestCase):
             self.assertIn('cannot enable code', result.stderr)
 
     def test_selected_runtime_profile_is_coherent(self):
-        profile = json.loads((PROFILE_DIR / 'competitive-dev-linux-x86.json').read_text())
+        profile = json.loads((PROFILE_DIR / 'observed-linux-x86.json').read_text())
         validator.validate(profile, PROFILE_DIR)
         header = (ROOT / 'extension/core/swlifecycleprofile.h').read_text()
         for module in profile['modules']:
@@ -161,8 +161,28 @@ class EvidenceTests(unittest.TestCase):
         self.assertTrue(profile['operational_selector']['enabled_in_product'])
         self.assertFalse(profile['enabled'])  # JSON is documentary; selector is code.
 
+    def test_public_metadata_omits_local_identifiers_without_claiming_new_acceptance(self):
+        profile = json.loads((PROFILE_DIR / 'observed-linux-x86.json').read_text())
+        self.assertIsNone(profile['environment']['container'])
+        self.assertFalse(profile['enabled'])
+        for record in profile['modules']:
+            data = json.loads((PROFILE_DIR / record['evidence_file']).read_text())
+            for field in ('pid_observed', 'path', 'device_major', 'device_minor', 'inode', 'pid_namespace'):
+                self.assertIsNone(data[field], field)
+            self.assertTrue(data['loaded_module_confirmed'])  # Original observation remains scoped.
+            self.assertTrue(data['public_copy']['measured_binary_fields_unchanged'])
+        trace = json.loads((PROFILE_DIR / profile['trace_file']).read_text())
+        self.assertIsNone(trace['container'])
+        self.assertTrue(trace['round1']['events'])
+        manifest = json.loads((ROOT / 'tests/fixtures/manifest.json').read_text())
+        toolchain = json.loads((ROOT / 'tests/fixtures/sdk-provenance/sdk-toolchain.json').read_text())
+        self.assertIsNone(toolchain['build_environment']['image'])
+        self.assertFalse(toolchain['harness_compiler']['local_tool_source'].startswith('/'))
+        self.assertFalse(manifest['metadata_sanitization']['runtime_acceptance_expanded'])
+        self.assertEqual(len(manifest['metadata_sanitization']['original_document_sha256']), 5)
+
     def test_selected_runtime_profile_rejects_corruption(self):
-        base = json.loads((PROFILE_DIR / 'competitive-dev-linux-x86.json').read_text())
+        base = json.loads((PROFILE_DIR / 'observed-linux-x86.json').read_text())
         for change in ('architecture', 'hash', 'rva', 'relocation', 'pattern', 'approval', 'trace', 'prefix', 'prototype'):
             with self.subTest(change=change):
                 profile = copy.deepcopy(base)

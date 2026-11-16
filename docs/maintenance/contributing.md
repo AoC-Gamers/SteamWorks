@@ -1,6 +1,6 @@
 # Contribuir
 
-Mantén las firmas y opcionalidad de `scripting/include/steamworks.inc`. Audita
+Mantén las firmas y opcionalidad de `addons/sourcemod/scripting/include/steamworks.inc`. Audita
 cualquier cambio de SDK, interfaz o ABI antes de ampliar una allowlist. No uses
 una modificación documental como autorización para operar un servidor.
 

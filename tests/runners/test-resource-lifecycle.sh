@@ -2,7 +2,8 @@
 set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 OUTPUT_DIR="${TEST_BUILD_DIR:-$ROOT_DIR/.build/tests-lifecycle}"
-SDK_DIR="${STEAMWORKS_SDK_DIR:-$ROOT_DIR/sdk_158a}"
+SDK_DIR="${STEAMWORKS_SDK_DIR:-$ROOT_DIR/sdk_155}"
+python3 "$ROOT_DIR/scripts/build/validate-steamworks-sdk.py" "$SDK_DIR"
 CXX="${CXX:-g++}"
 mkdir -p "$OUTPUT_DIR"
 read -r -a extra_flags <<< "${TEST_CXXFLAGS:-}"
@@ -19,7 +20,7 @@ for suite in client_lifecycle_test http_lifecycle_test forwards_lifecycle_test h
 done
 
 # Exposing provider capacity instead of valid bytes must fail the tail check.
-python3 "$ROOT_DIR/scripts/tests/helpers/generate-buffer-negatives.py" "$OUTPUT_DIR/negative"
+python3 "$ROOT_DIR/tests/helpers/generate-buffer-negatives.py" "$OUTPUT_DIR/negative"
 "$CXX" -std=c++14 -Wall -Wextra -Werror -pedantic -O3 -DNDEBUG -g \
  -fsanitize=undefined -fno-sanitize-recover=all "${extra_flags[@]}" \
  -I"$ROOT_DIR/tests/support" -I"$ROOT_DIR/tests/support/stubs" \

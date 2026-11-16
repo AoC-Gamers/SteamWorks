@@ -51,7 +51,9 @@ void* Factory(const char* v) { ++factoryCalls; factoryVersion=v; return &client;
 struct ILibrary { void* GetSymbolAddress(const char*) { return reinterpret_cast<void*>(&Factory); } void CloseLibrary() {} } library;
 struct Libraries { ILibrary* OpenLibrary(const char*,char*,size_t) { return &library; } } libraries;
 auto* libsys = &libraries;
+#ifndef POSIX
 #define POSIX
+#endif
 #include "../../extension/core/swgameserver.cpp"
 
 int checks = 0;
@@ -98,7 +100,7 @@ int main() {
   SteamWorksGameServer adapter;config.keys.clear();g_SteamWorks.available=true;
   int nativeCalls=client.calls;
   Check(adapter.GetGameServerAuth014()==&authToken && authVersion=="SteamGameServer014","auth uses exact 014 factory and typed object");
-  Check(client.calls==nativeCalls,"auth does not go through the SDK 015 getter");
+  Check(client.calls==nativeCalls,"auth uses the engine factory independently of the SDK 014 getter");
   int authCalls=authFactoryCalls;g_SteamWorks.available=false;
   Check(adapter.GetGameServerAuth014()==nullptr && authFactoryCalls==authCalls,"stopped runtime hides cached auth object");
   g_SteamWorks.available=true;Check(adapter.GetGameServerAuth014()==&authToken && authFactoryCalls==authCalls,"014 result cached independently");
@@ -112,10 +114,10 @@ int main() {
   adapter.Reset();config.keys.clear();authUser=0;int before=authFactoryCalls;
   Check(adapter.GetGameServerAuth014()==nullptr && authFactoryCalls==before,"no engine user means no auth factory call");
   authUser=7;authAvailable=false;
-  Check(adapter.GetGameServerAuth014()==nullptr && authFactoryCalls==before+1,"missing 014 object has no 015 fallback");
+  Check(adapter.GetGameServerAuth014()==nullptr && authFactoryCalls==before+1,"missing engine auth object has no SDK getter fallback");
   authAvailable=true;Check(adapter.GetGameServerAuth014()==&authToken,"transient 014 absence can recover");
-  adapter.Reset();config.keys["SteamGameServerInterfaceVersion"]="SteamGameServer014";
-  Check(adapter.GetGameServer()==nullptr && adapter.GetGameServerAuth014()==&authToken,"native 015 registry remains distinct from engine auth 014");
+  adapter.Reset();config.keys["SteamGameServerInterfaceVersion"]="SteamGameServer015";
+  Check(adapter.GetGameServer()==nullptr && adapter.GetGameServerAuth014()==&authToken,"unsupported native 015 is rejected independently of engine auth 014");
   config.keys.clear();
  }
  SteamWorksGameServer server; resolverGlobal=nullptr;

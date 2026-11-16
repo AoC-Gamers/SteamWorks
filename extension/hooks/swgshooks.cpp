@@ -191,7 +191,7 @@ void SteamWorksGSHooks::Start()
 
 void SteamWorksGSHooks::TraceState() const
 {
- steamworks::debug::Log(steamworks::debug::Hooks, "gameserver_state", "enabled=%d target=%d waiting=%d restart=%d logon=%d auth=%d nativeVersion=SteamGameServer015 authVersion=SteamGameServer014", m_enabled ? 1 : 0, m_target != nullptr ? 1 : 0, m_frameHook ? 1 : 0, m_hookIds[0] != 0 ? 1 : 0, m_hookIds[1] != 0 ? 1 : 0, m_hookIds[2] != 0 ? 1 : 0);
+ steamworks::debug::Log(steamworks::debug::Hooks, "gameserver_state", "enabled=%d target=%d waiting=%d restart=%d logon=%d auth=%d nativeVersion=SteamGameServer014 authVersion=SteamGameServer014", m_enabled ? 1 : 0, m_target != nullptr ? 1 : 0, m_frameHook ? 1 : 0, m_hookIds[0] != 0 ? 1 : 0, m_hookIds[1] != 0 ? 1 : 0, m_hookIds[2] != 0 ? 1 : 0);
  steamworks::debug::Log(steamworks::debug::Auth, "auth_state", "enabled=%d attached=%d receivers=%u", m_enabled ? 1 : 0, m_hookIds[2] != 0 ? 1 : 0, pBeginAuthSessionForward != nullptr ? pBeginAuthSessionForward->GetFunctionCount() : 0);
 }
 

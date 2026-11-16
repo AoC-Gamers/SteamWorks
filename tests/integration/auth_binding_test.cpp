@@ -5,7 +5,9 @@
 #include "sourcehook_impl.h"
 #include "sourcehook.h"
 #include "../support/stubs/auth_server014.h"
+#include "../support/stubs/native_server014.h"
 #include "../support/stubs/native_server015.h"
+#include <type_traits>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
@@ -41,12 +43,14 @@ struct ForwardSystem {
  void ReleaseForward(IForward* f){for(auto it=owned.begin();it!=owned.end();++it)if(it->second==f){owned.erase(it);break;}delete f;}
 } forwardSystem;
 auto* forwards=&forwardSystem;
+NativeServer014Stub native014;
 NativeServer015Stub native015;
+static_assert(!std::is_convertible<NativeServer015Stub*, ISteamGameServer*>::value, "Unsupported 015 cannot become SDK 014");
 AuthServer014Stub authA,authB;
 steamworks::ISteamGameServer014* selectedAuth=&authA;
 void* AuthFactory(HSteamUser user,const char* version){Check(user==7 && std::strcmp(version,"SteamGameServer014")==0,"adapter requests exact engine version/user");return selectedAuth;}
 struct Resolver {
- ISteamGameServer* GetGameServer(){return &native015;}
+ ISteamGameServer* GetGameServer(){return &native014;}
  steamworks::ISteamGameServer014* GetGameServerAuth014(){return steamworks::ResolveGameServerAuth014(AuthFactory,7,"SteamGameServer014");}
 } resolver;
 class SteamWorksGSHooks;
@@ -69,7 +73,7 @@ __attribute__((noinline)) EBeginAuthSessionResult EngineAuth(steamworks::ISteamG
  using Entry=EBeginAuthSessionResult (*)(void*,const void*,int,CSteamID);
  auto entry=reinterpret_cast<Entry>(table[26]);return entry(p,bytes,size,id);
 }
-__attribute__((noinline)) EBeginAuthSessionResult NativeAuth(ISteamGameServer* p){return p->BeginAuthSession(nullptr,0,CSteamID());}
+template<class T> __attribute__((noinline)) EBeginAuthSessionResult NativeAuth(T* p){return p->BeginAuthSession(nullptr,0,CSteamID());}
 int Run(){
  const unsigned char ticket[]={0,0x80,0xff,1,0};
  CSteamID identity(0xf1234567u,1,k_EUniversePublic,k_EAccountTypeIndividual);
@@ -80,6 +84,7 @@ int Run(){
   Check(dispatches==1 && authA.authCalls==1,"real SourceHook delivers one forward and one original call");
   Check(forward->array.size()==2 && std::memcmp(forward->array.data(),ticket,sizeof(ticket))==0,"actual hook forwards packed binary bytes");
   Check(forward->cells.size()==2 && forward->cells[0]==5 && static_cast<uint32>(forward->cells[1])==0xf1234567u,"actual hook preserves byte count and all AccountID bits");
+  Check(NativeAuth(&native014)==k_EBeginAuthSessionResultInvalidTicket && native014.authCalls==1 && dispatches==1,"separate SDK 014 object is not the engine auth target");
   Check(NativeAuth(&native015)==k_EBeginAuthSessionResultInvalidTicket && native015.authCalls==1 && dispatches==1,"015 object is not mistaken for the engine auth target");
   Check(EngineAuth(&authB,ticket,sizeof(ticket),identity)==k_EBeginAuthSessionResultInvalidTicket && authB.authCalls==1 && dispatches==1,"same-vtable second 014 instance does not receive first instance hook");
   hooks.Stop();
@@ -98,7 +103,7 @@ int Run(){
  Check(forwards->owned.empty() && host.frames.empty(),"destructor releases forwards and polling");
  Check(EngineAuth(&authB,ticket,sizeof(ticket),identity)==k_EBeginAuthSessionResultInvalidTicket && dispatches==3,"destruction removes actual 014 hook before target is released");
  hookSystem.CompleteShutdown();
- std::printf("PASS: %d authentication binding checks (production owner/adapter, real SourceHook, synthetic 014/015 objects)\n",checks);
+ std::printf("PASS: %d authentication binding checks (production owner/adapter, real SourceHook, synthetic engine/SDK 014 objects and rejected 015 fixture)\n",checks);
  return 0;
 }
 int main(){try{return Run();}catch(const std::exception& error){std::fprintf(stderr,"FAIL: %s\n",error.what());return 1;}}

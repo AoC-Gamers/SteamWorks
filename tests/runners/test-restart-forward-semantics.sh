@@ -2,7 +2,8 @@
 set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 OUTPUT_DIR="${TEST_BUILD_DIR:-$ROOT_DIR/.build/restart-forward-semantics}"
-SDK_DIR="${STEAMWORKS_SDK_DIR:-$ROOT_DIR/sdk_158a}"
+SDK_DIR="${STEAMWORKS_SDK_DIR:-$ROOT_DIR/sdk_155}"
+python3 "$ROOT_DIR/scripts/build/validate-steamworks-sdk.py" "$SDK_DIR"
 mkdir -p "$OUTPUT_DIR"
 read -r -a extra_flags <<< "${TEST_CXXFLAGS:--m32}"
 "${CXX:-g++}" -std=c++14 -Wall -Wextra -Werror -pedantic -O3 -DNDEBUG -g \

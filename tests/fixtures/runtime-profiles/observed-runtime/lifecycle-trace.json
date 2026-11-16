@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "container": "competitive_dev",
-  "isolation": "Separate sourcemod_p4 tree, empty plugin set except project harness; loopback/insecure laboratory. Installed extension and Steam modules not replaced.",
+  "container": null,
+  "isolation": "Separate SourceMod tree, project harness only; loopback/insecure laboratory. Installed extension and Steam modules not replaced.",
   "round1": {
     "events": [
       "L 11/14/2026 - 19:06:56: [STEAMWORKS] Steam lifecycle profile installed: l4d2-23990100-linux-x86",
@@ -51,5 +51,9 @@
     "other engine/Steam module pairs",
     "all HTTP/GC/stats runtime behaviors",
     "long-duration gameplay"
-  ]
+  ],
+  "public_copy": {
+    "environment_labels_redacted": true,
+    "observed_events_unchanged": true
+  }
 }

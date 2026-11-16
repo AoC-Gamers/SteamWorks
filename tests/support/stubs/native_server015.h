@@ -1,6 +1,56 @@
 #pragma once
 #include "steam_gameserver.h"
-struct NativeServer015Stub : ISteamGameServer {
+// Independent rejected ABI fixture. Not a supported SDK or product interface.
+// The extra ticket argument pins the historical 015 declaration explicitly.
+namespace steamworks_test {
+struct UnsupportedServer015 {
+ virtual bool InitGameServer(uint32, uint16, uint16, uint32, AppId_t, const char *) = 0;
+ virtual void SetProduct(const char *) = 0;
+ virtual void SetGameDescription(const char *) = 0;
+ virtual void SetModDir(const char *) = 0;
+ virtual void SetDedicatedServer(bool) = 0;
+ virtual void LogOn(const char *) = 0;
+ virtual void LogOnAnonymous() = 0;
+ virtual void LogOff() = 0;
+ virtual bool BLoggedOn() = 0;
+ virtual bool BSecure() = 0;
+ virtual CSteamID GetSteamID() = 0;
+ virtual bool WasRestartRequested() = 0;
+ virtual void SetMaxPlayerCount(int) = 0;
+ virtual void SetBotPlayerCount(int) = 0;
+ virtual void SetServerName(const char *) = 0;
+ virtual void SetMapName(const char *) = 0;
+ virtual void SetPasswordProtected(bool) = 0;
+ virtual void SetSpectatorPort(uint16) = 0;
+ virtual void SetSpectatorServerName(const char *) = 0;
+ virtual void ClearAllKeyValues() = 0;
+ virtual void SetKeyValue(const char *, const char *) = 0;
+ virtual void SetGameTags(const char *) = 0;
+ virtual void SetGameData(const char *) = 0;
+ virtual void SetRegion(const char *) = 0;
+ virtual void SetAdvertiseServerActive(bool) = 0;
+ virtual HAuthTicket GetAuthSessionTicket(void *, int, uint32 *, const SteamNetworkingIdentity *) = 0;
+ virtual EBeginAuthSessionResult BeginAuthSession(const void *, int, CSteamID) = 0;
+ virtual void EndAuthSession(CSteamID) = 0;
+ virtual void CancelAuthTicket(HAuthTicket) = 0;
+ virtual EUserHasLicenseForAppResult UserHasLicenseForApp(CSteamID, AppId_t) = 0;
+ virtual bool RequestUserGroupStatus(CSteamID, CSteamID) = 0;
+ virtual void GetGameplayStats() = 0;
+ virtual SteamAPICall_t GetServerReputation() = 0;
+ virtual SteamIPAddress_t GetPublicIP() = 0;
+ virtual bool HandleIncomingPacket(const void *, int, uint32, uint16) = 0;
+ virtual int GetNextOutgoingPacket(void *, int, uint32 *, uint16 *) = 0;
+ virtual SteamAPICall_t AssociateWithClan(CSteamID) = 0;
+ virtual SteamAPICall_t ComputeNewPlayerCompatibility(CSteamID) = 0;
+ virtual bool SendUserConnectAndAuthenticate_DEPRECATED(uint32, const void *, uint32, CSteamID *) = 0;
+ virtual CSteamID CreateUnauthenticatedUserConnection() = 0;
+ virtual void SendUserDisconnect_DEPRECATED(CSteamID) = 0;
+ virtual bool BUpdateUserData(CSteamID, const char *, uint32) = 0;
+ virtual void SetMasterServerHeartbeatInterval_DEPRECATED(int) = 0;
+ virtual void ForceMasterServerHeartbeat_DEPRECATED() = 0;
+};
+}
+struct NativeServer015Stub : steamworks_test::UnsupportedServer015 {
  int authCalls=0;
  bool InitGameServer(uint32, uint16, uint16, uint32, AppId_t, const char *) override { return {}; }
  void SetProduct(const char *) override {}

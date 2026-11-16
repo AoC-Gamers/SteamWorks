@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Laboratory-only x86 extension; never installs or launches a server.
 set -euo pipefail
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 OUTPUT_DIR="${TEST_BUILD_DIR:-$ROOT_DIR/.build/forward-fixture}"
 : "${SOURCEMOD_DIR:?Set SOURCEMOD_DIR to a compatible SourceMod source tree}"
 mkdir -p "$OUTPUT_DIR/sdk"

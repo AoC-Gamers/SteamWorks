@@ -91,7 +91,7 @@ for bucket, extensions in package_map.get("build", {}).get("extensions", {}).ite
                     or int.from_bytes(header[18:20], "little") != 3):
                 raise SystemExit(f"L4D2 requires a Linux x86 ELF32 extension: {extension_path}")
 
-source_root = os.path.join(root_dir, "scripting")
+source_root = os.path.join(root_dir, "addons", "sourcemod", "scripting")
 artifact_root = os.path.join(artifact_dir, "addons", "sourcemod", "scripting")
 artifact_manifest = package_map.get("artifact", {}).get("addons", {}).get("sourcemod", {}).get("scripting", {})
 validate_manifest_tree(source_root, artifact_root, artifact_manifest)

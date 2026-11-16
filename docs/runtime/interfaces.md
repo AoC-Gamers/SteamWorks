@@ -6,7 +6,7 @@ una auditoría; no se elige automáticamente una versión próxima.
 | Tipo | Versión admitida | Uso |
 |---|---|---|
 | ISteamClient | SteamClient020 | Resolver interfaces |
-| ISteamGameServer | SteamGameServer015 | Operaciones nativas de servidor |
+| ISteamGameServer | SteamGameServer014 | Operaciones nativas de servidor |
 | ISteamGameServer014 | SteamGameServer014 | Adaptador independiente del hook de autenticación |
 | ISteamUtils | SteamUtils010 | AppID, universo y utilidades |
 | ISteamNetworking | SteamNetworking006 | Red legacy expuesta |

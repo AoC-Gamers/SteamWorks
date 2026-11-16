@@ -15,8 +15,12 @@ Los tipos no cambian la API de SourcePawn. Los wrappers mantienen nombres,
 firmas, tipos, forwards y opcionalidad del include. La comparación de inventario
 con el fixture P0 es independiente de números de línea y metadatos de fuentes.
 Los tests negativos compilan un SDK inventado, mezcla AppID/AccountID y mezcla
-014/015: deben fallar por el diagnóstico esperado, no por un include perdido.
+entre el prefijo auditado y la interfaz completa del SDK: deben fallar por el diagnóstico esperado, no por un include perdido.
 
 Implementación: `extension/core/swtypes.h`, `swinterfaces.h`, `swgameauth014.h`.
 Regresiones: `tests/native/typed_boundary_test.cpp`, `interface_registry_test.cpp`
-y `scripts/tests/test-typed-boundary.sh` en las fuentes del proyecto.
+y `tests/runners/test-typed-boundary.sh` en las fuentes del proyecto.
+
+SDK 1.55 es la única dependencia admitida: `steamworks-sdk.lock.json` fija los
+headers y las dos bibliotecas x86 de enlace. La interfaz 015 permanece únicamente
+como doble independiente rechazado, sin utilizar un SDK alternativo.

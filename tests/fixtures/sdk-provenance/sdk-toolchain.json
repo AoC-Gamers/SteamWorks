@@ -254,7 +254,7 @@
   },
   "build_environment": {
     "isolation": "Docker, no network, repository read-only except .build",
-    "image": "sourcetvmanager-builder:local",
+    "image": null,
     "image_id": "sha256:8b88d2213cf0eaa488c64f73bd11d7827dfc9b10f9aefc0de714463c6fa2db3b",
     "os": "Debian GNU/Linux 12 (bookworm)",
     "compiler": "g++ 12.2.0-14+deb12u1",
@@ -295,8 +295,12 @@
   },
   "harness_compiler": {
     "version": "1.12.0.7259",
-    "local_tool_source": "L4D2-Family-Share/deps/sourcemod-linux/addons/sourcemod/scripting",
+    "local_tool_source": "SourcePawn compiler distribution; installation path omitted",
     "sha256": "3119c9cecf4f3d7324786ee6499f13265de80d778540feb44363a013122e86fd",
     "smx_sha256": "2d4b0086a8a264ddebef7828778d7b05181105b00b097fc7868d3b9c2d16cf97"
+  },
+  "public_copy": {
+    "environment_labels_and_local_paths_redacted": true,
+    "toolchain_versions_and_hashes_unchanged": true
   }
 }

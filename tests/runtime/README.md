@@ -15,13 +15,14 @@ La cuenta participante y sus escenarios deben estar autorizados.
 
 Compila con `spcomp`, include actual y dependencias explícitas del harness;
 no distribuyas includes externos solo para fabricar un paquete autocontenido.
-Los helpers `scripts/tests/helpers/build-{buffer,capability,forward}-fixture.sh`
+Los helpers `tests/helpers/build-{buffer,capability,forward}-fixture.sh`
 generan proveedores ELF32 de laboratorio; no se instalan en producto.
 
 ## Catálogo de escenarios
 
 | Fuentes | Finalidad y efectos |
 |---|---|
+| `steamwork_test.sp` | Diagnóstico manual de estado, HTTP, identidad, licencia, metadata y stats; puede modificar metadata, no instalar como plugin de producto |
 | `steamworks_acceptance.sp`, `steamworks_rollback_acceptance.sp` | HTTP, callback/contexto/cierre y comparación tras instalar/revertir |
 | `steamworks_stats_acceptance.sp` | Lecturas enteras/float y claves inexistentes con usuario autenticado |
 | `steamworks_identity_acceptance.sp`, `steamworks_identity_pending.sp` | Buffers, NUL y negativos antes de autorización |
@@ -52,3 +53,22 @@ por hash; no extender aceptación a paquetes o consumidores diferentes.
 El GC de cola vacía o el proveedor local no cierran GC remoto. La salida limpia
 de un perfil mínimo no cierra el SIGSEGV histórico del baseline completo.
 Consulta [cobertura](../COVERAGE.md) para observaciones y pendientes.
+
+## Observador de consumidores
+
+`steamworks_consumer_observer.sp` no presupone plugins de una instalación propia.
+Para comprobar un consumidor que procesa `SteamWorks_SteamServersConnected`,
+configúralo antes según su contrato y registra explícitamente cada CFG cuyo
+`exec` deba bloquearse durante el ensayo:
+
+```text
+sm_sw_consumer protect-config "sourcemod/consumer.cfg"
+sm_sw_consumer server-ip "consumer.smx"
+```
+
+`server-ip` exige al menos una ruta protegida, comprueba la presencia de los
+controles de red del motor, llama al callback real y contrasta la dirección
+consumida sin imprimirla; después restaura esos controles. No ajusta convars
+propias del consumidor. Los modos `loaded`, `unloaded`, `family` y `absent`
+conservan sus escenarios; el modo de callbacks generalizado requiere nueva
+aceptación SRCDS antes de atribuirle un resultado runtime.

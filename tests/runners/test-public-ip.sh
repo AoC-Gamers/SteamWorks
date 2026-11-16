@@ -4,7 +4,8 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 OUTPUT_DIR="${TEST_BUILD_DIR:-$ROOT_DIR/.build/tests-public-ip}"
 CXX="${CXX:-g++}"
-SDK_DIR="${STEAMWORKS_SDK_DIR:-$ROOT_DIR/sdk_158a}"
+SDK_DIR="${STEAMWORKS_SDK_DIR:-$ROOT_DIR/sdk_155}"
+python3 "$ROOT_DIR/scripts/build/validate-steamworks-sdk.py" "$SDK_DIR"
 mkdir -p "$OUTPUT_DIR"
 if [[ ! -f "$SDK_DIR/public/steam/steamclientpublic.h" ]]; then
   echo "Missing Steamworks SDK headers at $SDK_DIR; set STEAMWORKS_SDK_DIR." >&2

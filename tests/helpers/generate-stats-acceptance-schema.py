@@ -5,7 +5,7 @@ import argparse,hashlib,json
 p=argparse.ArgumentParser(description=__doc__)
 p.add_argument('output',type=Path)
 a=p.parse_args()
-source=Path(__file__).resolve().parents[3]/'tests/fixtures/stats/GetSchemaForGame_550.json'
+source=Path(__file__).resolve().parents[2]/'tests/fixtures/stats/GetSchemaForGame_550.json'
 game=json.loads(source.read_text())['game']['availableGameStats']
 keys=[s['name'] for s in game['stats']]
 assert len(keys)==len(set(keys)) and all(k.isascii() for k in keys)
