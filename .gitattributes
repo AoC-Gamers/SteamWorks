@@ -50,3 +50,5 @@ Dockerfile text eol=lf
 # Preserve their recorded hashes across Git add/checkout on every platform.
 docs/runtime-compatibility/** -text
 patches/** -text
+extension/sdk/smsdk_ext.cpp -text
+extension/sdk/smsdk_ext.h -text
