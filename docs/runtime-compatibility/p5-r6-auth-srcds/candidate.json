@@ -1,7 +1,0 @@
-{
-  "archive": ".build/p5-r6/review/steamworks-p5-r6-linux-x86-candidate.zip",
-  "archive_sha256": "63f4dc670b86912fe0199b7a0cf5f5fae5d15dd229fbaef8b6da960994acb81d",
-  "extension_sha256": "82347b99d5130bd411cdc0b35d215dc87fc82d394a2252ccd83d5d4940b6ca5a",
-  "include_sha256": "b4e021b2df9fd81101754f0795da2d5c2eee04c125a8e4997a0b19595fc3affb",
-  "payload_extracted_from_review_ZIP": true
-}

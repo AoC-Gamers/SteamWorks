@@ -4,6 +4,10 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 
 ## [Unreleased]
 
+### Reorganización documental y de pruebas
+
+Documentación por funcionalidad, fixtures protegidos, suites y scripts clasificados; rutas y empaquetado actualizados sin cambios de API ni lógica nativa.
+
 ### Correcciones posteriores a P5-R18
 - GC entrega al forward un snapshot de capacidad inicializada, copiando solo
   el mensaje válido; no lee salidas no garantizadas en errores. Mantiene

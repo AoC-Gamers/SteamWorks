@@ -1,9 +1,0 @@
-{
-  "timestamp_utc": "2026-11-16T10:23:59.843780+00:00",
-  "quit_completed": true,
-  "lab_stopped": true,
-  "stopped_pid": 10915,
-  "trace": [],
-  "error_log_sizes": {},
-  "crash_markers": []
-}

@@ -1,2 +1,0 @@
-PASS: 16 VM ownership cycles (delete only / explicit shutdown then delete)
-PASS: 227 authentication forward checks (production hook, actual SourceMod CForward and standalone SourcePawn VM; synthetic bytes only)

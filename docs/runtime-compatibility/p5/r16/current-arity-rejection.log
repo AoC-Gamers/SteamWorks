@@ -1,9 +1,0 @@
-SourcePawn Compiler 1.12.0.7259
-Copyright (c) 1997-2006 ITB CompuPhase
-Copyright (c) 2004-2024 AlliedModders LLC
-
-/home/lechuga/GitHub/l4d2_sourcemod/SteamWorks/docs/runtime-compatibility/consumer-compat-srcds/current-arity-rejection.sp(4) : error 034: argument does not have a default value (argument 4)
-     4 | public void ThreeArgumentCall(Handle request) {char body[64];SteamWorks_GetHTTPResponseBodyString(request,body,sizeof(body));}
-----------------------------------------------------------------------------------------------------------^
-
-1 Error.

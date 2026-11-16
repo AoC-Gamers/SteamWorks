@@ -1,1 +1,0 @@
-{"passed": true, "read_only": true, "rules": [{"family": "iptables", "owned_chain_absent": true, "owned_OUTPUT_jump_absent": true}, {"family": "ip6tables", "owned_chain_absent": true, "owned_OUTPUT_jump_absent": true}]}

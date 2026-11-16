@@ -1,7 +1,0 @@
-{
-  "no_SRCDS_running_during_fixture_update": true,
-  "updated_sha256": {
-    "extensions/steamworks_buffer_fixture.ext.so": "2e2cc359f17b4b0530f08a5bb78f0efd225ebab0888f67d6870118fb99948df6",
-    "plugins/steamworks_buffer_acceptance.smx": "2a5e77437b07a6ee509ab267fcc26c36eba036ec384db0a371220b449c5bfbb1"
-  }
-}

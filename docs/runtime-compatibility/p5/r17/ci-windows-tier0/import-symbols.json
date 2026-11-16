@@ -1,6 +1,0 @@
-{
-  "file": "hl2sdk-l4d2/lib/public/tier0.lib",
-  "sha256": "33aa502e332f77448eb5916e8a0f45cc86d6beee92c86bf5a097f0ccab3cda23",
-  "all_eight_missing_import_symbols_present": true,
-  "libraries_redistributed": false
-}

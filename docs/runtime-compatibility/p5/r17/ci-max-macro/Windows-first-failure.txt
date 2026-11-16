@@ -1,5 +1,0 @@
-build-exts-windows	Build Windows extension	2026-11-16T11:44:15.0095902Z Build failed: extension\steamworks.ext\windows-x86\http_swhttp.obj
-build-exts-windows	Build Windows extension	2026-11-16T11:44:15.0098454Z D:\a\SteamWorks\SteamWorks\extension\core/swtypes.h(19): error C2589: '(': illegal token on right side of '::'
-build-exts-windows	Build Windows extension	2026-11-16T11:44:15.0099423Z D:\a\SteamWorks\SteamWorks\extension\core/swtypes.h(19): error C2059: syntax error: ')'
-build-exts-windows	Build Windows extension	2026-11-16T11:44:15.0100250Z D:\a\SteamWorks\SteamWorks\extension\core/swtypes.h(19): error C2059: syntax error: ')'
-build-exts-windows	Build Windows extension	2026-11-16T11:44:15.0101190Z D:\a\SteamWorks\SteamWorks\extension\core/swtypes.h(19): error C2143: syntax error: missing ';' before '{'

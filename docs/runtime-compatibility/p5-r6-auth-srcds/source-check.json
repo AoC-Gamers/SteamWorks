@@ -1,6 +1,0 @@
-{
-  "product_and_tests_match_reviewed_P5_R6_sources": true,
-  "public_include_matches_ZIP": true,
-  "baseline_commit": "46e3ee05fc29ad090a1d6f7b1cb5e3dca9855350",
-  "candidate_sha256": "82347b99d5130bd411cdc0b35d215dc87fc82d394a2252ccd83d5d4940b6ca5a"
-}

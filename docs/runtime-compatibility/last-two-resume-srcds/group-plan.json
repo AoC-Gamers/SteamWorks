@@ -1,7 +1,0 @@
-{
-  "source": "AoC.sp g_groupId constant",
-  "user_confirmed_current_borrower_is_group_member": true,
-  "expected_member": true,
-  "no_Web_API_key_required": true,
-  "SDK_group_query_requested": true
-}

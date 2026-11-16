@@ -1,160 +1,75 @@
-# Pruebas nativas deterministas
+# Pruebas
 
-## Integración local y artefactos
-
-P5-R2 ejecuta diez suites con `--with-auth-forward --with-sourcepawn-environment`.
-`VM_TEST_CXX` y `VM_TEST_FLAGS` seleccionan el compilador/runtime instrumentado
-para esas dos suites, conservando el toolchain de las nativas. El preparador de
-artefactos admite `--label p5-r2`; once pruebas verifican su contrato y la
-restauración del candidato real desde el ZIP de reversión.
-
-`bash scripts/test-sourcepawn-vm-asan.sh` construye una VM de prueba desde fuentes
-fijadas con un parche de ownership, sin cambiar las cabeceras públicas ni tocar
-bibliotecas instaladas. Ejecuta 16 ciclos de destrucción y la regresión de
-autenticación con ASan/LSan activos. Requiere Clang con su runtime ASan, AMBuild,
-`SOURCEMOD_DIR`, `SPCOMP` y una salida nueva en `VM_TEST_BUILD_DIR`. Ver
-[diagnóstico y reproducción](../docs/runtime-compatibility/sourcepawn-vm-asan.md).
-
-`bash scripts/test-auth-forward.sh` requiere `SOURCEMOD_DIR`, `SPCOMP` y
-`SOURCEPAWN_VM`: ejercita el hook de producción con CForward real y un receptor
-SourcePawn compilado en una VM aislada. No arranca SRCDS ni llama a Steam.
-`test-integration.py --with-auth-forward` añade esta prueba a las ocho suites
-habituales. El script falla si faltan sus dependencias explícitas. Ver
-[T36](../docs/runtime-compatibility/t36-auth-forward.md) para resultados y límites.
-
-`python3 scripts/test-integration.py --output .build/validacion-nueva` compara
-el contrato público con P0 y ejecuta las siete suites siguientes más las nueve
-pruebas de empaquetado/reversión. Requiere AMTL para SteamID y admite las variables
-de toolchain descritas abajo. La salida debe ser nueva para conservar evidencia.
-Se registran tiempo y código de salida por suite, sin arrancar servidores.
-
-`python3 tests/review_artifacts_test.py` valida el contrato de archivos del
-preparador local, con ELF de fixture, no la ABI. La ejecución sobre la captura
-real de reversión está documentada en [P5](../docs/runtime-compatibility/p5-integration.md).
-
-## Stats
-
-Desde la raíz del repositorio:
+La integración compara la API con un baseline independiente y ejecuta suites
+offline sin administrar servidores. Elige una carpeta **nueva** de salida:
 
 ```bash
-bash scripts/test-stats-natives.sh
+TEST_CXXFLAGS=-m32 bash scripts/tests/test-typed-boundary.sh
+TEST_CXXFLAGS=-m32 bash scripts/tests/test-resource-lifecycle.sh
+python3 scripts/tests/test-integration.py --output .build/test-results/mi-ejecucion
 ```
 
-Requiere Bash, Steamworks SDK 1.58a en `sdk_158a/` (o la ruta indicada por
-`STEAMWORKS_SDK_DIR`) y un compilador C++14 con UBSan (`g++` por defecto). Se puede
-seleccionar otro compilador mediante `CXX`, cambiar la salida con
-`TEST_BUILD_DIR` o añadir flags mediante `TEST_CXXFLAGS`.
-Ejemplo con un toolchain multilib disponible:
+Los comandos se muestran desde la raíz. Para otro cwd invoca la ruta absoluta
+del script; también se admiten rutas con espacios y fuentes sin `.git`.
+Se requiere Python 3, C++14, multilib x86/UBSan y SDK 1.58a. La suite binaria
+requiere utilidades ELF/PE; no carga un juego. Con flags sin `-m32` su ejecución
+de instrucciones x86 se omite explícitamente; la integración predeterminada usa
+`-m32` y debe ejecutarla. La falta de una dependencia obligatoria es un error.
 
-```bash
-TEST_CXXFLAGS=-m32 TEST_BUILD_DIR="$PWD/.build/tests-stats-x86" bash scripts/test-stats-natives.sh
-```
+## Catálogo
 
-Las dos suites incluyen el archivo C++ de producción y llaman los natives a través
-de su tabla de registro real. Los guards de headers del test sustituyen las
-dependencias Steam/SourceMod solo en esa unidad de compilación. La extensión no
-contiene un modo especial de pruebas. Se usa el `CSteamID` real del SDK para
-observar sus campos y representación de 64 bits; los servicios de SourceMod,
-Utils y Stats se simulan. No se enlaza ni inicia un runtime Steam.
+Los ejecutores siguientes están en `scripts/tests/test-<suite>.sh`.
 
-Los 32 escenarios cubren fallo sin escritura, fallo después de escribir en el
-temporal, éxito con valor negativo y con cero, dirección inválida de nombre o
-salida, interfaz ausente y cliente inexistente/desconectado. Se comprueban el
-retorno, un centinela de salida, canarios adyacentes, el overload entero/flotante,
-el número de consultas y los errores de conversión. La precedencia existente se
-conserva: interfaz ausente devuelve fallo antes de resolver direcciones; las
-variantes cliente validan al jugador antes de convertir argumentos.
+| Suite | Propósito | Dependencia real/simulada | No demuestra |
+|---|---|---|---|
+| stats-natives | Salidas intactas al fallo, AppID separado de identidad | natives + host Steam simulado | Disponibilidad real de stats |
+| detours | Creación/habilitación y rollback, backup optimizado | CDetour + host simulado | Módulos reales del motor |
+| init-coexistence | Observador init y cadena de hooks ajenos | Bytes y callsites x86 + dobles | Convivencia de toda la pila de plugins |
+| public-ip | IPv4 y char signed/unsigned | Proveedor simulado | Dirección pública real |
+| steamid-string | Capacidades, truncamiento y NUL legacy | Conversión SourcePawn simulada | Autorización real |
+| typed-boundary | Registro, tipos, buffers HTTP/GC y negativos de compilación | SDK real + proveedores simulados | ABI completa del runtime |
+| resource-lifecycle | Callbacks, hooks, requests y teardown; negativo GC | Producción + hosts simulados, optimización auth | Parada real SRCDS |
+| restart-forward-semantics | Resultados de reinicio y reentrada | Forward simulado | Agregación completa de VM |
+| binary-evidence | Hashes/perfiles y relocalización de prefijos | Binarios SDK reales, ejecución x86, Python | Llamada init real ni runtime Windows |
+| debug-log | Máscara, I/O y rotación | Filesystem temporal + backend simulado | Autenticación válida |
+| http-stream-context | Dos celdas, wire independiente y negativo original | HTTP simulado con layout independiente | Entrega de un servidor remoto |
+| auth-forward | Marshalling y agregación real de forwards | VM SourcePawn real + Steam simulado; opcional | Ticket auténtico |
+| auth-binding | Hook 014 y rechazo del objetivo 015 | SourceHook real + dos proveedores simulados; opcional | Login Steam real |
+| sourcepawn-environment | Destrucción VM y ciclos de propiedad | VM instrumentada real, ASan; opcional | VM de producción ni estabilidad SRCDS |
 
-El ejecutable acepta opcionalmente el nombre de un native para aislar una
-variante, por ejemplo:
+Además, `tests/python/review_artifacts_test.py` comprueba paquetes/reversión;
+`runtime_evidence_test.py` valida perfiles e identidad; `documentation_test.py`
+comprueba estructura, enlaces y rechazos de contenido. Los ejecuta la integración.
+Los negativos HTTP estricto y GC se generan con mutaciones mínimas de producción:
+no requieren Internet, Git ni informes retirados y deben fallar con el mensaje
+esperado. Un error de compilación o de sanitizer no cuenta como detección válida.
 
-```bash
-.build/tests-stats/stats_natives_test SteamWorks_GetStatFloat
-```
+## Variables y suites opcionales
 
-`stats_requests_test` añade 34 escenarios sobre `RequestStats` y
-`RequestStatsAuthID`: AppID del contexto, distinto, cero, contexto desconocido,
-interfaces ausentes, fallo de solicitud asíncrona, AccountID con bit alto,
-cliente inválido/desconectado/bot/no autorizado, identidad de 64 bits inconsistente,
-tipo/universo/instancia inválidos y fallback desde AccountID validado. Compara la
-identidad exacta entregada al doble de Steam, comprueba que no se consulta con
-AppID ajeno y que las solicitudes no usan el constructor legacy basado en `params`.
-Las variantes de lectura conservan el doble legacy porque su identidad está
-fuera del alcance de estas pruebas de salida.
+| Variable | Uso |
+|---|---|
+| `STEAMWORKS_SDK_DIR` | Headers y biblioteca de referencia del SDK |
+| `CXX`, `TEST_CXXFLAGS`, `TEST_BUILD_DIR` | Compilador, flags y salida de cada suite nativa |
+| `AMTL_DIR`, `SOURCEMOD_DIR`, `MMSOURCE_DIR` | Headers AMTL, VM y SourceHook reales |
+| `SPCOMP`, `SOURCEPAWN_VM` | Compilador Pawn y biblioteca VM de arquitectura coincidente |
+| `VM_TEST_CXX`, `VM_TEST_FLAGS`, `VM_TEST_BUILD_DIR` | Toolchain y salida de VM, separados de los tests nativos |
 
-```bash
-.build/tests-stats/stats_requests_test SteamWorks_RequestStatsAuthID
-```
+`--with-auth-forward`, `--with-auth-binding` y `--with-sourcepawn-environment`
+exigen sus dependencias al seleccionarse; no convierten una ausencia en éxito.
+La última requiere VM y runtime ASan compatibles sin supresiones. Consulta
+[integración offline](integration/README.md).
 
-Estas pruebas unitarias no cargan la extensión en un servidor ni sustituyen las
-pruebas de stats reales y marshalling SourceMod. Ver el
-[informe de salidas](../docs/runtime-compatibility/p1-a-stats.md) y el
-[informe de AppID e identidad](../docs/runtime-compatibility/p1-b-stats-identity.md).
+`results.json` y logs van a la salida elegida, nunca a `docs/`. El resultado de
+API excluye números de línea y metadatos, no campos contractuales. El fixture P0
+no se regenera a partir del estado actual para hacer pasar una comparación.
 
-## Propietario y callbacks de detours
+## Alcance y operación
 
-```bash
-bash scripts/test-detours.sh
-```
+- [Cobertura y evidencia histórica](COVERAGE.md)
+- [Fixtures y procedencia](fixtures/README.md)
+- [Harnesses SRCDS de ejecución explícita](runtime/README.md)
+- [Probes diagnósticos](diagnostics/README.md)
+- [Pipeline y separación de publicación](../docs/build/ci.md)
 
-Usa las mismas opciones `CXX`, `TEST_BUILD_DIR`, `TEST_CXXFLAGS` y
-`STEAMWORKS_SDK_DIR`. Incluye el código de producción de `swgsdetours` y simula
-el host, símbolos, factoría CDetour, parcheo y trampolines. No ejecuta instrucciones
-del motor ni prueba la ABI de la entrada legacy.
-
-Los 26 casos comprueban precondiciones, creación completa antes de habilitar,
-fallo de cada creación, limpieza parcial, precedencia de gamedata/exports,
-diagnóstico único, cierre repetido, creación posterior a fallo, argumentos y
-retorno del callback original, ausencia de hooks tras fallo y orden del wrapper
-de shutdown. Se comprueba que el propietario no pueda copiar sus recursos.
-
-Ver [alcance, limitaciones y evidencia](../docs/runtime-compatibility/p1-c-detours.md).
-
-## IP pública IPv4
-
-```bash
-bash scripts/test-public-ip.sh
-```
-
-Usa las mismas opciones de compilador, salida, flags y SDK. Compila y ejecuta
-30 escenarios con `-fsigned-char` y otra vez con `-funsigned-char`, siempre con
-UBSan. Los dos entrypoints y su tabla son de producción; `SteamIPAddress_t` y
-sus constructores son del SDK real. SourceMod y el servicio GameServer son dobles.
-
-Comprueba orden de octetos, IPv4 no establecida, IPv6 establecida/no establecida,
-interfaz ausente, direcciones con bit alto y ceros interiores, conservación del
-patrón de bits de la celda, canarios de salida y errores al convertir la dirección
-del destino. No valida el transporte de `SteamIPAddress_t` desde una vtable real.
-
-El ejecutable acepta un caso y opcionalmente un native para aislar una prueba:
-
-```bash
-.build/tests-public-ip/public_ip_test_signed "IPv6 nonzero prefix rejected" SteamWorks_GetPublicIPCell
-```
-
-Ver [contrato y resultados](../docs/runtime-compatibility/p1-d-public-ip.md).
-
-## Conteo y buffers de SteamID textual
-
-```bash
-AMTL_DIR=/ruta/a/sourcemod/public/amtl bash scripts/test-steamid-string.sh
-```
-
-Requiere los headers de AMTL usados por SourceMod, además del SDK. El runner usa
-`AMTL_DIR` si se indica; por defecto busca `public/amtl` bajo `SOURCEMOD_DIR` o
-`.deps/exts-linux/sourcemod-1.12/`. No descarga dependencias ni copia el formateador.
-
-Los 19 casos ejecutan el native registrado de producción con `CSteamID` real y
-`ke::SafeVsprintf` de AMTL, la implementación a la que delega el `Format` de
-SourceMod. El host/memoria/clientes se simulan. Comprueban conteo incluyendo NUL,
-texto y terminación exactos, truncamiento, capacidad mínima/cero/negativa,
-dirección inválida, cliente inválido/desconectado y precedencia de errores.
-El límite `uint64` es un caso de formato, no una identidad Steam aceptada en red.
-
-Se puede aislar un caso:
-
-```bash
-.build/tests-steamid-string/steamid_string_test "zero capacity"
-```
-
-Ver [decisión de compatibilidad y evidencia](../docs/runtime-compatibility/p1-e-steamid-count.md).
+Los tests no prueban por sí solos una instalación, un login real o GC remoto.
+No se acepta una revisión nueva por compartir nombre con un binario anterior.

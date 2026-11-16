@@ -1,8 +1,0 @@
-{
-  "container": "competitive_dev",
-  "container_init_host_pid": 8771,
-  "cgroup_path": "system.slice/docker-c5a79fe2d4b3cf93e173dc4d1133b2a612aae80396d14648a07ca6af4e23511f.scope",
-  "cgroup_inode": 15502,
-  "host_network": true,
-  "filter_scope": "exact container cgroup and linuxgsm UID; loopback and gameplay port remain allowed"
-}

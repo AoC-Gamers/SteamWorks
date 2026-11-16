@@ -1,8 +1,0 @@
-{
-  "archive_sha256": "9558e016835f49e8a948ebe7523927bcb093d31d78a62d64d449df288363dbd9",
-  "extension_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-  "public_include_sha256": "b4e021b2df9fd81101754f0795da2d5c2eee04c125a8e4997a0b19595fc3affb",
-  "new_observer_harness_sha256": "5c8a9027151fc0fbf6c7d47e4318f041ee3fcc19ebb276bd87323d27b4a35dba",
-  "public_API_changed": false,
-  "product_sources_changed": false
-}

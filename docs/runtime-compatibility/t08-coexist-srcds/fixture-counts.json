@@ -1,9 +1,0 @@
-{
-  "/text": 4,
-  "/binary": 3,
-  "/empty": 3,
-  "/error": 3,
-  "/delay": 3,
-  "/stream": 3,
-  "/hold": 1
-}

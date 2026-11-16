@@ -1,7 +1,0 @@
-{
-  "status": "passed",
-  "source_archive_without_Git_metadata": true,
-  "SOURCE_DATE_EPOCH": 1794700800,
-  "optimized_ELF_identical_to_accepted_payload": true,
-  "sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192"
-}

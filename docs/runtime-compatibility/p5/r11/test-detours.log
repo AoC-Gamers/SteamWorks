@@ -1,2 +1,0 @@
-PASS: 27 detour owner/wrapper scenarios (simulated factory, patches and host; no ABI claim)
-PASS: 318 CDetour backup bounds checks (production helper, no live patching)

@@ -1,3 +1,0 @@
-PASS: 142 executable x86 init coexistence checks (production owner/caller patch/wrapper; synthetic SDK and staged consumer)
-PASS: 21 x86 init caller admission checks (production profile, synthetic ELF mappings)
-PASS: negative control detects init event lost behind consumer

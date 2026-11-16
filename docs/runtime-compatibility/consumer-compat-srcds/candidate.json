@@ -1,8 +1,0 @@
-{
-  "archive_sha256": "ea4ee3774bb5dbb6ce114a29322b2113f8560c01b071fe5d7be1f9855ab7c42d",
-  "extension_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-  "public_include_sha256": "a3e5a7a220dd4d7b46dab3226b41c68f2eb24c4ddf4943f0b943f87566b4f2d5",
-  "legacy_include_sha256": "e51bcd397139edc3d144f130c45f0f8edbf55d12278736e0134e4c650ec64f17",
-  "public_API_changed": false,
-  "external_product_repositories_modified": false
-}

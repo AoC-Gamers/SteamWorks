@@ -1,5 +1,0 @@
-{
-  "event": "11111111-1111-4111-8111-111111111111",
-  "body": "{\"schemaVersion\": 1, \"eventId\": \"11111111-1111-4111-8111-111111111111\", \"assignmentId\": \"22222222-2222-4222-8222-222222222222\", \"matchSessionPublicId\": \"isolated-session\", \"selectionEffectiveRevision\": \"isolated-revision\", \"unitId\": \"33333333-3333-4333-8333-333333333333\", \"unitIndex\": 1, \"kind\": \"HALF_RESULT\", \"payload\": {}}",
-  "metadata": "\"competitiveEvent\"\n{\n\"eventId\" \"11111111-1111-4111-8111-111111111111\"\n\"assignmentId\" \"22222222-2222-4222-8222-222222222222\"\n\"matchSessionPublicId\" \"isolated-session\"\n\"selectionEffectiveRevision\" \"isolated-revision\"\n\"unitId\" \"33333333-3333-4333-8333-333333333333\"\n\"kind\" \"HALF_RESULT\"\n\"unitIndex\" \"1\"\n\"retryAt\" \"0\"\n}\n"
-}

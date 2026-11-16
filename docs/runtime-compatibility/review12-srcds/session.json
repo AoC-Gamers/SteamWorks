@@ -1,9 +1,0 @@
-{
-  "phase": "finished_original_DEV_restored",
-  "container": "competitive_dev",
-  "port": 27015,
-  "production_touched": false,
-  "restore_original_DEV": true,
-  "original_DEV_restored": true,
-  "lab_removed": true
-}

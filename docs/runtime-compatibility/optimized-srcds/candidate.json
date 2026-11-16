@@ -1,7 +1,0 @@
-{
-  "extension_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-  "include_sha256": "b4e021b2df9fd81101754f0795da2d5c2eee04c125a8e4997a0b19595fc3affb",
-  "source_evidence": "optimized-build/results.json",
-  "from_build": "--enable-optimize -O3 -DNDEBUG -m32 -Werror",
-  "API_changed": false
-}

@@ -1,9 +1,0 @@
-{
-  "checkpoint": "p5-r16",
-  "archive_sha256": "2215a71ec9db48a36499db1265a8de3887499e4cce503b5cd0d676c16ad8bb33",
-  "extension_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-  "provider_sha256": "c475a8ac45016e38533c4119593e55d1618379435800a8b3ebd6f8e43ba1859d",
-  "pending_source_sha256": "a7b39b5e2d8fb7583d36907e8d042bb6b806bdca615fdcd62e2d658c25f93112",
-  "public_API_changed": false,
-  "Connect_product_correction_authorized": true
-}

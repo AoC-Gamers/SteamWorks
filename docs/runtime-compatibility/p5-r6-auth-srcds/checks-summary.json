@@ -1,8 +1,0 @@
-{
-  "candidate_archive_checksum_matches": true,
-  "same_PID_and_start_ticks": true,
-  "exactly_one_auth_and_each_public_validation_forward": true,
-  "no_new_cores": true,
-  "private_IDs_tickets_or_stat_values_exported": false,
-  "stats_writes": false
-}

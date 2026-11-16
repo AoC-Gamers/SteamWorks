@@ -46,9 +46,9 @@ Dockerfile text eol=lf
 *.res text eol=lf
 *.kv text eol=lf
 
-# Acceptance records and generated patches are audited by their exact bytes.
+# Regression fixtures and generated patches are audited by their exact bytes.
 # Preserve their recorded hashes across Git add/checkout on every platform.
-docs/runtime-compatibility/** -text
+tests/fixtures/** -text
 patches/** -text
 extension/sdk/smsdk_ext.cpp -text
 extension/sdk/smsdk_ext.h -text

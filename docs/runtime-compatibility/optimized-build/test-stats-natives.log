@@ -1,2 +1,0 @@
-PASS: 32 stats native scenarios (production entrypoints, simulated Steam/SourceMod)
-PASS: 34 stats request scenarios (real SDK identity types, simulated Steam/SourceMod services)

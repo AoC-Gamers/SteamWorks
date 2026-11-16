@@ -1,0 +1,6 @@
+# Pruebas
+
+- No debilites assertions ni controles negativos para acomodar movimientos.
+- Fixtures críticos mantienen bytes/procedencia y dependencia transitiva; no regeneres P0 con la API actual.
+- Separa dobles, SourceHook/VM y SRCDS. Lo no ejecutado queda pendiente.
+- `runtime/` requiere operación explícita; ningún ejecutor offline administra servidores.

@@ -1,6 +1,0 @@
-{
-  "canonical_build": "passed; default configure flags, same accepted ELF",
-  "initial_noncanonical_optimized_attempt": "--enable-optimize produced GCC stringop-overflow error in swgshooks.cpp; flag removed to reproduce canonical build, no source or warning changes; optimized configuration not accepted",
-  "initial_container_inventory": "Git safe.directory /workspace required for root container reading user-owned checkout; only ephemeral container config changed",
-  "failed_attempts_preserved": ".build/p5-r8/"
-}

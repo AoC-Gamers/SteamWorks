@@ -1,8 +1,0 @@
-{
-  "archive_sha256": "31659fbcd7c071fab6fbedd67354ae0d014afba7c57f4b678c8059fb045ffa34",
-  "extension_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-  "diagnostic_fixture_sha256": "d80d42fcff1223d0561bbf410f8bbd4cc1270f73fe8d6b120545035b23645641",
-  "product_sources_changed": false,
-  "public_API_changed": false,
-  "driver_scope": "Real candidate managed forwards, real SourceMod dispatch and VM; synthetic parameters; no SDK event injection."
-}

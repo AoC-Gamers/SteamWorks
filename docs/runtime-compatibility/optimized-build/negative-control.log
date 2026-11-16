@@ -1,5 +1,0 @@
-/workspace/.build/auth-ticket-opt/swgshooks-before.cpp: In member function ‘EBeginAuthSessionResult SteamWorksGSHooks::BeginAuthSession(const void*, int, CSteamID)’:
-/workspace/.build/auth-ticket-opt/swgshooks-before.cpp:108:83: error: ‘void* __builtin_memset(void*, int, unsigned int)’ specified bound 2147483648 exceeds maximum object size 2147483647 [-Werror=stringop-overflow=]
-  108 |                 std::unique_ptr<cell_t[]> ticket(new (std::nothrow) cell_t[cells]());
-      |                                                                                   ^
-cc1plus: all warnings being treated as errors

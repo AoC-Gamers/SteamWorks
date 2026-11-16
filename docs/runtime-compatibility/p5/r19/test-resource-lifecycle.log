@@ -1,7 +1,0 @@
-PASS: 10 client lifecycle checks (production finalizer, simulated SDK role API)
-PASS: 98 HTTP lifecycle checks (production manager/request, real SDK callback classes, simulated host)
-PASS: 20 global callback lifecycle checks (production forwards, real SDK subscriptions, simulated services)
-PASS: 132 hook lifecycle checks (production owners, simulated SourceHook/frames/SDK receiver)
-PASS: 48 runtime coordination checks (production load/stop/start/unload, simulated components)
-PASS: lifecycle profile rejection before any symbol lookup or patch (actual production policy)
-PASS: 26 lifecycle identity checks (known pair, architecture, unknown/ambiguous fingerprints and live-module refusal)

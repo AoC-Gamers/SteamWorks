@@ -1,7 +1,0 @@
-{
-  "first_cleanup_probe": "Original server not Steam-connected within initial 20-second window",
-  "action": "Retained lab recovery; checked live process and waited for original DEV Steam readiness; retried same checks without changing configuration",
-  "second_probe": "passed",
-  "server_restarted_again": false,
-  "all_protected_hash_checks_retained": true
-}

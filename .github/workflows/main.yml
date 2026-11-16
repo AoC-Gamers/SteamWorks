@@ -22,6 +22,28 @@ permissions:
   contents: write
 
 jobs:
+  documentation:
+    permissions:
+      contents: read
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout SteamWorks
+        uses: actions/checkout@v6
+      - name: Set up pinned Node major
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: scripts/tools/package-lock.json
+      - name: Install locked diagram toolchain
+        run: |
+          npm ci --prefix scripts/tools --ignore-scripts
+          node scripts/tools/node_modules/puppeteer/install.mjs
+      - name: Check documentation, packaging negatives and Mermaid
+        run: |
+          python3 tests/python/documentation_test.py
+          python3 scripts/tools/check-documentation.py --render .build/documentation/diagrams
+
   deps-exts-linux:
     runs-on: ubuntu-22.04
     outputs:
@@ -42,7 +64,7 @@ jobs:
         id: cache-key
         shell: bash
         run: |
-          echo "key=exts-linux-deps-${{ runner.os }}-${{ hashFiles('scripts/fetch-linux-deps.sh', 'scripts/build-linux-l4d2.sh', 'scripts/stage-artifact.py', 'scripts/package-release.py', 'plugin-package-map.json', 'Makefile', 'configure.py', 'AMBuildScript', 'PackageScript') }}" >> "$GITHUB_OUTPUT"
+          echo "key=exts-linux-deps-${{ runner.os }}-${{ hashFiles('scripts/deps/fetch-linux-deps.sh', 'scripts/build/build-linux-l4d2.sh', 'scripts/package/stage-artifact.py', 'scripts/package/artifact_contract.py', 'scripts/package/package-release.py', 'plugin-package-map.json', 'Makefile', 'configure.py', 'AMBuildScript', 'PackageScript') }}" >> "$GITHUB_OUTPUT"
 
       - name: Restore dependency cache
         id: deps-cache-restore
@@ -65,7 +87,7 @@ jobs:
 
   build-exts-linux:
     runs-on: ubuntu-22.04
-    needs: deps-exts-linux
+    needs: [deps-exts-linux, documentation]
     outputs:
       basename: ${{ steps.artifact.outputs.basename }}
       release-tag: ${{ steps.artifact.outputs.release_tag }}
@@ -119,79 +141,79 @@ jobs:
           fi
 
       - name: Test local review packaging and rollback contract
-        run: python3 tests/review_artifacts_test.py
+        run: python3 tests/python/review_artifacts_test.py
 
       - name: Test stats natives (x86, UBSan)
         shell: bash
         env:
           STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
-        run: TEST_CXXFLAGS=-m32 bash ./scripts/test-stats-natives.sh
+        run: TEST_CXXFLAGS=-m32 bash ./scripts/tests/test-stats-natives.sh
 
       - name: Test detour owner and wrappers (x86, UBSan)
         shell: bash
         env:
           STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
-        run: TEST_CXXFLAGS=-m32 bash ./scripts/test-detours.sh
+        run: TEST_CXXFLAGS=-m32 bash ./scripts/tests/test-detours.sh
 
       - name: Test init observer coexistence (x86, UBSan)
         shell: bash
         env:
           STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
-        run: TEST_CXXFLAGS=-m32 bash ./scripts/test-init-coexistence.sh
+        run: TEST_CXXFLAGS=-m32 bash ./scripts/tests/test-init-coexistence.sh
 
       - name: Test public IPv4 natives (x86, signed/unsigned char, UBSan)
         shell: bash
         env:
           STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
-        run: TEST_CXXFLAGS=-m32 bash ./scripts/test-public-ip.sh
+        run: TEST_CXXFLAGS=-m32 bash ./scripts/tests/test-public-ip.sh
 
       - name: Test SteamID string contract (x86, UBSan)
         shell: bash
         env:
           STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
           AMTL_DIR: ${{ github.workspace }}/.deps/exts-linux/sourcemod-1.12/public/amtl
-        run: TEST_CXXFLAGS=-m32 bash ./scripts/test-steamid-string.sh
+        run: TEST_CXXFLAGS=-m32 bash ./scripts/tests/test-steamid-string.sh
 
       - name: Test typed boundary and interface registry (x86, UBSan)
         shell: bash
         env:
           STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
-        run: TEST_CXXFLAGS=-m32 bash ./scripts/test-typed-boundary.sh
+        run: TEST_CXXFLAGS=-m32 bash ./scripts/tests/test-typed-boundary.sh
 
       - name: Test restart forward semantics (x86, UBSan)
         shell: bash
         env:
           STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
-        run: TEST_CXXFLAGS=-m32 bash ./scripts/test-restart-forward-semantics.sh
+        run: TEST_CXXFLAGS=-m32 bash ./scripts/tests/test-restart-forward-semantics.sh
 
       - name: Test resource lifecycle (x86, UBSan)
         shell: bash
         env:
           STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
-        run: TEST_CXXFLAGS=-m32 bash ./scripts/test-resource-lifecycle.sh
+        run: TEST_CXXFLAGS=-m32 bash ./scripts/tests/test-resource-lifecycle.sh
 
       - name: Test binary evidence and documentary profiles (x86)
         shell: bash
         env:
           STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
-        run: TEST_CXXFLAGS=-m32 bash ./scripts/test-binary-evidence.sh
+        run: TEST_CXXFLAGS=-m32 bash ./scripts/tests/test-binary-evidence.sh
 
       - name: Test opt-in diagnostic log (x86, UBSan)
         shell: bash
-        run: TEST_CXXFLAGS=-m32 bash ./scripts/test-debug-log.sh
+        run: TEST_CXXFLAGS=-m32 bash ./scripts/tests/test-debug-log.sh
 
       - name: Test typed auth binding with real SourceHook (x86, UBSan)
         shell: bash
         env:
           STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
           MMSOURCE_DIR: ${{ github.workspace }}/.deps/exts-linux/mmsource-1.12
-        run: TEST_CXXFLAGS=-m32 bash ./scripts/test-auth-binding.sh
+        run: TEST_CXXFLAGS=-m32 bash ./scripts/tests/test-auth-binding.sh
 
       - name: Test streaming HTTP context (x86, UBSan)
         shell: bash
         env:
           STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
-        run: TEST_CXXFLAGS=-m32 bash ./scripts/test-http-stream-context.sh
+        run: TEST_CXXFLAGS=-m32 bash ./scripts/tests/test-http-stream-context.sh
 
       - name: Build Linux extension
         shell: bash
@@ -267,7 +289,7 @@ jobs:
         env:
           EXTS_ARTIFACT_DIR: ${{ github.workspace }}/dist/linux/artifact
           EXTS_PLATFORM: linux
-        run: bash ./scripts/ci-validate-artifact.sh
+        run: bash ./scripts/ci/ci-validate-artifact.sh
 
       - name: Upload Linux release zip
         uses: actions/upload-artifact@v7
@@ -295,7 +317,7 @@ jobs:
         id: cache-key
         shell: bash
         run: |
-          echo "key=exts-windows-deps-${{ runner.os }}-${{ hashFiles('scripts/fetch-windows-deps.ps1', 'scripts/build-windows-l4d2.ps1', 'scripts/stage-artifact.py', 'scripts/package-release.py', 'plugin-package-map.json', 'Makefile', 'configure.py', 'AMBuildScript', 'PackageScript') }}" >> "$GITHUB_OUTPUT"
+          echo "key=exts-windows-deps-${{ runner.os }}-${{ hashFiles('scripts/deps/fetch-windows-deps.ps1', 'scripts/build/build-windows-l4d2.ps1', 'scripts/package/stage-artifact.py', 'scripts/package/artifact_contract.py', 'scripts/package/package-release.py', 'plugin-package-map.json', 'Makefile', 'configure.py', 'AMBuildScript', 'PackageScript') }}" >> "$GITHUB_OUTPUT"
 
       - name: Restore dependency cache
         id: deps-cache-restore
@@ -318,7 +340,7 @@ jobs:
 
   build-exts-windows:
     runs-on: windows-2022
-    needs: deps-exts-windows
+    needs: [deps-exts-windows, documentation]
     outputs:
       basename: ${{ steps.artifact.outputs.basename }}
 
@@ -429,7 +451,7 @@ jobs:
         env:
           EXTS_ARTIFACT_DIR: ${{ github.workspace }}/dist/windows/artifact
           EXTS_PLATFORM: windows
-        run: bash ./scripts/ci-validate-artifact.sh
+        run: bash ./scripts/ci/ci-validate-artifact.sh
 
       - name: Upload Windows release zip
         uses: actions/upload-artifact@v7

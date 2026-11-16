@@ -1,6 +1,0 @@
-{
-  "comparison": "all P0 contract fields excluding line/source metadata",
-  "status": "passed",
-  "drift": [],
-  "public_fixture_natives_excluded_from_product": true
-}

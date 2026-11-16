@@ -1,1 +1,0 @@
-{"first_verifier_attempt":"invalid: broad pending_ substring matched the successful HTTP_pending_outputs_unchanged check", "correction":"match only GC pending_ scenario marker; retain all pass=0/error/crash checks", "runtime_tests_modified_or_discarded":false}

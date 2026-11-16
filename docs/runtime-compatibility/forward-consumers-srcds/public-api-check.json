@@ -1,8 +1,0 @@
-{
-  "public_contract_matches_P0": true,
-  "include_comment_only_changed": true,
-  "candidate_include_sha256": "b4e021b2df9fd81101754f0795da2d5c2eee04c125a8e4997a0b19595fc3affb",
-  "corrected_include_sha256": "a3e5a7a220dd4d7b46dab3226b41c68f2eb24c4ddf4943f0b943f87566b4f2d5",
-  "three_harnesses_recompiled_without_warnings_after_comment_correction": true,
-  "public_API_changed": false
-}
