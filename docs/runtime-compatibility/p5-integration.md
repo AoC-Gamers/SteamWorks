@@ -154,3 +154,17 @@ DEV y recolección histórica describen la captura original y necesitan sus
 repositorios/servidor, sin ejecutarse como parte de esta reproducción offline.
 La revisión final prueba ambos comandos desde una extracción sin `.git`.
 No se autoriza publicación ni operación del servidor.
+
+## Seguimiento de CI tras el push
+
+El [primer CI remoto](p5/r17/ci-max-macro/results.json) pasó build/empaquetado Linux
+y falló en MSVC por la macro Windows `max`. Se corrigen las cuatro llamadas a
+`numeric_limits::max` con la forma de C++ protegida por paréntesis, conservando
+la macro y todas las comprobaciones. El control negativo reproduce el fallo;
+el control corregido mantiene la macro activa y pasa. Quince suites x86 repetidas
+y build optimizado vuelven a pasar con API y ELF exactamente idénticos.
+
+Los ZIP offline R17 se preservan como la captura anterior a este ajuste posterior
+al push; su ZIP de fuentes no contiene esta corrección. Las fuentes Git incluyen
+el ajuste y su prueba. Esto no amplía el perfil de aceptación runtime a Windows
+ni opera servidores. El resultado remoto definitivo se informa con su ejecución.

@@ -6,6 +6,10 @@
 #include <cstring>
 #include <type_traits>
 #include <initializer_list>
+#include <limits>
+#ifdef STEAMWORKS_TEST_WINDOWS_MAX_MACRO
+#define max(left, right) ((left) > (right) ? (left) : (right))
+#endif
 using cell_t = int32_t;
 constexpr int SP_ERROR_NONE = 0;
 struct IPluginContext {
@@ -16,6 +20,10 @@ struct IPluginContext {
  cell_t ThrowNativeErrorEx(int,const char*,...) { ++errors; return 0; }
 };
 #include "../extension/core/swpawn.h"
+#include "../extension/core/swauthticket.h"
+#if defined(STEAMWORKS_TEST_WINDOWS_MAX_MACRO) && !defined(max)
+#error Windows macro regression must not disable max
+#endif
 struct IGamePlayer {
  const char* auth=nullptr; AccountID_t account=0xfedcba98;
  const char* GetAuthString(bool) { return auth; }

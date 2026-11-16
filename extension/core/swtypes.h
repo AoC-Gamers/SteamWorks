@@ -16,7 +16,7 @@ static_assert(sizeof(SteamAPICall_t) == 8, "Async Steam calls must retain 64 bit
 
 inline bool ToSteamSize(ByteCount size, uint32& output)
 {
-	if (size.value > std::numeric_limits<uint32>::max()) { return false; }
+	if (size.value > (std::numeric_limits<uint32>::max)()) { return false; }
 	output = static_cast<uint32>(size.value);
 	return true;
 }

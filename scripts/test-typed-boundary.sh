@@ -14,6 +14,16 @@ for suite in interface_registry_test typed_boundary_test http_gc_boundary_test; 
  "$OUTPUT_DIR/$suite"
 done
 
+# Windows headers define max(a,b); the real boundary must compile unchanged
+# with that macro still active, including the authentication allocation bound.
+"$CXX" -std=c++14 -Wall -Wextra -Werror -pedantic -O1 -g \
+ -fsanitize=undefined -fno-sanitize-recover=all "${extra_flags[@]}" \
+ -DSTEAMWORKS_TEST_WINDOWS_MAX_MACRO \
+ -I"$ROOT_DIR/extension/sdk" -isystem "$SDK_DIR/public/steam" \
+ "$ROOT_DIR/tests/typed_boundary_test.cpp" -o "$OUTPUT_DIR/windows_max_macro_test"
+"$OUTPUT_DIR/windows_max_macro_test"
+echo "PASS: Windows-style max macro remains active across production boundaries"
+
 # Both are expected compile failures. A successful build would weaken the boundary.
 cat > "$OUTPUT_DIR/sdk-drift.cpp" <<'CPP'
 #include "steam_gameserver.h"

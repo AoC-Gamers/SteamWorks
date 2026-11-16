@@ -14,7 +14,7 @@ inline bool AuthTicketCellCount(int byteCount, size_t& output)
 	constexpr size_t cellBytes = sizeof(std::int32_t);
 	const size_t bytes = static_cast<size_t>(byteCount);
 	const size_t cells = bytes == 0 ? 1 : bytes / cellBytes + (bytes % cellBytes != 0);
-	if (cells > static_cast<size_t>(std::numeric_limits<std::ptrdiff_t>::max()) / cellBytes) {
+	if (cells > static_cast<size_t>((std::numeric_limits<std::ptrdiff_t>::max)()) / cellBytes) {
 		return false;
 	}
 	output = cells;

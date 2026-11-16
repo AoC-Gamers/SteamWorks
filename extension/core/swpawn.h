@@ -89,7 +89,7 @@ inline void StoreFloat(cell_t* output, float value)
 
 inline bool StoreSize(IPluginContext* context, cell_t* output, uint32 size)
 {
-	if (size > static_cast<uint32>(std::numeric_limits<cell_t>::max())) {
+	if (size > static_cast<uint32>((std::numeric_limits<cell_t>::max)())) {
 		context->ThrowNativeError("Steam size exceeds SourcePawn length range");
 		return false;
 	}

@@ -694,7 +694,7 @@ static cell_t sm_GetHTTPResponseBodyCallback(IPluginContext *pContext, const cel
 	}
 
 	// The callback exposes length as one Pawn cell, including a terminator.
-	if (size >= static_cast<uint32>(std::numeric_limits<cell_t>::max())) {
+	if (size >= static_cast<uint32>((std::numeric_limits<cell_t>::max)())) {
 		return pContext->ThrowNativeError("HTTP callback body exceeds SourcePawn length range");
 	}
 	const size_t capacity = static_cast<size_t>(size) + 1;

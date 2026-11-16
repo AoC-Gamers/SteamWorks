@@ -5,6 +5,11 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 ## [Unreleased]
 
 ### Validación
+- Seguimiento CI R17: corrige colisión con la macro Windows `max` en cuatro
+  límites numéricos sin desactivar macros ni comprobaciones. Control negativo
+  reproducido y regresión x86 con la macro activa, 15 suites y build optimizado
+  idéntico pasan. Se preservan los ZIP offline anteriores al ajuste y se repite
+  CI remoto; sin operación del servidor ni ampliación de aceptación a Windows.
 - Revisión final R17 corrige reproducción del ZIP de fuentes desde extracción
   limpia, entrada explícita de VM diagnóstica e inventario sin `.git`/HEAD ajeno;
   concilia referencias antiguas de GC/forwards. Build idéntico y 15 suites desde
