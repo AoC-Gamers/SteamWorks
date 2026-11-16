@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "documentation_only": true,
+  "enabled": false,
+  "file_name": "libsteam_api.so",
+  "origin": "competitive_dev selected by user; copied read-only from installed game",
+  "role": "steam-runtime",
+  "format": "ELF",
+  "architecture": "x86",
+  "size_bytes": 420954,
+  "sha256": "43fc556d8255dd17f15d7ce266c7c7bee3075499fdec350af5ed32b9b7cda0ed",
+  "build_id": "0d18f257d51538a7b34c594a31e042b04001fb1c",
+  "pid_observed": 5422,
+  "loaded_module_confirmed": true,
+  "exports": {
+    "SteamGameServer_InitSafe": [
+      {
+        "rva": 112160,
+        "size_bytes": 108,
+        "kind": "FUNC"
+      }
+    ],
+    "SteamInternal_GameServer_Init": [
+      {
+        "rva": 111664,
+        "size_bytes": 484,
+        "kind": "FUNC"
+      }
+    ],
+    "SteamInternal_GameServer_Init_V2": [],
+    "SteamGameServer_Shutdown": [
+      {
+        "rva": 112272,
+        "size_bytes": 280,
+        "kind": "FUNC"
+      }
+    ],
+    "SteamInternal_CreateInterface": [
+      {
+        "rva": 111184,
+        "size_bytes": 89,
+        "kind": "FUNC"
+      }
+    ],
+    "SteamGameServerInternal_CreateInterface": [],
+    "SteamGameServer_GetHSteamUser": [
+      {
+        "rva": 111632,
+        "size_bytes": 18,
+        "kind": "FUNC"
+      }
+    ],
+    "SteamGameServer_GetHSteamPipe": [
+      {
+        "rva": 111600,
+        "size_bytes": 18,
+        "kind": "FUNC"
+      }
+    ],
+    "g_pSteamClientGameServer": [
+      {
+        "rva": 357632,
+        "size_bytes": 4,
+        "kind": "OBJECT"
+      }
+    ]
+  },
+  "imports_of_interest": [],
+  "relocations_of_interest": [
+    {
+      "offset": 351588,
+      "type": "R_386_GLOB_DAT",
+      "symbol": "g_pSteamClientGameServer"
+    },
+    {
+      "offset": 351936,
+      "type": "R_386_JUMP_SLOT",
+      "symbol": "SteamInternal_GameServer_Init"
+    },
+    {
+      "offset": 351948,
+      "type": "R_386_JUMP_SLOT",
+      "symbol": "SteamGameServer_GetHSteamUser"
+    }
+  ],
+  "abi_verified": false,
+  "initialization_route_verified": false,
+  "notes": [
+    "SDK files are reference/link dependencies unless a selected process maps this exact device/inode.",
+    "Export/import/relocation presence is not proof of an executed call path or ABI.",
+    "Loaded status verifies process maps device/inode; it is not a hash of mapped memory."
+  ],
+  "path": "/data/serverfiles/bin/libsteam_api.so",
+  "device_major": 259,
+  "device_minor": 2,
+  "inode": 3195191,
+  "pid_namespace": "competitive_dev container",
+  "copy_hash_matches_mapped_file": true,
+  "observation_date": "2026-11-14",
+  "observation_context": "Mapped in the first isolated SRCDS process before cleanup; process has since been stopped."
+}

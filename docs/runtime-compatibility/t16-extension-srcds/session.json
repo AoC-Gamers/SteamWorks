@@ -1,0 +1,14 @@
+{
+  "updated_utc": "2026-11-15T19:49:05.710866+00:00",
+  "phase": "T16_acceptance_passed_original_DEV_restored",
+  "container": "competitive_dev",
+  "port": 27015,
+  "private_recovery": "/data/serverfiles/left4dead2/addons/sourcemod_acceptance/recovery",
+  "restore_original_DEV_after_acceptance": true,
+  "production_touched": false,
+  "shutdown_clean": true,
+  "original_DEV_restored": true,
+  "lab_removed": true,
+  "fixture_stopped": true,
+  "evidence": "docs/runtime-compatibility/t16-extension-srcds/results.json"
+}

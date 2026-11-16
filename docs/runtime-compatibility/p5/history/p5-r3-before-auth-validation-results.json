@@ -1,0 +1,1005 @@
+{
+  "schema_version": 3,
+  "checkpoint": "p5-r3",
+  "timestamp_utc": "2026-11-15T02:35:37.636385+00:00",
+  "branch": "develop",
+  "baseline_commit": "46e3ee05fc29ad090a1d6f7b1cb5e3dca9855350",
+  "status": "integrated_x86_review_candidate_with_scoped_runtime_acceptances",
+  "full_matrix_accepted": false,
+  "committed": false,
+  "published": false,
+  "deployed_in_this_update": false,
+  "candidate_previously_run_in_isolated_DEV": true,
+  "production_touched": false,
+  "public_api_changed": false,
+  "result_scope": "executed_levels describe current candidate only. prior_candidate_evidence is attributed separately. passed certifies only executed scope; pending_levels remain open.",
+  "target": "Linux x86 only; historical x64 diagnostics are not regenerated or shipped",
+  "sdk": {
+    "target": "1.58a",
+    "commit": "a7aaa2754d9cda244d0cd9d7523c1144a1c472d2",
+    "headers_checked": 53,
+    "headers_and_links_match_P0": true
+  },
+  "build_environment": {
+    "isolation": "Docker, no network, repository read-only except .build",
+    "image": "sourcetvmanager-builder:local",
+    "image_id": "sha256:8b88d2213cf0eaa488c64f73bd11d7827dfc9b10f9aefc0de714463c6fa2db3b",
+    "os": "Debian GNU/Linux 12 (bookworm)",
+    "compiler": "g++ 12.2.0-14+deb12u1",
+    "python": "3.11.2",
+    "ambuild_api": "2.2.4",
+    "ambuild_package_metadata_version": "2.0",
+    "dependency_commits": {
+      "hl2sdk-l4d2": "c2badaa4f7e763a92427ac11202c349385810cc2",
+      "sourcemod-1.12": "2e229b111534b1be007dc3bd9acfcf2fc472e893",
+      "mmsource-1.12": "75dd7b26fe92e535a11f0318ead73c3e05130d0b",
+      "ambuild": "01212cb57c96561f664b6dfb2ee10e66de6f81e4"
+    },
+    "working_tree_note": "No tracked modifications; untracked AMBuild.egg-info/ present. Submodule revisions are recorded in the local build-environment.log.",
+    "dependency_submodules": {
+      "sourcemod-1.12": {
+        "hl2sdk-manifests": "20b3a014264b38908c4a5d4eb263ba2c488f3dc1",
+        "public/amtl": "2d3b1a3378a3728637f26660c9ffc2df3189cf62",
+        "public/amtl/third_party/googletest": "a651a4d44e65b749467fa3dddf93819a22f0cc4a",
+        "public/safetyhook": "8c6692c85a6c41f5d89f744da57b5ba43515b4ec",
+        "sourcepawn": "11b22edb634b9764d19fd28699e03289cfd18520",
+        "sourcepawn/third_party/amtl": "2d3b1a3378a3728637f26660c9ffc2df3189cf62",
+        "sourcepawn/third_party/amtl/third_party/googletest": "a651a4d44e65b749467fa3dddf93819a22f0cc4a"
+      },
+      "mmsource-1.12": {
+        "hl2sdk-manifests": "4304a88cf5cb750d5f694884ad132f82a644542e",
+        "third_party/amtl": "285b4f853c0003023838140113e3ec066bd800c6",
+        "third_party/amtl/third_party/googletest": "a651a4d44e65b749467fa3dddf93819a22f0cc4a"
+      }
+    }
+  },
+  "build": {
+    "status": "passed",
+    "platform": "linux-x86",
+    "warnings_as_errors": true,
+    "path": ".build/p5-r3/build/package/addons/sourcemod/extensions/steamworks.ext.so",
+    "sha256": "bc76b00d0614f8f8489f8d3d30e3d654976f3bfde689f17d8731018d6c7ac639",
+    "identical_to_HTTP_SRCDS_accepted_binary": true,
+    "identical_to_auth014_R3_binary": false,
+    "current_candidate_executed_in_SRCDS": true,
+    "log": ".build/p5-r3/build.log"
+  },
+  "x86_suites": {
+    "public_api": "passed",
+    "test_flags": "-m32",
+    "runtime_validation": false,
+    "suites": [
+      {
+        "name": "test-review-artifacts",
+        "exit_code": 0,
+        "compiler": "g++",
+        "test_flags": "-m32",
+        "duration_seconds": 0.17
+      },
+      {
+        "name": "test-stats-natives",
+        "exit_code": 0,
+        "compiler": "g++",
+        "test_flags": "-m32",
+        "duration_seconds": 0.721
+      },
+      {
+        "name": "test-detours",
+        "exit_code": 0,
+        "compiler": "g++",
+        "test_flags": "-m32",
+        "duration_seconds": 1.06
+      },
+      {
+        "name": "test-public-ip",
+        "exit_code": 0,
+        "compiler": "g++",
+        "test_flags": "-m32",
+        "duration_seconds": 0.668
+      },
+      {
+        "name": "test-steamid-string",
+        "exit_code": 0,
+        "compiler": "g++",
+        "test_flags": "-m32",
+        "duration_seconds": 0.454
+      },
+      {
+        "name": "test-typed-boundary",
+        "exit_code": 0,
+        "compiler": "g++",
+        "test_flags": "-m32",
+        "duration_seconds": 3.063
+      },
+      {
+        "name": "test-resource-lifecycle",
+        "exit_code": 0,
+        "compiler": "g++",
+        "test_flags": "-m32",
+        "duration_seconds": 7.369
+      },
+      {
+        "name": "test-binary-evidence",
+        "exit_code": 0,
+        "compiler": "g++",
+        "test_flags": "-m32",
+        "duration_seconds": 0.331
+      },
+      {
+        "name": "test-debug-log",
+        "exit_code": 0,
+        "compiler": "g++",
+        "test_flags": "-m32",
+        "duration_seconds": 0.5
+      },
+      {
+        "name": "test-http-stream-context",
+        "exit_code": 0,
+        "compiler": "g++",
+        "test_flags": "-m32",
+        "duration_seconds": 4.153
+      },
+      {
+        "name": "test-auth-forward",
+        "exit_code": 0,
+        "compiler": "clang++",
+        "test_flags": "-m32 -fsanitize=address -shared-libasan -fsized-deallocation -fno-pie -no-pie",
+        "duration_seconds": 2.537
+      },
+      {
+        "name": "test-auth-binding",
+        "exit_code": 0,
+        "compiler": "g++",
+        "test_flags": "-m32",
+        "duration_seconds": 4.58
+      },
+      {
+        "name": "test-sourcepawn-environment",
+        "exit_code": 0,
+        "compiler": "clang++",
+        "test_flags": "-m32 -fsanitize=address -shared-libasan -fsized-deallocation -fno-pie -no-pie",
+        "duration_seconds": 0.131
+      }
+    ]
+  },
+  "asan": {
+    "native_lifecycle_and_streaming": "passed",
+    "auth_forward_checks": 227,
+    "VM_ownership_cycles": 16,
+    "auth_binding_checks": 18,
+    "stream_context_checks": 92,
+    "suppressions": false,
+    "VM_rebuilt_in_this_update": false,
+    "VM_reused_from": ".build/p5-r2/vm-x86",
+    "VM_sha256": "eebb33dd75fdca4231f0dcd8d2597d9832098593dc80557af1ab463b532fa3df",
+    "VM_installed_in_server": false,
+    "image_id": "sha256:ce871f47542914ddaa60dd5a94df7c7e85c83908c764a5eeea3a0e9a651cb368"
+  },
+  "runtime_acceptances": [
+    {
+      "path": "auth014-srcds/results.json",
+      "candidate_sha256": "ddfdf9bf2f9bde625719ba171c59f7cac8b56cbe136a15e4911c7acbf00383ad",
+      "scope": "014 real auth, public validation forwards, real identity/integer stats, debug, quit and restoration",
+      "current_candidate": false,
+      "auth_sources_match_current": true
+    },
+    {
+      "path": "http-stream-srcds/results.json",
+      "candidate_sha256": "bc76b00d0614f8f8489f8d3d30e3d654976f3bfde689f17d8731018d6c7ac639",
+      "scope": "32 completions / four HTTP rounds; 24 streaming bytes; context/payload; map; cancellation; quit and restoration",
+      "current_candidate": true
+    }
+  ],
+  "consumers": {
+    "compilations": 3,
+    "import_tables": 4,
+    "source_files_scanned": 2675,
+    "files_with_references": 24,
+    "external_Connect_arity_mismatches": 2,
+    "report": "p5/consumers.json",
+    "inventory": "p5/consumers-inventory.json"
+  },
+  "rollback": {
+    "captured_utc": "2026-11-15T02:32:53.029191+00:00",
+    "absent": [
+      "gamedata/steamworks.txt"
+    ],
+    "read_only": true,
+    "files_sha256": {
+      "extensions/steamworks.ext.so": "9ca37aadcd83448d49126d6a72babcb8ec97ec5a06c171b4821ae0ee3cf05d70",
+      "scripting/include/steamworks.inc": "e51bcd397139edc3d144f130c45f0f8edbf55d12278736e0134e4c650ec64f17"
+    },
+    "isolated_DEV_restore_previously_exercised": true,
+    "live_restore_evidence": [
+      "auth014-srcds/cleanup.json",
+      "http-stream-srcds/cleanup.json"
+    ],
+    "in_place_restore_from_regenerated_ZIP_exercised": false,
+    "VM_installed_or_restored": false
+  },
+  "checks": {
+    "integration_suites": 13,
+    "review_artifacts_tests": 12,
+    "remote_CI": "not_run",
+    "native_and_VM_ASan_LSan_UBSan": "passed x86, no suppressions",
+    "package_validator": "passed",
+    "archived_rollback_filesystem_roundtrip": "passed; candidate-preflight/review-preflight, repeated on final archives",
+    "actionlint": "passed",
+    "bash_syntax": "passed",
+    "git_diff_check": "passed",
+    "workflow_streaming_regression": "added x86 test step; actionlint passed; remote CI not run"
+  },
+  "artifact_directory": ".build/p5-r3/review/",
+  "historical_checkpoint": "p5/history/p5-r2-validation-results.json",
+  "source_sha256": {
+    "extension/extension.cpp": "f21542798116c69e8f12ae87b98167ba913d3fdbf4b60407e62da240da1822c5",
+    "extension/extension.h": "db08e0b6c1a69e85251482e331abcf19ea879a7441ba15cb30bb1396cf052bf5",
+    "extension/steamtools/ticket.h": "c11f22200702275ab425a04cc18b194de33c1b71316e5d143f534466e54a9917",
+    "extension/steamtools/blob.h": "e0b7531c85093661a87a8bbc5a82ac6607b31dfe73e2bf9b698706f57bcc0585",
+    "extension/CDetour/detours.h": "ea62f0ee139da2edec9e369b0eda94c559fb24dbf6cb13e9fe0a55a2efc79e9f",
+    "extension/CDetour/detourhelpers.h": "19e6eb47101c6b0feea762154de5b1287c774f27647285d52a91967dbbbfb513",
+    "extension/CDetour/detours.cpp": "c1adf1b9fdd02e4e379ea83d192a4a4508ac9c3ad57c6cb26e7baff8291e712a",
+    "extension/core/swgameauth014.h": "bceac91310f61c80ed666e67ac8338b9e8b67e4065fc666be48b2ae36d879000",
+    "extension/core/swinterfaces.h": "b3860e743113c78da93010179a7e8004b24061a22616f7dc737783fd2fd96966",
+    "extension/core/swdebug.h": "5804bce8237d1fc8111d0b93c1262ad8d20be740906877756c690fc54f22e335",
+    "extension/core/swdebuglog.h": "56aa29452f60b5c93ac66a52f62f7bdf454c233d17f2a3858ec9fe6e54ec5fa9",
+    "extension/core/swtypes.h": "59ac96a60971906883408492db7455be2b69c2f7b9c33b0e28b0574e9e62e438",
+    "extension/core/swlifecycleprofile.h": "f6731b5b50d0a1f61511c0908b72ba81898693951aac64296beddc551502e15a",
+    "extension/core/swdebug.cpp": "87f9ee88c07ff1e76b9f35570da1f7f5f9f7c11089c561398fdf2d52afcff49d",
+    "extension/core/swgamedata.cpp": "08762de8bdd474dd611e729df5be54291a12467d6e4c26c524f157b104976771",
+    "extension/core/swidentity.cpp": "e6fc10a80d4846c5fd21e3cb36b45d054191e0eed226796ba1a3eb9f680ddba3",
+    "extension/core/swgamedata.h": "fdfb11ec5485dc30ac65e3a21da0f2a3daed12221b3681a347f84f0b628de2a7",
+    "extension/core/swgameserver.h": "b2218bd75897a23277e36b551d05b041a33ade23a466ece2a4e02a24810d9847",
+    "extension/core/swforwards.cpp": "d930c86595966ed13effc7b39032863bc947ec7577c0809f212b2d441f0ad1bd",
+    "extension/core/swgameserver.cpp": "a5a1c75d4d330254186282f58b9af00ea3c56b2dcdc652dc5e6d419368e99100",
+    "extension/core/swforwards.h": "edc92f86e061ee8512d1d645a55faeb5ba6267da602632817c8c02009eec4dba",
+    "extension/core/swpawn.h": "9650b5da155414c7fb533caccafb49361887a002e966fe0248e64b6892be097f",
+    "extension/hooks/swgchooks.h": "f2e8e57ba1c2ddb971f7617aa01e75fc78df6a7272958c4c5f13c545d0608bb9",
+    "extension/hooks/swgsdetours.h": "73bc3ab586917f7ebe5b0275f39fe45fc6a0253db137e25de2a9918c60f8b974",
+    "extension/hooks/swgsdetours.cpp": "33ff6a73fc15381dd05598ebf5fd27e27f6e66363396868354283cf1b688f07a",
+    "extension/hooks/swgshooks.h": "7185a644f7a0c8874d433263d81fb2d6bc54d4fda83ee355a9bbfcf5c5ba0c62",
+    "extension/hooks/swgshooks.cpp": "c9f38b57b838c117ba3a83345bd8c134f354abc8c20d98000fb454103836f421",
+    "extension/hooks/swgchooks.cpp": "048ee33af2e292637be5e3f39e9e8ae44b83acfff5b91953d3cd30bbd66af9c6",
+    "extension/http/swhttprequest.h": "e6e676d284e246b4de125c4688c48360d64653e46b72e6be8f60025b6bab45a9",
+    "extension/http/swhttp.h": "f5331691cf3cf2dbe36c1cd6bd55bd39c93e0c3c37f492c54edebcef0228b653",
+    "extension/http/swhttprequest.cpp": "3ba07c83837224ecde903508852e7ec1f6b88083ad70521104f87c4509094922",
+    "extension/http/swhttp.cpp": "cf34b30c403d8b928b81742e98a5200c6117db96c65bd36feaf44b814bb84082",
+    "extension/natives/ssnatives.h": "a51c6701115845fc72b37a137bbf66fcb89fd879f0265d3672e2a2bf89b7bb1c",
+    "extension/natives/gsnatives.h": "46da15d868d44d590af78faf177a1e6ef981e56b3aa664c9afad71d3a7350839",
+    "extension/natives/gcnatives.cpp": "ae2fda2f2c57a36794a6212559b688425999da2d1bc2b63e5058e41a13914175",
+    "extension/natives/gsnatives.cpp": "3151d3ea22f55fc2fdfdf26f9e0186d05d9003bd299e095f41b8ccc801291ab4",
+    "extension/natives/ssnatives.cpp": "4ba91f9a23bbf5ae360c75f002cc519d553027d582f1b113d99cda084508011c",
+    "extension/natives/gcnatives.h": "5d2870d2358736f3e4767eaf06766cdc4a7af5066620fa209f02143259fdf3ca",
+    "extension/asm/asm.h": "6d78a17764bb9ebd727904d9441b7ab96372545067a9e4167b4c278b48614e27",
+    "extension/sdk/smsdk_ext.h": "7100fb30b2f4b0cc58fc19eee9aae9b5a5f1324211f6d0bdf8b4c72930e28534",
+    "extension/sdk/smsdk_config.h": "f1b0cb954c3690d022dd1c74cfcdb282f21b7c21a795dd33d185af273013de6c",
+    "extension/sdk/smsdk_ext.cpp": "65e47a43ecf14a93653badf5c470a1d8a7c7f25b8bb9b9e7dbee1388d73daafb",
+    "scripts/test-integration.py": "e1272caa38a0a0f33460f46de476adb5e6017fc52cdb217bb8ed4100af050024",
+    "scripts/test-auth-binding.sh": "c9f03b34b55788a82ef33178ef34e1c37de52dd9283bba53677c0e298a67650b",
+    "scripts/stage-artifact.py": "50f2a2c591ff66a6e0ead1bb9b3e1f3ec8f7561cb1c2617865602a8c651c1989",
+    "scripts/validate-runtime-evidence.py": "5fd7d7d14b3e89a0a9f473dc24d18768fcd54bb30d1d59cf2f3b03defb659924",
+    "scripts/test-public-ip.sh": "767bbbc2771050efac35d5bc909d3cc0122c37a1edf86c3cd8dcdb2a5d76c4cd",
+    "scripts/fetch-linux-deps.sh": "719e2a5851fa8582c254c2b059125895fb962f46f45ec9c13993b704761bff71",
+    "scripts/test-typed-boundary.sh": "cccc6a75fa3fba9ae2147d975ffdf9a1bf2950be663a1ccc842713ad61115e4f",
+    "scripts/inventory-steamworks.py": "67f81b9daf45cf0278a7738e7351f03d10a0b3a17e11c496444a0c82ce301b19",
+    "scripts/test-auth-forward.sh": "85dabf69c7f2c23572506589812b414cd49c97694bee431332272bb01ad9d47e",
+    "scripts/test-stats-natives.sh": "b0bd7d760a65d8de48b971566c2cc176a64b5f9aac62044d5ebe58a2f5ad2f3d",
+    "scripts/test-http-stream-context.sh": "c3dc3fe11c37675dfc2fdb25b9881bb48ca787f0681f904277a80b34bd883665",
+    "scripts/test-resource-lifecycle.sh": "185a38aab712f407a8f12005938cf2e809b606db124d8f83a5595d3a93c2286d",
+    "scripts/prepare-review-artifacts.py": "1457b9241ba9139f443b6e1ca37e80876331227cb2954cbe8793a2d73b39567a",
+    "scripts/inspect-steamworks-module.py": "f51d31adbfe655aa68662c89a1beb70aa028deb03810aa64300f4aff892b717b",
+    "scripts/build-linux-l4d2.sh": "6e3a17da5eea0cce764391d1845afb774d99c6a168bc63bff082db65d088e30f",
+    "scripts/test-sourcepawn-environment.sh": "d4bbe852941108bc666401e395514177230d3caec905280f2d88c96b6ea0d5e3",
+    "scripts/test-debug-log.sh": "ab53c5c253dcacd7172a72e51e53703d85a80d34357e77e4bf7c620d016ecd0f",
+    "scripts/package-release.py": "b6d415805d2719369294b81f843c6c0535901f1e2993e9b22c8823a046106fd6",
+    "scripts/test-steamid-string.sh": "60a34343807a12d7c0c1dedb9ff030355b329aba8961af82a348d5b3fc41c58b",
+    "scripts/test-binary-evidence.sh": "f0eba9355bbf6ae06742de026aa26d481a20d9504ace46e1525e30308168530d",
+    "scripts/ci-validate-artifact.sh": "00912b02f34ef4b3bfaeb5f73bb2bda7e71d463affa5cd1bf6745aef77715958",
+    "scripts/test-detours.sh": "58fd5b4d112795c949ab05fc895253db95bfdac245dc22c9c048a29edb0a62a6",
+    "scripts/build-test-sourcepawn.sh": "f6abdf66ffd45b0cd3b37e422ee7cab45b03b3c381049a21561939591b8f2e09",
+    "scripts/test-sourcepawn-vm-asan.sh": "c42d41450b397f3d501e3b525c4873fb0a7d7548532a88d1e37a3384d04ba0f0",
+    "tests/steamid_string_test.cpp": "3088ded3a47393b70d0d618475243f59247e1e8470703a1c8c8f99e7264a8182",
+    "tests/steam_callbacks_test_host.h": "49f5b9a70f9983dffadb8e565e44ddbc8475a3256745e4b22d2f9d07abdf71ea",
+    "tests/stats_natives_test.cpp": "d499fa3f1c9cadb5f8ac6dbf254667cead6db76cf13961d4d981a7e0eb8b5c41",
+    "tests/stats_requests_test.cpp": "c3a355aed7c6c078144af3bd79942b5eb716ce24f30c2d29ea7065cbde4b59c1",
+    "tests/typed_boundary_test.cpp": "86b019186650687fa0e943dba973c41dd62834e757b4f43ae1d4a185bea8ba88",
+    "tests/public_ip_test_host.h": "612b3c8a75aa47d48612c4b6432ca26246c3433c956abda5b9426aff1952ede2",
+    "tests/review_artifacts_test.py": "8cb8c706493701e31d2a418a238bea962ca5044f6a00de02b6a8cbf87df117b0",
+    "tests/auth_binding_test.cpp": "4f6783f00d9ef7456967a40df64298b4823c5ed0daa440ed88fc0e3901c233c6",
+    "tests/debug_log_test.cpp": "252b8a7c1998fc862509c4d24e5fd48e4ef1488060e2751cdcdeb77eceadd651",
+    "tests/http_gc_boundary_test.cpp": "087fe867b8dff153767ab9491f3273ed433d90d121cb74b0b305dca2e8398358",
+    "tests/binary_trampoline_test.cpp": "ca23ba2c1ca7030533da7734369ed6ff066fe38ce5339841ce896e49a95127e2",
+    "tests/http_lifecycle_test.cpp": "8e9417263efa9f0dec957ea4c13293e35f0131e8dca08a668842988ce9239d08",
+    "tests/http_stream_context_test.cpp": "71fb75ebecd45d60022e8ea05625ffbd38623ca4e39417d6b66f95be7e8c0b24",
+    "tests/http_gc_test_host.h": "0f0f9bb1b696ec1bd9a5ffd2c5bf9a5a093650348735bd03007fd2092b071f4d",
+    "tests/runtime_lifecycle_test.cpp": "2aa0e1ac24bc18224a1a7e4b95f198e461ebaea1c2a7c47f98c7e313b78b912d",
+    "tests/detours_lifecycle_test.cpp": "c0b26d4132aebce58379b8e29eb04c109ece4ea7926053e63cc53c4adbc9d1ca",
+    "tests/runtime_evidence_test.py": "e2e22a898ed494955a284a80f93175a094ceaadb9df05f558cf5170d9bfea712",
+    "tests/public_ip_test.cpp": "fbaa92686816d702892f46ed04d85af537c0793b8e7bbbb50df759bd312a0841",
+    "tests/lifecycle_profile_rejection_test.cpp": "c50ab965a59890330b7a9becf14496399f4cff850268030c5a8c05f197fb4d45",
+    "tests/auth_forward_receiver.sp": "108e3d8dc7609cfc0486c5080f3ec9a37b34376c91c86a3e84abf1fc227e8ae0",
+    "tests/auth_forward_test.cpp": "8b764f4afec580e441fa9f5252fe0b9f9f6f67fd043b31380b34362fdc0779d9",
+    "tests/hooks_lifecycle_test.cpp": "b6b853f06dbcc827fbf64ee7526e8931ec46ba947015aae11070f5ca551fdeac",
+    "tests/detours_test_host.h": "707877054eeae95d1af00dc0441efc837b01f98ffa9bb64e405d53795ff11fc2",
+    "tests/sourcepawn_environment_test.cpp": "67f7a6db3a0ac2715d65c89e45a6b980999a81b04b1f1002acfa608f5eabfda9",
+    "tests/lifecycle_profile_identity_test.cpp": "d282651890528c647d9113f5199a8492b5bff155ba07104ec6c591950c7e8a12",
+    "tests/stats_test_host.h": "832541ff7f2e9d7092158129fee350597736921d8a1c3f951d0f3753f7cb59df",
+    "tests/interface_registry_test.cpp": "2cb5426c4d8b81819127255205d3a9b8ca30c8f10f16b250f89eeadc47ce9c8c",
+    "tests/forwards_lifecycle_test.cpp": "130526e8404c73bd04f9ad9980bed402bfd8ea322cbf08af39c6c7e3248b4167",
+    "tests/stubs/auth_server014.h": "30ef7188cc75c7966e4080afd418b710e92af215a2a87bb01459e2cac6311e30",
+    "tests/stubs/sourcehook.h": "0a91de5937e44eac13be0707fc0e4d5f6f7c62114ae0f0cea318035ff4bceb10",
+    "tests/stubs/native_server015.h": "82842bd30e8fd26ec062b4b81ad7b3b86ea5bfa452d2d72b4ea5557ee1f17071",
+    "tests/runtime/steamworks_acceptance.sp": "ec2694f432e1e6a362e38192e79ccf952a9262de7622722bc41b58d073aec881",
+    "tests/runtime/http_fixture.py": "07a62b5e2150e7a258fc32cb5cdcfd1c30ab29901a53f2e9f951290ced9c3054",
+    "tests/runtime/steamworks_pending_owner.sp": "7b75ab4ecb7e5562fce03a51a7927551175e5111e67c013b77c0f1945c0e0def",
+    "tests/diagnostics/gameserver_interface_probe.cpp": "a3321c97eceb633ef8f9a40998ac258e3a2fb3093e9d5abd12ef30399a73b40d",
+    "tests/diagnostics/http_stream_context_probe.cpp": "d2780e0f0c071d772e4580c5ac6bed9323837d0412b398c83c042ed0a0b8195b",
+    "tests/diagnostics/run_http_stream_context_probe.py": "3656799b36960dd71ee41ce89f6fd2cbc8cf8ca57708cec3c907b17f08f49406",
+    "tests/diagnostics/extension_load_probe.cpp": "208c9447310df69198774c12e74bc7d9a50d2ae901185e48ff20f453d6c5c88d",
+    "patches/sourcepawn/test-vm-only.patch": "1fe0826dd430ed15dbdb097d92ced36070a3cff884ec306459f09f913c45bd0b",
+    "patches/sourcepawn/environment-ownership.patch": "f07d26c38b2fb384fd120c1e1828ca92fc1c7ac8767bae7f88469a572f2a8185",
+    ".github/workflows/main.yml": "f92c272fe535f37ae77fc83491d5fcce19986eef5f39b9c72f6363b483c1d050"
+  },
+  "cases": [
+    {
+      "id": "T01",
+      "planned_levels": "U/I",
+      "case": "RequestStatsAuthID` con AccountID conocido y AppID del juego.",
+      "expected": "La identidad conserva universo/tipo correctos; AppID no se usa como universo.",
+      "status": "passed",
+      "executed_levels": [
+        "U"
+      ],
+      "pending_levels": [
+        "I"
+      ],
+      "evidence": [
+        "test-stats-natives: exact AccountID/universe and context AppID"
+      ],
+      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U.",
+      "prior_candidate_evidence": {
+        "path": "auth014-srcds/results.json",
+        "candidate_sha256": "ddfdf9bf2f9bde625719ba171c59f7cac8b56cbe136a15e4911c7acbf00383ad",
+        "scope": "Real authorized human, matching integer stats and failed float sentinel / textual identity observed in R3; not transferred to final candidate."
+      }
+    },
+    {
+      "id": "T02",
+      "planned_levels": "U/I",
+      "case": "Lectura float que falla sin escribir el temporal.",
+      "expected": "Retorno de fallo y salida centinela intacta.",
+      "status": "passed",
+      "executed_levels": [
+        "U"
+      ],
+      "pending_levels": [
+        "I"
+      ],
+      "evidence": [
+        "test-stats-natives: untouched sentinel on failed float read"
+      ],
+      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U.",
+      "prior_candidate_evidence": {
+        "path": "auth014-srcds/results.json",
+        "candidate_sha256": "ddfdf9bf2f9bde625719ba171c59f7cac8b56cbe136a15e4911c7acbf00383ad",
+        "scope": "Real authorized human, matching integer stats and failed float sentinel / textual identity observed in R3; not transferred to final candidate."
+      }
+    },
+    {
+      "id": "T03",
+      "planned_levels": "U/I/R",
+      "case": "Lecturas de stats exitosas y clave/tipo inexistente.",
+      "expected": "Valor correcto en \u00e9xito; sin publicaci\u00f3n de datos inv\u00e1lidos en fallo.",
+      "status": "passed",
+      "executed_levels": [
+        "U"
+      ],
+      "pending_levels": [
+        "I",
+        "R"
+      ],
+      "evidence": [
+        "test-stats-natives: integer/float success and controlled provider failure; no remote stat key exercise"
+      ],
+      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U.",
+      "prior_candidate_evidence": {
+        "path": "auth014-srcds/results.json",
+        "candidate_sha256": "ddfdf9bf2f9bde625719ba171c59f7cac8b56cbe136a15e4911c7acbf00383ad",
+        "scope": "Real authorized human, matching integer stats and failed float sentinel / textual identity observed in R3; not transferred to final candidate."
+      }
+    },
+    {
+      "id": "T04",
+      "planned_levels": "U/I",
+      "case": "IPv4 conocida y direcci\u00f3n no establecida/no IPv4.",
+      "expected": "Octetos correctos; rechazo controlado sin leer el miembro incorrecto.",
+      "status": "passed",
+      "executed_levels": [
+        "U"
+      ],
+      "pending_levels": [
+        "I"
+      ],
+      "evidence": [
+        "test-public-ip: IPv4 and non-IPv4 rejection"
+      ],
+      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U."
+    },
+    {
+      "id": "T05",
+      "planned_levels": "B/U",
+      "case": "Helpers de IP con `char` sin signo.",
+      "expected": "Recorrido finito y mismo resultado v\u00e1lido.",
+      "status": "passed",
+      "executed_levels": [
+        "U"
+      ],
+      "pending_levels": [],
+      "evidence": [
+        "test-public-ip: signed/unsigned char variants"
+      ],
+      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U."
+    },
+    {
+      "id": "T06",
+      "planned_levels": "U/I",
+      "case": "Creaci\u00f3n de detour que falla.",
+      "expected": "No hay desreferencia nula; capacidad y diagn\u00f3stico coherentes.",
+      "status": "passed",
+      "executed_levels": [
+        "U"
+      ],
+      "pending_levels": [
+        "I"
+      ],
+      "evidence": [
+        "test-detours: partial and total creation failure"
+      ],
+      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U."
+    },
+    {
+      "id": "T07",
+      "planned_levels": "U/I",
+      "case": "Inicializaci\u00f3n original devuelve fallo.",
+      "expected": "No se instalan hooks posinicio ni se anuncia capacidad lista.",
+      "status": "passed",
+      "executed_levels": [
+        "U"
+      ],
+      "pending_levels": [
+        "I"
+      ],
+      "evidence": [
+        "test-detours: original init false suppresses consumers"
+      ],
+      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U."
+    },
+    {
+      "id": "T08",
+      "planned_levels": "U/I/R",
+      "case": "Arranque, shutdown observado y eventual reinicializaci\u00f3n.",
+      "expected": "Una instalaci\u00f3n por instancia; desmontaje antes de invalidarla.",
+      "status": "partial",
+      "executed_levels": [
+        "U",
+        "I",
+        "R"
+      ],
+      "pending_levels": [
+        "Same-process runtime reinitialization with final candidate"
+      ],
+      "evidence": [
+        "http-stream-srcds/results.json",
+        "p5/r3/test-resource-lifecycle.log"
+      ],
+      "actual": "Current candidate starts, survives a map and explicitly shuts consumers down on quit; same-process reinitialization remains synthetic."
+    },
+    {
+      "id": "T09",
+      "planned_levels": "U/I",
+      "case": "Instalaci\u00f3n parcial y repetici\u00f3n de desmontaje.",
+      "expected": "Reversi\u00f3n completa, sin doble liberaci\u00f3n ni suscripciones duplicadas.",
+      "status": "passed",
+      "executed_levels": [
+        "U"
+      ],
+      "pending_levels": [
+        "I"
+      ],
+      "evidence": [
+        "test-resource-lifecycle: rollback, duplicate stop, close exactly once"
+      ],
+      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U."
+    },
+    {
+      "id": "T10",
+      "planned_levels": "U/I",
+      "case": "Override de interfaz desconocido.",
+      "expected": "Rechazo previo a invocar m\u00e9todos con una declaraci\u00f3n incompatible.",
+      "status": "passed",
+      "executed_levels": [
+        "U"
+      ],
+      "pending_levels": [
+        "I"
+      ],
+      "evidence": [
+        "test-typed-boundary: unknown/cross-family version rejected before factory"
+      ],
+      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U."
+    },
+    {
+      "id": "T11",
+      "planned_levels": "I/R",
+      "case": "Interfaces admitidas en el perfil.",
+      "expected": "Registro de versi\u00f3n/ruta y ejercicio m\u00ednimo de cada capacidad habilitada.",
+      "status": "partial",
+      "executed_levels": [
+        "I",
+        "R"
+      ],
+      "pending_levels": [
+        "Complete per-interface capability matrix, notably GC and current positive stats"
+      ],
+      "evidence": [
+        "http-stream-srcds/results.json",
+        "auth014-srcds/results.json",
+        "compatibility.md"
+      ],
+      "actual": "HTTP and native game-server status exercised on final candidate. Registry membership is not full interface acceptance."
+    },
+    {
+      "id": "T12",
+      "planned_levels": "R",
+      "case": "Entrada legacy de inicializaci\u00f3n del motor.",
+      "expected": "Prototipo y m\u00f3dulo identificados; se conserva llamada y retorno original.",
+      "status": "passed",
+      "executed_levels": [
+        "R"
+      ],
+      "pending_levels": [],
+      "evidence": [
+        "http-stream-srcds/results.json",
+        "http-stream-srcds/initial-http.json",
+        "http-stream-srcds/shutdown.json"
+      ],
+      "actual": "Final candidate installs known legacy lifecycle profile; successful start, live status and controlled shutdown observed on the identified pair."
+    },
+    {
+      "id": "T13",
+      "planned_levels": "U/B",
+      "case": "Patrones con byte cero, ausencia y varias coincidencias.",
+      "expected": "Longitud exacta; cero/m\u00faltiples resultados no habilitan funci\u00f3n.",
+      "status": "not_applicable",
+      "executed_levels": [],
+      "pending_levels": [],
+      "evidence": [
+        "../p4-binary-profiles.md"
+      ],
+      "actual": "Unused pattern/vtable helpers removed in P4; no production scanning path remains; approved lifecycle uses named exports plus bounded identity/entry validation"
+    },
+    {
+      "id": "T14",
+      "planned_levels": "U/B",
+      "case": "B\u00fasqueda limitada e \u00edndice cero de vtable, si permanece.",
+      "expected": "No se sale de la regi\u00f3n aprobada; \u00edndice cero y ausencia se distinguen.",
+      "status": "not_applicable",
+      "executed_levels": [],
+      "pending_levels": [],
+      "evidence": [
+        "../p4-binary-profiles.md"
+      ],
+      "actual": "Unused pattern/vtable helpers removed in P4; no production scanning path remains; approved lifecycle uses named exports plus bounded identity/entry validation"
+    },
+    {
+      "id": "T15",
+      "planned_levels": "U/I",
+      "case": "SteamID textual con buffers suficiente, peque\u00f1o, m\u00ednimo e inv\u00e1lido.",
+      "expected": "Conteo/terminaci\u00f3n/truncamiento acordados, sin escrituras fuera del contrato.",
+      "status": "passed",
+      "executed_levels": [
+        "U"
+      ],
+      "pending_levels": [
+        "I"
+      ],
+      "evidence": [
+        "test-steamid-string: real AMTL, counts, buffers and invalid output"
+      ],
+      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U.",
+      "prior_candidate_evidence": {
+        "path": "auth014-srcds/results.json",
+        "candidate_sha256": "ddfdf9bf2f9bde625719ba171c59f7cac8b56cbe136a15e4911c7acbf00383ad",
+        "scope": "Real authorized human, matching integer stats and failed float sentinel / textual identity observed in R3; not transferred to final candidate."
+      }
+    },
+    {
+      "id": "T16",
+      "planned_levels": "I/R",
+      "case": "Carga tard\u00eda, cambio de mapa y descarga soportada.",
+      "expected": "No se asume que mapa equivale a shutdown; no se reutilizan recursos inv\u00e1lidos.",
+      "status": "partial",
+      "executed_levels": [
+        "I",
+        "R"
+      ],
+      "pending_levels": [
+        "Late load and supported hot extension unload/reload with final candidate"
+      ],
+      "evidence": [
+        "http-stream-srcds/results.json"
+      ],
+      "actual": "Map transition on same PID/candidate and explicit process quit pass. Process exit is not a hot unload test."
+    },
+    {
+      "id": "T17",
+      "planned_levels": "I/R",
+      "case": "HTTP textual y binario con bytes cero.",
+      "expected": "Separaci\u00f3n correcta entre capacidad, bytes v\u00e1lidos y terminador textual.",
+      "status": "passed",
+      "executed_levels": [
+        "I",
+        "R"
+      ],
+      "pending_levels": [],
+      "evidence": [
+        "http-stream-srcds/results.json",
+        "http-stream-srcds/initial-http.json",
+        "http-stream-srcds/after-map-http.json",
+        "p5/r3/test-http-stream-context.log"
+      ],
+      "actual": "Four controlled HTTP rounds: text, packed binary with NUL and streaming. Headers/data preserve both context cells; 24 streaming bytes verified, zero failures."
+    },
+    {
+      "id": "T18",
+      "planned_levels": "I/R",
+      "case": "HTTP vac\u00edo, error de red, HTTP de error, certificado inv\u00e1lido y timeout.",
+      "expected": "Resultado coherente; no hay lectura de cuerpo inexistente ni bypass de la pol\u00edtica TLS.",
+      "status": "passed",
+      "executed_levels": [
+        "I",
+        "R"
+      ],
+      "pending_levels": [],
+      "evidence": [
+        "http-stream-srcds/results.json"
+      ],
+      "actual": "Empty body, HTTP 503, refused connection, timeout and verified self-signed TLS rejection pass in all four current-candidate rounds."
+    },
+    {
+      "id": "T19",
+      "planned_levels": "U/I",
+      "case": "Longitud HTTP negativa, exceso de rango o handle inv\u00e1lido.",
+      "expected": "Error antes de convertir a tama\u00f1o sin signo o acceder a recursos ajenos.",
+      "status": "passed",
+      "executed_levels": [
+        "U"
+      ],
+      "pending_levels": [
+        "I"
+      ],
+      "evidence": [
+        "test-typed-boundary: HTTP lengths and handle ownership boundaries"
+      ],
+      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U."
+    },
+    {
+      "id": "T20",
+      "planned_levels": "U/I",
+      "case": "Plugin HTTP se descarga o cierra el handle dentro del callback.",
+      "expected": "Cierre \u00fanico; no invocar receptor destruido ni reutilizar el objeto despu\u00e9s del cierre.",
+      "status": "partial",
+      "executed_levels": [
+        "U",
+        "I"
+      ],
+      "pending_levels": [
+        "Owner plugin unload with pending request on final candidate"
+      ],
+      "evidence": [
+        "http-stream-srcds/results.json",
+        "p5/r3/test-resource-lifecycle.log"
+      ],
+      "actual": "All 32 real completion callbacks close their handle safely. One pending delay request is closed with no later callback. Owner unload remains deterministic for final candidate."
+    },
+    {
+      "id": "T21",
+      "planned_levels": "U/I",
+      "case": "Callback pendiente perteneciente a una generaci\u00f3n anterior.",
+      "expected": "Se desregistra o descarta con objeto receptor a\u00fan protegido; sin acceso inv\u00e1lido.",
+      "status": "passed",
+      "executed_levels": [
+        "U"
+      ],
+      "pending_levels": [
+        "I"
+      ],
+      "evidence": [
+        "test-resource-lifecycle: previous-generation events and ownership"
+      ],
+      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U."
+    },
+    {
+      "id": "T22",
+      "planned_levels": "U/I/R",
+      "case": "GC: \u00e9xito, sin mensaje y buffer insuficiente.",
+      "expected": "No se expone memoria no escrita ni se consume dos veces el mensaje.",
+      "status": "passed",
+      "executed_levels": [
+        "U"
+      ],
+      "pending_levels": [
+        "I",
+        "R"
+      ],
+      "evidence": [
+        "test-typed-boundary: production GC native, simulated success/no message/small buffer"
+      ],
+      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U."
+    },
+    {
+      "id": "T23",
+      "planned_levels": "U/I",
+      "case": "Forwards con cero/uno/varios consumidores y resultados distintos.",
+      "expected": "Orden, par\u00e1metros y significado del resultado conservados o corregidos expl\u00edcitamente.",
+      "status": "partial",
+      "executed_levels": [
+        "U",
+        "I"
+      ],
+      "pending_levels": [
+        "Full semantic forward/consumer matrix in SRCDS on final candidate"
+      ],
+      "evidence": [
+        "p5/r3/test-auth-binding.log",
+        "p5/r3/test-auth-forward.log",
+        "auth014-srcds/results.json"
+      ],
+      "actual": "Real SourceHook 014/015 binding regression plus actual CForward/standalone VM pass locally. Real auth/validation reception passed on prior R3; no automatic transfer."
+    },
+    {
+      "id": "T24",
+      "planned_levels": "B",
+      "case": "Diferencia autom\u00e1tica del inventario p\u00fablico.",
+      "expected": "Sin renumeraci\u00f3n, supresi\u00f3n o cambio accidental de firmas.",
+      "status": "passed",
+      "executed_levels": [
+        "B"
+      ],
+      "pending_levels": [],
+      "evidence": [
+        "p5/r3/integration.json",
+        "p5/api-inventory.json"
+      ],
+      "actual": "Current inventory equals P0 declarations, registrations, optionality and values; all 13 x86 suites pass."
+    },
+    {
+      "id": "T25",
+      "planned_levels": "I",
+      "case": "Plugins existentes precompilados y recompilados.",
+      "expected": "Cargan y cumplen los contratos acordados, incluidos H08/H09.",
+      "status": "pending",
+      "executed_levels": [
+        "B"
+      ],
+      "pending_levels": [
+        "Current-candidate complete runtime consumer behavior, precompiled/recompiled and H08/H09"
+      ],
+      "evidence": [
+        "p5/consumers.json",
+        "p5/consumers-inventory.json"
+      ],
+      "actual": "Three current compilations and four SMX import tables pass. Historical DEV stack loads do not certify every consumer behavior on the final binary. Connect two HTTP arity mismatches remain external."
+    },
+    {
+      "id": "T26",
+      "planned_levels": "B/I",
+      "case": "Instalaci\u00f3n desde el paquete generado.",
+      "expected": "Archivos necesarios presentes; gamedata real coincide con documentaci\u00f3n.",
+      "status": "partial",
+      "executed_levels": [
+        "B",
+        "I"
+      ],
+      "pending_levels": [
+        "Fresh regenerated ZIP installation in SRCDS"
+      ],
+      "evidence": [
+        ".build/p5-r3/review/manifest.json",
+        "http-stream-srcds/results.json"
+      ],
+      "actual": "Same owned payload was copied to isolated SourceMod and accepted live. New ZIP is staged/extracted/validated locally; it has not itself been installed."
+    },
+    {
+      "id": "T27",
+      "planned_levels": "B",
+      "case": "Revisi\u00f3n de artefactos y logs.",
+      "expected": "Sin SDK privado redistribuido, secretos, tickets o configuraci\u00f3n local inadvertida.",
+      "status": "passed",
+      "executed_levels": [
+        "B"
+      ],
+      "pending_levels": [],
+      "evidence": [
+        ".build/p5-r3/review/manifest.json",
+        "scripts/prepare-review-artifacts.py"
+      ],
+      "actual": "Allowlisted payload reviewed: no SDK/game libraries, secrets, server config, auth tickets or test SMX; license included"
+    },
+    {
+      "id": "T28",
+      "planned_levels": "U/I",
+      "case": "Direcci\u00f3n de salida inv\u00e1lida y fallo de conversi\u00f3n SourcePawn.",
+      "expected": "Error controlado antes de escribir o provocar efectos externos.",
+      "status": "passed",
+      "executed_levels": [
+        "U"
+      ],
+      "pending_levels": [
+        "I"
+      ],
+      "evidence": [
+        "native suites: bad Pawn addresses before output/side effects"
+      ],
+      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U."
+    },
+    {
+      "id": "T29",
+      "planned_levels": "U/I",
+      "case": "Identidad de cliente, fallback, bot/no autenticado y desconectado.",
+      "expected": "No construir identidad de otro usuario ni usar AppID como universo.",
+      "status": "passed",
+      "executed_levels": [
+        "U"
+      ],
+      "pending_levels": [
+        "I"
+      ],
+      "evidence": [
+        "stats/typed suites: authorized human identity, bot/fallback/inconsistent identities"
+      ],
+      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U.",
+      "prior_candidate_evidence": {
+        "path": "auth014-srcds/results.json",
+        "candidate_sha256": "ddfdf9bf2f9bde625719ba171c59f7cac8b56cbe136a15e4911c7acbf00383ad",
+        "scope": "Real authorized human, matching integer stats and failed float sentinel / textual identity observed in R3; not transferred to final candidate."
+      }
+    },
+    {
+      "id": "T30",
+      "planned_levels": "U/I",
+      "case": "Valores l\u00edmite: AccountID con bit alto, SteamID64, AppID ajeno y tama\u00f1os.",
+      "expected": "Preservaci\u00f3n de bits o rechazo expl\u00edcito seg\u00fan el contrato, sin truncamiento silencioso.",
+      "status": "passed",
+      "executed_levels": [
+        "U"
+      ],
+      "pending_levels": [
+        "I"
+      ],
+      "evidence": [
+        "stats/typed suites: high bits, AppID mismatch, size bounds"
+      ],
+      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U."
+    },
+    {
+      "id": "T31",
+      "planned_levels": "B/R",
+      "case": "M\u00f3dulo o plataforma no cubiertos por perfil interno.",
+      "expected": "La ruta dependiente no se habilita por similitud de nombre.",
+      "status": "passed",
+      "executed_levels": [
+        "B",
+        "U"
+      ],
+      "pending_levels": [
+        "R: unknown game pair"
+      ],
+      "evidence": [
+        "tests/lifecycle_profile_identity_test.cpp",
+        "tests/lifecycle_profile_rejection_test.cpp",
+        "../p4/validation-results.json"
+      ],
+      "actual": "Actual production selector rejects architecture, unknown/ambiguous identity and ordinary process before patching; real known pair exercised in P4"
+    },
+    {
+      "id": "T32",
+      "planned_levels": "I/R",
+      "case": "Steam pierde conexi\u00f3n sin destruir el runtime.",
+      "expected": "No confundir desconexi\u00f3n con fin de vida de interfaces; diagn\u00f3stico apropiado.",
+      "status": "pending",
+      "executed_levels": [],
+      "pending_levels": [
+        "I/R: controlled Steam disconnect without runtime destruction"
+      ],
+      "evidence": [
+        "p5-integration.md",
+        "compatibility.md"
+      ],
+      "actual": "No forced network interruption in P5"
+    },
+    {
+      "id": "T33",
+      "planned_levels": "I/R",
+      "case": "Operaci\u00f3n continuada y repetici\u00f3n de solicitudes/cierres.",
+      "expected": "Sin crecimiento no explicado de recursos ni logs por frame.",
+      "status": "pending",
+      "executed_levels": [],
+      "pending_levels": [
+        "I/R: measured sustained load and resource baseline"
+      ],
+      "evidence": [
+        "p5-integration.md",
+        "compatibility.md"
+      ],
+      "actual": "Short unit repetitions and ASan are not a runtime soak or performance comparison"
+    },
+    {
+      "id": "T34",
+      "planned_levels": "B/I/R",
+      "case": "Windows, solo cuando se incluya en la entrega.",
+      "expected": "Compilaci\u00f3n y ABI probadas por separado; no heredar aprobaci\u00f3n de Linux.",
+      "status": "not_applicable",
+      "executed_levels": [],
+      "pending_levels": [],
+      "evidence": [],
+      "actual": "Windows excluded from candidate and operational support claim; Linux results are not transferred to Windows"
+    },
+    {
+      "id": "T35",
+      "planned_levels": "I",
+      "case": "Reversi\u00f3n del paquete, configuraci\u00f3n y gamedata.",
+      "expected": "Restauraci\u00f3n coherente del conjunto anterior con procedimiento documentado.",
+      "status": "partial",
+      "executed_levels": [
+        "B",
+        "I"
+      ],
+      "pending_levels": [
+        "In-place restoration of regenerated rollback ZIP followed by SRCDS startup"
+      ],
+      "evidence": [
+        ".build/p5-r3/review/manifest.json",
+        "auth014-srcds/cleanup.json",
+        "http-stream-srcds/cleanup.json"
+      ],
+      "actual": "Archived candidate/rollback roundtrip passes in filesystem sandbox. Live isolated lab was removed and original selector/config hashes/extension/Steam connection restored in both acceptances; no in-place ZIP restore was performed."
+    },
+    {
+      "id": "T36",
+      "planned_levels": "U/I",
+      "case": "Longitud binaria y declaraci\u00f3n del forward de autenticaci\u00f3n.",
+      "expected": "Marshalling acorde con include y SourceMod, sin registrar tickets reales.",
+      "status": "partial",
+      "executed_levels": [
+        "U",
+        "I"
+      ],
+      "pending_levels": [
+        "Real player authentication on final candidate; full semantic forward matrix"
+      ],
+      "evidence": [
+        "p5/r3/test-auth-forward.log",
+        "p5/r3/test-auth-binding.log",
+        "auth014-srcds/results.json"
+      ],
+      "actual": "227 current x86 checks with production hook, real CForward and patched standalone VM pass. 18 real SourceHook binding checks plus negative control pass. R3 delivered one real auth event; ticket bytes/AccountID were not inspected.",
+      "integration_scope": "Standalone CForward/VM integration; SourceHook transport simulated, not a full SourceMod host",
+      "prior_candidate_evidence": {
+        "path": "auth014-srcds/results.json",
+        "candidate_sha256": "ddfdf9bf2f9bde625719ba171c59f7cac8b56cbe136a15e4911c7acbf00383ad",
+        "scope": "One real auth forward event and both public validation forwards. Synthetic marshalling tests establish byte contract; no real ticket comparison."
+      }
+    }
+  ],
+  "limitations": [
+    "R3 real authentication/positive stats were not repeated with final bc76 candidate; auth source identity is recorded but does not transfer runtime acceptance.",
+    "Complete admitted-interface and consumer/forward semantics remain open, notably GC.",
+    "Same-process reinitialization, late/hot extension unload, controlled Steam disconnect, stale generations in real host and sustained resource behavior remain open.",
+    "New ZIP installation and in-place archive rollback have not run in SRCDS; local archive tests and actual isolated-selector restoration are distinct.",
+    "Two Connect HTTP calls still pass three of five required arguments; external fix required.",
+    "Only the identified Linux x86 pair is supported; no new x64 or Windows artifacts.",
+    "SourcePawn VM is isolated diagnostics only; no installed runtime replacement.",
+    "No new deployment or remote CI in this update."
+  ]
+}

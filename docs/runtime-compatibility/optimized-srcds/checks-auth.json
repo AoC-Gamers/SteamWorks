@@ -1,0 +1,16 @@
+{
+  "checks": {
+    "authorized_human": true,
+    "identity_and_license": true,
+    "account_integer_stat_and_failed_float_sentinel": true,
+    "client_matches_account_and_failed_float_sentinel": true,
+    "auth_forward_received": true,
+    "both_validation_forwards_received": true,
+    "typed_014_target": true,
+    "auth_dispatch_succeeded": true,
+    "steam_validation_success": true,
+    "no_SM_error_logs": true,
+    "no_crash_markers": true
+  },
+  "passed": true
+}

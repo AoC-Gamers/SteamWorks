@@ -1,0 +1,21 @@
+{
+  "timestamp_utc": "2026-11-15T14:28:08.705116+00:00",
+  "quit_completed": true,
+  "lab_stopped": true,
+  "stopped_pid": 43113,
+  "trace": [
+    "[SW-RESTORE] plugin_ready",
+    "[SW-RESTORE] status loaded=1 connected=1 vac=1 completed=0 failed=0",
+    "[SW-RESTORE] queued context=1 callbacks=1 sent=1",
+    "[SW-RESTORE] complete pass=1 failure=0 success=1 status=200 body=1 context=1",
+    "[SW-RESTORE] request_closed",
+    "[SW-RESTORE] status loaded=1 connected=1 vac=1 completed=1 failed=0",
+    "[SW-RESTORE] plugin_end completed=1 failed=0"
+  ],
+  "lifecycle": [
+    "L 11/15/2026 - 14:27:52: [STEAMWORKS] Steam lifecycle profile installed: l4d2-23990100-linux-x86",
+    "L 11/15/2026 - 14:28:05: [STEAMWORKS] Steam lifecycle shutdown observed: consumers stopped"
+  ],
+  "error_log_sizes": {},
+  "crash_markers": []
+}

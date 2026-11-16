@@ -1,0 +1,45 @@
+--- a/vm/environment.h
++++ b/vm/environment.h
+@@ -28,6 +28,8 @@
+ using namespace SourcePawn;
+ 
+ class PluginRuntime;
++class SourcePawnEngine;
++class SourcePawnEngine2;
+ class CodeStubs;
+ class WatchdogTimer;
+ class ErrorReport;
+@@ -193,8 +195,8 @@
+   void DispatchReport(const ErrorReport& report);
+ 
+  private:
+-  std::unique_ptr<ISourcePawnEngine> api_v1_;
+-  std::unique_ptr<ISourcePawnEngine2> api_v2_;
++  std::unique_ptr<SourcePawnEngine> api_v1_;
++  std::unique_ptr<SourcePawnEngine2> api_v2_;
+   std::unique_ptr<WatchdogTimer> watchdog_timer_;
+   std::unique_ptr<BuiltinNatives> builtins_;
+   ke::Mutex mutex_;
+--- a/vm/environment.cpp
++++ b/vm/environment.cpp
+@@ -54,6 +54,10 @@
+ 
+ Environment::~Environment()
+ {
++  // The public environment contract allows deletion without an explicit shutdown.
++  // Shell callers may already have shut down; do not release global pools twice.
++  if (sEnvironment == this)
++    Shutdown();
+ }
+ 
+ Environment*
+@@ -98,7 +102,8 @@
+ void
+ Environment::Shutdown()
+ {
+-  watchdog_timer_->Shutdown();
++  if (watchdog_timer_)
++    watchdog_timer_->Shutdown();
+   builtins_ = nullptr;
+   code_stubs_ = nullptr;
+   code_alloc_ = nullptr;

@@ -1,0 +1,19 @@
+{
+  "since_utc": "2026-11-15 17:13:52 UTC",
+  "events": [
+    {
+      "role": "rollback_baseline",
+      "guest_pid": 76760,
+      "host_pid": 144640,
+      "signal": 11,
+      "executable": "/data/serverfiles/srcds_linux",
+      "timestamp_us": "1794762942170231"
+    }
+  ],
+  "candidate_has_no_core": true,
+  "baseline_exit_SIGSEGV_reproduced": true,
+  "cmdline_environment_and_raw_status_omitted": true,
+  "cores_exported": false,
+  "original_systemd_cores_preserved": true,
+  "baseline_cause_not_reanalyzed_in_this_followup": true
+}

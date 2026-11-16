@@ -1,0 +1,12 @@
+python3 ./scripts/build-local.py --root . --spcomp "deps/sourcemod-linux/addons/sourcemod/scripting/spcomp" --output-root ".build/steamworks-compat-final" --compile-log deps/build-smx-compile.log
+Compiling connect.sp -> addons/sourcemod/plugins/connect.smx
+SourcePawn Compiler 1.12.0.7260
+Copyright (c) 1997-2006 ITB CompuPhase
+Copyright (c) 2004-2024 AlliedModders LLC
+
+Code size:         366448 bytes
+Data size:         336268 bytes
+Stack/heap size:      83640 bytes
+Total requirements:  786356 bytes
+
+Build local completed in: /home/lechuga/GitHub/Connect/Connect-Sourcepawn/.build/steamworks-compat-final

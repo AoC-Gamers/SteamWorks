@@ -1,0 +1,15 @@
+{
+  "timestamp_utc": "2026-11-15T18:37:00.579212+00:00",
+  "normal_DEV_rechecked": true,
+  "processes": [
+    {
+      "pid": 89791,
+      "original_selector": true,
+      "original_module_mapped": true,
+      "lab_module_mapped": false
+    }
+  ],
+  "four_protected_hashes_original": true,
+  "lab_absent": true,
+  "Steam_connected": true
+}

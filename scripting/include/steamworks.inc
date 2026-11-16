@@ -329,26 +329,37 @@ native EUserHasLicenseForAppResult SteamWorks_HasLicenseForAppId(int authid, int
  *
  * @param client     Connected client index
  * @param steamId    Buffer that receives the SteamID string
- * @param length     Maximum buffer length
- * @return           Number of characters written to steamId (excluding the null terminator)
+ * @param length     Buffer capacity in bytes, including space for the null terminator
+ * @return           Bytes stored including the null terminator (legacy behavior),
+ *                   or 0 for zero capacity. Positive capacity always terminates
+ *                   the output; a capacity of 1 stores only the terminator and returns 1.
+ *
+ * On truncation the count describes bytes stored, not the required full length.
+ * @error            Invalid/disconnected client, negative capacity or invalid output address
  */
 native int SteamWorks_GetClientSteamID(int client, char[] steamId, int length);
 
 /**
  * Requests a player's stats from Steam using their SteamID (AuthID).
  *
- * @param authid     Player SteamID (AuthID or SteamID64)
- * @param appid      Game AppID (for example, 550 for L4D2)
- * @return           true if the request was sent successfully
+ * @param authid     32-bit Steam AccountID (not a SteamID64; all 32 bits are preserved)
+ * @param appid      Nonzero AppID matching the game server context (550 for L4D2), not a universe
+ * @return           true if Steam accepted the asynchronous request; false if the context,
+ *                   AppID or identity is unavailable/invalid, or the request was rejected
+ *
+ * Requests cannot select a different game's stats. Success does not mean stats are ready.
  */
 native bool SteamWorks_RequestStatsAuthID(int authid, int appid);
 
 /**
  * Requests stats from Steam for a connected client.
  *
- * @param client     Client index
- * @param appid      Game AppID
- * @return           true if the request was sent successfully
+ * @param client     Connected, authorized human client index
+ * @param appid      Nonzero AppID matching the game server context, not a universe
+ * @return           true if Steam accepted the asynchronous request; false if the context,
+ *                   AppID or validated identity is unavailable/invalid, or the request was rejected
+ *
+ * Uses SourceMod's validated Steam identity. Success does not mean stats are ready.
  */
 native bool SteamWorks_RequestStats(int client, int appid);
 
@@ -850,7 +861,9 @@ forward void SteamWorks_SteamServersDisconnected(EResult result);
  *
  * This can happen due to IP changes or other Steam-side conditions.
  *
- * @return Plugin_Handled to prevent the restart, Plugin_Continue to allow it
+ * @return With receivers present, Plugin_Handled/Plugin_Stop keep the SDK restart
+ *         request true; Plugin_Continue/Plugin_Changed suppress it. With no
+ *         receivers, the original SDK result is preserved. Historical behavior.
  */
 forward Action SteamWorks_RestartRequested();
 

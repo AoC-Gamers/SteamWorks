@@ -1,0 +1,15 @@
+{
+  "archived_utc": "2026-11-14T21:43:18.879316+00:00",
+  "files": {
+    "docs/runtime-compatibility/p5/history/pre-t36-validation-results.json": "cafc18d43c83d71355be6adc847081ea66fb25b6facf8da24d877af13badde5f",
+    "docs/runtime-compatibility/p5/history/pre-t36-consumers.json": "cf711e109178f7a42ba26c27b9f393c49cb34efe76c7c1419612e209f602fd38",
+    "docs/runtime-compatibility/p5/history/pre-t36-integration-original.md": "b9420255d973e9f99839561f53ff2b4bcccc6a9bccfe774f0b08b14c381c2423"
+  },
+  "old_artifact_directory": ".build/p5/review",
+  "new_artifact_directory": ".build/p5-r2/review",
+  "reader_copy": {
+    "path": "docs/runtime-compatibility/p5-pre-t36-integration.md",
+    "sha256": "69d98593dd9966b7dda58cf86ee824f627c88be03909ecd6762b01b53bc348a7",
+    "adjustments": "Archived matrix link and historical heading; raw original retained"
+  }
+}

@@ -1,0 +1,1 @@
+{"status":"invalid_fixture_attempt","cause":"Python PosixPath plus str in receipt output filename","positive_ACK_acceptance":false,"production_code_failure":false,"evidence":"connect-oversize-ACK.json retains initial transport errors"}

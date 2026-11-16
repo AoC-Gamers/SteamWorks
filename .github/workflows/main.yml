@@ -118,6 +118,81 @@ jobs:
             exit 1
           fi
 
+      - name: Test local review packaging and rollback contract
+        run: python3 tests/review_artifacts_test.py
+
+      - name: Test stats natives (x86, UBSan)
+        shell: bash
+        env:
+          STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
+        run: TEST_CXXFLAGS=-m32 bash ./scripts/test-stats-natives.sh
+
+      - name: Test detour owner and wrappers (x86, UBSan)
+        shell: bash
+        env:
+          STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
+        run: TEST_CXXFLAGS=-m32 bash ./scripts/test-detours.sh
+
+      - name: Test init observer coexistence (x86, UBSan)
+        shell: bash
+        env:
+          STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
+        run: TEST_CXXFLAGS=-m32 bash ./scripts/test-init-coexistence.sh
+
+      - name: Test public IPv4 natives (x86, signed/unsigned char, UBSan)
+        shell: bash
+        env:
+          STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
+        run: TEST_CXXFLAGS=-m32 bash ./scripts/test-public-ip.sh
+
+      - name: Test SteamID string contract (x86, UBSan)
+        shell: bash
+        env:
+          STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
+          AMTL_DIR: ${{ github.workspace }}/.deps/exts-linux/sourcemod-1.12/public/amtl
+        run: TEST_CXXFLAGS=-m32 bash ./scripts/test-steamid-string.sh
+
+      - name: Test typed boundary and interface registry (x86, UBSan)
+        shell: bash
+        env:
+          STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
+        run: TEST_CXXFLAGS=-m32 bash ./scripts/test-typed-boundary.sh
+
+      - name: Test restart forward semantics (x86, UBSan)
+        shell: bash
+        env:
+          STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
+        run: TEST_CXXFLAGS=-m32 bash ./scripts/test-restart-forward-semantics.sh
+
+      - name: Test resource lifecycle (x86, UBSan)
+        shell: bash
+        env:
+          STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
+        run: TEST_CXXFLAGS=-m32 bash ./scripts/test-resource-lifecycle.sh
+
+      - name: Test binary evidence and documentary profiles (x86)
+        shell: bash
+        env:
+          STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
+        run: TEST_CXXFLAGS=-m32 bash ./scripts/test-binary-evidence.sh
+
+      - name: Test opt-in diagnostic log (x86, UBSan)
+        shell: bash
+        run: TEST_CXXFLAGS=-m32 bash ./scripts/test-debug-log.sh
+
+      - name: Test typed auth binding with real SourceHook (x86, UBSan)
+        shell: bash
+        env:
+          STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
+          MMSOURCE_DIR: ${{ github.workspace }}/.deps/exts-linux/mmsource-1.12
+        run: TEST_CXXFLAGS=-m32 bash ./scripts/test-auth-binding.sh
+
+      - name: Test streaming HTTP context (x86, UBSan)
+        shell: bash
+        env:
+          STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
+        run: TEST_CXXFLAGS=-m32 bash ./scripts/test-http-stream-context.sh
+
       - name: Build Linux extension
         shell: bash
         run: make build-exts-linux STEAMWORKS_SDK_DIR="${{ steps.sdk.outputs.dir }}"
@@ -126,31 +201,33 @@ jobs:
         id: artifact
         shell: bash
         run: |
-          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
-            version="${GITHUB_REF_NAME#v}"
-            echo "basename=steamworks-$version-linux" >> "$GITHUB_OUTPUT"
-            echo "release_tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
-            echo "release_name=SteamWorks $version" >> "$GITHUB_OUTPUT"
-            echo "prerelease=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          case "${GITHUB_REF_NAME}" in
-            main)
-              echo "basename=steamworks-latest-linux" >> "$GITHUB_OUTPUT"
-              echo "release_tag=channel/latest" >> "$GITHUB_OUTPUT"
-              echo "release_name=Latest" >> "$GITHUB_OUTPUT"
-              echo "prerelease=false" >> "$GITHUB_OUTPUT"
-              ;;
-            develop)
-              echo "basename=steamworks-develop-linux" >> "$GITHUB_OUTPUT"
-              echo "release_tag=channel/develop" >> "$GITHUB_OUTPUT"
-              echo "release_name=Develop" >> "$GITHUB_OUTPUT"
-              echo "prerelease=true" >> "$GITHUB_OUTPUT"
-              ;;
-            *)
-              echo "basename=steamworks-${GITHUB_SHA::7}-linux" >> "$GITHUB_OUTPUT"
-              ;;
-          esac
+          {
+            if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+              version="${GITHUB_REF_NAME#v}"
+              echo "basename=steamworks-$version-linux"
+              echo "release_tag=${GITHUB_REF_NAME}"
+              echo "release_name=SteamWorks $version"
+              echo "prerelease=false"
+              exit 0
+            fi
+            case "${GITHUB_REF_NAME}" in
+              main)
+                echo "basename=steamworks-latest-linux"
+                echo "release_tag=channel/latest"
+                echo "release_name=Latest"
+                echo "prerelease=false"
+                ;;
+              develop)
+                echo "basename=steamworks-develop-linux"
+                echo "release_tag=channel/develop"
+                echo "release_name=Develop"
+                echo "prerelease=true"
+                ;;
+              *)
+                echo "basename=steamworks-${GITHUB_SHA::7}-linux"
+                ;;
+            esac
+          } >> "$GITHUB_OUTPUT"
 
       - name: Upload Linux build tree
         uses: actions/upload-artifact@v7

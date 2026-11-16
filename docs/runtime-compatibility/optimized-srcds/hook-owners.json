@@ -1,0 +1,16 @@
+{
+  "PID": 87189,
+  "engine_init_CALL_owner": {
+    "module": "steamworks.ext.so",
+    "sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192"
+  },
+  "shutdown_detour_owner": {
+    "module": "steamworks.ext.so",
+    "sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192"
+  },
+  "SDK_init_bridge_handler_owner": {
+    "module": "sourcetvsupport.ext.2.l4d2.so",
+    "sha256": "b0ce14d78143d1f2e82fefaa7a72bf2aa06df1b24d0196c1b7ba1f616a763933"
+  },
+  "coexistence_passed": true
+}

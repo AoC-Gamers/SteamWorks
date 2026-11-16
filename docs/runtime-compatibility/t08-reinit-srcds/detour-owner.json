@@ -1,0 +1,23 @@
+{
+  "pid": 49349,
+  "entry_trace": [
+    "[SW-LIFETIME] entry=SteamInit address=ebb5d430 opcode=e9 target=eb25100e",
+    "[SW-LIFETIME] entry=SteamShutdown address=ebb5d690 opcode=ff target=d422fa9c"
+  ],
+  "init_bridge": {
+    "address": "0xeb25100e",
+    "instruction_bytes": "e94d47f5e9",
+    "instruction": "jmp rel32",
+    "target": "0xd51a5760",
+    "owner_mapping": "d5191000-d52f1000 r-xp 0008d000 103:02 3148099                           /data/serverfiles/left4dead2/addons/sourcemod_acceptance/extensions/sourcetvsupport.ext.2.l4d2.so",
+    "owner_symbol": "Handler_SteamInternal_GameServer_Init(unsigned int, unsigned short, unsigned short, unsigned short, EServerMode, char const*)",
+    "owner_RVA": "0xa1760"
+  },
+  "shutdown_target_in_SteamWorks": true,
+  "source_support": {
+    "path": "/home/lechuga/GitHub/l4d2_sourcemod/sourcetvsupport/extension/extension.cpp",
+    "sha256": "a694e89b3473667c87afe4d8f13a7fd7c38159f0f4e4aa111ef95e1f5b8342a0",
+    "observed_design": "CreateDetours in SDK_OnLoad; EnableDetour in SDK_OnAllLoaded; this mapped binary owns the shared init export on this run"
+  },
+  "inference": "Competing init patch bypasses SteamWorks observer: no init event, extension remains stopped, engine reconnects. No cooperative chain accepted or runtime availability forced."
+}

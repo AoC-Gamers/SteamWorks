@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "runtime_evidence": "optimized-srcds/results.json",
+  "candidate": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+  "scope": "optimized build only; canonical distinct binary not tested in SRCDS",
+  "source_hashes_unchanged": true,
+  "public_API_unchanged": true,
+  "original_DEV_live_rechecked": true,
+  "four_protected_hashes_original": true,
+  "historical_review_artifacts_unchanged": 71,
+  "doc_links_checked": 98,
+  "git_diff_check": "passed",
+  "branch": "develop",
+  "HEAD_unchanged": true,
+  "index_empty": true,
+  "committed": false,
+  "production_touched": false
+}

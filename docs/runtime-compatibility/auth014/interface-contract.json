@@ -1,0 +1,18 @@
+{
+  "role": "GameServerAuth",
+  "type": "steamworks::ISteamGameServer014",
+  "version": "SteamGameServer014",
+  "factory": "SteamInternal_FindOrCreateGameServerInterface",
+  "user": "SteamGameServer_GetHSteamUser",
+  "config_key": "SteamGameServerAuthInterfaceVersion",
+  "profile": "l4d2-23990100-linux-x86",
+  "native_contract_remains": "SteamGameServer015",
+  "prefix_slots": 27,
+  "auth_slot": 26,
+  "reference": {
+    "repository": "AoC-Gamers/Steamworks-SDK",
+    "commit": "a7aaa2754d9cda244d0cd9d7523c1144a1c472d2",
+    "file": "sdk_155/public/steam/isteamgameserver.h",
+    "sha256": "fc935b853c9fe67721d1cfc4f7d518a489bd9a8910680a39e11bb3830a60827f"
+  }
+}

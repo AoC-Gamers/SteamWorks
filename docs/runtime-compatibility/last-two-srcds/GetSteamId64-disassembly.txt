@@ -1,0 +1,56 @@
+
+.build/last-two-srcds/sourcemod.2.l4d2.so:     file format elf32-i386
+
+
+Disassembly of section .text:
+
+00057a40 <CPlayer::GetSteamId64(bool)>:
+   57a40:	55                   	push   %ebp
+   57a41:	89 e5                	mov    %esp,%ebp
+   57a43:	53                   	push   %ebx
+   57a44:	56                   	push   %esi
+   57a45:	83 ec 10             	sub    $0x10,%esp
+   57a48:	e8 00 00 00 00       	call   57a4d <CPlayer::GetSteamId64(bool)+0xd>
+   57a4d:	5b                   	pop    %ebx
+   57a4e:	81 c3 b3 d5 08 00    	add    $0x8d5b3,%ebx
+   57a54:	8b 75 08             	mov    0x8(%ebp),%esi
+   57a57:	80 7d 0c 00          	cmpb   $0x0,0xc(%ebp)
+   57a5b:	74 45                	je     57aa2 <CPlayer::GetSteamId64(bool)+0x62>
+   57a5d:	8b 06                	mov    (%esi),%eax
+   57a5f:	89 34 24             	mov    %esi,(%esp)
+   57a62:	ff 50 18             	call   *0x18(%eax)
+   57a65:	84 c0                	test   %al,%al
+   57a67:	75 39                	jne    57aa2 <CPlayer::GetSteamId64(bool)+0x62>
+   57a69:	80 bb 6d 9a 00 00 00 	cmpb   $0x0,0x9a6d(%ebx)
+   57a70:	74 30                	je     57aa2 <CPlayer::GetSteamId64(bool)+0x62>
+   57a72:	8d 83 f0 55 00 00    	lea    0x55f0(%ebx),%eax
+   57a78:	89 04 24             	mov    %eax,(%esp)
+   57a7b:	e8 40 ca fe ff       	call   444c0 <CHalfLife2::IsLANServer()>
+   57a80:	84 c0                	test   %al,%al
+   57a82:	75 1e                	jne    57aa2 <CPlayer::GetSteamId64(bool)+0x62>
+   57a84:	8d 83 40 30 00 00    	lea    0x3040(%ebx),%eax
+   57a8a:	8b 00                	mov    (%eax),%eax
+   57a8c:	8b 4e 70             	mov    0x70(%esi),%ecx
+   57a8f:	8b 10                	mov    (%eax),%edx
+   57a91:	89 4c 24 04          	mov    %ecx,0x4(%esp)
+   57a95:	89 04 24             	mov    %eax,(%esp)
+   57a98:	ff 92 c0 01 00 00    	call   *0x1c0(%edx)
+   57a9e:	84 c0                	test   %al,%al
+   57aa0:	74 12                	je     57ab4 <CPlayer::GetSteamId64(bool)+0x74>
+   57aa2:	81 c6 a0 00 00 00    	add    $0xa0,%esi
+   57aa8:	8b 06                	mov    (%esi),%eax
+   57aaa:	8b 56 04             	mov    0x4(%esi),%edx
+   57aad:	83 c4 10             	add    $0x10,%esp
+   57ab0:	5e                   	pop    %esi
+   57ab1:	5b                   	pop    %ebx
+   57ab2:	5d                   	pop    %ebp
+   57ab3:	c3                   	ret
+   57ab4:	8d b3 b8 9b 00 00    	lea    0x9bb8(%ebx),%esi
+   57aba:	80 bb c0 9b 00 00 00 	cmpb   $0x0,0x9bc0(%ebx)
+   57ac1:	75 e5                	jne    57aa8 <CPlayer::GetSteamId64(bool)+0x68>
+   57ac3:	8b 83 e0 99 00 00    	mov    0x99e0(%ebx),%eax
+   57ac9:	8b 8b e4 99 00 00    	mov    0x99e4(%ebx),%ecx
+   57acf:	89 8b bc 9b 00 00    	mov    %ecx,0x9bbc(%ebx)
+   57ad5:	89 83 b8 9b 00 00    	mov    %eax,0x9bb8(%ebx)
+   57adb:	c6 83 c0 9b 00 00 01 	movb   $0x1,0x9bc0(%ebx)
+   57ae2:	eb c4                	jmp    57aa8 <CPlayer::GetSteamId64(bool)+0x68>

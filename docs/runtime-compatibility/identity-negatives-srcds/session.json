@@ -1,0 +1,16 @@
+{
+  "updated_utc": "2026-11-15T20:37:40.903630+00:00",
+  "phase": "runtime_finished_original_DEV_restored",
+  "container": "competitive_dev",
+  "port": 27015,
+  "private_recovery": "/data/serverfiles/left4dead2/addons/sourcemod_acceptance/recovery",
+  "restore_original_DEV_after_acceptance": true,
+  "production_touched": false,
+  "candidate_SHA": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+  "bot_checks": 23,
+  "expected_bot_native_errors": 10,
+  "unexpected_errors": 0,
+  "shutdown_clean": true,
+  "original_DEV_restored": true,
+  "lab_removed": true
+}

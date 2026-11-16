@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "responsible": "Codex",
+  "branch": "develop",
+  "baseline_commit": "46e3ee05fc29ad090a1d6f7b1cb5e3dca9855350",
+  "status": "uncommitted_working_tree",
+  "source_sha256": {
+    "extension/natives/ssnatives.cpp": "fc400ec6809ca9e1fb9820f1577c5d3d2bccf5bb698a186ce42d80003f0334de",
+    "tests/stats_natives_test.cpp": "33db66f6f07fa6d1db9ed6e8260ab45f00d1d56abf399ca0b3888f43a761b4b9",
+    "scripts/test-stats-natives.sh": "55cbd14ead742751122a4dc2b369616073541d69d07f5ba9ad7eeff01106a757",
+    "scripting/include/steamworks.inc": "ae27e5f673f617155107fdce66cf9f963cf5215de682655d04ed6b2ff5d35655",
+    ".github/workflows/main.yml": "edc02991076b9e21312d4e69070c10b7ca494bd9d5b5350e9f2ec28a0af04a5c"
+  },
+  "environments": {
+    "host": "GCC 13.3.0 / Linux x86_64 / UBSan",
+    "x86": "GCC 12.2.0 / Debian 12 container / -m32 / UBSan",
+    "container_image_id": "sha256:8b88d2213cf0eaa488c64f73bd11d7827dfc9b10f9aefc0de714463c6fa2db3b",
+    "sdk_snapshot": "../p0/sdk-toolchain.json"
+  },
+  "checks": [
+    {
+      "id": "T02-U",
+      "status": "passed",
+      "scope": "Client/AuthID float: failed provider leaves sentinel intact, with and without provider writes."
+    },
+    {
+      "id": "T03-U",
+      "status": "passed",
+      "scope": "All four readers: success copies negative/zero value, false never copies. 32 total scenarios per architecture including error cases."
+    },
+    {
+      "id": "T28-U",
+      "status": "passed",
+      "scope": "Four stats readers only: invalid name/output conversion propagates error before Steam query. Missing interface and invalid client retain existing precedence."
+    },
+    {
+      "id": "unit-x86_64",
+      "status": "passed",
+      "command": "bash scripts/test-stats-natives.sh",
+      "exit_code": 0,
+      "scenarios": 32,
+      "sanitizer": "undefined, no recovery"
+    },
+    {
+      "id": "unit-x86",
+      "status": "passed",
+      "command": "TEST_BUILD_DIR=/workspace/.build/tests-stats-x86 TEST_CXXFLAGS=-m32 bash scripts/test-stats-natives.sh",
+      "environment": "Isolated container, same image/dependencies as P0, no network",
+      "exit_code": 0,
+      "scenarios": 32,
+      "sanitizer": "undefined, no recovery"
+    },
+    {
+      "id": "baseline-regression",
+      "status": "passed",
+      "expected_failure": true,
+      "baseline": "git show HEAD:extension/natives/ssnatives.cpp copied into .build/p1-a/baseline",
+      "result": "All 4 original variants exit 1 on failure-after-provider-write. The same fixture passes on the corrected source."
+    },
+    {
+      "id": "real-sdk-object",
+      "status": "passed",
+      "command_record": ".build/p1-a/real-sdk-command.json",
+      "exit_code": 0,
+      "artifact": ".build/p1-a/ssnatives-real-sdk.o",
+      "artifact_sha256": "6573bb7adbf502aca477f76c23f9a821e292e550144034fe884dc9a5542e18b3",
+      "format": "ELF 32-bit LSB relocatable, Intel 80386",
+      "qualification": "Only this translation unit compiled. P0 GCC command reused with C-only -Wno-pointer-to-int-cast removed; -Werror otherwise retained. No build configuration changes."
+    },
+    {
+      "id": "T24-B",
+      "status": "passed",
+      "scope": "Declarations, enum values, typesets, bindings, registrations and optional native list identical to P0. Include byte hash unchanged."
+    },
+    {
+      "id": "full-extension-build",
+      "status": "blocked",
+      "reason": "Known P0 C-only warning option breaks GCC C++ under -Werror; not repaired or reclassified by the object-only check."
+    },
+    {
+      "id": "T02-I/T03-I-R/T28-I",
+      "status": "blocked",
+      "reason": "No selected Linux x86 L4D2/SourceMod server to execute VM marshalling and real stats. Unit doubles do not validate ABI."
+    },
+    {
+      "id": "ci-workflow",
+      "status": "passed",
+      "command": "actionlint -shellcheck= .github/workflows/main.yml (rhysd/actionlint:1.7.7)",
+      "result": "Workflow lint passed. New Linux x86 UBSan test step added before extension build; remote CI not run."
+    }
+  ],
+  "local_logs": [
+    {
+      "path": ".build/p1-a/unit-host.log",
+      "sha256": "86183ea3e795ed4e61cbaaed8c6c8a6d2fc9294e7bdc67dd78fba4a9e1898ee1"
+    },
+    {
+      "path": ".build/p1-a/unit-x86.log",
+      "sha256": "86183ea3e795ed4e61cbaaed8c6c8a6d2fc9294e7bdc67dd78fba4a9e1898ee1"
+    },
+    {
+      "path": ".build/p1-a/baseline-regression.log",
+      "sha256": "bbda8ef2da0792808ed69fde9053a9987d07f1f4e6a7f3ad772e0aec6beaaab1"
+    },
+    {
+      "path": ".build/p1-a/real-sdk-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".build/p1-a/real-sdk-command.json",
+      "sha256": "8e4d725299822bfb6618009413a84e3b159ac13c0def1cf4191008a9ce39a9b7"
+    },
+    {
+      "path": ".build/p1-a/api-comparison.log",
+      "sha256": "329a97d576abb8b44232ded6e00bd994b2e401305890549b02284d997013d90f"
+    },
+    {
+      "path": ".build/p1-a/actionlint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "acceptance": {
+    "unit_regression": "passed",
+    "operational_runtime": "not_evaluated",
+    "unrelated_findings": "H08/H09, HTTP compatibility, detours and lifecycle not changed."
+  }
+}

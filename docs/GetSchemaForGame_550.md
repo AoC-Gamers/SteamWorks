@@ -4,11 +4,11 @@
 
 Este documento explica cómo usar:
 
-- [GetSchemaForGame_550.json](C:\GitHub\SteamWorks\docs\GetSchemaForGame_550.json)
+- [GetSchemaForGame_550.json](GetSchemaForGame_550.json)
 
 como referencia local para probar stats de Left 4 Dead 2 con:
 
-- [steamwork_test.sp](C:\GitHub\SteamWorks\scripts\steamwork_test.sp)
+- [steamwork_test.sp](../scripting/steamwork_test.sp)
 
 El archivo corresponde al schema oficial de Steam para `appid=550`.
 
@@ -20,6 +20,14 @@ El schema mezcla al menos dos tipos de entradas relevantes:
 - `achievements`
 
 Es importante no mezclarlas.
+
+Este JSON no declara el tipo numérico de cada stat. `defaultvalue: 0` y nombres
+como `Avg` o `Accuracy` no demuestran que el getter float vaya a aceptarlo.
+El harness `tests/runtime/steamworks_stats_acceptance.sp` genera una lista de
+claves de este archivo y contrasta los getters reales por cliente/AccountID.
+La [aceptación P5-R4](runtime-compatibility/p5-r4-stats-srcds-acceptance.md) registró
+12 claves float aceptadas en dos recorridos; no clasificó como enteras todas las
+claves cuyo getter float fue rechazado.
 
 ### Stats
 

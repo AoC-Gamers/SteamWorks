@@ -1,0 +1,25 @@
+{
+  "pid": 20379,
+  "loader_events": [
+    "20379:\tfile=libsteam_api.so [0];  needed by bin/dedicated_srv.so [0]",
+    "20379:\tfile=libsteam_api.so [0];  generating link map",
+    "20379:\tcalling init: bin/libsteam_api.so",
+    "20379:\tfile=/data/.steam/sdk32/steamclient.so [0];  generating link map",
+    "20379:\tcalling init: /data/.steam/sdk32/steamclient.so",
+    "20379:\topening file=/data/.steam/sdk32/steamclient.so [0]; direct_opencount=1",
+    "20379:\tfile=/data/.steam/sdk32/crashhandler.so [0];  dynamically loaded by /data/.steam/sdk32/steamclient.so [0]",
+    "20379:\tfile=/data/.steam/sdk32/crashhandler.so [0];  generating link map",
+    "20379:\tcalling init: /data/.steam/sdk32/crashhandler.so",
+    "20379:\topening file=/data/.steam/sdk32/crashhandler.so [0]; direct_opencount=1",
+    "20379:\topening file=bin/libsteam_api.so [0]; direct_opencount=1",
+    "20379:\tfile=./bin/libsteam_api.so [0];  dynamically loaded by /data/serverfiles/left4dead2/addons/sourcemod_acceptance/bin/sourcemod.logic.so [0]",
+    "20379:\topening file=bin/libsteam_api.so [0]; direct_opencount=1",
+    "20379:\tclosing file=bin/libsteam_api.so; direct_opencount=1",
+    "20379:\tclosing file=/data/.steam/sdk32/steamclient.so; direct_opencount=4",
+    "20379:\tclosing file=/data/.steam/sdk32/steamclient.so; direct_opencount=3",
+    "20379:\tcalling fini: bin/libsteam_api.so [0]",
+    "20379:\tfile=bin/libsteam_api.so [0];  destroying link map",
+    "20379:\tcalling fini: /data/.steam/sdk32/crashhandler.so [0]",
+    "20379:\tfile=/data/.steam/sdk32/crashhandler.so [0];  destroying link map"
+  ]
+}

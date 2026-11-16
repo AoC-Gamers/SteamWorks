@@ -1,0 +1,1 @@
+[{"family": "iptables", "cgroup_kernel_rule_accepted": true, "hooked_into_traffic": false}, {"family": "ip6tables", "cgroup_kernel_rule_accepted": true, "hooked_into_traffic": false}]

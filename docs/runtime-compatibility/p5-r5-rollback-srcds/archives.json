@@ -1,0 +1,12 @@
+{
+  "candidate_zip_sha256": "700826233129ec9a8fd3161cf5ded9f414181f787638779edb4073e49f1427f6",
+  "rollback_zip_sha256": "55153d557f3af7f71f1016c8c394dc74fe29e0cdc9511044c21de29e8bc6dffc",
+  "candidate_extension_sha256": "bc76b00d0614f8f8489f8d3d30e3d654976f3bfde689f17d8731018d6c7ac639",
+  "rollback_files": {
+    "extensions/steamworks.ext.so": "9ca37aadcd83448d49126d6a72babcb8ec97ec5a06c171b4821ae0ee3cf05d70",
+    "scripting/include/steamworks.inc": "e51bcd397139edc3d144f130c45f0f8edbf55d12278736e0134e4c650ec64f17"
+  },
+  "rollback_absent_paths": [
+    "gamedata/steamworks.txt"
+  ]
+}

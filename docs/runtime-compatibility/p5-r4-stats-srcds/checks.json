@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "checks": {
+    "stats_requested": true,
+    "integer_control_ready": true,
+    "schema_scan_completed": true,
+    "positive_float_found": true,
+    "all_float_paths_agree": true,
+    "missing_before_and_after": true,
+    "no_check_failures": true,
+    "no_SM_errors": true,
+    "no_crash_markers": true
+  },
+  "successful_float_keys": 12
+}

@@ -17,6 +17,7 @@
 */
 
 #include "swforwards.h"
+#include "swdebug.h"
 
 namespace {
 
@@ -50,6 +51,7 @@ SteamWorksForwards::SteamWorksForwards() :
 
 SteamWorksForwards::~SteamWorksForwards()
 {
+	Stop();
 	ReleaseForward(pLegacyValidateClientForward);
 	ReleaseForward(pValidateClientForward);
 	ReleaseForward(pSteamServersConnectedForward);
@@ -60,18 +62,19 @@ SteamWorksForwards::~SteamWorksForwards()
 
 void SteamWorksForwards::ExecuteValidateClientForward(IForward* forward, Account_t parent, Account_t child)
 {
-	if (forward == nullptr || forward->GetFunctionCount() == 0) {
+	if (!m_running || forward == nullptr || forward->GetFunctionCount() == 0) {
 		return;
 	}
 
 	forward->PushCell(parent);
 	forward->PushCell(child);
+	steamworks::debug::Log(steamworks::debug::Auth, "validation_dispatch", "forward=%s receivers=%u", forward == pLegacyValidateClientForward ? "legacy" : "current", forward->GetFunctionCount());
 	forward->Execute(nullptr);
 }
 
 void SteamWorksForwards::ExecuteSteamServerResultForward(IForward* forward, cell_t result)
 {
-	if (forward == nullptr || forward->GetFunctionCount() == 0) {
+	if (!m_running || forward == nullptr || forward->GetFunctionCount() == 0) {
 		return;
 	}
 
@@ -81,24 +84,27 @@ void SteamWorksForwards::ExecuteSteamServerResultForward(IForward* forward, cell
 
 void SteamWorksForwards::NotifyPawnValidateClient(Account_t parent, Account_t child)
 {
+	const uint64 generation = m_generation;
 	ExecuteValidateClientForward(pLegacyValidateClientForward, parent, child);
-	ExecuteValidateClientForward(pValidateClientForward, parent, child);
+	if (m_generation == generation) { ExecuteValidateClientForward(pValidateClientForward, parent, child); }
 }
 
 void SteamWorksForwards::OnGSClientApprove(GSClientApprove_t *pApprove)
 {
+	steamworks::debug::Log(steamworks::debug::Auth, "validation_callback", "source=GSClientApprove");
 	this->NotifyPawnValidateClient(pApprove->m_OwnerSteamID.GetAccountID(), pApprove->m_SteamID.GetAccountID());
 }
 
 void SteamWorksForwards::OnValidateTicket(ValidateAuthTicketResponse_t *pTicket)
 {
+	steamworks::debug::Log(steamworks::debug::Auth, "validation_callback", "source=ValidateAuthTicketResponse result=%d", static_cast<int>(pTicket->m_eAuthSessionResponse));
 	this->NotifyPawnValidateClient(pTicket->m_OwnerSteamID.GetAccountID(), pTicket->m_SteamID.GetAccountID());
 }
 
 void SteamWorksForwards::OnSteamServersConnected(SteamServersConnected_t *pResponse)
 {
 	(void)pResponse;
-	if (pSteamServersConnectedForward == nullptr || pSteamServersConnectedForward->GetFunctionCount() == 0) {
+	if (!m_running || pSteamServersConnectedForward == nullptr || pSteamServersConnectedForward->GetFunctionCount() == 0) {
 		return;
 	}
 
@@ -117,7 +123,7 @@ void SteamWorksForwards::OnSteamServersDisconnected(SteamServersDisconnected_t *
 
 void SteamWorksForwards::OnGroupStatusResult(GSClientGroupStatus_t *pResponse)
 {
-	if (pClientGroupStatusForward == nullptr || pClientGroupStatusForward->GetFunctionCount() == 0) {
+	if (!m_running || pClientGroupStatusForward == nullptr || pClientGroupStatusForward->GetFunctionCount() == 0) {
 		return;
 	}
 
@@ -126,4 +132,29 @@ void SteamWorksForwards::OnGroupStatusResult(GSClientGroupStatus_t *pResponse)
 	pClientGroupStatusForward->PushCell(pResponse->m_bMember);
 	pClientGroupStatusForward->PushCell(pResponse->m_bOfficer);
 	pClientGroupStatusForward->Execute(nullptr);
+}
+
+void SteamWorksForwards::Stop()
+{
+ if (!m_running) { return; }
+ m_running = false;
+ ++m_generation;
+ m_CallbackGSClientApprove.Unregister();
+ m_CallbackValidateTicket.Unregister();
+ m_CallbackSteamConnected.Unregister();
+ m_CallbackSteamConnectFailure.Unregister();
+ m_CallbackSteamDisconnected.Unregister();
+ m_CallbackGroupStatus.Unregister();
+}
+
+void SteamWorksForwards::Start()
+{
+ if (m_running) { return; }
+ m_running = true;
+ m_CallbackGSClientApprove.Register(this, &SteamWorksForwards::OnGSClientApprove);
+ m_CallbackValidateTicket.Register(this, &SteamWorksForwards::OnValidateTicket);
+ m_CallbackSteamConnected.Register(this, &SteamWorksForwards::OnSteamServersConnected);
+ m_CallbackSteamConnectFailure.Register(this, &SteamWorksForwards::OnSteamServersConnectFailure);
+ m_CallbackSteamDisconnected.Register(this, &SteamWorksForwards::OnSteamServersDisconnected);
+ m_CallbackGroupStatus.Register(this, &SteamWorksForwards::OnGroupStatusResult);
 }

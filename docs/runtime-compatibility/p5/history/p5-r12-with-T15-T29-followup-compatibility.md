@@ -1,0 +1,99 @@
+# Registro de compatibilidad
+
+P5-R12 es candidato local de revisión, sin publicación ni aceptación operativa global.
+SDK objetivo 1.58a; no se cambió el SDK del juego.
+
+| Plataforma/módulos | Ruta interna | Validación |
+|---|---|---|
+| Linux i386, L4D2 build 23990100, pareja de P4 | `l4d2-23990100-linux-x86` | Optimizado `839ff075…`: dos reinits con SourceTVSupport, HTTP/streaming, auth/identidad/stats humanos y quit limpio aceptados; T26/T35 del ZIP R9 pasan en su alcance |
+| Otra pareja Linux, aunque comparta nombre/versión visible | Rechazada | Requiere evidencia y perfil nuevo |
+| Linux x86_64 | Rechazada | Solo historia diagnóstica; sin nuevos builds ni artefactos |
+| Windows | Rechazada | Fuera del candidato; herramientas generales no certifican ABI |
+
+Identidades/prefijos: [P4](p4-binary-profiles.md) y
+[perfil documental](p4/competitive-dev-linux-x86.json). Los JSON no habilitan rutas
+del producto. No se distribuyen bibliotecas Steam/engine/SDK.
+
+## Compatibilidad de consumidores
+
+H08 conserva ambas firmas de solicitud de stats. El segundo argumento es el
+AppID del contexto, no el universo Steam. Un plugin que pasaba `1` como universo
+debe usar el AppID correspondiente (550 en L4D2). El primer argumento AuthID es
+AccountID de 32 bits, no SteamID64 truncado. Una solicitud aceptada sigue siendo
+asíncrona. [Contrato y pruebas](p1-b-stats-identity.md).
+
+H09 conserva el resultado histórico de `GetClientSteamID`: para capacidad
+positiva, el conteo incluye NUL. Cero devuelve cero sin escribir; tamaños negativos
+son error. Los consumidores no deben sumar otro terminador al conteo devuelto.
+[Conciliación y consumidores](p1-e-steamid-count.md).
+
+El helper HTTP textual exige sus cinco argumentos existentes. Dos llamadas de
+Connect (`connect/http.inc`, `connect/ingest.inc`) siguen pasando tres argumentos.
+El native las rechaza con error controlado antes de leer salidas ausentes. Ese
+consumidor requiere corrección externa antes de incluirlo en la aceptación.
+No se cambia su repositorio desde este trabajo.
+
+P5-R12 recompila el ejemplo, AoC y Family Share sin warnings y comprueba cuatro
+tablas de imports, una precompilada. El inventario examina 2693 archivos y encuentra
+37 con referencias. El corpus léxico y la carga de 138 plugins en el ensayo
+optimizado no acreditan toda la semántica de consumidores; T25 permanece pendiente.
+
+Se conservan dos observaciones de P0: faltan marcaciones opcionales para
+`SetMapName` y `GetHTTPRequestWasTimedOut`, y existe el forward interno no declarado
+`SteamWorks_BeginAuthSession`. [T36](t36-auth-forward.md) conserva `Param_Array`
+y sus tres argumentos, con transporte compacto por `PushArray`, CForward/VM
+reales y límites de reserva probados bajo optimización. El
+[adaptador 014](begin-auth-session-014.md) mantiene un tipo separado de la interfaz
+nativa 015. La API pública conserva firmas, registros, valores y opcionalidad.
+
+## Atribución de evidencia
+
+| Binario/checkpoint | Evidencia y límite |
+|---|---|
+| Optimizado `839ff075…`, P5-R9/R10/R11/R12 | [SRCDS directo](optimized-srcds-acceptance.md): dos reinits, 25 HTTP/18 bytes streaming, petición retenida, un humano con auth/identidad/stats y quit limpio; build R9 idéntico. T26/T35 con ZIP real aceptados en su seguimiento |
+| Canónico `75a9b5d9…` | Build local pasa; no se ejecutó en SRCDS ni se empaqueta en R9 |
+| `82347b99…`, P5-R6–R8 | [T08 con SourceTVSupport](t08-coexist-srcds-acceptance.md), [auth/stats R6](p5-r6-auth-srcds-acceptance.md) y [rollback R7](p5-r7-rollback-srcds-acceptance.md); históricos |
+| `bc76b00d…`, R3–R5 | HTTP/auth/stats aceptados en sus informes; SIGSEGV de salida observado en R5 y después corregido en candidatos nuevos |
+| `cd42f40c…` | Cierre corregido, reinicialización con SourceTVSupport fallida; se conserva [incidencia](t08-reinit-srcds-acceptance.md), resuelta posteriormente |
+| Baseline `9ca37aad…` | Rollback R7 con arranque/Steam/HTTP aceptados; conserva SIGSEGV al salir; bytes originales sin modificar |
+
+P5-R12 repite 14 suites x86 y sanitizadores sin supresiones, reproduce el optimizado
+aceptado y regenera paquetes/captura por lectura. Se conserva la
+[matriz anterior](p5/history/p5-r11-with-T16-followup-validation-results.json)
+y todos los ZIP previos. El [seguimiento R9](p5-r9-rollback-srcds-acceptance.md)
+acepta T26/T35 con instalación real desde ZIP, reversión en el mismo árbol y
+arranque/Steam/HTTP del baseline. Su SIGSEGV final queda separado. La
+[matriz activa](p5/validation-results.json) mantiene los pendientes globales de
+interfaces/GC/consumidores, identidad y lifecycle.
+
+R12 conserva los bytes de runtime instalados desde el ZIP R9 y el SHA del rollback
+realmente aplicado. T26/T35 mantienen su aceptación en ese alcance; el nuevo ZIP
+candidato R12 actualiza documentación/metadatos y se verifica localmente. No hay
+otro ensayo SRCDS ni aceptación global implícita.
+
+El [seguimiento T20](t20-owner-srcds-acceptance.md) acepta dos descargas del
+propietario con HTTP pendiente en el mismo ELF. Solo cambia el harness de pruebas;
+handles propios reclamados y cero callbacks antiguos en las ventanas observadas.
+La medición sostenida sigue pendiente; la descarga de la extensión se acepta
+por separado en el seguimiento T16 y bajo sus límites.
+
+R11 incorpora la fuente del harness T20 y repite su compilación, sin cambiar el
+ELF aceptado. T20/T26/T35 mantienen su aceptación acotada por hash y protocolo.
+T11/T15/T23/T25/T29/T32/T33 siguen abiertos; los nuevos ZIP R11 solo tienen
+verificación local de este refresco y no implican otro ensayo SRCDS.
+
+[T16](t16-extension-srcds-acceptance.md) acepta carga tardía y dos descargas/recargas
+seriales por consola sin consumidores/peticiones activas. El DSO se desmapea,
+hooks vuelven a bytes iniciales, SourceTVSupport y pipes Steam se conservan;
+HTTP/nuevo juego/quit pasan en el mismo PID. Pila mínima, sin fuerza ni unload
+desde callbacks. Solo se añade un harness; el ELF y los ZIP R11 quedan intactos.
+
+R12 incorpora el observador independiente probado en T16 y recompila siete
+harnesses sin warnings; el ELF y el archivo de reversión conservan sus hashes
+aceptados. T16/T20/T26/T35 mantienen sus alcances, con siete casos globales
+abiertos. Los nuevos ZIP R12 solo se verifican localmente, sin otro ensayo SRCDS.
+
+El [seguimiento T15/T29 de R12](identity-negatives-srcds-acceptance.md) ejecuta el ELF
+R12 en SRCDS x86: T15 pasa; T29 amplía negativos y permanece parcial. Seis casos
+globales abiertos. Los ZIP R12 conservan sus bytes y el harness nuevo se entrega
+en un archivo separado; no implica una nueva validación integrada completa.

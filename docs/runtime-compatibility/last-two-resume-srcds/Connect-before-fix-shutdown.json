@@ -1,0 +1,11 @@
+{
+  "timestamp_utc": "2026-11-16T10:20:14.933263+00:00",
+  "quit_completed": true,
+  "lab_stopped": true,
+  "stopped_pid": 8563,
+  "trace": [],
+  "error_log_sizes": {
+    "errors_20261116.log": 929
+  },
+  "crash_markers": []
+}

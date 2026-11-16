@@ -18,12 +18,6 @@
 
 #include "swgchooks.h"
 
-enum
-{
-	eUnhooked = 0,
-	eHooking,
-	eHooked
-};
 
 namespace
 {
@@ -45,31 +39,21 @@ SH_DECL_HOOK4(ISteamGameCoordinator, RetrieveMessage, SH_NOATTRIB, 0, EGCResults
 
 static ISteamGameCoordinator *GetSteamGCPointer()
 {
-	return g_SteamWorks.pSWGameServer->GetGameCoordinator();
+	return g_SteamWorks.pSWGameServer != nullptr ? g_SteamWorks.pSWGameServer->GetGameCoordinator() : nullptr;
 }
 
 SteamWorksGCHooks::SteamWorksGCHooks()
 {
-	uHooked = eHooking;
 	pGCSendMessageForward = forwards->CreateForward("SteamWorks_GCSendMessage", ET_Event, 3, nullptr, Param_Cell, Param_String, Param_Cell);
 	pGCMessageAvailableForward = forwards->CreateForward("SteamWorks_GCMsgAvailable", ET_Ignore, 1, nullptr, Param_Cell);
 	pGCRetrieveMessageForward = forwards->CreateForward("SteamWorks_GCRetrieveMessage", ET_Event, 4, nullptr, Param_Cell, Param_String, Param_Cell, Param_Cell);
 	
-	ISteamGameCoordinator *pGC = GetSteamGCPointer();
-	if (pGC)
-	{
-		AddHooks(pGC);
-	}
-	else
-	{
-		smutils->AddGameFrameHook(OurGCGameFrameHook);
-	}
+	Start();
 }
 
 SteamWorksGCHooks::~SteamWorksGCHooks()
 {
-	RemoveHooks(GetSteamGCPointer(), true);
-	smutils->RemoveGameFrameHook(OurGCGameFrameHook);
+	Stop();
 	ReleaseForward(pGCSendMessageForward);
 	ReleaseForward(pGCMessageAvailableForward);
 	ReleaseForward(pGCRetrieveMessageForward);
@@ -77,7 +61,7 @@ SteamWorksGCHooks::~SteamWorksGCHooks()
 
 EGCResults SteamWorksGCHooks::SendMessage(uint32 unMsgType, const void *pubData, uint32 cubData)
 {
-	if (pGCSendMessageForward->GetFunctionCount() == 0)
+	if (!m_enabled || m_target == nullptr || pGCSendMessageForward == nullptr || pGCSendMessageForward->GetFunctionCount() == 0)
 	{
 		RETURN_META_VALUE(MRES_IGNORED, k_EGCResultOK);
 	}
@@ -103,11 +87,12 @@ EGCResults SteamWorksGCHooks::SendMessage(uint32 unMsgType, const void *pubData,
 
 bool SteamWorksGCHooks::IsMessageAvailable(uint32_t *pcubMsgSize)
 {
-	if (pGCMessageAvailableForward->GetFunctionCount() == 0)
+	if (!m_enabled || m_target == nullptr || pGCMessageAvailableForward == nullptr || pGCMessageAvailableForward->GetFunctionCount() == 0)
 	{
 		RETURN_META_VALUE(MRES_IGNORED, false);
 	}
 
+	const uint64 generation = m_generation;
 	bool res = META_RESULT_ORIG_RET(bool);
 	if (!res)
 	{
@@ -118,10 +103,11 @@ bool SteamWorksGCHooks::IsMessageAvailable(uint32_t *pcubMsgSize)
 	if (!pcubMsgSize)
 	{
 		shill = 0;
-		SH_CALL(GetSteamGCPointer(), &ISteamGameCoordinator::IsMessageAvailable)(&shill);
+		SH_CALL(m_target, &ISteamGameCoordinator::IsMessageAvailable)(&shill);
 		pcubMsgSize = &shill;
 	}
 
+	if (!m_enabled || m_generation != generation) { RETURN_META_VALUE(MRES_IGNORED, res); }
 	pGCMessageAvailableForward->PushCell(*pcubMsgSize);
 	pGCMessageAvailableForward->Execute(nullptr);
 	RETURN_META_VALUE(MRES_IGNORED, true);
@@ -129,14 +115,16 @@ bool SteamWorksGCHooks::IsMessageAvailable(uint32_t *pcubMsgSize)
 
 EGCResults SteamWorksGCHooks::RetrieveMessage(uint32 *punMsgType, void *pubDest, uint32 cubDest, uint32 *pcubMsgSize)
 {
-	if (pGCRetrieveMessageForward->GetFunctionCount() == 0)
+	if (!m_enabled || m_target == nullptr || pGCRetrieveMessageForward == nullptr || pGCRetrieveMessageForward->GetFunctionCount() == 0)
 	{
 		RETURN_META_VALUE(MRES_IGNORED, k_EGCResultOK);
 	}
 
 	/* Don't trust a bitch, except for 2GD. https://www.youtube.com/watch?v=MgePh_YJgrc */
 	cell_t Result = k_EGCResultOK;
-	EGCResults res = SH_CALL(GetSteamGCPointer(), &ISteamGameCoordinator::RetrieveMessage)(punMsgType, pubDest, cubDest, pcubMsgSize);
+	const uint64 generation = m_generation;
+	EGCResults res = SH_CALL(m_target, &ISteamGameCoordinator::RetrieveMessage)(punMsgType, pubDest, cubDest, pcubMsgSize);
+	if (!m_enabled || m_generation != generation) { RETURN_META_VALUE(MRES_SUPERCEDE, res); }
 	if (punMsgType)
 		pGCRetrieveMessageForward->PushCell(*punMsgType);
 	else
@@ -169,50 +157,60 @@ EGCResults SteamWorksGCHooks::RetrieveMessage(uint32 *punMsgType, void *pubDest,
 	RETURN_META_VALUE(MRES_SUPERCEDE, res);
 }
 
-void SteamWorksGCHooks::AddHooks(ISteamGameCoordinator *pGC)
+void SteamWorksGCHooks::SetFrameHook(bool enabled)
 {
-	if (uHooked == eHooked || pGC == nullptr)
-	{
-		return;
-	}
-
-	uHooked = eHooked;
-	SH_ADD_HOOK(ISteamGameCoordinator, SendMessage, pGC, SH_MEMBER(this, &SteamWorksGCHooks::SendMessage), false);
-	SH_ADD_HOOK(ISteamGameCoordinator, IsMessageAvailable, pGC, SH_MEMBER(this, &SteamWorksGCHooks::IsMessageAvailable), true);
-	SH_ADD_HOOK(ISteamGameCoordinator, RetrieveMessage, pGC, SH_MEMBER(this, &SteamWorksGCHooks::RetrieveMessage), false);
+ if (m_frameHook == enabled) { return; }
+ m_frameHook = enabled;
+ if (enabled) { smutils->AddGameFrameHook(OurGCGameFrameHook); }
+ else { smutils->RemoveGameFrameHook(OurGCGameFrameHook); }
 }
 
-void SteamWorksGCHooks::RemoveHooks(ISteamGameCoordinator *pGC, bool destroyed)
+void SteamWorksGCHooks::Detach()
 {
-	if (uHooked != eHooked || pGC == nullptr)
-	{
-		return;
-	}
-
-	SH_REMOVE_HOOK(ISteamGameCoordinator, SendMessage, pGC, SH_MEMBER(this, &SteamWorksGCHooks::SendMessage), false);
-	SH_REMOVE_HOOK(ISteamGameCoordinator, IsMessageAvailable, pGC, SH_MEMBER(this, &SteamWorksGCHooks::IsMessageAvailable), true);
-	SH_REMOVE_HOOK(ISteamGameCoordinator, RetrieveMessage, pGC, SH_MEMBER(this, &SteamWorksGCHooks::RetrieveMessage), false);
-
-	if (destroyed)
-	{
-		uHooked = eUnhooked;
-		return;
-	}
-
-	uHooked = eHooking;
-	smutils->AddGameFrameHook(OurGCGameFrameHook);
+ ++m_generation;
+ for (int& id : m_hookIds) {
+  if (id != 0) { SH_REMOVE_HOOK_ID(id); id = 0; }
+ }
+ m_target = nullptr;
 }
 
-void OurGCGameFrameHook(bool simulating) /* What we do for SDK independence. */
+void SteamWorksGCHooks::Stop()
 {
-	(void)simulating;
+ m_enabled = false;
+ SetFrameHook(false);
+ Detach();
+}
 
-	ISteamGameCoordinator *pGC = GetSteamGCPointer();
-	if (pGC == nullptr)
-	{
-		return;
-	}
+void SteamWorksGCHooks::Start()
+{
+ m_enabled = true;
+ TryAttach();
+}
 
-	g_SteamWorks.pGCHooks->AddHooks(pGC);
-	smutils->RemoveGameFrameHook(OurGCGameFrameHook);
+void SteamWorksGCHooks::TryAttach()
+{
+ if (!m_enabled) { return; }
+ auto* target = GetSteamGCPointer();
+ if (target != nullptr) { AddHooks(target); }
+ else { SetFrameHook(true); }
+}
+
+void SteamWorksGCHooks::AddHooks(ISteamGameCoordinator* target)
+{
+ if (!m_enabled || target == nullptr || m_target == target) { return; }
+ Detach();
+ m_target = target;
+ m_hookIds[0] = SH_ADD_HOOK(ISteamGameCoordinator, SendMessage, target, SH_MEMBER(this, &SteamWorksGCHooks::SendMessage), false);
+ if (m_hookIds[0] == 0) { Stop(); g_pSM->LogError(myself, "Could not install ISteamGameCoordinator SendMessage hook; group disabled until restart"); return; }
+ m_hookIds[1] = SH_ADD_HOOK(ISteamGameCoordinator, IsMessageAvailable, target, SH_MEMBER(this, &SteamWorksGCHooks::IsMessageAvailable), true);
+ if (m_hookIds[1] == 0) { Stop(); g_pSM->LogError(myself, "Could not install ISteamGameCoordinator IsMessageAvailable hook; group disabled until restart"); return; }
+ m_hookIds[2] = SH_ADD_HOOK(ISteamGameCoordinator, RetrieveMessage, target, SH_MEMBER(this, &SteamWorksGCHooks::RetrieveMessage), false);
+ if (m_hookIds[2] == 0) { Stop(); g_pSM->LogError(myself, "Could not install ISteamGameCoordinator RetrieveMessage hook; group disabled until restart"); return; }
+ SetFrameHook(false);
+}
+
+void OurGCGameFrameHook(bool simulating)
+{
+ (void)simulating;
+ if (g_SteamWorks.pGCHooks != nullptr) { g_SteamWorks.pGCHooks->TryAttach(); }
 }

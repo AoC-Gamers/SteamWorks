@@ -1,0 +1,9 @@
+SourcePawn Compiler 1.12.0.7259
+Copyright (c) 1997-2006 ITB CompuPhase
+Copyright (c) 2004-2024 AlliedModders LLC
+
+Code size:         3632 bytes
+Data size:         2280 bytes
+Stack/heap size:      16460 bytes
+Total requirements:   22372 bytes
+PASS: 227 authentication forward checks (production hook, actual SourceMod CForward and standalone SourcePawn VM; synthetic bytes only)

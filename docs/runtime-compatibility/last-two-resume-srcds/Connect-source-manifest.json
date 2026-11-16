@@ -1,0 +1,21 @@
+{
+  "repository": "/home/lechuga/GitHub/Connect/Connect-Sourcepawn",
+  "branch": "develop",
+  "baseline_commit": "c695bf0ceca8192a2cee704242a969ab973be0ba",
+  "source_sha256": {
+    "addons/sourcemod/scripting/connect.sp": "02aa7978ccb96b83d259457d957c269f93ceb904abfde9d8bb39fb60bf078b8e",
+    "addons/sourcemod/scripting/connect/http.inc": "d800e5de82f7813392c48e76b500c8fb2c96c665aac685d9bea09cae23a48606",
+    "addons/sourcemod/scripting/connect/http_body.inc": "749157f3d8e24eaf3540b9eb55123f01b9302c1ec11b9fc1145a353e958aa1a0",
+    "addons/sourcemod/scripting/connect/http_retry.inc": "fc2f491b280b17f85a8d4841d60b399d6897e40638dbc7eaa578e8fc3b57d00b",
+    "addons/sourcemod/scripting/connect/ingest.inc": "2212632e0a03c8aace2afe272925695c7d43f22023e102880c233e13f0c4cb91",
+    "addons/sourcemod/scripting/connect/runtime.inc": "3cb77310c808d9f748937b8d1ec84d3d607b40a8e076daac2a990a6cefdf3c27",
+    "addons/sourcemod/scripting/include/steamworks.inc": "cd75b34bd3fdb30fdf33ddb946ec28fe51b08fb4e18f8b3f33b3c79b2a13a94c",
+    "tests/sourcepawn/http_body_contract_test.sp": "43c7fd30ace29d6a7dc11c6ebfce18dbca0c816bb7d6297958ed7e082771a4fc",
+    "tests/sourcepawn/http_retry_contract_test.sp": "ac2c82712aadbc1b95d41dda91c1c5b754b77ba66bb23ced9ded66859f0d45cb",
+    "tests/sourcepawn/steam_context_contract_test.sp": "69b893a624f4942634901428d9bd414e859e90ddda14124bfad7337a9c14f68c"
+  },
+  "public_connect_include_sha256": "16d829f98418c7d21e7d4256182bf11a5cc394813d766d2c6178abfd5971e023",
+  "public_connect_include_unchanged": true,
+  "accepted_SMX_sha256": "0b6bfaa581f2876c5034ea5f31a01b2882107d4b6acd9fbec2662183d60b088a",
+  "third_party_consumer_not_extension_payload": true
+}

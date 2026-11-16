@@ -1,0 +1,63 @@
+{
+  "timestamp_utc": "2026-11-15T22:32:35.323846+00:00",
+  "phase": "family-recompiled",
+  "commands": [
+    "sm plugins unload disabled/family_precompiled.smx",
+    "sm_sw_consumer unloaded disabled/family_precompiled.smx",
+    "sm_sw_consumer absent",
+    "sm plugins load disabled/family_recompiled.smx",
+    "sm_sw_consumer loaded disabled/family_recompiled.smx",
+    "sm_sw_consumer family"
+  ],
+  "trace": [
+    "[SW-CONS] check=real_consumer_unloaded pass=1",
+    "[SW-CONS] summary checks=25 failures=0 config_blocks=3 profile_events=1",
+    "[SW-CONS] check=family_removed_observed pass=1",
+    "[SW-CONS] summary checks=26 failures=0 config_blocks=3 profile_events=1",
+    "[SW-CONS] protected_config_exec_blocked=1",
+    "[SW-CONS] check=real_consumer_running pass=1",
+    "[SW-CONS] summary checks=27 failures=0 config_blocks=4 profile_events=1",
+    "[SW-CONS] check=family_library_present pass=1",
+    "[SW-CONS] check=family_key_control_available pass=1",
+    "[SW-CONS] check=family_invalid_client_state pass=1",
+    "[SW-CONS] check=family_zero_account_refused pass=1",
+    "[SW-CONS] check=family_fallback_queued pass=1",
+    "[SW-CONS] summary checks=32 failures=0 config_blocks=4 profile_events=0",
+    "[SW-CONS] check=family_local_profile_callback_fields pass=1",
+    "[SW-CONS] check=family_profile_exactly_once pass=1",
+    "[SW-CONS] profile_complete events=1 failures=0"
+  ],
+  "processes": [
+    {
+      "pid": 140518,
+      "start_ticks": 3680667
+    }
+  ],
+  "protected_file_fingerprints": {
+    "/data/config-lgsm/l4d2server/l4d2server.cfg": {
+      "sha256": "65cd69dc84f848a40b2381d8913d5c3390504e62a7946fcfdcec05a28fdadd4d",
+      "mtime_ns": 1794781713839877717,
+      "bytes": 182
+    },
+    "/data/serverfiles/left4dead2/addons/sourcemod/extensions/steamworks.ext.so": {
+      "sha256": "9ca37aadcd83448d49126d6a72babcb8ec97ec5a06c171b4821ae0ee3cf05d70",
+      "mtime_ns": 1793313142386301868,
+      "bytes": 495540
+    },
+    "/data/serverfiles/left4dead2/cfg/sourcemod/l4d2_familyshare_core.cfg": {
+      "sha256": "d45bd707cad427b00869413f6889d4af0882a1f843837745509b198e3e1ad57c",
+      "mtime_ns": 1793313446038473901,
+      "bytes": 623
+    },
+    "/data/serverfiles/left4dead2/cfg/sourcemod/AoC.cfg": {
+      "sha256": "f388af97e294b2af0adeda330934bcd0a29c346c76e9464b4228ba008cf04fbf",
+      "mtime_ns": 1793564764531501333,
+      "bytes": 2788
+    }
+  },
+  "expected_legacy_arity_errors": 0,
+  "error_log_metadata": {},
+  "unexpected_errors": [],
+  "crash_markers": [],
+  "raw_console_or_private_configs_exported": false
+}

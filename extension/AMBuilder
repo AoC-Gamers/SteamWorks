@@ -5,6 +5,9 @@ project = SteamWorks.HL2Project(builder, 'steamworks.ext')
 project.sources += [
   'extension.cpp',
   'core/swgameserver.cpp',
+  'core/swclientlifecycle.cpp',
+  'core/swdebug.cpp',
+  'core/swidentity.cpp',
   'core/swgamedata.cpp',
   'core/swforwards.cpp',
   'natives/gsnatives.cpp',
@@ -31,13 +34,26 @@ for sdk_name in SteamWorks.sdks:
     os.path.join(sdk.path, 'public', 'steam'),
   ]
 
+  if binary.compiler.target.platform in ['linux', 'mac']:
+    # Rebuild the ConVar dependency closure as PIC instead of linking legacy
+    # archive objects with absolute text relocations. SDK headers are external.
+    binary.sources += [os.path.join(sdk.path, 'tier1', source) for source in
+                       ['convar.cpp', 'strtools.cpp', 'utlbuffer.cpp', 'characterset.cpp', 'utlstring.cpp']]
+    binary.compiler.defines += ['_alloca=alloca']
+    binary.compiler.cxxflags += ['-isystem', os.path.join(sdk.path, 'public')]
+
   if binary.compiler.target.platform == 'linux':
     binary.compiler.postlink += (
       os.path.join(SteamWorks.steamworks_root, 'redistributable_bin', 'linux32', 'libsteam_api.so'),
+      # SourceMod loads extensions locally: tier1's diagnostic imports must
+      # have an explicit provider, not rely on the engine's loader scope.
+      '-L' + os.path.join(sdk.path, 'lib', 'linux'),
+      '-ltier0_srv',
     )
     binary.compiler.linkflags += ['-Wl,-rpath,$ORIGIN/../../../../bin']
 
   if binary.compiler.target.platform == 'windows':
+    binary.compiler.postlink += (os.path.join(sdk.path, 'lib', 'public', 'tier1.lib'),)
     binary.compiler.postlink += (
       os.path.join(SteamWorks.steamworks_root, 'redistributable_bin', 'steam_api.lib'),
     )

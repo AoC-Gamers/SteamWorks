@@ -1,0 +1,196 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "responsible": "Codex",
+  "branch": "develop",
+  "baseline_commit": "46e3ee05fc29ad090a1d6f7b1cb5e3dca9855350",
+  "status": "uncommitted_working_tree",
+  "before_source_sha256": {
+    ".build/p1-e/gsnatives-before.cpp": "7284bc138ba4c79a5dc1b3362f6d56228a360c867a1d48987fd0bb83969cc77c",
+    ".build/p1-e/steamworks-before.inc": "90f909f1fa6b4b7ed1ef94fe6f88fc2a5f996f996793360a07861bf99318fb31"
+  },
+  "source_sha256": {
+    "extension/natives/gsnatives.cpp": "a80075a7c4b020879a15226a9c24ef1f5ff3bf0128b2615c88e613bccefd7aac",
+    "scripting/include/steamworks.inc": "b4e021b2df9fd81101754f0795da2d5c2eee04c125a8e4997a0b19595fc3affb",
+    "tests/public_ip_test_host.h": "2ffad612f4e30f0e2a7f0d03e2c1d4308af1e1b1917739646286acb3c9a19eef",
+    "tests/steamid_string_test.cpp": "875f5ca4fea7fec4754c4c3d7691520f3762710a19da66bc736f5c1b4cdd1f61",
+    "scripts/test-steamid-string.sh": "60a34343807a12d7c0c1dedb9ff030355b329aba8961af82a348d5b3fc41c58b",
+    ".github/workflows/main.yml": "8d4dfb5344165e787c456e87c01824699494e20a4569057fae54998e1366e5ed"
+  },
+  "contract_decision": {
+    "public_signature_changed": false,
+    "positive_capacity": "Preserve historical bytes stored including terminator, including truncation. Not strlen or required full length.",
+    "capacity_one": "Writes only NUL, returns 1.",
+    "capacity_zero": "Return 0, no output resolution or writes; fixes previous fictitious count 1.",
+    "negative_capacity": "Native error before unsigned conversion or formatting.",
+    "invalid_address": "Propagate LocalToString error before identity construction/formatting.",
+    "precedence": "Connected client, length, output address, legacy identity, formatting.",
+    "memory_limit": "Caller must supply real positive capacity; base-address validation is not a general VM buffer extent validator."
+  },
+  "formatter": {
+    "implementation": "ke::SafeVsprintf in AMTL, used through a simulated SourceMod Format adapter",
+    "amtl_commit": "2d3b1a3378a3728637f26660c9ffc2df3189cf62",
+    "checkout_clean": true,
+    "am_string_sha256": "8623d0decb43137e66a90b9c812198b6dd6040ca04b1473f95130f89226aa056",
+    "same_as_P0_container": true,
+    "source_wrapper_verified": "SourceModBase::Format -> FormatArgs -> ke::SafeVsprintf in pinned P0 SourceMod checkout",
+    "SDK": "../p0/sdk-toolchain.json"
+  },
+  "environments": {
+    "host": "GCC 13.3.0 / Linux x86_64 / UBSan",
+    "x86": "GCC 12.2.0 / Debian 12 / -m32 / UBSan",
+    "container_image_id": "sha256:8b88d2213cf0eaa488c64f73bd11d7827dfc9b10f9aefc0de714463c6fa2db3b",
+    "isolation": "No network; repository read-only except .build"
+  },
+  "checks": [
+    {
+      "id": "T15-U",
+      "status": "passed",
+      "commands": [
+        "AMTL_DIR=<SourceMod>/public/amtl bash scripts/test-steamid-string.sh",
+        "AMTL_DIR=/opt/sm-deps/sourcemod-1.12/public/amtl TEST_BUILD_DIR=/workspace/.build/tests-steamid-string-x86 TEST_CXXFLAGS=-m32 bash scripts/test-steamid-string.sh"
+      ],
+      "scenarios_per_architecture": 19,
+      "architectures": [
+        "x86_64",
+        "x86"
+      ],
+      "exit_codes": [
+        0,
+        0
+      ],
+      "sanitizer": "undefined, no recovery",
+      "scope": "Real SDK ID and AMTL formatting, production native. Literal count/text expectations, terminator, truncation, minimum/zero/negative lengths, memory translation/client errors. No real SourceMod VM."
+    },
+    {
+      "id": "T28-U-SteamID",
+      "status": "passed",
+      "scope": "Error code/cause/precedence, no output write, formatter or identity construction on invalid/zero-length inputs. No general VM range proof."
+    },
+    {
+      "id": "positive-compatibility-controls",
+      "status": "passed",
+      "scope": "Nine positive-capacity golden cases pass unchanged on preserved pre-P1-E native source with the same fixture/real AMTL formatter."
+    },
+    {
+      "id": "zero-capacity-regression",
+      "status": "passed",
+      "expected_failure": true,
+      "scope": "Original code returns 1 without storing a terminator; selected old-source probe exits 1, corrected source returns 0."
+    },
+    {
+      "id": "T25-B-local-consumers",
+      "status": "passed",
+      "scope": "Refreshed consumer scan plus source review; only active caller found is the project harness. Precompiled/remote callers not verified."
+    },
+    {
+      "id": "harness-build",
+      "status": "passed",
+      "compiler": "SourcePawn 1.12.0.7259",
+      "command": "<FamilyShare>/deps/sourcemod-linux/addons/sourcemod/scripting/spcomp scripting/steamwork_test.sp -iscripting/include -i<FamilyShare>/deps/sourcemod-linux/addons/sourcemod/scripting/include -o.build/p1-e/steamwork_test.smx",
+      "exit_code": 0,
+      "artifact_sha256": "8cbf36bfbcae38d112c1a7c505017035a8bc7b021dc08803e1f68b992dab89a5",
+      "result": "No warnings; public include comments updated, declarations unchanged."
+    },
+    {
+      "id": "T24-B",
+      "status": "passed",
+      "scope": "Declarations/enums/callbacks/binding/optional natives/registrations equivalent to P0 ignoring line offsets; all unrelated GameServer native bodies match pre-P1-E, including IPv4 correction."
+    },
+    {
+      "id": "prior-regressions",
+      "status": "passed",
+      "scenarios_per_architecture": 152,
+      "scope": "Stats 32+34, detours 26 and IPv4 30 with each char signedness pass in host and x86 container; shared GameServer host fixture extended for formatting/error observability."
+    },
+    {
+      "id": "real-sdk-object",
+      "status": "passed",
+      "exit_code": 0,
+      "command_record": ".build/p1-e/real-sdk-command.json",
+      "artifact": ".build/p1-e/gsnatives-real-sdk.o",
+      "artifact_sha256": "377b77a0a8bcbca7c28a0a219ec1ec2affb64a037c84de70c39c5f9e9f403b74",
+      "format": "ELF 32-bit LSB relocatable, Intel 80386",
+      "qualification": "Translation unit only. Diagnostic command omits only C-only -Wno-pointer-to-int-cast and keeps -Werror. No AMBuild changes."
+    },
+    {
+      "id": "ci-workflow",
+      "status": "passed",
+      "command": "actionlint -shellcheck= .github/workflows/main.yml (rhysd/actionlint:1.7.7)",
+      "result": "Local lint passed. New x86 UBSan string suite uses AMTL from restored SourceMod dependencies; no remote CI triggered."
+    },
+    {
+      "id": "full-extension-build",
+      "status": "blocked",
+      "reason": "Known P0 GCC warning-option issue remains; no linked extension from this object check."
+    },
+    {
+      "id": "T15-I/T25-I/T28-I",
+      "status": "blocked",
+      "reason": "No selected identified SourceMod/L4D2 runtime or precompiled plugin set to exercise actual VM memory and runtime compatibility."
+    }
+  ],
+  "local_logs": [
+    {
+      "path": ".build/p1-e/unit-host.log",
+      "sha256": "377cec86c51f2e91c1a8d5e9c89a49757db8404a61f050b0ec39b9f5ea16c3fe"
+    },
+    {
+      "path": ".build/p1-e/unit-x86.log",
+      "sha256": "4798b2c157c628ab667dc721ef73ae44596278995603a43a3a1de78ba26be8c2"
+    },
+    {
+      "path": ".build/p1-e/steamid-x86-final.log",
+      "sha256": "377cec86c51f2e91c1a8d5e9c89a49757db8404a61f050b0ec39b9f5ea16c3fe"
+    },
+    {
+      "path": ".build/p1-e/baseline-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".build/p1-e/baseline-regression.log",
+      "sha256": "ae2216b6171d00834697238c49da6a7af05ea2e0ee1c89c5b2ae29c35cb688b8"
+    },
+    {
+      "path": ".build/p1-e/formatter-provenance.log",
+      "sha256": "9fc96260f498b710dfd009480ab2142834b9ebc38956b2503297998bbb6bf0b7"
+    },
+    {
+      "path": ".build/p1-e/real-sdk-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".build/p1-e/real-sdk-command.json",
+      "sha256": "cd616ee7d1147c950f924ebfe9f717ddb078b3439f1682bf9c05a45729036fea"
+    },
+    {
+      "path": ".build/p1-e/inventory.log",
+      "sha256": "375412df9d6af02e60b307fbdbbeeee7bbb97177bf0a81a1807149a7fcf1d586"
+    },
+    {
+      "path": ".build/p1-e/harness-compile.log",
+      "sha256": "cddd44938ea441fabdf81d9355ee18867319afb381f95672d13870b6fef6ce4e"
+    },
+    {
+      "path": ".build/p1-e/ip-regression-host.log",
+      "sha256": "317c959177acf4adb49516d2e1b87bc2796ddc304b1151d9e4b4748ef1435c02"
+    },
+    {
+      "path": ".build/p1-e/stats-regression-host.log",
+      "sha256": "90e113c7040aea39157490d5e8f0ca1271c24596727da4d59374e85a93002045"
+    },
+    {
+      "path": ".build/p1-e/detours-regression-host.log",
+      "sha256": "b88cd6378a1f046325e4ad94bde54312e17d81a0a89529a0fb4c066704d59309"
+    },
+    {
+      "path": ".build/p1-e/actionlint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "acceptance": {
+    "unit_regression": "passed",
+    "operational_runtime": "not_evaluated",
+    "scenario_executions_per_architecture": 171
+  }
+}

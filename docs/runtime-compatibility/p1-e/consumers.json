@@ -1,0 +1,163 @@
+{
+  "scan_root_label": "GitHub",
+  "source_files_scanned": 2670,
+  "excluded_directories": [
+    ".git",
+    "node_modules",
+    "deps",
+    ".deps",
+    ".build",
+    "vendor",
+    "vendors",
+    "sdk",
+    "sdk_*",
+    "steamworks-sdk",
+    ".venv",
+    "build",
+    "dist",
+    "tmp",
+    ".tmp",
+    "third_party",
+    "thirdparty"
+  ],
+  "limits": "Lexical .sp/.inc references only; excludes ignored files and does not establish deployment or reachability.",
+  "repositories": {
+    "AoC-L4D2-Competitive": {
+      "commit": "e9df209bee8200eef4a2ff07188b2e3575187066",
+      "branch": "develop",
+      "tracked_changes_present": false
+    },
+    "BanSystem/BanSystem-Sourcepawn": {
+      "commit": "756653be672fa6440c713461ecaca8fb5a5ee8b4",
+      "branch": "develop",
+      "tracked_changes_present": true
+    },
+    "Connect/Connect-Sourcepawn": {
+      "commit": "c695bf0ceca8192a2cee704242a969ab973be0ba",
+      "branch": "develop",
+      "tracked_changes_present": false
+    },
+    "l4d2_sourcemod/L4D1_2-Plugins": {
+      "commit": "6b29683eb5831c19d4eb552f6c1dbc3b6ef566b1",
+      "branch": "master",
+      "tracked_changes_present": false
+    },
+    "l4d2_sourcemod/L4D2-Family-Share": {
+      "commit": "7849de18520250caf36cb39b4a4c4089643eaf72",
+      "branch": "develop",
+      "tracked_changes_present": false
+    },
+    "l4d2_sourcemod/SteamWorks": {
+      "commit": "46e3ee05fc29ad090a1d6f7b1cb5e3dca9855350",
+      "branch": "develop",
+      "tracked_changes_present": true
+    }
+  },
+  "references": [
+    {
+      "file": "AoC-L4D2-Competitive/left4dead2/addons/sourcemod/scripting/include/steamworks.inc",
+      "sha256": "e51bcd397139edc3d144f130c45f0f8edbf55d12278736e0134e4c650ec64f17",
+      "repository": "AoC-L4D2-Competitive",
+      "hits": [
+        {
+          "symbol": "SteamWorks_GetClientSteamID",
+          "line": 335,
+          "role": "declaration",
+          "argument_count": 3
+        }
+      ]
+    },
+    {
+      "file": "BanSystem/BanSystem-Sourcepawn/addons/sourcemod/scripting/include/steamworks.inc",
+      "sha256": "04da29392f3e7cb7bb323e9cf87bb0e28f2a39e1622301022432cefbbecbf7c2",
+      "repository": "BanSystem/BanSystem-Sourcepawn",
+      "hits": [
+        {
+          "symbol": "SteamWorks_GetClientSteamID",
+          "line": 335,
+          "role": "declaration",
+          "argument_count": 3
+        }
+      ]
+    },
+    {
+      "file": "Connect/Connect-Sourcepawn/addons/sourcemod/scripting/include/steamworks.inc",
+      "sha256": "e51bcd397139edc3d144f130c45f0f8edbf55d12278736e0134e4c650ec64f17",
+      "repository": "Connect/Connect-Sourcepawn",
+      "hits": [
+        {
+          "symbol": "SteamWorks_GetClientSteamID",
+          "line": 335,
+          "role": "declaration",
+          "argument_count": 3
+        }
+      ]
+    },
+    {
+      "file": "l4d2_sourcemod/L4D1_2-Plugins/scripting_1.12/include/SteamWorks.inc",
+      "sha256": "a371bff6ab23c54af7d9dfe7bc91a0d820ff2ad269888bc23e9a7beb2afbae6f",
+      "repository": "l4d2_sourcemod/L4D1_2-Plugins",
+      "hits": [
+        {
+          "symbol": "SteamWorks_GetClientSteamID",
+          "line": 359,
+          "role": "declaration",
+          "argument_count": 3
+        }
+      ]
+    },
+    {
+      "file": "l4d2_sourcemod/L4D2-Family-Share/addons/sourcemod/scripting/include/steamworks.inc",
+      "sha256": "ae27e5f673f617155107fdce66cf9f963cf5215de682655d04ed6b2ff5d35655",
+      "repository": "l4d2_sourcemod/L4D2-Family-Share",
+      "hits": [
+        {
+          "symbol": "SteamWorks_GetClientSteamID",
+          "line": 335,
+          "role": "declaration",
+          "argument_count": 3
+        }
+      ]
+    },
+    {
+      "file": "l4d2_sourcemod/SteamWorks/scripting/include/steamworks.inc",
+      "sha256": "b4e021b2df9fd81101754f0795da2d5c2eee04c125a8e4997a0b19595fc3affb",
+      "repository": "l4d2_sourcemod/SteamWorks",
+      "hits": [
+        {
+          "symbol": "SteamWorks_GetClientSteamID",
+          "line": 340,
+          "role": "declaration",
+          "argument_count": 3
+        }
+      ]
+    },
+    {
+      "file": "l4d2_sourcemod/SteamWorks/scripting/steamwork_test.sp",
+      "sha256": "edd15a4932e6eaf8ab16ffeb44a462e860026e4c09d1f432ed8a1319ec70fde1",
+      "repository": "l4d2_sourcemod/SteamWorks",
+      "hits": [
+        {
+          "symbol": "SteamWorks_GetClientSteamID",
+          "line": 272,
+          "role": "call_or_reference",
+          "argument_count": 3
+        }
+      ]
+    }
+  ],
+  "active_callers": [
+    {
+      "file": "l4d2_sourcemod/SteamWorks/scripting/steamwork_test.sp",
+      "hits": [
+        {
+          "symbol": "SteamWorks_GetClientSteamID",
+          "line": 272,
+          "role": "call_or_reference",
+          "argument_count": 3
+        }
+      ]
+    }
+  ],
+  "caller_review": "64-byte buffer, sizeof capacity, logs return/string and checks return > 0 plus nonempty text; no exact count dependency observed."
+}

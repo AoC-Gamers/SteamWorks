@@ -1,0 +1,93 @@
+
+.build/last-two-srcds/sourcemod.2.l4d2.so:     file format elf32-i386
+
+
+Disassembly of section .text:
+
+00056920 <CPlayer::GetSteamAccountID(bool)>:
+   56920:	55                   	push   %ebp
+   56921:	89 e5                	mov    %esp,%ebp
+   56923:	53                   	push   %ebx
+   56924:	57                   	push   %edi
+   56925:	56                   	push   %esi
+   56926:	83 ec 0c             	sub    $0xc,%esp
+   56929:	e8 00 00 00 00       	call   5692e <CPlayer::GetSteamAccountID(bool)+0xe>
+   5692e:	5b                   	pop    %ebx
+   5692f:	81 c3 d2 e6 08 00    	add    $0x8e6d2,%ebx
+   56935:	8b 7d 08             	mov    0x8(%ebp),%edi
+   56938:	8b 07                	mov    (%edi),%eax
+   5693a:	89 3c 24             	mov    %edi,(%esp)
+   5693d:	ff 50 18             	call   *0x18(%eax)
+   56940:	31 f6                	xor    %esi,%esi
+   56942:	84 c0                	test   %al,%al
+   56944:	0f 85 b3 00 00 00    	jne    569fd <CPlayer::GetSteamAccountID(bool)+0xdd>
+   5694a:	80 7d 0c 00          	cmpb   $0x0,0xc(%ebp)
+   5694e:	0f 84 8a 00 00 00    	je     569de <CPlayer::GetSteamAccountID(bool)+0xbe>
+   56954:	8b 07                	mov    (%edi),%eax
+   56956:	89 3c 24             	mov    %edi,(%esp)
+   56959:	ff 50 18             	call   *0x18(%eax)
+   5695c:	84 c0                	test   %al,%al
+   5695e:	75 39                	jne    56999 <CPlayer::GetSteamAccountID(bool)+0x79>
+   56960:	80 bb 6d 9a 00 00 00 	cmpb   $0x0,0x9a6d(%ebx)
+   56967:	74 30                	je     56999 <CPlayer::GetSteamAccountID(bool)+0x79>
+   56969:	8d 83 f0 55 00 00    	lea    0x55f0(%ebx),%eax
+   5696f:	89 04 24             	mov    %eax,(%esp)
+   56972:	e8 49 db fe ff       	call   444c0 <CHalfLife2::IsLANServer()>
+   56977:	84 c0                	test   %al,%al
+   56979:	75 1e                	jne    56999 <CPlayer::GetSteamAccountID(bool)+0x79>
+   5697b:	8d 83 40 30 00 00    	lea    0x3040(%ebx),%eax
+   56981:	8b 00                	mov    (%eax),%eax
+   56983:	8b 4f 70             	mov    0x70(%edi),%ecx
+   56986:	8b 10                	mov    (%eax),%edx
+   56988:	89 4c 24 04          	mov    %ecx,0x4(%esp)
+   5698c:	89 04 24             	mov    %eax,(%esp)
+   5698f:	ff 92 c0 01 00 00    	call   *0x1c0(%edx)
+   56995:	84 c0                	test   %al,%al
+   56997:	74 64                	je     569fd <CPlayer::GetSteamAccountID(bool)+0xdd>
+   56999:	8b 07                	mov    (%edi),%eax
+   5699b:	89 3c 24             	mov    %edi,(%esp)
+   5699e:	ff 50 18             	call   *0x18(%eax)
+   569a1:	84 c0                	test   %al,%al
+   569a3:	75 39                	jne    569de <CPlayer::GetSteamAccountID(bool)+0xbe>
+   569a5:	80 bb 6d 9a 00 00 00 	cmpb   $0x0,0x9a6d(%ebx)
+   569ac:	74 30                	je     569de <CPlayer::GetSteamAccountID(bool)+0xbe>
+   569ae:	8d 83 f0 55 00 00    	lea    0x55f0(%ebx),%eax
+   569b4:	89 04 24             	mov    %eax,(%esp)
+   569b7:	e8 04 db fe ff       	call   444c0 <CHalfLife2::IsLANServer()>
+   569bc:	84 c0                	test   %al,%al
+   569be:	75 1e                	jne    569de <CPlayer::GetSteamAccountID(bool)+0xbe>
+   569c0:	8d 83 40 30 00 00    	lea    0x3040(%ebx),%eax
+   569c6:	8b 00                	mov    (%eax),%eax
+   569c8:	8b 4f 70             	mov    0x70(%edi),%ecx
+   569cb:	8b 10                	mov    (%eax),%edx
+   569cd:	89 4c 24 04          	mov    %ecx,0x4(%esp)
+   569d1:	89 04 24             	mov    %eax,(%esp)
+   569d4:	ff 92 c0 01 00 00    	call   *0x1c0(%edx)
+   569da:	84 c0                	test   %al,%al
+   569dc:	74 29                	je     56a07 <CPlayer::GetSteamAccountID(bool)+0xe7>
+   569de:	81 c7 a0 00 00 00    	add    $0xa0,%edi
+   569e4:	8b 47 04             	mov    0x4(%edi),%eax
+   569e7:	89 c6                	mov    %eax,%esi
+   569e9:	81 e6 00 00 f0 00    	and    $0xf00000,%esi
+   569ef:	c1 e8 18             	shr    $0x18,%eax
+   569f2:	85 f6                	test   %esi,%esi
+   569f4:	74 02                	je     569f8 <CPlayer::GetSteamAccountID(bool)+0xd8>
+   569f6:	8b 37                	mov    (%edi),%esi
+   569f8:	85 c0                	test   %eax,%eax
+   569fa:	0f 44 f0             	cmove  %eax,%esi
+   569fd:	89 f0                	mov    %esi,%eax
+   569ff:	83 c4 0c             	add    $0xc,%esp
+   56a02:	5e                   	pop    %esi
+   56a03:	5f                   	pop    %edi
+   56a04:	5b                   	pop    %ebx
+   56a05:	5d                   	pop    %ebp
+   56a06:	c3                   	ret
+   56a07:	8d bb b8 9b 00 00    	lea    0x9bb8(%ebx),%edi
+   56a0d:	80 bb c0 9b 00 00 00 	cmpb   $0x0,0x9bc0(%ebx)
+   56a14:	75 ce                	jne    569e4 <CPlayer::GetSteamAccountID(bool)+0xc4>
+   56a16:	8b 83 e0 99 00 00    	mov    0x99e0(%ebx),%eax
+   56a1c:	8b 8b e4 99 00 00    	mov    0x99e4(%ebx),%ecx
+   56a22:	89 8b bc 9b 00 00    	mov    %ecx,0x9bbc(%ebx)
+   56a28:	89 83 b8 9b 00 00    	mov    %eax,0x9bb8(%ebx)
+   56a2e:	c6 83 c0 9b 00 00 01 	movb   $0x1,0x9bc0(%ebx)
+   56a35:	eb ad                	jmp    569e4 <CPlayer::GetSteamAccountID(bool)+0xc4>

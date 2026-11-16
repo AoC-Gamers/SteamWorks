@@ -1,0 +1,35 @@
+{
+  "status": "paused_at_user_request",
+  "timestamp_utc": "2026-11-16T01:18:56.796578+00:00",
+  "reason": "User requested postponing real-account tests until tomorrow and confirmed account available",
+  "T25": "partial",
+  "T29": "partial",
+  "original_DEV_restored": true,
+  "original_DEV_steam_connected": true,
+  "lab_active": false,
+  "lab_removed": true,
+  "owned_HTTP_fixtures_stopped": true,
+  "shared_game_CFG_files_verified_unchanged": 1925,
+  "verification": {
+    "original_DEV_PID": 167622,
+    "original_selector_and_module_verified": true,
+    "protected_files_verified": 4,
+    "lab_absent": true,
+    "read_only": true
+  },
+  "expected_historical_fixture_errors_preserved": {
+    "invalid_first_fixture_transport_errors": 4,
+    "deliberate_oversize_ACK_rejections": 2
+  },
+  "no_new_acceptance_tests_after_pause_request": true,
+  "producer_API_changed": false,
+  "committed": false,
+  "published": false,
+  "production_touched": false,
+  "resume_requires_user": true,
+  "remaining_inputs": [
+    "User will enter available borrowed account when laboratory is ready again",
+    "Authorized group URL/ID",
+    "Local Steam Web API key configuration path, no secret in chat"
+  ]
+}

@@ -1,0 +1,2 @@
+PASS: 92 x86 streaming context checks (production natives, SDK callback dispatch, independent wire fixture)
+PASS: negative control detects original streaming context loss

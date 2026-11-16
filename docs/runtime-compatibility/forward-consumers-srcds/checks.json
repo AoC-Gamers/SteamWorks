@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "positive_rounds": 7,
+  "managed_forwards": 12,
+  "scenarios_per_forward_per_round": 8,
+  "positive_dispatches": 672,
+  "positive_checks": 4803,
+  "positive_failures": 0,
+  "expected_negative_order_control_failures": 104,
+  "same_PID_and_start_ticks": true,
+  "lab_PID": 121362,
+  "real_SourceMod_errors": 0,
+  "API_unchanged": true,
+  "synthetic_dispatch_only": true,
+  "T23_scope": "Managed-forward dispatch semantics plus production hook deterministic mapping; not a live SDK trigger/GC availability test."
+}

@@ -1,0 +1,27 @@
+{
+  "trace": [
+    "[SW-PENDING] ready",
+    "[SW-CONS] observer_ready",
+    "[SW-SOCIAL] ready late=0",
+    "[SW-CONS] protected_config_exec_blocked=1",
+    "[SW-PENDING] status armed=1 observations=0 checks=0 failures=0",
+    "[SW-PENDING] check=current_pending_slot_serial_reference_found pass=1",
+    "[SW-PENDING] check=real_connected_nonbot_unauthorized_client pass=1",
+    "[SW-PENDING] check=unauthorized_native_returns_false_without_exception pass=1",
+    "[SW-PENDING] pending observed=1 native_error=0 returned=1 accepted=0",
+    "[SW-SOCIAL] check=real_family_detection_forward_distinct_accounts pass=1",
+    "[SW-SOCIAL] real_detection_event=1"
+  ],
+  "active_plugins": [
+    "  1 \"SteamWorks Pending Identity Observer\" (1.0.0) by Lechuga",
+    "  2 \"SteamWorks Consumer Observer\" (1.0.0) by Lechuga",
+    "  3 \"SteamWorks Consumer Social Observer\" (1.0.0) by Lechuga",
+    "  4 \"L4D2 Family Share Core\" (2.0.1) by Lechuga"
+  ],
+  "expected_invalid_fixture_transport_errors": 0,
+  "expected_oversize_ACK_rejections": 0,
+  "unexpected_error_messages": [],
+  "unclassified_error_lines": [],
+  "shared_CFG_unchanged": true,
+  "private_key_file_present": false
+}

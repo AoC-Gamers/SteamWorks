@@ -1,0 +1,24 @@
+test_bad_cli_input_does_not_write_evidence (__main__.EvidenceTests.test_bad_cli_input_does_not_write_evidence) ... ok
+test_documentary_candidate_is_consistent_and_disabled (__main__.EvidenceTests.test_documentary_candidate_is_consistent_and_disabled) ... ok
+test_loaded_mapping_requires_exact_file_device_and_inode (__main__.EvidenceTests.test_loaded_mapping_requires_exact_file_device_and_inode) ... ok
+test_malformed_or_unsupported_binary_fails_closed (__main__.EvidenceTests.test_malformed_or_unsupported_binary_fails_closed) ... ok
+test_minimal_unique_modules_and_entrypoints (__main__.EvidenceTests.test_minimal_unique_modules_and_entrypoints) ... ok
+test_module_metadata_and_evidence_hash_are_bound (__main__.EvidenceTests.test_module_metadata_and_evidence_hash_are_bound) ... ok
+test_no_documentary_activation_or_self_approval (__main__.EvidenceTests.test_no_documentary_activation_or_self_approval) ... ok
+test_packaging_keeps_profiles_out_of_gamedata (__main__.EvidenceTests.test_packaging_keeps_profiles_out_of_gamedata) ... ok
+test_pe_export_presence_is_not_windows_acceptance (__main__.EvidenceTests.test_pe_export_presence_is_not_windows_acceptance) ... ok
+test_profile_validation_cli_rejects_activation (__main__.EvidenceTests.test_profile_validation_cli_rejects_activation) ... ok
+test_real_sdk_reference_exports_and_identity (__main__.EvidenceTests.test_real_sdk_reference_exports_and_identity) ... ok
+test_reference_versions_do_not_imply_same_init_route (__main__.EvidenceTests.test_reference_versions_do_not_imply_same_init_route) ... ok
+test_removed_memory_helpers_have_no_product_consumer (__main__.EvidenceTests.test_removed_memory_helpers_have_no_product_consumer) ... ok
+test_sdk_identity_cannot_stand_in_for_runtime (__main__.EvidenceTests.test_sdk_identity_cannot_stand_in_for_runtime) ... ok
+test_selected_runtime_profile_is_coherent (__main__.EvidenceTests.test_selected_runtime_profile_is_coherent) ... ok
+test_selected_runtime_profile_rejects_corruption (__main__.EvidenceTests.test_selected_runtime_profile_rejects_corruption) ... ok
+test_unverified_entrypoints_stay_unavailable (__main__.EvidenceTests.test_unverified_entrypoints_stay_unavailable) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.183s
+
+OK
+DOCUMENTARY_EVIDENCE_OK; JSON cannot activate code paths
+PASS: 2 SDK x86 PIC-prefix relocation/execution cases (actual copy_bytes, no init/body invocation)

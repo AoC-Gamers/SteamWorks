@@ -1,0 +1,343 @@
+{
+  "schema_version": 1,
+  "timestamp_utc": "2026-11-14T20:51:36.774323+00:00",
+  "responsible": "Codex, local validation",
+  "baseline_commit": "46e3ee05fc29ad090a1d6f7b1cb5e3dca9855350",
+  "branch": "develop",
+  "status": "passed_isolated_patched_VM_ASan_LSan_and_scoped_integration",
+  "staged": false,
+  "committed": false,
+  "deployed": false,
+  "installed_VM_modified": false,
+  "SteamWorks_public_API_changed": false,
+  "SourcePawn_public_headers_changed": false,
+  "SteamWorks_production_source_changed_since_T36": false,
+  "cause": {
+    "owner": "sp::Environment::api_v1_/api_v2_",
+    "defect": "unique_ptr to public interfaces without virtual destructors deletes concrete engines via base types",
+    "observed_x64_allocation_bytes": 264,
+    "observed_x64_delete_bytes": 8,
+    "secondary_source_defect": "empty Environment destructor does not perform promised shutdown or clear current environment in pinned checkout"
+  },
+  "fix": {
+    "sourcepawn_revision": "11b22edb634b9764d19fd28699e03289cfd18520",
+    "ownership": "private unique_ptr members use concrete SourcePawnEngine/SourcePawnEngine2 types",
+    "lifecycle": "destructor shuts down only if current; partial-init watchdog null guard",
+    "public_ABI": "no new virtual methods/destructors or public header changes",
+    "application": "patches applied only to private copied sources; existing runtime binaries untouched"
+  },
+  "toolchain": {
+    "image": "steamworks-sourcepawn-asan:local",
+    "image_id": "sha256:ce871f47542914ddaa60dd5a94df7c7e85c83908c764a5eeea3a0e9a651cb368",
+    "base_image_id": "sha256:8b88d2213cf0eaa488c64f73bd11d7827dfc9b10f9aefc0de714463c6fa2db3b",
+    "compiler": "Debian Clang 14.0.6",
+    "packages": {
+      "clang": "1:14.0-55.7~deb12u1",
+      "clang-14": "1:14.0.6-12",
+      "libclang-rt-14-dev": "1:14.0.6-12",
+      "libc6": "2.36-9+deb12u14"
+    },
+    "local_image_setup_network": "Debian package acquisition only",
+    "builds_and_tests_network": "none"
+  },
+  "platforms": {
+    "x64": {
+      "acceptance": {
+        "status": "passed",
+        "platform": "x86_64",
+        "VM_sha256": "4e5cefbba92b260395f9e8d0a17fe61fbd3d10c19bfdf781c568e86290975c54",
+        "ASAN_OPTIONS": "detect_leaks=1:halt_on_error=1:alloc_dealloc_mismatch=1:new_delete_type_mismatch=1",
+        "LSAN_OPTIONS": "exitcode=23",
+        "UBSAN_OPTIONS": "halt_on_error=1:print_stacktrace=1",
+        "test_flags": "-m64 -fsanitize=address -shared-libasan -fsized-deallocation -fno-pie -no-pie",
+        "VM_instrumented": true,
+        "sized_deallocation": true,
+        "RTTI_enabled": true,
+        "environment_cycles": 16,
+        "auth_checks": 227,
+        "suppression_files": [],
+        "installed_runtime_modified": false,
+        "server_deployment": false
+      },
+      "integration": {
+        "public_api": "passed",
+        "test_flags": "",
+        "runtime_validation": false,
+        "suites": [
+          {
+            "name": "test-review-artifacts",
+            "exit_code": 0,
+            "compiler": "g++",
+            "test_flags": "",
+            "duration_seconds": 0.062
+          },
+          {
+            "name": "test-stats-natives",
+            "exit_code": 0,
+            "compiler": "g++",
+            "test_flags": "",
+            "duration_seconds": 0.413
+          },
+          {
+            "name": "test-detours",
+            "exit_code": 0,
+            "compiler": "g++",
+            "test_flags": "",
+            "duration_seconds": 0.692
+          },
+          {
+            "name": "test-public-ip",
+            "exit_code": 0,
+            "compiler": "g++",
+            "test_flags": "",
+            "duration_seconds": 0.624
+          },
+          {
+            "name": "test-steamid-string",
+            "exit_code": 0,
+            "compiler": "g++",
+            "test_flags": "",
+            "duration_seconds": 0.428
+          },
+          {
+            "name": "test-typed-boundary",
+            "exit_code": 0,
+            "compiler": "g++",
+            "test_flags": "",
+            "duration_seconds": 2.463
+          },
+          {
+            "name": "test-resource-lifecycle",
+            "exit_code": 0,
+            "compiler": "g++",
+            "test_flags": "",
+            "duration_seconds": 5.722
+          },
+          {
+            "name": "test-binary-evidence",
+            "exit_code": 0,
+            "compiler": "g++",
+            "test_flags": "",
+            "duration_seconds": 0.212
+          },
+          {
+            "name": "test-auth-forward",
+            "exit_code": 0,
+            "compiler": "clang++",
+            "test_flags": "-fsanitize=address -shared-libasan -fsized-deallocation -fno-pie -no-pie",
+            "duration_seconds": 1.341
+          },
+          {
+            "name": "test-sourcepawn-environment",
+            "exit_code": 0,
+            "compiler": "clang++",
+            "test_flags": "-fsanitize=address -shared-libasan -fsized-deallocation -fno-pie -no-pie",
+            "duration_seconds": 0.119
+          }
+        ]
+      },
+      "provenance_file": "provenance-x64.json",
+      "provenance_sha256": "c0fded4e9a412ff0345bbb23d65f3257eb2fa1dc36b97f7b2dc0a1b2adff9ae9",
+      "VM_path": ".build/vm-asan/final-x64/build/libsourcepawn/linux-x86_64/libsourcepawn.so",
+      "build_and_acceptance_log": ".build/vm-asan/final-x64.log",
+      "build_and_acceptance_log_sha256": "88f0c683ee17fa21cce6c8e7cd6c662f1f9847493f1c14cc6a654a55d8fd8201",
+      "source_input_hashes": {
+        "core/logic/ForwardSys.h": "39528415f6f1af1c401e7e44f2a2b929aca3c3bfb25d0bc54f9eda9003eeeba4",
+        "core/logic/ForwardSys.cpp": "c59e7b2f4c4f1ad0db5879d4cb52e43526be62b8d4b084e6cd4e6b513d1265c0",
+        "public/IForwardSys.h": "680654b65ef9ca5578ef0f89afdab0ffe4e77c4f571c08b723612fefc5d5595a",
+        "public/ReentrantList.h": "f641ec2bd438c949adf7bd86d3e74f7dcd718cd0071d0bb6fc368ef979e399d4",
+        "sourcepawn/include/sp_vm_api.h": "522a8d1d04fea83c93fdb02a1f996a8fcdc5e5bf14b0faf3abbdff89bc9f5016"
+      },
+      "runtime_input_hashes": {
+        "compiler_sha256": "da428dc9f0acd8df6b47568020f1e4d6d4f2cdd059f3b445f2c50683c0788a02",
+        "VM_sha256": "4e5cefbba92b260395f9e8d0a17fe61fbd3d10c19bfdf781c568e86290975c54",
+        "VM_filename": "libsourcepawn.so"
+      }
+    },
+    "x86": {
+      "acceptance": {
+        "status": "passed",
+        "platform": "x86",
+        "VM_sha256": "310ea486029489ee94f205d94ae28876332bf57a912655a77d13a82eff32e7d0",
+        "ASAN_OPTIONS": "detect_leaks=1:halt_on_error=1:alloc_dealloc_mismatch=1:new_delete_type_mismatch=1",
+        "LSAN_OPTIONS": "exitcode=23",
+        "UBSAN_OPTIONS": "halt_on_error=1:print_stacktrace=1",
+        "test_flags": "-m32 -fsanitize=address -shared-libasan -fsized-deallocation -fno-pie -no-pie",
+        "VM_instrumented": true,
+        "sized_deallocation": true,
+        "RTTI_enabled": true,
+        "environment_cycles": 16,
+        "auth_checks": 227,
+        "suppression_files": [],
+        "installed_runtime_modified": false,
+        "server_deployment": false
+      },
+      "integration": {
+        "public_api": "passed",
+        "test_flags": "-m32",
+        "runtime_validation": false,
+        "suites": [
+          {
+            "name": "test-review-artifacts",
+            "exit_code": 0,
+            "compiler": "g++",
+            "test_flags": "-m32",
+            "duration_seconds": 0.06
+          },
+          {
+            "name": "test-stats-natives",
+            "exit_code": 0,
+            "compiler": "g++",
+            "test_flags": "-m32",
+            "duration_seconds": 0.42
+          },
+          {
+            "name": "test-detours",
+            "exit_code": 0,
+            "compiler": "g++",
+            "test_flags": "-m32",
+            "duration_seconds": 0.769
+          },
+          {
+            "name": "test-public-ip",
+            "exit_code": 0,
+            "compiler": "g++",
+            "test_flags": "-m32",
+            "duration_seconds": 0.643
+          },
+          {
+            "name": "test-steamid-string",
+            "exit_code": 0,
+            "compiler": "g++",
+            "test_flags": "-m32",
+            "duration_seconds": 0.432
+          },
+          {
+            "name": "test-typed-boundary",
+            "exit_code": 0,
+            "compiler": "g++",
+            "test_flags": "-m32",
+            "duration_seconds": 2.771
+          },
+          {
+            "name": "test-resource-lifecycle",
+            "exit_code": 0,
+            "compiler": "g++",
+            "test_flags": "-m32",
+            "duration_seconds": 6.727
+          },
+          {
+            "name": "test-binary-evidence",
+            "exit_code": 0,
+            "compiler": "g++",
+            "test_flags": "-m32",
+            "duration_seconds": 0.316
+          },
+          {
+            "name": "test-auth-forward",
+            "exit_code": 0,
+            "compiler": "clang++",
+            "test_flags": "-m32 -fsanitize=address -shared-libasan -fsized-deallocation -fno-pie -no-pie",
+            "duration_seconds": 1.364
+          },
+          {
+            "name": "test-sourcepawn-environment",
+            "exit_code": 0,
+            "compiler": "clang++",
+            "test_flags": "-m32 -fsanitize=address -shared-libasan -fsized-deallocation -fno-pie -no-pie",
+            "duration_seconds": 0.111
+          }
+        ]
+      },
+      "provenance_file": "provenance-x86.json",
+      "provenance_sha256": "c0fded4e9a412ff0345bbb23d65f3257eb2fa1dc36b97f7b2dc0a1b2adff9ae9",
+      "VM_path": ".build/vm-asan/final-x86/build/libsourcepawn/linux-x86/libsourcepawn.so",
+      "build_and_acceptance_log": ".build/vm-asan/final-x86.log",
+      "build_and_acceptance_log_sha256": "99060b8116308bccc17d18507b5da92a615fb95d98b61e5d848d8f50dcf89dc8",
+      "source_input_hashes": {
+        "core/logic/ForwardSys.h": "39528415f6f1af1c401e7e44f2a2b929aca3c3bfb25d0bc54f9eda9003eeeba4",
+        "core/logic/ForwardSys.cpp": "c59e7b2f4c4f1ad0db5879d4cb52e43526be62b8d4b084e6cd4e6b513d1265c0",
+        "public/IForwardSys.h": "680654b65ef9ca5578ef0f89afdab0ffe4e77c4f571c08b723612fefc5d5595a",
+        "public/ReentrantList.h": "f641ec2bd438c949adf7bd86d3e74f7dcd718cd0071d0bb6fc368ef979e399d4",
+        "sourcepawn/include/sp_vm_api.h": "522a8d1d04fea83c93fdb02a1f996a8fcdc5e5bf14b0faf3abbdff89bc9f5016"
+      },
+      "runtime_input_hashes": {
+        "compiler_sha256": "da428dc9f0acd8df6b47568020f1e4d6d4f2cdd059f3b445f2c50683c0788a02",
+        "VM_sha256": "310ea486029489ee94f205d94ae28876332bf57a912655a77d13a82eff32e7d0",
+        "VM_filename": "libsourcepawn.so"
+      }
+    }
+  },
+  "negative_control": {
+    "prebuilt_minimal_reproducer": {
+      "status": "expected_failure",
+      "VM_sha256": "46d4437e88d4879781a6365829b40583ef2adfc9e41e7031ab189fcc9c34af73",
+      "log": ".build/vm-asan/negative-prebuilt.log"
+    },
+    "same_source_instrumented_baseline": {
+      "status": "expected_failure",
+      "platform": "x86_64",
+      "exit_code": 23,
+      "error": "new-delete-type-mismatch 264 vs 8",
+      "log": ".build/vm-asan/final-negative-baseline.log",
+      "log_sha256": "30130cc6163d5d349d00247172cf076a7dd07237b19c75a9fe8cd6e7ef50ef4d",
+      "only_patch_applied": "test-vm-only.patch",
+      "public_headers_unchanged": true
+    }
+  },
+  "diagnostics_not_used_as_acceptance": {
+    "uniform_Clang_ASan_native_sweep": {
+      "status": "failed_diagnostic",
+      "logs": [
+        ".build/vm-asan/integration-x64.log",
+        ".build/vm-asan/integration-x86.log"
+      ],
+      "findings": [
+        "Clang -Werror rejects existing HTTP declarations missing override",
+        "LSan reports an allocation when unloading a reference SDK library in x86 prefix fixture"
+      ],
+      "resolution_for_acceptance": "Keep recorded GCC/UBSan native and normal decoder configuration; use matching Clang/ASan for VM tests. VM checks remain active."
+    },
+    "PIE_Clang14_runtime": {
+      "status": "failed_diagnostic",
+      "log": ".build/vm-asan/auth-final-x64.log",
+      "note": "repeated DEADLYSIGNAL; process stopped and first output retained; final harness non-PIE, VM PIC and system ASLR unchanged"
+    }
+  },
+  "checks": {
+    "bash_syntax": "passed",
+    "python_compile": "passed",
+    "git_diff_check": "passed",
+    "API_inventory": "passed on both architectures",
+    "remote_CI": "not_run"
+  },
+  "old_artifacts": {
+    "T36_extension_sha256": "4830b71afa8d1a8b64e412071871165f849953667cc89499bd04612a1589687e",
+    "P5_archives_preserved": true
+  },
+  "source_sha256": {
+    "scripts/build-test-sourcepawn.sh": "f6abdf66ffd45b0cd3b37e422ee7cab45b03b3c381049a21561939591b8f2e09",
+    "scripts/test-sourcepawn-environment.sh": "d4bbe852941108bc666401e395514177230d3caec905280f2d88c96b6ea0d5e3",
+    "scripts/test-sourcepawn-vm-asan.sh": "c42d41450b397f3d501e3b525c4873fb0a7d7548532a88d1e37a3384d04ba0f0",
+    "scripts/test-integration.py": "5828e02101df6c83f5f166bc0ae2dc30fb4d90b731dae2176b4624924c6fbfdf",
+    "tests/sourcepawn_environment_test.cpp": "67f7a6db3a0ac2715d65c89e45a6b980999a81b04b1f1002acfa608f5eabfda9",
+    "tests/sourcepawn-vm.Dockerfile": "878b8bcc019a518ed2775a20d1d4fd39a832b34b73f63da763755b0bb9097648",
+    "patches/sourcepawn/environment-ownership.patch": "f07d26c38b2fb384fd120c1e1828ca92fc1c7ac8767bae7f88469a572f2a8185",
+    "patches/sourcepawn/test-vm-only.patch": "1fe0826dd430ed15dbdb097d92ced36070a3cff884ec306459f09f913c45bd0b",
+    "patches/sourcepawn/README.md": "40172e50fefa0853b66c5baa767cf4ec5211bc13cb0b6b7fbc2e7dbd37f1010d",
+    "docs/runtime-compatibility/sourcepawn-vm-asan.md": "2587c3a812fe1a93529fe293156449534575fb32486620a028c5bbabf6d2deed",
+    "docs/runtime-compatibility/t36-auth-forward.md": "89bc66824933a896444ea9230d5b03e8a70b5c7fcd2cd7e7ecee3a990ab2dce7",
+    "docs/README.md": "b085cd876549ae4cce0eeb7c1586ad64ecfa9f9b48563c46a451dde173b1c41b",
+    "docs/TestCoverage.md": "e97974e5db0da420be03c0a42c8c56e4d16ac04cb917b5a8548e70612d5b27c3",
+    "tests/README.md": "e3c09c7a7f764d18041c8f02c24d537213a279b6d745da2d47bd512384982f20",
+    "README.md": "3b867245789b407ce471c27788137e2c5f67edb9a197c84861c3f0c15e23539c",
+    "CHANGELOG.md": "dda8c0c3f0206523b4f64c36dd0701c3891104ee12e1f8e61c7ff2f9a478df5d"
+  },
+  "limitations": [
+    "No server runtime, Steam authentication, credentials or real tickets exercised",
+    "Precompiled VM remains a failing control; correction is a patch plus isolated build, not an installed update",
+    "Scope pinned to SourcePawn revision and Linux x86/x86_64",
+    "Uniform Clang/ASan sweep of unrelated suites is not claimed passed",
+    "No performance or whole-SRCDS sanitizer acceptance"
+  ]
+}

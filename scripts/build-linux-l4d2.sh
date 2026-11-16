@@ -119,6 +119,7 @@ mkdir -p "$BUILD_DIR"
 pushd "$BUILD_DIR" > /dev/null
 "$VENV_PYTHON" "$CONFIGURE_SCRIPT" \
   --sdks "$TARGET_SDK" \
+  --target x86 \
   --hl2sdk-root "$DEPS_DIR" \
   --mms-path "$MMSOURCE_DIR" \
   --sm-path "$SOURCEMOD_DIR" \
@@ -138,6 +139,14 @@ EXT_BIN="$PACKAGE_DIR/steamworks.ext.so"
 
 if [[ ! -f "$EXT_BIN" ]]; then
   echo "Build completed but $EXT_BIN was not found." >&2
+  exit 1
+fi
+
+# The SDK's tier0 library has no SONAME. Its basename must be recorded in
+# DT_NEEDED so RTLD_LOCAL does not depend on engine-global symbols or SDK paths.
+DYNAMIC_INFO="$(LC_ALL=C readelf -d "$EXT_BIN")"
+if ! grep -Fq 'Shared library: [libtier0_srv.so]' <<< "$DYNAMIC_INFO"; then
+  echo "Missing portable libtier0_srv.so dependency in $EXT_BIN" >&2
   exit 1
 fi
 

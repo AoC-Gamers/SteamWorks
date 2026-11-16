@@ -1,0 +1,16 @@
+{
+  "timestamp_utc": "2026-11-15T18:26:17.657672+00:00",
+  "ready": true,
+  "trace": [
+    "[SW-ACCEPT] plugin_ready",
+    "[SW-ACCEPT] map_start loaded=1 connected=0",
+    "[SW-ACCEPT] connected_event",
+    "[SW-ACCEPT] status loaded=1 connected=1 vac=1 ipv4=1 completed=0 failed=0 headers=0 streamBytes=0 authEvents=0",
+    "[SW-ACCEPT] validation_events current=0 legacy=0"
+  ],
+  "debug": [
+    "L 2026-11-15 18:26:17: [lifecycle] event=debug_enabled mask=15",
+    "L 2026-11-15 18:26:17: [hooks] event=gameserver_state enabled=1 target=1 waiting=0 restart=1 logon=1 auth=1 nativeVersion=SteamGameServer015 authVersion=SteamGameServer014",
+    "L 2026-11-15 18:26:17: [auth] event=auth_state enabled=1 attached=1 receivers=1"
+  ]
+}

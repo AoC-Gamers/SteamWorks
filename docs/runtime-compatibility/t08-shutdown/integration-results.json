@@ -1,0 +1,98 @@
+{
+  "public_api": "passed",
+  "test_flags": "-m32",
+  "runtime_validation": false,
+  "suites": [
+    {
+      "name": "test-review-artifacts",
+      "exit_code": 0,
+      "compiler": "g++",
+      "test_flags": "-m32",
+      "duration_seconds": 0.128
+    },
+    {
+      "name": "test-stats-natives",
+      "exit_code": 0,
+      "compiler": "g++",
+      "test_flags": "-m32",
+      "duration_seconds": 0.396
+    },
+    {
+      "name": "test-detours",
+      "exit_code": 0,
+      "compiler": "g++",
+      "test_flags": "-m32",
+      "duration_seconds": 0.843
+    },
+    {
+      "name": "test-public-ip",
+      "exit_code": 0,
+      "compiler": "g++",
+      "test_flags": "-m32",
+      "duration_seconds": 0.678
+    },
+    {
+      "name": "test-steamid-string",
+      "exit_code": 0,
+      "compiler": "g++",
+      "test_flags": "-m32",
+      "duration_seconds": 0.484
+    },
+    {
+      "name": "test-typed-boundary",
+      "exit_code": 0,
+      "compiler": "g++",
+      "test_flags": "-m32",
+      "duration_seconds": 2.987
+    },
+    {
+      "name": "test-resource-lifecycle",
+      "exit_code": 0,
+      "compiler": "g++",
+      "test_flags": "-m32",
+      "duration_seconds": 7.264
+    },
+    {
+      "name": "test-binary-evidence",
+      "exit_code": 0,
+      "compiler": "g++",
+      "test_flags": "-m32",
+      "duration_seconds": 0.303
+    },
+    {
+      "name": "test-debug-log",
+      "exit_code": 0,
+      "compiler": "g++",
+      "test_flags": "-m32",
+      "duration_seconds": 0.479
+    },
+    {
+      "name": "test-http-stream-context",
+      "exit_code": 0,
+      "compiler": "g++",
+      "test_flags": "-m32",
+      "duration_seconds": 3.816
+    },
+    {
+      "name": "test-auth-forward",
+      "exit_code": 0,
+      "compiler": "clang++",
+      "test_flags": "-m32 -fsanitize=address -shared-libasan -fsized-deallocation -fno-pie -no-pie",
+      "duration_seconds": 1.437
+    },
+    {
+      "name": "test-auth-binding",
+      "exit_code": 0,
+      "compiler": "g++",
+      "test_flags": "-m32",
+      "duration_seconds": 4.268
+    },
+    {
+      "name": "test-sourcepawn-environment",
+      "exit_code": 0,
+      "compiler": "clang++",
+      "test_flags": "-m32 -fsanitize=address -shared-libasan -fsized-deallocation -fno-pie -no-pie",
+      "duration_seconds": 0.118
+    }
+  ]
+}

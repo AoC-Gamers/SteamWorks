@@ -1,0 +1,14 @@
+[
+  {
+    "mode": "return",
+    "exit_code": 0,
+    "stdout": "LOCAL_USER_READY\nRETURNING\n",
+    "stderr": "flock /sys/devices/virtual/dmi/id/sys_vendor LOCK_SH failed. errno = 13flock /sys/devices/virtual/dmi/id/product_name LOCK_SH failed. errno = 1311/15 13:43:50 minidumps folder is set to /tmp/dumps\n11/15 13:43:50 Could not find steamerrorreporter binary. Any minidumps will be uploaded in-process"
+  },
+  {
+    "mode": "shutdown",
+    "exit_code": 0,
+    "stdout": "LOCAL_USER_READY\nSHUTDOWN=1\nRETURNING\n",
+    "stderr": "flock /sys/devices/virtual/dmi/id/sys_vendor LOCK_SH failed. errno = 13flock /sys/devices/virtual/dmi/id/product_name LOCK_SH failed. errno = 1311/15 13:43:50 minidumps folder is set to /tmp/dumps\n11/15 13:43:50 Could not find steamerrorreporter binary. Any minidumps will be uploaded in-process"
+  }
+]

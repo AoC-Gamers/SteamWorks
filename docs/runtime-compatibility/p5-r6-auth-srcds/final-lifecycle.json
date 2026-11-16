@@ -1,0 +1,13 @@
+{
+  "debug": [
+    "L 2026-11-15 16:04:25: [hooks] event=gameserver_state enabled=1 target=1 waiting=0 restart=1 logon=1 auth=1 nativeVersion=SteamGameServer015 authVersion=SteamGameServer014",
+    "L 2026-11-15 16:04:25: [auth] event=auth_state enabled=1 attached=1 receivers=1",
+    "L 2026-11-15 16:16:21: [auth] event=begin_auth_enter enabled=1 target=1 receivers=1 bytes=240",
+    "L 2026-11-15 16:16:21: [auth] event=begin_auth_dispatch result=0 cells=60",
+    "L 2026-11-15 16:16:23: [auth] event=validation_callback source=ValidateAuthTicketResponse result=0",
+    "L 2026-11-15 16:16:23: [auth] event=validation_dispatch forward=legacy receivers=1",
+    "L 2026-11-15 16:16:23: [auth] event=validation_dispatch forward=current receivers=3",
+    "L 2026-11-15 16:48:33: [hooks] event=gameserver_detach generation=1"
+  ],
+  "original_selector_restored": true
+}

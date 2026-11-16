@@ -1,0 +1,154 @@
+{
+  "timestamp_utc": "2026-11-15T23:33:54.078620+00:00",
+  "monotonic_seconds": 40718.091276004,
+  "phase": "load-02",
+  "PID": 152698,
+  "start_ticks": 4027743,
+  "cpu_ticks": 3526,
+  "clock_ticks_per_second": 100,
+  "process_status": {
+    "VmSize": 580000,
+    "VmRSS": 338596,
+    "RssAnon": 277844,
+    "RssFile": 58700,
+    "VmData": 469204,
+    "Threads": 12
+  },
+  "smaps_rollup_KiB": {
+    "Pss": 338586,
+    "Private_Clean": 58684,
+    "Private_Dirty": 279896,
+    "Anonymous": 277844
+  },
+  "FDs": 53,
+  "sockets": 7,
+  "owner_HTTP_handles": 0,
+  "total_HTTP_handles": 0,
+  "owner_all_handles": 0,
+  "handle_type_counts": {
+    "Identity": 1,
+    "BitBufReader": 1,
+    "ConVar": 1,
+    "Plugin": 1
+  },
+  "metrics": {
+    "phase": "load-02",
+    "sent": 198,
+    "completed": 198,
+    "closed": 198,
+    "pending": 0,
+    "peak": 3,
+    "failures": 0,
+    "loaded": 1,
+    "connected": 1,
+    "frames": 1803,
+    "frame_mean_ms": 33.333,
+    "frame_max_ms": 34.606,
+    "stream_bytes": 300,
+    "stream_callbacks": 100,
+    "working": 0
+  },
+  "latency_histograms": [
+    {
+      "kind": 0,
+      "completed": 50,
+      "sum_ms": 4136.474,
+      "max_ms": 133.911,
+      "bins": [
+        13,
+        10,
+        27,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "kind": 1,
+      "completed": 50,
+      "sum_ms": 10540.405,
+      "max_ms": 267.364,
+      "bins": [
+        0,
+        0,
+        44,
+        6,
+        0,
+        0
+      ]
+    },
+    {
+      "kind": 2,
+      "completed": 49,
+      "sum_ms": 3706.207,
+      "max_ms": 134.765,
+      "bins": [
+        15,
+        16,
+        18,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "kind": 3,
+      "completed": 49,
+      "sum_ms": 151034.234,
+      "max_ms": 3134.643,
+      "bins": [
+        0,
+        0,
+        0,
+        0,
+        49,
+        0
+      ]
+    }
+  ],
+  "trace": [
+    "[SW-SOAK] status phase=load-02 sent=198 completed=198 closed=198 pending=0 peak=3 failures=0 loaded=1 connected=1 frames=1803 frame_mean_ms=33.333 frame_max_ms=34.606 stream_bytes=300 stream_callbacks=100 working=0",
+    "[SW-SOAK] latency kind=0 completed=50 sum_ms=4136.474 max_ms=133.911 bins=13,10,27,0,0,0",
+    "[SW-SOAK] latency kind=1 completed=50 sum_ms=10540.405 max_ms=267.364 bins=0,0,44,6,0,0",
+    "[SW-SOAK] latency kind=2 completed=49 sum_ms=3706.207 max_ms=134.765 bins=15,16,18,0,0,0",
+    "[SW-SOAK] latency kind=3 completed=49 sum_ms=151034.234 max_ms=3134.643 bins=0,0,0,0,49,0"
+  ],
+  "protected_files": {
+    "/data/config-lgsm/l4d2server/l4d2server.cfg": {
+      "sha256": "65cd69dc84f848a40b2381d8913d5c3390504e62a7946fcfdcec05a28fdadd4d",
+      "mtime_ns": 1794785184425778520
+    },
+    "/data/serverfiles/left4dead2/addons/sourcemod/extensions/steamworks.ext.so": {
+      "sha256": "9ca37aadcd83448d49126d6a72babcb8ec97ec5a06c171b4821ae0ee3cf05d70",
+      "mtime_ns": 1793313142386301868
+    },
+    "/data/serverfiles/left4dead2/cfg/sourcemod/l4d2_familyshare_core.cfg": {
+      "sha256": "d45bd707cad427b00869413f6889d4af0882a1f843837745509b198e3e1ad57c",
+      "mtime_ns": 1793313446038473901
+    },
+    "/data/serverfiles/left4dead2/cfg/sourcemod/AoC.cfg": {
+      "sha256": "f388af97e294b2af0adeda330934bcd0a29c346c76e9464b4228ba008cf04fbf",
+      "mtime_ns": 1793564764531501333
+    }
+  },
+  "harness_log_lines_total": 33,
+  "console_bytes": 10012,
+  "extension_standard_log_lines": 2,
+  "log_metadata": {
+    "L20261115.log": {
+      "bytes": 344,
+      "lines": 3
+    },
+    "accelerator.log": {
+      "bytes": 0,
+      "lines": 0
+    }
+  },
+  "error_log_sizes": {},
+  "crash_markers": [],
+  "raw_handle_dump_removed": true,
+  "raw_console_or_private_configs_exported": false,
+  "interval_cpu_one_core_percent": 7.621373554869477,
+  "interval_seconds": 60.09415451200039,
+  "interval_harness_log_lines": 6
+}

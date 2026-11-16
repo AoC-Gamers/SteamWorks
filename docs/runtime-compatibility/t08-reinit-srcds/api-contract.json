@@ -1,0 +1,6 @@
+{
+  "public_API_drift": false,
+  "compared_to": "docs/runtime-compatibility/p0/api-inventory.json",
+  "SourcePawn_compilation": "three harnesses, 1.12.0.7259, no warnings",
+  "extension_changed": false
+}

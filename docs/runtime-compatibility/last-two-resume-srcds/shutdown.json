@@ -1,0 +1,16 @@
+{
+  "timestamp_utc": "2026-11-16T10:27:26.237959+00:00",
+  "quit_completed": true,
+  "lab_stopped": true,
+  "stopped_pid": 12979,
+  "trace": [
+    "[SW-PENDING] ready",
+    "[SW-CONS] observer_ready",
+    "[SW-SOCIAL] ready late=0",
+    "[Connect HTTP tests] checks=83 failures=0",
+    "[SW-CONS] protected_config_exec_blocked=1",
+    "[SW-CONS] protected_config_exec_blocked=1"
+  ],
+  "error_log_sizes": {},
+  "crash_markers": []
+}

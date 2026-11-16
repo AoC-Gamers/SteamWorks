@@ -1,0 +1,1 @@
+{"original_sha256": "ca1b5179fd3ea4154f3a2d8de41f1e6eaea0f93ba6598b2047498b371802bd00", "selected_sha256": "65cd69dc84f848a40b2381d8913d5c3390504e62a7946fcfdcec05a28fdadd4d", "original_basepath": "addons/sourcemod1", "lab_basepath": "addons/sourcemod_acceptance", "strategy": "change only sm_basepath; preserve LGSM startparameters and servercfg"}

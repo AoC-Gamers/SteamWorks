@@ -72,13 +72,21 @@ for bucket, extensions in package_map.get("build", {}).get("extensions", {}).ite
         )
         if not os.path.isfile(extension_path):
             raise SystemExit(f"Missing compiled extension: {extension_path}")
+        if platform == "linux":
+            with open(extension_path, "rb") as extension_file:
+                header = extension_file.read(52)
+            # The L4D2 runtime requires little-endian ELF32, ET_DYN, EM_386.
+            if (len(header) < 52 or header[:7] != b"\x7fELF\x01\x01\x01"
+                    or int.from_bytes(header[16:18], "little") != 3
+                    or int.from_bytes(header[18:20], "little") != 3):
+                raise SystemExit(f"L4D2 requires a Linux x86 ELF32 extension: {extension_path}")
 
 source_root = os.path.join(root_dir, "scripting")
 artifact_root = os.path.join(artifact_dir, "addons", "sourcemod", "scripting")
 artifact_manifest = package_map.get("artifact", {}).get("addons", {}).get("sourcemod", {}).get("scripting", {})
 validate_manifest_tree(source_root, artifact_root, artifact_manifest)
 
-for rel_path in ("README.md", "CHANGELOG.md", "plugin-package-map.json"):
+for rel_path in ("README.md", "CHANGELOG.md", "LICENSE", "plugin-package-map.json"):
     artifact_path = os.path.join(artifact_dir, rel_path)
     if not os.path.exists(artifact_path):
         raise SystemExit(f"Missing packaged project asset: {artifact_path}")

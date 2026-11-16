@@ -1,0 +1,27 @@
+{
+  "timestamp_utc": "2026-11-15T19:12:11.726719+00:00",
+  "phase": "unloaded-1",
+  "commands": [
+    "sm plugins unload steamworks_pending_owner.smx"
+  ],
+  "trace": [
+    "[SW-OWNER] ended pending=1 callbacks=1 sequence=21",
+    "[SW-RESTORE] status loaded=1 connected=1 vac=1 completed=1 failed=0"
+  ],
+  "all_owner_trace": [
+    "[SW-OWNER] ready",
+    "[SW-OWNER] status pending=0 callbacks=0 sequence=0",
+    "[SW-OWNER] queued sequence=11 hold=1 configured=1 sent=1",
+    "[SW-OWNER] callback sequence=11 context=1 pass=1",
+    "[SW-OWNER] queued sequence=21 hold=1 configured=1 sent=1",
+    "[SW-OWNER] ended pending=1 callbacks=1 sequence=21"
+  ],
+  "owner_HTTP_handles": [],
+  "owner_HTTP_handle_count": 0,
+  "owner_plugin_rows": [],
+  "plugin_rows": 135,
+  "plugin_error_rows": [],
+  "error_log_sizes": {},
+  "crash_markers": [],
+  "raw_handle_dump_removed": true
+}

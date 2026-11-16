@@ -1,0 +1,7 @@
+{
+  "sha256": "ddfdf9bf2f9bde625719ba171c59f7cac8b56cbe136a15e4911c7acbf00383ad",
+  "platform": "linux-i386",
+  "DT_NEEDED_added": "libtier0_srv.so",
+  "API_changed": false,
+  "local_loader_smoke": "passed"
+}

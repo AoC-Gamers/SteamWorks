@@ -1,0 +1,40 @@
+{
+  "status": "passed",
+  "T16": "passed scoped cold late load and two quiescent console unload/reload cycles",
+  "candidate_SHA_unchanged": true,
+  "prior_sources_unchanged": 131,
+  "new_test_harness": "tests/runtime/steamworks_extension_observer.sp",
+  "public_API_unchanged": true,
+  "historical_review_artifacts_preserved": 95,
+  "module_unmapped_each_unload": true,
+  "engine_CALL_and_shutdown_restored_exactly": true,
+  "SourceTVSupport_init_untouched": true,
+  "client_server_pipes_unchanged_in_cycles": [
+    1,
+    2
+  ],
+  "no_force_or_callback_stack_unload_tested": true,
+  "minimal_consumer_stack_only": true,
+  "newgame_and_four_HTTP_rounds_passed": true,
+  "clean_final_quit": true,
+  "new_candidate_core": false,
+  "full_matrix_accepted": false,
+  "remaining_cases": [
+    "T11",
+    "T15",
+    "T23",
+    "T25",
+    "T29",
+    "T32",
+    "T33"
+  ],
+  "active_doc_links_checked": 124,
+  "original_DEV_live_rechecked": true,
+  "lab_removed": true,
+  "git_diff_check": "passed",
+  "branch": "develop",
+  "HEAD_unchanged": true,
+  "index_empty": true,
+  "committed": false,
+  "production_touched": false
+}

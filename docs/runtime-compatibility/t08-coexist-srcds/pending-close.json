@@ -1,0 +1,46 @@
+{
+  "timestamp_utc": "2026-11-15T15:28:28.437702+00:00",
+  "phase": "pending-close",
+  "commands": [
+    "sm_sw_lifecycle_pending check",
+    "sm_sw_lifecycle_pending close"
+  ],
+  "trace": [
+    "[SW-PENDING] retained pass=1 owned=1 callbacks=0 mapEnds=2",
+    "[SW-PENDING] closed callbacks=0 mapEnds=2",
+    "[SW-ACCEPT] status loaded=1 connected=1 vac=1 ipv4=1 completed=25 failed=0 headers=3 streamBytes=18 authEvents=0",
+    "[SW-ACCEPT] validation_events current=0 legacy=0"
+  ],
+  "engine_connections": 0,
+  "debug": [
+    "L 2026-11-15 15:26:30: [lifecycle] event=debug_enabled mask=15",
+    "L 2026-11-15 15:26:30: [hooks] event=gameserver_state enabled=1 target=1 waiting=0 restart=1 logon=1 auth=1 nativeVersion=SteamGameServer015 authVersion=SteamGameServer014",
+    "L 2026-11-15 15:26:30: [auth] event=auth_state enabled=1 attached=1 receivers=1",
+    "L 2026-11-15 15:26:54: [lifecycle] event=runtime_stop ",
+    "L 2026-11-15 15:26:54: [hooks] event=gameserver_detach generation=1",
+    "L 2026-11-15 15:26:55: [lifecycle] event=runtime_start ",
+    "L 2026-11-15 15:26:55: [interfaces] event=gameserver_resolved version=SteamGameServer015 available=1",
+    "L 2026-11-15 15:26:55: [interfaces] event=auth_server_resolved version=SteamGameServer014 available=1",
+    "L 2026-11-15 15:26:55: [hooks] event=hook_install method=WasRestartRequested success=1",
+    "L 2026-11-15 15:26:55: [hooks] event=hook_install method=LogOnAnonymous success=1",
+    "L 2026-11-15 15:26:55: [hooks] event=hook_install method=BeginAuthSession success=1 version=SteamGameServer014",
+    "L 2026-11-15 15:27:47: [lifecycle] event=runtime_stop ",
+    "L 2026-11-15 15:27:47: [hooks] event=gameserver_detach generation=3",
+    "L 2026-11-15 15:27:49: [lifecycle] event=runtime_start ",
+    "L 2026-11-15 15:27:49: [interfaces] event=gameserver_resolved version=SteamGameServer015 available=1",
+    "L 2026-11-15 15:27:49: [interfaces] event=auth_server_resolved version=SteamGameServer014 available=1",
+    "L 2026-11-15 15:27:49: [hooks] event=hook_install method=WasRestartRequested success=1",
+    "L 2026-11-15 15:27:49: [hooks] event=hook_install method=LogOnAnonymous success=1",
+    "L 2026-11-15 15:27:49: [hooks] event=hook_install method=BeginAuthSession success=1 version=SteamGameServer014"
+  ],
+  "steamworks_lifecycle": [
+    "L 11/15/2026 - 15:25:52: [STEAMWORKS] Steam lifecycle profile installed: l4d2-23990100-linux-x86",
+    "L 11/15/2026 - 15:25:55: [STEAMWORKS] Steam lifecycle init observed: result=1",
+    "L 11/15/2026 - 15:26:55: [STEAMWORKS] Steam lifecycle shutdown observed: consumers stopped",
+    "L 11/15/2026 - 15:26:56: [STEAMWORKS] Steam lifecycle init observed: result=1",
+    "L 11/15/2026 - 15:27:48: [STEAMWORKS] Steam lifecycle shutdown observed: consumers stopped",
+    "L 11/15/2026 - 15:27:50: [STEAMWORKS] Steam lifecycle init observed: result=1"
+  ],
+  "error_log_sizes": {},
+  "crash_markers": []
+}

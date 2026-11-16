@@ -1,0 +1,41 @@
+[
+  {
+    "event": "armed_passthrough",
+    "elapsed_seconds": 0.02,
+    "cgroup_match": true,
+    "owner_uid": 1000,
+    "game_port": 27015,
+    "loopback_and_DNS_allowed": true
+  },
+  {
+    "event": "mode",
+    "elapsed_seconds": 0.04,
+    "mode": "observe"
+  },
+  {
+    "event": "mode",
+    "elapsed_seconds": 1.07,
+    "mode": "block"
+  },
+  {
+    "event": "explicit_stop",
+    "elapsed_seconds": 52.59
+  },
+  {
+    "event": "owned_chain_counters",
+    "elapsed_seconds": 52.6,
+    "family": "iptables",
+    "listing": "Chain SWCONNECTION_LAB (1 references)\n    pkts      bytes target     prot opt in     out     source               destination         \n      15     1268 RETURN     0    --  *      *       0.0.0.0/0            127.0.0.0/8         \n       0        0 RETURN     17   --  *      *       0.0.0.0/0            0.0.0.0/0            udp spt:27015\n       0        0 RETURN     6    --  *      *       0.0.0.0/0            0.0.0.0/0            tcp spt:27015\n       0        0 RETURN     17   --  *      *       0.0.0.0/0            0.0.0.0/0            udp dpt:53\n       0        0 RETURN     6    --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:53\n      22     1575 DROP       0    --  *      *       0.0.0.0/0            0.0.0.0/0           \n"
+  },
+  {
+    "event": "owned_chain_counters",
+    "elapsed_seconds": 52.6,
+    "family": "ip6tables",
+    "listing": "Chain SWCONNECTION_LAB (1 references)\n    pkts      bytes target     prot opt in     out     source               destination         \n       6      448 RETURN     0    --  *      *       ::/0                 ::1                 \n       0        0 RETURN     17   --  *      *       ::/0                 ::/0                 udp spt:27015\n       0        0 RETURN     6    --  *      *       ::/0                 ::/0                 tcp spt:27015\n       0        0 RETURN     17   --  *      *       ::/0                 ::/0                 udp dpt:53\n       0        0 RETURN     6    --  *      *       ::/0                 ::/0                 tcp dpt:53\n       0        0 DROP       0    --  *      *       ::/0                 ::/0                \n"
+  },
+  {
+    "event": "all_owned_rules_removed",
+    "elapsed_seconds": 52.65,
+    "families": 2
+  }
+]

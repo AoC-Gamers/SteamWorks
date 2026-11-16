@@ -1,0 +1,14 @@
+[
+  {
+    "mode": "gs",
+    "exit_code": 0,
+    "stdout": "INIT=1 CLIENT_PIPE=0 GS_PIPE=1\nGS_SHUTDOWN CLIENT_PIPE=0 GS_PIPE=0\nRETURNING\n",
+    "stderr": "dlopen failed trying to load:\nsteamclient.so\nwith error:\nsteamclient.so: cannot open shared object file: No such file or directory\nflock /sys/devices/virtual/dmi/id/sys_vendor LOCK_SH failed. errno = 13flock /sys/devices/virtual/dmi/id/product_name LOCK_SH failed. errno = 13[S_API] SteamAPI_Init(): Loaded '/tmp/.steam/sdk32/steamclient.so' OK.  (First tried local 'steamclient.so')\n11/15 13:50:20 minidumps folder is set to /tmp/dumps\n11/15 13:50:20 Could not find steamerrorreporter binary. Any minidumps will be uploaded in-processSetting breakpad minidump AppID = 550\n"
+  },
+  {
+    "mode": "both",
+    "exit_code": 0,
+    "stdout": "INIT=1 CLIENT_PIPE=0 GS_PIPE=1\nGS_SHUTDOWN CLIENT_PIPE=0 GS_PIPE=0\nAPI_SHUTDOWN\nRETURNING\n",
+    "stderr": "dlopen failed trying to load:\nsteamclient.so\nwith error:\nsteamclient.so: cannot open shared object file: No such file or directory\nflock /sys/devices/virtual/dmi/id/sys_vendor LOCK_SH failed. errno = 13flock /sys/devices/virtual/dmi/id/product_name LOCK_SH failed. errno = 13[S_API] SteamAPI_Init(): Loaded '/tmp/.steam/sdk32/steamclient.so' OK.  (First tried local 'steamclient.so')\n11/15 13:50:22 minidumps folder is set to /tmp/dumps\n11/15 13:50:22 Could not find steamerrorreporter binary. Any minidumps will be uploaded in-processSetting breakpad minidump AppID = 550\n"
+  }
+]

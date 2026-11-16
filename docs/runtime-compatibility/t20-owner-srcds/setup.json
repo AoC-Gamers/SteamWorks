@@ -1,0 +1,24 @@
+{
+  "original_files_sha256": {
+    "/data/config-lgsm/l4d2server/l4d2server.cfg": "ca1b5179fd3ea4154f3a2d8de41f1e6eaea0f93ba6598b2047498b371802bd00",
+    "/data/serverfiles/left4dead2/addons/sourcemod/extensions/steamworks.ext.so": "9ca37aadcd83448d49126d6a72babcb8ec97ec5a06c171b4821ae0ee3cf05d70",
+    "/data/serverfiles/left4dead2/cfg/sourcemod/l4d2_familyshare_core.cfg": "d45bd707cad427b00869413f6889d4af0882a1f843837745509b198e3e1ad57c",
+    "/data/serverfiles/left4dead2/cfg/sourcemod/AoC.cfg": "f388af97e294b2af0adeda330934bcd0a29c346c76e9464b4228ba008cf04fbf"
+  },
+  "original_selector": "addons/sourcemod1",
+  "selected_selector": "addons/sourcemod_acceptance",
+  "selected_sha256": "65cd69dc84f848a40b2381d8913d5c3390504e62a7946fcfdcec05a28fdadd4d",
+  "candidate_installation": {
+    "archive_sha256": "b36c707df5a9c35f5cdfb1acfbcc69189ab980edf619728e52487d8e64404aa4",
+    "installed_directly_from_guest_ZIP": true,
+    "all_archive_members_verified": 720,
+    "runtime_paths": {
+      "addons/sourcemod/extensions/steamworks.ext.so": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+      "addons/sourcemod/scripting/include/steamworks.inc": "b4e021b2df9fd81101754f0795da2d5c2eee04c125a8e4997a0b19595fc3affb"
+    },
+    "no_SRCDS_running_during_install": true,
+    "original_baseline_matches_rollback_ZIP": true,
+    "candidate_gamedata_absent": true,
+    "only_runtime_payload_installed": true
+  }
+}

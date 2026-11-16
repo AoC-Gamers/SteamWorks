@@ -1,0 +1,5 @@
+{
+  "old_CDetour_backup": "compilation rejected at -O3 -DNDEBUG -m32 -Werror",
+  "error": "stringop-overflow: unchecked decoded length exceeds fixed 20-byte backup",
+  "diagnostics_suppressed": false
+}

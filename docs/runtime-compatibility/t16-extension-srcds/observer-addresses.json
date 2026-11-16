@@ -1,0 +1,1 @@
+{"PID": 105960, "addresses": ["ef65a540", "ef65d3f0", "ef4498eb", "ef65d690", "ef65d430"], "export_RVAs": {"SteamAPI_GetHSteamPipe": 99648, "SteamGameServer_GetHSteamPipe": 111600, "SteamGameServer_Shutdown": 112272, "SteamInternal_GameServer_Init": 111664}, "command": "sm_sw_extension_observe ef65a540 ef65d3f0 ef4498eb ef65d690 ef65d430"}

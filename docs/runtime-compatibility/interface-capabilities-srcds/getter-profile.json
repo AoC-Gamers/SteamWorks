@@ -1,0 +1,67 @@
+{
+  "candidate_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+  "global_object": {
+    "rva": 213536,
+    "size": 64,
+    "type": "b"
+  },
+  "resolver_member_offset": 24,
+  "resolver_slot_rva": 213560,
+  "getters": [
+    {
+      "method": "GetSteamClient",
+      "rva": 16512,
+      "size": 265,
+      "type": "t"
+    },
+    {
+      "method": "GetGameServer",
+      "rva": 16960,
+      "size": 220,
+      "type": "t"
+    },
+    {
+      "method": "GetUtils",
+      "rva": 17392,
+      "size": 172,
+      "type": "t"
+    },
+    {
+      "method": "GetNetworking",
+      "rva": 17568,
+      "size": 180,
+      "type": "t"
+    },
+    {
+      "method": "GetServerStats",
+      "rva": 17760,
+      "size": 180,
+      "type": "t"
+    },
+    {
+      "method": "GetHTTP",
+      "rva": 17952,
+      "size": 180,
+      "type": "t"
+    },
+    {
+      "method": "GetMatchmaking",
+      "rva": 18144,
+      "size": 180,
+      "type": "t"
+    },
+    {
+      "method": "GetGameCoordinator",
+      "rva": 18336,
+      "size": 180,
+      "type": "t"
+    },
+    {
+      "method": "GetGameServerAuth014",
+      "rva": 17184,
+      "size": 200,
+      "type": "t"
+    }
+  ],
+  "owner_slot_provenance": "Exact sm_IsConnected PIC sequence and GetGameServer call in hashed ELF; no scanning/guessing."
+}

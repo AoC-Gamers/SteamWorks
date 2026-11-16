@@ -1,0 +1,19 @@
+{
+  "updated_utc": "2026-11-15T18:37:00.585501+00:00",
+  "phase": "acceptance_passed_and_original_DEV_restored",
+  "container": "competitive_dev",
+  "port": 27015,
+  "candidate_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+  "recovery": "/data/serverfiles/left4dead2/addons/sourcemod_acceptance/recovery",
+  "restore_original_DEV_after_acceptance": true,
+  "production_touched": false,
+  "PID": 87189,
+  "debug_mask_during_reinit": 15,
+  "debug_mask": 12,
+  "automatic_acceptance": "passed",
+  "shutdown_clean": true,
+  "original_DEV_restored": true,
+  "lab_removed": true,
+  "fixture_stopped": true,
+  "evidence": "docs/runtime-compatibility/optimized-srcds/results.json"
+}

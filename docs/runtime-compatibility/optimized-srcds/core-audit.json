@@ -1,0 +1,9 @@
+{
+  "since_utc": "2026-11-15 18:26:17 UTC",
+  "candidate_PID": 87189,
+  "candidate_core_events": [],
+  "candidate_has_no_new_core": true,
+  "raw_status_cmdline_environment_omitted": true,
+  "cores_exported": false,
+  "original_systemd_cores_preserved": true
+}

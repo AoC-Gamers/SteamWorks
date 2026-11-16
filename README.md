@@ -37,6 +37,28 @@ Left 4 Dead 2.
 
 ## Estado del proyecto
 
+La [matriz P5-R17](docs/runtime-compatibility/p5/validation-results.json) queda
+aceptada para el perfil Linux x86: 33 casos pasan y T13/T14/T34 no aplican.
+El [cierre T25/T29](docs/runtime-compatibility/last-two-srcds-progress.md) incorpora
+licencia prestada, perfil Web API y grupo reales, preautenticación/identidad del
+mismo cliente y Connect corregido: arranque frío, HTTP/ACK y cambio de mapa.
+Se mantienen las aceptaciones [T32](docs/runtime-compatibility/connection-srcds-acceptance.md)
+y [T33](docs/runtime-compatibility/soak-srcds-acceptance.md) en sus límites medidos.
+
+Quince suites x86 repetidas y API pública pasan; Connect añade 104 checks en VM
+x86 y conserva 66 pruebas Python correctas. Extensión `839ff075…` e include
+`a3e5a7a2…` permanecen idénticos. La aceptación no certifica todo el negocio de
+consumidores, otras plataformas ni proveedores distintos.
+
+Los cuatro paquetes P5-R17 están en `.build/p5-r17/review/`, con manifiesto,
+checksums y reversión renovada. Los ZIP R16 permanecen intactos. El ZIP de fuentes
+R17 incorpora evidencia y el parche externo de Connect para revisión; los
+consumidores HTTP antiguos de tres argumentos requieren recompilación. La [reversión](docs/runtime-compatibility/p5-rollback.md)
+conserva los bytes ya ejercitados; el baseline mantiene su fallo conocido al salir.
+DEV original permanece intacto, comprobado por lectura antes/después; R17 no
+opera el servidor. Rama develop,
+sin commit, publicación ni despliegue en producción.
+
 El repositorio se mantiene principalmente para compilar y distribuir la extensión
 Linux de 32 bits usada por servidores dedicados de L4D2.
 
@@ -254,8 +276,10 @@ sdk_158a
 
 ## Gamedata
 
-La extensión puede usar gamedata para ajustar versiones de interfaces o resolver
-símbolos específicos del runtime.
+La extensión puede usar gamedata para seleccionar versiones admitidas de interfaces
+y ajustar la ruta de biblioteca. Las versiones desconocidas se rechazan
+antes de adquirir la interfaz; no hay conversión entre ABI históricas. El registro
+y los límites de esta validación se describen en [P2](docs/runtime-compatibility/p2-typed-interfaces.md).
 
 Ruta esperada:
 
@@ -263,11 +287,11 @@ Ruta esperada:
 addons/sourcemod/gamedata/steamworks.txt
 ```
 
-Archivo fuente en el repo:
-
-```text
-gamedata/steamworks.txt
-```
+El gamedata es opcional: el repositorio actual no incluye un archivo
+`steamworks.txt` ni lo incorpora a los paquetes. Si el servidor necesita
+overrides, el archivo debe proporcionarse por separado en la ruta indicada.
+Sin él, la extensión usa las versiones de interfaces y las rutas predeterminadas
+del código y del SDK.
 
 Este archivo puede definir, entre otros:
 
@@ -278,11 +302,30 @@ Este archivo puede definir, entre otros:
 - versión de `ISteamHTTP`;
 - versión de `ISteamMatchmaking`;
 - versión de `ISteamGameCoordinator`;
-- ruta de `libsteam_api.so` o `steam_api.dll`;
-- firmas para funciones internas cuando sea necesario.
+- ruta de `libsteam_api.so` o `steam_api.dll`.
+
+Las entradas de lifecycle y el factory usan exports declarados; sus direcciones
+no se sustituyen mediante firmas de gamedata.
 
 Si el runtime de Steam cambia o el binario del servidor expone versiones
-distintas de interfaces, este archivo es el primer lugar que debe revisarse.
+distintas de interfaces, deben revisarse este archivo, el registro y las
+declaraciones compiladas. Cambiar una cadena no habilita una ABI no admitida.
+
+La carga requiere preparar los observadores de inicio/shutdown para retirar los
+recursos antes de invalidar interfaces. Si falla esa preparación o la creación
+del tipo de handle HTTP, se revierte la carga con un diagnóstico. Propiedad,
+orden de desmontaje y pruebas: [P3](docs/runtime-compatibility/p3-resource-lifecycle.md).
+
+**Perfil P4:** se validó localmente la pareja de binarios Linux x86 de
+`competitive_dev` (juego 2.2.4.3, build 23990100). El selector exige sus build-id,
+exports/RVA, el `CALL` de init del motor y el prefijo de shutdown; versiones,
+módulos ambiguos, cambios en esos puntos y plataformas sin perfil se rechazan.
+La [corrección de convivencia](docs/runtime-compatibility/t08-init-coexistence.md)
+conserva el hook compartido de SourceTVSupport en el SDK y observa el retorno
+desde el llamador. Las pruebas x86 y la [aceptación real de T08](docs/runtime-compatibility/t08-coexist-srcds-acceptance.md)
+pasan para el ELF aceptado; véase la matriz P5 actual y sus límites de perfil.
+Los manifiestos JSON documentan la evidencia y no activan código. Windows aún
+no tiene un perfil validado. Detalles: [P4](docs/runtime-compatibility/p4-binary-profiles.md).
 
 ## API SourcePawn
 
@@ -333,6 +376,11 @@ native int SteamWorks_GetClientSteamID(int client, char[] steamId, int length);
 
 Estas funciones permiten consultar membresía de grupos Steam, licencias de apps
 y SteamID64 de jugadores.
+
+`SteamWorks_GetClientSteamID` conserva su conteo histórico: con capacidad positiva
+devuelve bytes almacenados incluyendo `\0`, también si el texto se trunca.
+Con capacidad cero devuelve 0 sin escribir; una capacidad negativa genera error
+nativo. Ver [contrato y pruebas de conteo](docs/runtime-compatibility/p1-e-steamid-count.md).
 
 Para L4D2, el AppID es:
 
@@ -732,6 +780,7 @@ make release-linux
 make release-windows
 make clean-linux
 make clean-windows
+make clean-all
 ```
 
 ## Variables de entorno
@@ -753,14 +802,34 @@ TARGET_SDK
 ENV_FILE
 ```
 
-Por defecto:
+Al usar `make`, las rutas predeterminadas son relativas a la raíz del repo:
 
-```text
-DEPS_DIR=.deps
-STEAMWORKS_SDK_NAME=sdk
-STEAMWORKS_SDK_DIR=<repo>/<STEAMWORKS_SDK_NAME>
-TARGET_SDK=l4d2
+| Ruta | Linux | Windows |
+| --- | --- | --- |
+| Dependencias | `.deps/exts-linux` | `.deps/exts-windows` |
+| Build AMBuild | `.build/linux-l4d2` | `.build/windows-l4d2` |
+| Paquete preparado | `.build/package-exts-linux` | `.build/package-exts-windows` |
+| Artefacto de release | `dist/linux/artifact` | `dist/windows/artifact` |
+
+El SDK usa `STEAMWORKS_SDK_NAME=sdk` y se busca en
+`<repo>/<STEAMWORKS_SDK_NAME>`, salvo que se indique `STEAMWORKS_SDK_DIR`.
+El script Linux usa `TARGET_SDK=l4d2`; el script Windows también compila para L4D2.
+
+Para cambiar las rutas desde `make`, usar sus variables por plataforma, por
+ejemplo:
+
+```bash
+make deps-exts-linux LINUX_DEPS_DIR=/ruta/dependencias-linux
+make build-exts-linux LINUX_DEPS_DIR=/ruta/dependencias-linux LINUX_BUILD_DIR=/ruta/build-linux STEAMWORKS_SDK_NAME=sdk_158a
 ```
+
+Los equivalentes Windows son `WINDOWS_DEPS_DIR` y `WINDOWS_BUILD_DIR`.
+`make` pasa esas rutas a los scripts como `DEPS_DIR` y `BUILD_DIR`. Si los scripts
+se ejecutan directamente, usan `<repo>/.deps` por defecto para las dependencias;
+para reproducir la separación por plataforma hay que indicar `DEPS_DIR`.
+`ENV_FILE` y `TARGET_SDK` son opciones de los scripts Linux; los scripts Windows
+leen `.env` desde la raíz del repositorio. Las variables ya definidas en el
+proceso, incluidas las que pasa `make`, tienen prioridad sobre `.env`.
 
 También se puede crear un archivo local:
 
@@ -783,13 +852,11 @@ Los scripts de dependencias descargan y preparan:
 - `alliedmodders/metamod-source`, rama `1.12-dev`;
 - `alliedmodders/ambuild`.
 
-Todo se instala localmente dentro de:
+Al usar los targets de `make`, las dependencias se instalan en
+`.deps/exts-linux/` o `.deps/exts-windows/`, según la plataforma.
 
-```text
-.deps/
-```
-
-También se crea un entorno virtual de Python para AMBuild.
+Dentro de cada directorio se crea un entorno virtual de Python para AMBuild:
+`.venv-linux/` o `.venv-windows/`, respectivamente.
 
 El Steamworks SDK no se descarga automáticamente.
 
@@ -849,7 +916,8 @@ El workflow principal usa jobs separados para:
 - preparar dependencias;
 - compilar Linux 32-bit;
 - compilar Windows x86;
-- publicar releases oficiales usando el artefacto Linux.
+- preparar y validar los paquetes Linux y Windows;
+- publicar releases con los ZIP de ambas plataformas.
 
 En CI se clona también:
 
@@ -863,7 +931,10 @@ y se usa:
 sdk_158a
 ```
 
-El release oficial se enfoca en Linux 32-bit.
+Linux 32-bit sigue siendo la plataforma principal. El job `publish` espera
+los builds y paquetes de ambas plataformas. Los pushes a `main` y `develop`
+actualizan los canales `channel/latest` y `channel/develop`, respectivamente;
+los tags `v*` generan releases versionados.
 
 Para detalle del sistema de build y del empaquetado actual, ver también:
 
@@ -877,7 +948,7 @@ docs/DEVELOPMENT.md
 El repositorio documenta pruebas usando:
 
 ```text
-scripts/steamwork_test.sp
+scripting/steamwork_test.sp
 ```
 
 Cobertura documentada:
@@ -885,6 +956,11 @@ Cobertura documentada:
 ```text
 docs/TestCoverage.md
 ```
+
+Las listas siguientes corresponden al plugin de ejemplo histórico. La cobertura
+vigente de GC local, streaming, forwards y recuperación Steam está en la
+[matriz P5-R17](docs/runtime-compatibility/p5/validation-results.json); los límites
+del ejemplo no son casos pendientes del candidato.
 
 Áreas verificadas:
 
@@ -920,19 +996,19 @@ docs/TestCoverage.md
 
 Documentos disponibles:
 
-```text
-docs/README.md
-docs/GetSchemaForGame_550.md
-docs/ISteamHTTP.md
-docs/ISteamFriends.md
-docs/ISteamUserStats.md
-docs/TestCoverage.md
-```
+- [Índice técnico](docs/README.md)
+- [Desarrollo local](docs/DEVELOPMENT.md)
+- [Sistema de build](docs/BUILD_SYSTEM.md)
+- [Schema de L4D2](docs/GetSchemaForGame_550.md)
+- [HTTP](docs/ISteamHTTP.md)
+- [Limitaciones de ISteamFriends](docs/ISteamFriends.md)
+- [Stats de usuarios](docs/ISteamUserStats.md)
+- [Cobertura de pruebas](docs/TestCoverage.md)
 
 Notas recomendadas:
 
 - usar enlaces relativos dentro de `docs/README.md`;
-- evitar rutas absolutas locales como `C:\GitHub\...`;
+- evitar rutas absolutas de una máquina local;
 - mantener explícitas las limitaciones runtime para no reintroducir interfaces ya descartadas.
 
 ## Consideraciones importantes

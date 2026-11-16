@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "documentation_only": true,
+  "enabled": false,
+  "file_name": "steam_api.dll",
+  "origin": "Local sdk_158a; pinned SDK checkout inventoried in P0",
+  "role": "sdk-reference",
+  "format": "PE",
+  "architecture": "x86",
+  "size_bytes": 268136,
+  "sha256": "e0ccfcdde7bbba55dba4c19007299018a2cf86f92c7bc1df4af134c65dbf8003",
+  "build_id": null,
+  "pid_observed": null,
+  "loaded_module_confirmed": false,
+  "exports": {
+    "SteamGameServer_InitSafe": [
+      {
+        "rva": null,
+        "size_bytes": null,
+        "kind": "export_name_only"
+      }
+    ],
+    "SteamInternal_GameServer_Init": [],
+    "SteamInternal_GameServer_Init_V2": [
+      {
+        "rva": null,
+        "size_bytes": null,
+        "kind": "export_name_only"
+      }
+    ],
+    "SteamGameServer_Shutdown": [
+      {
+        "rva": null,
+        "size_bytes": null,
+        "kind": "export_name_only"
+      }
+    ],
+    "SteamInternal_CreateInterface": [
+      {
+        "rva": null,
+        "size_bytes": null,
+        "kind": "export_name_only"
+      }
+    ],
+    "SteamGameServerInternal_CreateInterface": [],
+    "SteamGameServer_GetHSteamUser": [
+      {
+        "rva": null,
+        "size_bytes": null,
+        "kind": "export_name_only"
+      }
+    ],
+    "SteamGameServer_GetHSteamPipe": [
+      {
+        "rva": null,
+        "size_bytes": null,
+        "kind": "export_name_only"
+      }
+    ],
+    "g_pSteamClientGameServer": [
+      {
+        "rva": null,
+        "size_bytes": null,
+        "kind": "export_name_only"
+      }
+    ]
+  },
+  "imports_of_interest": [],
+  "relocations_of_interest": [],
+  "abi_verified": false,
+  "initialization_route_verified": false,
+  "notes": [
+    "SDK files are reference/link dependencies unless a selected process maps this exact device/inode.",
+    "Export/import/relocation presence is not proof of an executed call path or ABI.",
+    "Loaded status verifies process maps device/inode; it is not a hash of mapped memory."
+  ],
+  "source_relative_path": "sdk_158a/redistributable_bin/steam_api.dll"
+}

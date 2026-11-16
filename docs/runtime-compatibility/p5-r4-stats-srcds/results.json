@@ -1,0 +1,89 @@
+{
+  "timestamp_utc": "2026-11-15T12:59:35.065545+00:00",
+  "local_date": "2026-11-15",
+  "branch": "develop",
+  "base_commit": "46e3ee05fc29ad090a1d6f7b1cb5e3dca9855350",
+  "checkpoint": "p5-r4",
+  "candidate_sha256": "bc76b00d0614f8f8489f8d3d30e3d654976f3bfde689f17d8731018d6c7ac639",
+  "result": "passed_float_success_and_missing_key",
+  "scope": "One authorized human; two read-only rounds on actual SRCDS x86 via LinuxGSM in competitive_dev, isolated sm_basepath on 27015",
+  "profile": "l4d2-23990100-linux-x86",
+  "schema_sha256": "3f9e9bc415131265daea10084d49a70cf03303eecbbd83b623bcf77240c37f2b",
+  "schema_declares_numeric_types": false,
+  "rounds": [
+    {
+      "trace": "runtime.json",
+      "checks": "checks.json",
+      "schema_keys_scanned": 733,
+      "successful_float_keys": 12,
+      "missing_checks": 2,
+      "failures": 0
+    },
+    {
+      "trace": "runtime-repeat.json",
+      "checks": "checks-repeat.json",
+      "schema_keys_scanned": 733,
+      "successful_float_keys": 12,
+      "missing_checks": 2,
+      "failures": 0
+    }
+  ],
+  "successful_float_keys": [
+    "Stat.KitsUsed.Avg",
+    "Stat.PillsUsed.Avg",
+    "Stat.KitsShared.Avg",
+    "Stat.WasRevived.Avg",
+    "Stat.WasProtected.Avg",
+    "Stat.FFDamageGame.Avg",
+    "Stat.PillsShared.Avg",
+    "Stat.TeamRevived.Avg",
+    "Stat.TeamProtected.Avg",
+    "Stat.AdrenalineShared.Avg",
+    "Stat.AdrenalineUsed.Avg",
+    "Stat.DefibrillatorsUsed.Avg"
+  ],
+  "positive_means": "getter success, finite value overwrites NaN sentinel, bit-identical client/AccountID outputs; not a requirement that numeric value be greater than zero",
+  "integer_control": "Stat.GamesPlayed.Total read by both routes before each scan, equal",
+  "missing_key": "__steamworks_accept_missing_stat_p5_r4__",
+  "missing_key_absent_from_local_stats_and_achievements": true,
+  "missing_getters": [
+    "GetStatCell",
+    "GetStatAuthIDCell",
+    "GetStatFloat",
+    "GetStatAuthIDFloat"
+  ],
+  "missing_individual_reads": 16,
+  "missing_outputs": "all four getters return false; distinct integer sentinels and float NaN payload bits preserved; checked before/after each round",
+  "float_rejected_schema_keys_per_round": 721,
+  "rejected_float_outputs": "both routes preserve their NaN sentinel bits",
+  "actual_values_or_identifiers_logged": false,
+  "stats_written": false,
+  "shutdown": "explicit quit, consumers stopped, no SourceMod error logs or crash markers",
+  "restoration": "original selector/config hashes and original extension mapped; Steam connected; lab removed",
+  "public_API_changed": false,
+  "production_touched": false,
+  "SRCDS_ASan_instrumented": false,
+  "limits": [
+    "No complete stats universe/type classification: rejected float getters can correspond to integers or unavailable user stats.",
+    "One authorized human; no bot/fallback/disconnected identity or complete forward/consumer/GC/lifecycle acceptance.",
+    "Baseline restored by isolated selector; no in-place installation of archive rollback."
+  ],
+  "evidence_sha256": {
+    "candidate.json": "85daa65194d217fc3ee451d6356cf6f6e4eea94969dacd1b65f4db20166484fc",
+    "checks-repeat.json": "ea888bfcdcce80c97ee2c2be839234d890c60346ad07bab334b82641b67a71c8",
+    "checks.json": "ea888bfcdcce80c97ee2c2be839234d890c60346ad07bab334b82641b67a71c8",
+    "cleanup.json": "d567622de5d34abceb3a8e273810b8d0e2bf32a09b44a7005cbb35e1b945dd11",
+    "compile.log": "b83fa2898ab0214ccb7aed47357d0605cbab334df878ccad3c0bdcd796dc563c",
+    "generate-schema.py": "67ec36d8a43b671a0714df0bec9341461a029c699709585777070f9c491e2c9b",
+    "harness.sp": "033fbeed423ecabb8cf313920e013d42974c7533c264ade715f033070ac773ac",
+    "loaded-modules-final.json": "ba6333f664e0e4f270a2ed55fccf0d7c483e7d4496badeb533f278b3c2d80aa4",
+    "loaded-modules.json": "09f3fc10f327264c37cec87c63499ac06ac97d502169125f3b968d55f539c68f",
+    "ready.json": "cb76eec97b2dceb2aa4393b5c00a48bdaf0698ab6d68e0db96f9c1c19f2c313a",
+    "restored-selector.json": "95df571788e79a4b847384803d914320142d4eb5882090d314d9abe5270e8fd7",
+    "runtime-repeat.json": "9ba87fb19d9a7643d854051bac70cacdc9332c23b857bd403cd85a5bdedfbc85",
+    "runtime.json": "ebf7bdaf7f7d691c75b9fc201d1d97913df5068abe4c479fd03577881dbc3c1c",
+    "setup.json": "d61862582e351c4c6fafb1b476717f479a4b2df8f24dec9d31f151ff776fdfd4",
+    "shutdown.json": "214c547737ea65f69ca64bc5a261c2e1ed27fd0c02c4ecb9579b8e56e317ff2a",
+    "stats_schema_keys.inc": "b9030175c42bc527888052d0bf34cfdb890cd75594bf2dd94b8fe6e1114ce9c8"
+  }
+}

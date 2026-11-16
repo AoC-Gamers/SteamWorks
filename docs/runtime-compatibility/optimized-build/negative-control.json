@@ -1,0 +1,5 @@
+{
+  "old_production_hook": "compilation rejected at -O3 -DNDEBUG -m32 -Werror",
+  "error": "stringop-overflow: padded allocation 2147483648 exceeds maximum object size 2147483647",
+  "diagnostics_suppressed": false
+}

@@ -1,0 +1,2 @@
+PASS: 30 public IP scenarios (real SDK address types, signed char, simulated host/Steam)
+PASS: 30 public IP scenarios (real SDK address types, unsigned char, simulated host/Steam)

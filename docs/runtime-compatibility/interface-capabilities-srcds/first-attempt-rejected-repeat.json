@@ -1,0 +1,84 @@
+{
+  "timestamp_utc": "2026-11-15T21:51:24.404677+00:00",
+  "phase": "rejected-repeat",
+  "binding_verification": null,
+  "commands": [
+    "sm_sw_capabilities rejected",
+    "sm_sw_restore_check http"
+  ],
+  "driver_trace": [
+    "[SW-CAP] typed_probe kind=0 pass=1",
+    "[SW-CAP] typed_probe kind=1 pass=1",
+    "[SW-CAP] typed_probe kind=2 pass=1",
+    "[SW-CAP] typed_probe kind=3 pass=1",
+    "[SW-CAP] typed_probe kind=4 pass=1",
+    "[SW-CAP] typed_probe kind=5 pass=1",
+    "[SW-CAP] gc queued=0 retrieval_attempted=1 retrieval_result=1",
+    "[SW-CAP] typed_probe kind=7 pass=1",
+    "[SW-CAP] typed_probe kind=8 pass=1"
+  ],
+  "console_trace": [
+    "[SW-CAP] check=stable_resolver_result pass=1",
+    "[SW-CAP] interface kind=0 available=1 typed_probe=1",
+    "[SW-CAP] check=provided_interface_minimum_query pass=1",
+    "[SW-CAP] check=stable_resolver_result pass=1",
+    "[SW-CAP] interface kind=1 available=1 typed_probe=1",
+    "[SW-CAP] check=provided_interface_minimum_query pass=1",
+    "[SW-CAP] check=stable_resolver_result pass=1",
+    "[SW-CAP] interface kind=2 available=1 typed_probe=1",
+    "[SW-CAP] check=provided_interface_minimum_query pass=1",
+    "[SW-CAP] check=stable_resolver_result pass=1",
+    "[SW-CAP] interface kind=3 available=1 typed_probe=1",
+    "[SW-CAP] check=provided_interface_minimum_query pass=1",
+    "[SW-CAP] check=stable_resolver_result pass=1",
+    "[SW-CAP] interface kind=4 available=1 typed_probe=1",
+    "[SW-CAP] check=provided_interface_minimum_query pass=1",
+    "[SW-CAP] check=stable_resolver_result pass=1",
+    "[SW-CAP] interface kind=5 available=1 typed_probe=1",
+    "[SW-CAP] check=provided_interface_minimum_query pass=1",
+    "[SW-CAP] check=stable_resolver_result pass=1",
+    "[SW-CAP] interface kind=6 available=0 typed_probe=0",
+    "[SW-CAP] check=matchmaking_absent_not_called pass=1",
+    "[SW-CAP] check=stable_resolver_result pass=1",
+    "[SW-CAP] interface kind=7 available=1 typed_probe=1",
+    "[SW-CAP] check=unknown_GC_version_refused pass=0",
+    "[SW-CAP] check=stable_resolver_result pass=1",
+    "[SW-CAP] interface kind=8 available=1 typed_probe=1",
+    "[SW-CAP] check=provided_interface_minimum_query pass=1",
+    "[SW-CAP] check=public_gameserver_loaded_connected pass=1",
+    "[SW-CAP] check=public_IPv4_query pass=1",
+    "[SW-CAP] check=public_stats_failure_preserves_cell pass=1",
+    "[SW-CAP] check=public_stats_failure_preserves_float pass=1",
+    "[SW-CAP] check=public_GC_send_locally_intercepted pass=1",
+    "[SW-CAP] summary checks=56 failures=1 GC_available=1 rejected_mode=1",
+    "[SW-RESTORE] status loaded=1 connected=1 vac=1 completed=0 failed=0",
+    "[SW-RESTORE] queued context=1 callbacks=1 sent=1",
+    "[SW-RESTORE] complete pass=1 failure=0 success=1 status=200 body=1 context=1",
+    "[SW-RESTORE] request_closed"
+  ],
+  "processes": [
+    {
+      "pid": 130184,
+      "start_ticks": 3450855
+    }
+  ],
+  "error_log_metadata": {
+    "errors_20261115.log": {
+      "bytes": 437,
+      "sha256": "86eb681f012fc34fdd1e71f0a90463dfd5f51059e679bcfe8672112f6931c63e"
+    }
+  },
+  "expected_GC_version_rejections": 0,
+  "unexpected_errors": [
+    {
+      "file": "errors_20261115.log",
+      "line_sha256": "edddaec98f53953930b6a8382f5ca2b66e24091faec86fed0462f43472b3d505"
+    },
+    {
+      "file": "errors_20261115.log",
+      "line_sha256": "1ecec77dfd1a3581982ce4b732ee92588af0a163d33b4b26b7481a1668ad1deb"
+    }
+  ],
+  "crash_markers": [],
+  "raw_console_and_logs_exported": false
+}

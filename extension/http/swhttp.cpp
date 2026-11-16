@@ -18,23 +18,25 @@
 
 #include "swhttp.h"
 
-namespace
-{
-	void DelayedDeleteSteamWorksHTTPRequest(void *object)
-	{
-		SteamWorksHTTPRequest *pRequest = reinterpret_cast<SteamWorksHTTPRequest *>(object);
-		delete pRequest;
-	}
-}
-
 SteamWorksHTTP::SteamWorksHTTP()
 {
+	plsys->AddPluginsListener(this);
 	typeHTTP = handlesys->CreateType("HTTPHandle", this, 0, nullptr, nullptr, myself->GetIdentity(), nullptr);
 }
 
 SteamWorksHTTP::~SteamWorksHTTP()
 {
-	handlesys->RemoveType(typeHTTP, myself->GetIdentity());
+    m_destroying = true;
+    StopRuntime();
+    plsys->RemovePluginsListener(this);
+    if (typeHTTP != 0) { handlesys->RemoveType(typeHTTP, myself->GetIdentity()); typeHTTP = 0; }
+    // RemoveType normally closes every handle. Also detach any construction/dispatch survivor.
+    while (!m_requests.empty()) {
+        auto* request = *m_requests.begin();
+        m_requests.erase(request);
+        request->DetachManager();
+        request->Close();
+    }
 }
 
 HandleType_t SteamWorksHTTP::GetHTTPHandle() const
@@ -46,7 +48,7 @@ void SteamWorksHTTP::OnHandleDestroy(HandleType_t type, void *object)
 {
 	if (type == typeHTTP) /* Heaven forbid we ever offer another handle. */
 	{
-		smutils->AddFrameAction(DelayedDeleteSteamWorksHTTPRequest, object);
+		static_cast<SteamWorksHTTPRequest*>(object)->Close();
 	}
 }
 
@@ -61,4 +63,31 @@ bool SteamWorksHTTP::GetHandleApproxSize(HandleType_t type, void *object, unsign
 	}
 
 	return false;
+}
+
+void SteamWorksHTTP::Track(SteamWorksHTTPRequest* request) { m_requests.insert(request); }
+void SteamWorksHTTP::Untrack(SteamWorksHTTPRequest* request) { m_requests.erase(request); }
+
+void SteamWorksHTTP::StopRuntime()
+{
+ if (!m_accepting) { return; }
+ m_accepting = false;
+ ++m_generation;
+ auto requests = m_requests;
+ for (auto* request : requests) {
+  if (m_requests.count(request) != 0) { request->Invalidate(); }
+ }
+}
+
+void SteamWorksHTTP::StartRuntime()
+{
+ if (!m_destroying) { m_accepting = true; }
+}
+
+void SteamWorksHTTP::OnPluginWillUnload(IPlugin* plugin)
+{
+ auto requests = m_requests;
+ for (auto* request : requests) {
+  if (m_requests.count(request) != 0) { request->PluginUnloading(plugin); }
+ }
 }

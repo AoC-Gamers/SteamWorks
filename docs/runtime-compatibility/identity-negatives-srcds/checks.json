@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "T15": "passed",
+  "T29": "partial",
+  "stable_epoch_checks": 40,
+  "failures": 0,
+  "expected_native_errors_in_stable_epoch": 15,
+  "errors_since_baseline_including_previous_process": {
+    "negative_capacity": 9,
+    "invalid_output_address": 3,
+    "invalid_client": 14
+  },
+  "unexpected_errors": 0,
+  "same_human_preauth_observed": true,
+  "scope": "Reached real-host paths only; inconsistent validated identity and validated-account-only fallback remain deterministic."
+}

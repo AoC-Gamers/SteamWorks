@@ -21,6 +21,7 @@
 #include "smsdk_ext.h"
 #include "isteamgamecoordinator.h"
 #include "steam_gameserver.h"
+#include "swinterfaces.h"
 
 #if defined(STEAM_API_INTERNAL_H) || !defined(STEAM_API_EXPORTS)
 	S_API ISteamClient *g_pSteamClientGameServer;
@@ -34,6 +35,7 @@ public:
 
 	ISteamClient *GetSteamClient(void);
 	ISteamGameServer *GetGameServer(void);
+	steamworks::ISteamGameServer014* GetGameServerAuth014();
 	ISteamUtils *GetUtils(void);
 	ISteamNetworking *GetNetworking(void);
 	ISteamGameServerStats *GetServerStats(void);
@@ -46,9 +48,12 @@ public:
 
 private:
 	void GetUserAndPipe(HSteamUser &hSteamUser, HSteamPipe &hSteamPipe);
+	template <typename Interface> const char* CompatibleVersion();
+	bool m_rejectedVersions[static_cast<size_t>(steamworks::InterfaceId::Count)] = {};
 
 	ISteamClient *m_pClient = nullptr;
 	ISteamGameServer *m_pGameServer = nullptr;
+	steamworks::ISteamGameServer014* m_pAuthServer014 = nullptr;
 	ISteamUtils *m_pUtils = nullptr;
 	ISteamNetworking *m_pNetworking = nullptr;
 	ISteamGameServerStats *m_pStats = nullptr;

@@ -1,0 +1,36 @@
+{
+  "lifecycle": [
+    "L 11/15/2026 - 00:00:04: [STEAMWORKS] Steam lifecycle profile installed: l4d2-23990100-linux-x86",
+    "L 11/14/2026 - 23:56:00: [STEAMWORKS] Steam lifecycle profile installed: l4d2-23990100-linux-x86",
+    "L 11/14/2026 - 23:56:01: [STEAMWORKS] Steam lifecycle init observed: result=0",
+    "L 11/14/2026 - 23:56:23: [STEAMWORKS] Steam lifecycle profile installed: l4d2-23990100-linux-x86",
+    "L 11/14/2026 - 23:56:25: [STEAMWORKS] Steam lifecycle init observed: result=0",
+    "L 11/14/2026 - 23:56:55: [STEAMWORKS] Steam lifecycle profile installed: l4d2-23990100-linux-x86",
+    "L 11/14/2026 - 23:59:48: [STEAMWORKS] Steam lifecycle shutdown observed: consumers stopped"
+  ],
+  "interface_literals_only": {
+    "/data/serverfiles/bin/engine_srv.so": [
+      "SteamGameServer014"
+    ],
+    "/data/serverfiles/bin/libsteam_api.so": [
+      "SteamGameServer014"
+    ]
+  },
+  "active_plugins": [
+    "antiflood.smx",
+    "left4dhooks.smx",
+    "match_vote.smx",
+    "basecommands.smx",
+    "basechat.smx",
+    "adminmenu.smx",
+    "plugin_manager.smx",
+    "l4d_pause_message.smx",
+    "clientprefs.smx",
+    "playercommands.smx",
+    "sounds.smx",
+    "confoglcompmod.smx",
+    "funcommands.smx",
+    "adminhelp.smx",
+    "steamworks_acceptance.smx"
+  ]
+}

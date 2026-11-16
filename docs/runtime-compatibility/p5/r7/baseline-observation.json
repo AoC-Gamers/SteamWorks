@@ -1,0 +1,13 @@
+{
+  "captured_utc": "2026-11-15T17:00:23.217752+00:00",
+  "files_sha256": {
+    "extensions/steamworks.ext.so": "9ca37aadcd83448d49126d6a72babcb8ec97ec5a06c171b4821ae0ee3cf05d70",
+    "scripting/include/steamworks.inc": "e51bcd397139edc3d144f130c45f0f8edbf55d12278736e0134e4c650ec64f17"
+  },
+  "absent": [
+    "gamedata/steamworks.txt"
+  ],
+  "read_only": true,
+  "capture_method": "docker cp of owned files and read-only absence check; no process operations",
+  "baseline_unchanged": true
+}

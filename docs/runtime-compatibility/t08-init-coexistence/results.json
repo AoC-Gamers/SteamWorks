@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "task": "T08 init coexistence correction",
+  "timestamp_utc": "2026-11-15T15:20:54.479212+00:00",
+  "branch": "develop",
+  "baseline_commit": "46e3ee05fc29ad090a1d6f7b1cb5e3dca9855350",
+  "status": "implemented_and_validated_locally_x86; SRCDS_acceptance_pending",
+  "public_API_changed": false,
+  "candidate_sha256": "82347b99d5130bd411cdc0b35d215dc87fc82d394a2252ccd83d5d4940b6ca5a",
+  "public_include_sha256": "b4e021b2df9fd81101754f0795da2d5c2eee04c125a8e4997a0b19595fc3affb",
+  "binary": {
+    "platform": "linux-x86",
+    "path": ".build/t08-init-coexist/build/package/addons/sourcemod/extensions/steamworks.ext.so",
+    "warnings_as_errors": true,
+    "build_log_sha256": "10e0f2b7f150c093904e6ca19831512e3b986eec3f68d69c37c2954d4d9ad11d"
+  },
+  "mechanism": {
+    "engine_build_id": "b152439170af081a0d31fc357364a4cd4caa56ac",
+    "SDK_provider_build_id": "0d18f257d51538a7b34c594a31e042b04001fb1c",
+    "engine_call_RVA": "0x2018eb",
+    "relocation_RVA": "0x2018ec",
+    "relocation_type": "R_386_PC32",
+    "instruction": "CALL rel32, 5 bytes",
+    "SDK_export_RVA": "0x1b430",
+    "SDK_export": "SteamInternal_GameServer_Init",
+    "entrypoint_modified": false,
+    "caller_before": "8b 83 b4 00 00 00 89 04 24",
+    "caller_after": "84 c0 0f 84",
+    "wrapper": "Existing six-argument typed legacy wrapper, bool preserved; call current SDK export chain, then RuntimeStarted only on true.",
+    "shutdown": "Existing validated SDK entry CDetour unchanged."
+  },
+  "validation": {
+    "executable_x86_checks": 142,
+    "profile_admission_checks": 21,
+    "negative_control": "passed: lost init event rejected by recovery assertion",
+    "detour_owner_scenarios": 27,
+    "integrated_suites": 14,
+    "all_integrated_suites_passed": true,
+    "public_API_comparison_to_P0": "passed",
+    "asan_lsan_ubsan": "x86 executable coexistence and profile tests, no suppressions; instrumented VM remains isolated",
+    "initial_integrated_fixture_compile_error": "Mock profile type lacked decoder declaration; fixed and all 14 suites rerun successfully."
+  },
+  "source_sha256": {
+    "extension/core/swinitcallsite.h": "f841e15d5c237f7b9bd25ef59da828fc57403adf8e790324c2985a16f26c57f8",
+    "extension/core/swlifecycleprofile.h": "034fa2eba2e0a5dcccd7d906b949a410f971f5c168e01746b7aeec799a2d54fa",
+    "extension/hooks/swgsdetours.cpp": "077392afe9a07fd06380118eef1d2ce4592778c8b6a70b097c7a660988d299bb",
+    "extension/hooks/swgsdetours.h": "589cd716d9d717260d25e08aa28a406d0692597aa6b1565e8ab3038fbc192cda",
+    "tests/init_coexistence_test.cpp": "0ad26557ae4902e4f8e0a2698a99a17e7863460f6c46f7de371d2b0e01f55a93",
+    "tests/init_call_profile_test.cpp": "8c0b3b1ea3cded7b076ecb7f7f7bec20745e87a132300425a9a3a5026175f83f",
+    "tests/detours_test_host.h": "e0d7520d765a3b7134a7f0b01e9615b813cdaed05f05cd923ecd4f45c3d99d93",
+    "tests/detours_lifecycle_test.cpp": "693bd0741739b6b33d801d9ca4d1e729a7d099ae17296e9a98f39fb5397e95b7",
+    "tests/lifecycle_profile_identity_test.cpp": "300867c0ed2a638f435fbd4778e478f786c94b19170a66cfd9b98bebae526650",
+    "scripts/test-init-coexistence.sh": "4af784698319f6f9e66f57bf663c21b5afda0f26bc08b29276b49e0c533cb4d3",
+    "scripts/test-integration.py": "03686ba06bcf26c00f550aeda24cc8d377eb9df2623158b899b32d71e8f5be9d"
+  },
+  "not_performed": [
+    "No competitive_dev or LinuxGSM operations",
+    "No candidate installed into a gameserver",
+    "No new auth/stats/human acceptance",
+    "No SRCDS same-process reinit or exit acceptance for new ELF",
+    "No SourceTVSupport source or binary modification",
+    "No prior review archive regeneration",
+    "No x64/Windows build"
+  ],
+  "committed": false,
+  "published": false,
+  "production_touched": false,
+  "global_P5_accepted": false
+}

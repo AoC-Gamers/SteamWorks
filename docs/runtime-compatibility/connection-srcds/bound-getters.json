@@ -1,0 +1,9 @@
+{
+  "pid": 147982,
+  "mapped_candidate_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+  "getter_count": 9,
+  "getter_executable_ranges_verified": true,
+  "owner_slot_writable_range_verified": true,
+  "exact_binary_owner_slot_profile": true,
+  "raw_command_omitted": true
+}

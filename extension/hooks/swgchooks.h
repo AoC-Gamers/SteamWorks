@@ -35,7 +35,11 @@ class SteamWorksGCHooks
 
 	public:
 		void AddHooks(ISteamGameCoordinator *pGC);
-		void RemoveHooks(ISteamGameCoordinator *pGC, bool destroyed = false);
+		void Stop();
+	void Start();
+	void TryAttach();
+	SteamWorksGCHooks(const SteamWorksGCHooks&) = delete;
+	SteamWorksGCHooks& operator=(const SteamWorksGCHooks&) = delete;
 
 	public:
 		EGCResults SendMessage(uint32 unMsgType, const void *pubData, uint32 cubData);
@@ -46,7 +50,13 @@ class SteamWorksGCHooks
 		IForward *pGCSendMessageForward = nullptr;
 		IForward *pGCMessageAvailableForward = nullptr;
 		IForward *pGCRetrieveMessageForward = nullptr;
-		unsigned char uHooked = 0;
+		ISteamGameCoordinator* m_target = nullptr;
+	int m_hookIds[3] = {};
+	bool m_frameHook = false;
+	bool m_enabled = false;
+	uint64 m_generation = 0;
+	void Detach();
+	void SetFrameHook(bool enabled);
 };
 
 void OurGCGameFrameHook(bool simulating);

@@ -1,0 +1,67 @@
+{
+  "date": "2026-11-14",
+  "branch": "develop",
+  "base_commit": "46e3ee05fc29ad090a1d6f7b1cb5e3dca9855350",
+  "architecture": "linux-x86",
+  "deployed": false,
+  "srcds_acceptance": "pending",
+  "public_api": "passed P0 comparison",
+  "cause": "Real providers preserve low context word but zero high word in HTTP streaming events; completion retains full context. Extension previously forwarded truncated event value.",
+  "wire": {
+    "headers_size": 12,
+    "data_size": 20,
+    "completion_size": 24,
+    "context_offset": 4,
+    "data_offset_offset": 12,
+    "data_length_offset": 16,
+    "set_context": "0000000712345678",
+    "stream_context": "0000000012345678",
+    "completion_context": "0000000712345678"
+  },
+  "provider_sha256": {
+    "steamclient.so": "80f6c6f041fb187daff229aeb26b9112ea18dc76edab211d2cfea74cc022ecec",
+    "sdk32-steamclient.so": "c4e495a2bbc4f23e63f2b437cb64107cd63d7c7f79d04791cba0ef71022491bc"
+  },
+  "tests": {
+    "deterministic_checks": 92,
+    "negative_control": "passed: old event context fails expected assertion",
+    "integration_suites": 11,
+    "sanitizers": [
+      "ASan",
+      "LSan",
+      "UBSan"
+    ],
+    "suppressions": false,
+    "asan_options": "detect_leaks=1:halt_on_error=1:alloc_dealloc_mismatch=1:new_delete_type_mismatch=1",
+    "lsan_options": "exitcode=23",
+    "lifecycle_suites": 6,
+    "real_provider_probe": "two offline local-user processes; no extension, SRCDS, logon or authentication"
+  },
+  "build": {
+    "artifact": ".build/http-stream-context/build/package/addons/sourcemod/extensions/steamworks.ext.so",
+    "sha256": "bc76b00d0614f8f8489f8d3d30e3d654976f3bfde689f17d8731018d6c7ac639",
+    "format": "ELF32 little-endian ET_DYN EM_386",
+    "validation": "ARTIFACT_VALIDATION_OK"
+  },
+  "source_sha256": {
+    "extension/http/swhttprequest.cpp": "3ba07c83837224ecde903508852e7ec1f6b88083ad70521104f87c4509094922",
+    "extension/http/swhttprequest.h": "e6e676d284e246b4de125c4688c48360d64653e46b72e6be8f60025b6bab45a9",
+    "extension/http/swhttp.h": "f5331691cf3cf2dbe36c1cd6bd55bd39c93e0c3c37f492c54edebcef0228b653",
+    "tests/http_stream_context_test.cpp": "71fb75ebecd45d60022e8ea05625ffbd38623ca4e39417d6b66f95be7e8c0b24",
+    "tests/http_gc_test_host.h": "0f0f9bb1b696ec1bd9a5ffd2c5bf9a5a093650348735bd03007fd2092b071f4d",
+    "tests/steam_callbacks_test_host.h": "49f5b9a70f9983dffadb8e565e44ddbc8475a3256745e4b22d2f9d07abdf71ea",
+    "tests/diagnostics/http_stream_context_probe.cpp": "d2780e0f0c071d772e4580c5ac6bed9323837d0412b398c83c042ed0a0b8195b",
+    "tests/diagnostics/run_http_stream_context_probe.py": "3656799b36960dd71ee41ce89f6fd2cbc8cf8ca57708cec3c907b17f08f49406",
+    "scripts/test-http-stream-context.sh": "c3dc3fe11c37675dfc2fdb25b9881bb48ca787f0681f904277a80b34bd883665",
+    "scripts/test-integration.py": "e1272caa38a0a0f33460f46de476adb5e6017fc52cdb217bb8ed4100af050024",
+    "sdk_158a/public/steam/isteamhttp.h": "20e6e41d3fdf59a5c61d5a28df76df5d8473487ad4df19999ba4a084c6b2e312",
+    "scripting/include/steamworks.inc": "b4e021b2df9fd81101754f0795da2d5c2eee04c125a8e4997a0b19595fc3affb"
+  },
+  "evidence_sha256": {
+    "asan-lifecycle.log": "153f67351bc04091a5e6a4fce72de4fd11c346d307f039505918b56b8f480d72",
+    "asan.log": "4b8bee8e413bafa95535a229155b13af9b6fa4ad73b917a46f19f8865bf4ac7b",
+    "integration.json": "14e060235acc86f7c4ccdb7149a1c47bb70e0a7c8ae469483b6f2e8c31e538bb",
+    "provider.log": "e9eb7867fb0a106b7acabcb201589e4da7285c694c699d90b480174548f7e7b2",
+    "sdk32-provider.log": "68b0df00daca65a36ae58775461549f674a4f528fd855754ebb54187fca60bf6"
+  }
+}

@@ -212,7 +212,6 @@ class SteamWorksConfig(object):
       '-msse',
       '-m32',
       '-fvisibility=hidden',
-      '-Wno-pointer-to-int-cast',
     ]
     cxx.cxxflags += [
       '-std=c++14',

@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "same_PID_and_start_ticks": true,
+  "same_module_file_mappings": true,
+  "real_SDK_disconnect_reconnect_observed": true,
+  "nine_getter_results_stable": true,
+  "retained_HTTP_across_outage": true,
+  "fresh_HTTP_during_and_after_outage": true,
+  "runtime_loaded_during_disconnect": true,
+  "unexpected_errors": 0,
+  "API_changed": false,
+  "production_touched": false
+}

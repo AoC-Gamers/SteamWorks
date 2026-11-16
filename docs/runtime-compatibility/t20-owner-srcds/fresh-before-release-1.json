@@ -1,0 +1,34 @@
+{
+  "timestamp_utc": "2026-11-15T19:12:15.197464+00:00",
+  "phase": "fresh-before-release-1",
+  "commands": [
+    "sm_sw_owner probe 121"
+  ],
+  "trace": [
+    "[SW-OWNER] queued sequence=121 hold=0 configured=1 sent=1",
+    "[SW-OWNER] callback sequence=121 context=1 pass=1",
+    "[SW-RESTORE] status loaded=1 connected=1 vac=1 completed=1 failed=0"
+  ],
+  "all_owner_trace": [
+    "[SW-OWNER] ready",
+    "[SW-OWNER] status pending=0 callbacks=0 sequence=0",
+    "[SW-OWNER] queued sequence=11 hold=1 configured=1 sent=1",
+    "[SW-OWNER] callback sequence=11 context=1 pass=1",
+    "[SW-OWNER] queued sequence=21 hold=1 configured=1 sent=1",
+    "[SW-OWNER] ended pending=1 callbacks=1 sequence=21",
+    "[SW-OWNER] ready",
+    "[SW-OWNER] status pending=0 callbacks=0 sequence=0",
+    "[SW-OWNER] queued sequence=121 hold=0 configured=1 sent=1",
+    "[SW-OWNER] callback sequence=121 context=1 pass=1"
+  ],
+  "owner_HTTP_handles": [],
+  "owner_HTTP_handle_count": 0,
+  "owner_plugin_rows": [
+    "  136 \"SteamWorks Pending Owner\" (1.0.0) by Lechuga"
+  ],
+  "plugin_rows": 136,
+  "plugin_error_rows": [],
+  "error_log_sizes": {},
+  "crash_markers": [],
+  "raw_handle_dump_removed": true
+}

@@ -5,7 +5,7 @@ import shutil
 from pathlib import Path
 
 
-ROOT_FILES = ("README.md", "CHANGELOG.md", "plugin-package-map.json")
+ROOT_FILES = ("README.md", "CHANGELOG.md", "LICENSE", "plugin-package-map.json")
 ROOT_DIRS = ("docs",)
 
 

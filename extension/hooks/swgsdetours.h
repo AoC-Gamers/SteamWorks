@@ -21,15 +21,21 @@
 #include "smsdk_ext.h"
 #include "../CDetour/detours.h"
 #include "steam_gameserver.h"
+#include "../core/swinitcallsite.h"
 
 class SteamWorksGSDetours
 {
 public:
 	SteamWorksGSDetours();
 	~SteamWorksGSDetours();
+	void Shutdown();
+	bool IsInstalled() const { return m_initCall.IsInstalled() && m_pShutdownDetour != nullptr; }
+	SteamWorksGSDetours(const SteamWorksGSDetours&) = delete;
+	SteamWorksGSDetours& operator=(const SteamWorksGSDetours&) = delete;
 
 private:
-	CDetour *m_pSafeInitDetour = nullptr;
+	ILibrary* m_library = nullptr;
+	steamworks::InitCallSite m_initCall;
 	CDetour *m_pShutdownDetour = nullptr;
 };
 

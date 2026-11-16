@@ -1,0 +1,70 @@
+{
+  "timestamp_utc": "2026-11-15T00:31:28.515893+00:00",
+  "local_date": "2026-11-14",
+  "branch": "develop",
+  "commit": "46e3ee05fc29ad090a1d6f7b1cb5e3dca9855350",
+  "committed": false,
+  "debug_build_deployed": false,
+  "SRCDS_restarted": false,
+  "public_native_and_forward_contract_changed": false,
+  "new_convar": {
+    "name": "steamworks_debug",
+    "default": 0,
+    "mask": {
+      "lifecycle": 1,
+      "interfaces": 2,
+      "hooks": 4,
+      "auth": 8
+    },
+    "range": [
+      0,
+      15
+    ]
+  },
+  "build": {
+    "status": "passed",
+    "platform": "linux-i386",
+    "sha256": "ccbd3fac0b9d65cf47a4cd29ad03f6ce7902add28c9a77aabafa2669a6eb7f44",
+    "warnings": 0,
+    "DT_TEXTREL": false,
+    "path": ".build/auth-debug-build/package/addons/sourcemod/extensions/steamworks.ext.so"
+  },
+  "tests": {
+    "integrated_suites_per_architecture": 9,
+    "debug_log_checks": 32,
+    "hook_lifecycle_checks": 53,
+    "auth_VM_checks_per_architecture": 227,
+    "ASan_LSan_enabled": true,
+    "suppression_files": [],
+    "real_convar_registration_in_SRCDS": "pending",
+    "actual_auth_transport_fix": "not_implemented"
+  },
+  "finding": "Engine analyzed uses SteamGameServer014 slot26; extension hooks 015; standalone probes show distinct objects/vtables/slot targets in both observed Steam providers. No live engine pointer or ticket capture.",
+  "source_sha256": {
+    "extension/core/swdebug.h": "5804bce8237d1fc8111d0b93c1262ad8d20be740906877756c690fc54f22e335",
+    "extension/core/swdebuglog.h": "56aa29452f60b5c93ac66a52f62f7bdf454c233d17f2a3858ec9fe6e54ec5fa9",
+    "extension/core/swdebug.cpp": "87f9ee88c07ff1e76b9f35570da1f7f5f9f7c11089c561398fdf2d52afcff49d",
+    "extension/hooks/swgshooks.cpp": "70ea6e64a70696d798e2d7dcdbe76cacc988c940b3b13783ac855082dd17c675",
+    "extension/hooks/swgshooks.h": "c70eec32a1adad235e1d3e44bc857f74a6c3b47cca452c308bc57685d31b37b4",
+    "extension/core/swgameserver.cpp": "02afbc89431c341b6ba4d771b815f27109023c0eefc4764a409351b8aeea1f63",
+    "extension/core/swforwards.cpp": "d930c86595966ed13effc7b39032863bc947ec7577c0809f212b2d441f0ad1bd",
+    "extension/extension.cpp": "f21542798116c69e8f12ae87b98167ba913d3fdbf4b60407e62da240da1822c5",
+    "extension/extension.h": "db08e0b6c1a69e85251482e331abcf19ea879a7441ba15cb30bb1396cf052bf5",
+    "extension/AMBuilder": "d25d7b7936b81b0af7fbce6a324edfd77eb6199f753de8501c2ee7f11eb10202",
+    "tests/debug_log_test.cpp": "252b8a7c1998fc862509c4d24e5fd48e4ef1488060e2751cdcdeb77eceadd651",
+    "tests/hooks_lifecycle_test.cpp": "78d003febfff8da114e1180f73df4d1c9378307320cdd67a07805937da0d2022",
+    "tests/diagnostics/gameserver_interface_probe.cpp": "a3321c97eceb633ef8f9a40998ac258e3a2fb3093e9d5abd12ef30399a73b40d",
+    "scripts/test-debug-log.sh": "ab53c5c253dcacd7172a72e51e53703d85a80d34357e77e4bf7c620d016ecd0f",
+    "scripts/test-integration.py": "f4e834d6fe7b2c1132919375b1e0b2b8c7fce379a3c7c75182751da672ccc574"
+  },
+  "evidence_sha256": {
+    "auth-vm-x64-final.log": "fef98e29221f8565c4a3142bf7fd6d57251d7f9fa031ae163bfbddc46d894937",
+    "auth-vm-x86.log": "fef98e29221f8565c4a3142bf7fd6d57251d7f9fa031ae163bfbddc46d894937",
+    "binary-evidence.json": "ea6d2751d9cddb428a4857e162645abd955e982f2a8fd3f43595e1972702abf7",
+    "debug-asan.log": "3e598bcb7df56c5b1ea738dcf3833546497d3215454a8f20c0fec095081182d5",
+    "engine-auth-call.txt": "029f7176bc8fd28970b984aae592ed8fdfdb5d803bd080357ff591c940546edf",
+    "engine-interface-init.txt": "434d677a5ca526920c1ef842ecd2e62f8791bc1fc7b21ff082513b1e77ef785b",
+    "integration-host.json": "13630cffffe4d185e75a5fab5125ce085d3333b5184b680c4dc9fcd3fc02ad83",
+    "integration-x86.json": "b64faa076fb0bc738c3170b877b945fca721a2730ab70aedec244859e9a5aa6f"
+  }
+}

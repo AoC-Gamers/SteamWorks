@@ -1,0 +1,130 @@
+
+.build/last-two-srcds/sourcemod.2.l4d2.so:     file format elf32-i386
+
+
+Disassembly of section .text:
+
+000450a0 <CHalfLife2::ReferenceToIndex(int)>:
+   450a0:	55                   	push   %ebp
+   450a1:	89 e5                	mov    %esp,%ebp
+   450a3:	53                   	push   %ebx
+   450a4:	57                   	push   %edi
+   450a5:	56                   	push   %esi
+   450a6:	83 ec 0c             	sub    $0xc,%esp
+   450a9:	e8 00 00 00 00       	call   450ae <CHalfLife2::ReferenceToIndex(int)+0xe>
+   450ae:	5b                   	pop    %ebx
+   450af:	81 c3 52 ff 09 00    	add    $0x9ff52,%ebx
+   450b5:	8b 7d 0c             	mov    0xc(%ebp),%edi
+   450b8:	be ff ff ff ff       	mov    $0xffffffff,%esi
+   450bd:	83 ff ff             	cmp    $0xffffffff,%edi
+   450c0:	0f 84 55 01 00 00    	je     4521b <CHalfLife2::ReferenceToIndex(int)+0x17b>
+   450c6:	85 ff                	test   %edi,%edi
+   450c8:	78 2d                	js     450f7 <CHalfLife2::ReferenceToIndex(int)+0x57>
+   450ca:	81 ff ff 0f 00 00    	cmp    $0xfff,%edi
+   450d0:	0f 87 45 01 00 00    	ja     4521b <CHalfLife2::ReferenceToIndex(int)+0x17b>
+   450d6:	8b 8b 94 56 00 00    	mov    0x5694(%ebx),%ecx
+   450dc:	85 c9                	test   %ecx,%ecx
+   450de:	0f 84 a9 00 00 00    	je     4518d <CHalfLife2::ReferenceToIndex(int)+0xed>
+   450e4:	03 8b 24 0a 00 00    	add    0xa24(%ebx),%ecx
+   450ea:	85 c9                	test   %ecx,%ecx
+   450ec:	0f 85 ab 00 00 00    	jne    4519d <CHalfLife2::ReferenceToIndex(int)+0xfd>
+   450f2:	e9 c4 00 00 00       	jmp    451bb <CHalfLife2::ReferenceToIndex(int)+0x11b>
+   450f7:	89 fa                	mov    %edi,%edx
+   450f9:	81 e2 ff 0f 00 00    	and    $0xfff,%edx
+   450ff:	8b 83 94 56 00 00    	mov    0x5694(%ebx),%eax
+   45105:	85 c0                	test   %eax,%eax
+   45107:	74 0c                	je     45115 <CHalfLife2::ReferenceToIndex(int)+0x75>
+   45109:	03 83 24 0a 00 00    	add    0xa24(%ebx),%eax
+   4510f:	85 c0                	test   %eax,%eax
+   45111:	75 12                	jne    45125 <CHalfLife2::ReferenceToIndex(int)+0x85>
+   45113:	eb 1b                	jmp    45130 <CHalfLife2::ReferenceToIndex(int)+0x90>
+   45115:	8b 83 98 56 00 00    	mov    0x5698(%ebx),%eax
+   4511b:	85 c0                	test   %eax,%eax
+   4511d:	74 11                	je     45130 <CHalfLife2::ReferenceToIndex(int)+0x90>
+   4511f:	8b 00                	mov    (%eax),%eax
+   45121:	85 c0                	test   %eax,%eax
+   45123:	74 0b                	je     45130 <CHalfLife2::ReferenceToIndex(int)+0x90>
+   45125:	89 d1                	mov    %edx,%ecx
+   45127:	c1 e1 04             	shl    $0x4,%ecx
+   4512a:	8b 44 08 04          	mov    0x4(%eax,%ecx,1),%eax
+   4512e:	eb 45                	jmp    45175 <CHalfLife2::ReferenceToIndex(int)+0xd5>
+   45130:	c7 83 b0 56 00 00 00 	movl   $0x0,0x56b0(%ebx)
+   45137:	00 00 00 
+   4513a:	c7 83 ac 56 00 00 00 	movl   $0x0,0x56ac(%ebx)
+   45141:	00 00 00 
+   45144:	8d 83 50 30 00 00    	lea    0x3050(%ebx),%eax
+   4514a:	8b 00                	mov    (%eax),%eax
+   4514c:	8b 40 58             	mov    0x58(%eax),%eax
+   4514f:	89 d1                	mov    %edx,%ecx
+   45151:	c1 e1 04             	shl    $0x4,%ecx
+   45154:	8b 44 08 0c          	mov    0xc(%eax,%ecx,1),%eax
+   45158:	89 83 a4 56 00 00    	mov    %eax,0x56a4(%ebx)
+   4515e:	8b 08                	mov    (%eax),%ecx
+   45160:	89 04 24             	mov    %eax,(%esp)
+   45163:	89 d6                	mov    %edx,%esi
+   45165:	ff 51 0c             	call   *0xc(%ecx)
+   45168:	89 f2                	mov    %esi,%edx
+   4516a:	8b 00                	mov    (%eax),%eax
+   4516c:	c1 e8 0c             	shr    $0xc,%eax
+   4516f:	89 83 a8 56 00 00    	mov    %eax,0x56a8(%ebx)
+   45175:	c1 ef 0c             	shr    $0xc,%edi
+   45178:	81 e7 ff ff 07 00    	and    $0x7ffff,%edi
+   4517e:	39 f8                	cmp    %edi,%eax
+   45180:	be ff ff ff ff       	mov    $0xffffffff,%esi
+   45185:	0f 44 f2             	cmove  %edx,%esi
+   45188:	e9 8e 00 00 00       	jmp    4521b <CHalfLife2::ReferenceToIndex(int)+0x17b>
+   4518d:	8b 83 98 56 00 00    	mov    0x5698(%ebx),%eax
+   45193:	85 c0                	test   %eax,%eax
+   45195:	74 24                	je     451bb <CHalfLife2::ReferenceToIndex(int)+0x11b>
+   45197:	8b 08                	mov    (%eax),%ecx
+   45199:	85 c9                	test   %ecx,%ecx
+   4519b:	74 1e                	je     451bb <CHalfLife2::ReferenceToIndex(int)+0x11b>
+   4519d:	89 f8                	mov    %edi,%eax
+   4519f:	c1 e0 04             	shl    $0x4,%eax
+   451a2:	01 c1                	add    %eax,%ecx
+   451a4:	8b 01                	mov    (%ecx),%eax
+   451a6:	85 c0                	test   %eax,%eax
+   451a8:	74 71                	je     4521b <CHalfLife2::ReferenceToIndex(int)+0x17b>
+   451aa:	8b 08                	mov    (%eax),%ecx
+   451ac:	89 04 24             	mov    %eax,(%esp)
+   451af:	ff 51 18             	call   *0x18(%ecx)
+   451b2:	83 f8 01             	cmp    $0x1,%eax
+   451b5:	19 f6                	sbb    %esi,%esi
+   451b7:	09 fe                	or     %edi,%esi
+   451b9:	eb 60                	jmp    4521b <CHalfLife2::ReferenceToIndex(int)+0x17b>
+   451bb:	c7 83 b0 56 00 00 00 	movl   $0x0,0x56b0(%ebx)
+   451c2:	00 00 00 
+   451c5:	c7 83 ac 56 00 00 00 	movl   $0x0,0x56ac(%ebx)
+   451cc:	00 00 00 
+   451cf:	8d 83 50 30 00 00    	lea    0x3050(%ebx),%eax
+   451d5:	8b 00                	mov    (%eax),%eax
+   451d7:	39 78 50             	cmp    %edi,0x50(%eax)
+   451da:	7e 3f                	jle    4521b <CHalfLife2::ReferenceToIndex(int)+0x17b>
+   451dc:	8b 40 58             	mov    0x58(%eax),%eax
+   451df:	85 c0                	test   %eax,%eax
+   451e1:	74 38                	je     4521b <CHalfLife2::ReferenceToIndex(int)+0x17b>
+   451e3:	89 f9                	mov    %edi,%ecx
+   451e5:	c1 e1 04             	shl    $0x4,%ecx
+   451e8:	8b 44 08 0c          	mov    0xc(%eax,%ecx,1),%eax
+   451ec:	85 c0                	test   %eax,%eax
+   451ee:	74 2b                	je     4521b <CHalfLife2::ReferenceToIndex(int)+0x17b>
+   451f0:	89 83 a4 56 00 00    	mov    %eax,0x56a4(%ebx)
+   451f6:	8d 8b a4 56 00 00    	lea    0x56a4(%ebx),%ecx
+   451fc:	89 4d f0             	mov    %ecx,-0x10(%ebp)
+   451ff:	8b 08                	mov    (%eax),%ecx
+   45201:	89 04 24             	mov    %eax,(%esp)
+   45204:	ff 51 0c             	call   *0xc(%ecx)
+   45207:	8b 4d f0             	mov    -0x10(%ebp),%ecx
+   4520a:	8b 00                	mov    (%eax),%eax
+   4520c:	c1 e8 0c             	shr    $0xc,%eax
+   4520f:	89 83 a8 56 00 00    	mov    %eax,0x56a8(%ebx)
+   45215:	8b 01                	mov    (%ecx),%eax
+   45217:	85 c0                	test   %eax,%eax
+   45219:	75 8f                	jne    451aa <CHalfLife2::ReferenceToIndex(int)+0x10a>
+   4521b:	89 f0                	mov    %esi,%eax
+   4521d:	83 c4 0c             	add    $0xc,%esp
+   45220:	5e                   	pop    %esi
+   45221:	5f                   	pop    %edi
+   45222:	5b                   	pop    %ebx
+   45223:	5d                   	pop    %ebp
+   45224:	c3                   	ret

@@ -22,6 +22,7 @@
 #include "smsdk_ext.h"
 #include "sourcehook.h"
 #include "steam_gameserver.h"
+#include "../core/swgameauth014.h"
 
 class SteamWorksGSHooks
 {
@@ -29,8 +30,13 @@ public:
 	SteamWorksGSHooks();
 	~SteamWorksGSHooks();
 
-	void AddHooks(ISteamGameServer *pGameServer);
-	void RemoveHooks(ISteamGameServer *pGameServer, bool destroyed = false);
+	void AddHooks(ISteamGameServer* pGameServer, steamworks::ISteamGameServer014* authServer);
+	void Stop();
+	void Start();
+	void TryAttach();
+	void TraceState() const;
+	SteamWorksGSHooks(const SteamWorksGSHooks&) = delete;
+	SteamWorksGSHooks& operator=(const SteamWorksGSHooks&) = delete;
 
 	bool WasRestartRequested(void);
 	void LogOnAnonymous(void);
@@ -40,7 +46,14 @@ private:
 	IForward *pRestartRequestedForward = nullptr;
 	IForward *pTokenRequestedForward = nullptr;
 	IForward *pBeginAuthSessionForward = nullptr;
-	unsigned char uHooked = 0;
+	ISteamGameServer* m_target = nullptr;
+	steamworks::ISteamGameServer014* m_authTarget = nullptr;
+	int m_hookIds[3] = {};
+	bool m_frameHook = false;
+	bool m_enabled = false;
+	uint64 m_generation = 0;
+	void Detach();
+	void SetFrameHook(bool enabled);
 };
 
 void OurGameFrameHook(bool simulating);

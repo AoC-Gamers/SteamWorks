@@ -2,8 +2,15 @@
 
 ## Resumen
 
-La interfaz `ISteamHTTP` sí es utilizable en el runtime del servidor dedicado
-de Left 4 Dead 2.
+La interfaz `ISteamHTTP` tiene evidencia histórica de uso en el servidor dedicado
+de Left 4 Dead 2. La implementación actual tiene pruebas deterministas de frontera,
+propiedad y callbacks. La [aceptación P5-R2](runtime-compatibility/srcds-acceptance.md)
+validó HTTP/TLS/timeout y detectó pérdida de contexto en streaming. La
+[corrección x86 del contexto](runtime-compatibility/http-stream-context.md)
+reproduce la causa en el proveedor real y pasa pruebas deterministas. La
+[aceptación posterior en SRCDS x86](runtime-compatibility/http-stream-srcds-acceptance.md)
+valida contexto y payload de streaming en cuatro tandas, incluida una tras cambio
+de mapa, con cero fallos. Su alcance se limita al binario/perfil documentado.
 
 
 ## Uso esperado
@@ -46,7 +53,7 @@ la extensión expone además:
 Este helper:
 
 - lee hasta `length - 1`
-- agrega siempre terminador nulo
+- agrega terminador nulo cuando devuelve éxito
 - reporta cuántos caracteres escribió
 - reporta si el contenido fue truncado
 - simplifica el consumo desde SourcePawn
@@ -59,6 +66,16 @@ Por eso:
 
 - usar `SteamWorks_GetHTTPResponseBodyData(...)` sigue siendo lo correcto para payloads binarios
 - usar `SteamWorks_GetHTTPResponseBodyString(...)` es la opción conveniente para texto o JSON
+
+Su firma requiere los cinco argumentos, incluidos `written` y `truncated`.
+Las llamadas antiguas de tres argumentos se rechazan antes de acceder a salidas
+ausentes. `written` excluye el terminador; no comparte el conteo histórico de
+`GetClientSteamID`. Un fallo no garantiza contenido textual utilizable.
+
+Cada request pertenece al plugin y a la generación del runtime que lo creó.
+Shutdown o descarga del propietario lo invalidan; debe crearse uno nuevo tras
+reinicialización. Cerrar el handle desde un callback es admisible: su destrucción
+se difiere hasta salir del despacho. Véase [P3](runtime-compatibility/p3-resource-lifecycle.md).
 
 ## Patrón recomendado
 

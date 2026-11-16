@@ -1,0 +1,2 @@
+PASS: 18 authentication binding checks (production owner/adapter, real SourceHook, synthetic 014/015 objects)
+PASS: negative control rejects the former 015 hook target

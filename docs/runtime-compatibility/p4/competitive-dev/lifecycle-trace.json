@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "container": "competitive_dev",
+  "isolation": "Separate sourcemod_p4 tree, empty plugin set except project harness; loopback/insecure laboratory. Installed extension and Steam modules not replaced.",
+  "round1": {
+    "events": [
+      "L 11/14/2026 - 19:06:56: [STEAMWORKS] Steam lifecycle profile installed: l4d2-23990100-linux-x86",
+      "L 11/14/2026 - 19:06:57: [STEAMWORKS] Steam lifecycle init observed: result=1",
+      "L 11/14/2026 - 19:08:33: [STEAMWORKS] Steam lifecycle shutdown observed: consumers stopped",
+      "L 11/14/2026 - 19:08:34: [STEAMWORKS] Steam lifecycle init observed: result=1",
+      "L 11/14/2026 - 19:10:16: [STEAMWORKS] Steam lifecycle shutdown observed: consumers stopped",
+      "L 11/14/2026 - 19:10:16: [STEAMWORKS] Steam lifecycle init observed: result=1",
+      "L 11/14/2026 - 19:12:01: [STEAMWORKS] Steam lifecycle profile installed: l4d2-23990100-linux-x86",
+      "L 11/14/2026 - 19:14:20: [STEAMWORKS] Steam lifecycle shutdown observed: consumers stopped",
+      "L 11/14/2026 - 19:14:21: [STEAMWORKS] Steam lifecycle init observed: result=1",
+      "L 11/14/2026 - 19:17:03: [STEAMWORKS] Steam lifecycle shutdown observed: consumers stopped"
+    ],
+    "init_successes": 4,
+    "shutdowns": 4,
+    "installations": 2,
+    "unload_reload_confirmed": true,
+    "fixture_notes": "Initial lab config omissions corrected using public default languages/admin config and SQLite-only database config before second cold start."
+  },
+  "round2": {
+    "events": [
+      "L 11/14/2026 - 19:18:07: [STEAMWORKS] Steam lifecycle profile installed: l4d2-23990100-linux-x86",
+      "L 11/14/2026 - 19:18:08: [STEAMWORKS] Steam lifecycle init observed: result=1",
+      "L 11/14/2026 - 19:20:25: [STEAMWORKS] Steam lifecycle shutdown observed: consumers stopped",
+      "L 11/14/2026 - 19:20:26: [STEAMWORKS] Steam lifecycle init observed: result=1"
+    ],
+    "errors": []
+  },
+  "server_state_before": "Container running, SRCDS stopped",
+  "tests": [
+    "cold startup and original init success",
+    "map/new-game transitions with observed shutdown and reinit in same PID",
+    "extension/harness unload and reload with matching prologues restored",
+    "second cold startup with complete lab configs"
+  ],
+  "artifact_sha256": "28c34d3c5c1599f00c532037516c66aa7a6c0bdcb62294e33cad1083094e5632",
+  "harness_sha256": "aceba4666cfe5cec805aeb675f6fc1dadca220877a0712e22f473502c6176a3f",
+  "status_observed": {
+    "loaded": true,
+    "connected": true,
+    "vac": false,
+    "ip_query_success": true,
+    "ip_value": "omitted"
+  },
+  "unverified": [
+    "Windows",
+    "other engine/Steam module pairs",
+    "all HTTP/GC/stats runtime behaviors",
+    "long-duration gameplay"
+  ]
+}

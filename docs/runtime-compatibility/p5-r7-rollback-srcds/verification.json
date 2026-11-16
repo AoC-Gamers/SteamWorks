@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "source_files_unchanged": 129,
+  "public_API_unchanged": true,
+  "historical_artifacts_unchanged": 57,
+  "R7_archives_and_manifest_unchanged": true,
+  "active_doc_links_checked": 107,
+  "git_diff_check": "passed",
+  "branch": "develop",
+  "HEAD_unchanged": true,
+  "index_empty": true,
+  "normal_DEV_live_recheck": "p5-r7-rollback-srcds/final-recheck.json",
+  "T35": "passed scoped restore/start/HTTP",
+  "baseline_clean_exit": false,
+  "candidate_clean_exit": true,
+  "full_matrix_accepted": false
+}

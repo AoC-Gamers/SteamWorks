@@ -1,0 +1,1847 @@
+{
+  "schema_version": 1,
+  "baseline_commit": "46e3ee05fc29ad090a1d6f7b1cb5e3dca9855350",
+  "source_sha256": {
+    "extension/CDetour/detourhelpers.h": "ea9e6d2866dfb4e763dc921d712f1694f47107e0faade9490ae10614f827c3a8",
+    "extension/CDetour/detours.cpp": "e67c202073164a6575a33137139b454cbab250fffb5f377b4bb1929b94feeea3",
+    "extension/CDetour/detours.h": "ea62f0ee139da2edec9e369b0eda94c559fb24dbf6cb13e9fe0a55a2efc79e9f",
+    "extension/asm/asm.c": "75ab667354202ee77c404f090e9bf1610ba0a72e6e3acebd3d6410d8cdd918c0",
+    "extension/asm/asm.h": "6d78a17764bb9ebd727904d9441b7ab96372545067a9e4167b4c278b48614e27",
+    "extension/core/swauthticket.h": "d58b7692002cd9d3dcb4364bd31ff2a51cfca66589934aac3cf8cb0f058dd0ae",
+    "extension/core/swclientlifecycle.cpp": "4dc8ddb708b867cf6e968d7b998d13e7c3cea015a2f1040864507e258826619a",
+    "extension/core/swclientlifecycle.h": "801de18713143e1409fc441a02f45805f280cd1b49eb04141a24a520092f64e4",
+    "extension/core/swdebug.cpp": "87f9ee88c07ff1e76b9f35570da1f7f5f9f7c11089c561398fdf2d52afcff49d",
+    "extension/core/swdebug.h": "5804bce8237d1fc8111d0b93c1262ad8d20be740906877756c690fc54f22e335",
+    "extension/core/swdebuglog.h": "56aa29452f60b5c93ac66a52f62f7bdf454c233d17f2a3858ec9fe6e54ec5fa9",
+    "extension/core/swforwards.cpp": "d930c86595966ed13effc7b39032863bc947ec7577c0809f212b2d441f0ad1bd",
+    "extension/core/swforwards.h": "edc92f86e061ee8512d1d645a55faeb5ba6267da602632817c8c02009eec4dba",
+    "extension/core/swgameauth014.h": "bceac91310f61c80ed666e67ac8338b9e8b67e4065fc666be48b2ae36d879000",
+    "extension/core/swgamedata.cpp": "08762de8bdd474dd611e729df5be54291a12467d6e4c26c524f157b104976771",
+    "extension/core/swgamedata.h": "fdfb11ec5485dc30ac65e3a21da0f2a3daed12221b3681a347f84f0b628de2a7",
+    "extension/core/swgameserver.cpp": "a5a1c75d4d330254186282f58b9af00ea3c56b2dcdc652dc5e6d419368e99100",
+    "extension/core/swgameserver.h": "b2218bd75897a23277e36b551d05b041a33ade23a466ece2a4e02a24810d9847",
+    "extension/core/swidentity.cpp": "e6fc10a80d4846c5fd21e3cb36b45d054191e0eed226796ba1a3eb9f680ddba3",
+    "extension/core/swinitcallsite.h": "f841e15d5c237f7b9bd25ef59da828fc57403adf8e790324c2985a16f26c57f8",
+    "extension/core/swinterfaces.h": "b3860e743113c78da93010179a7e8004b24061a22616f7dc737783fd2fd96966",
+    "extension/core/swlifecycleprofile.h": "034fa2eba2e0a5dcccd7d906b949a410f971f5c168e01746b7aeec799a2d54fa",
+    "extension/core/swpawn.h": "9650b5da155414c7fb533caccafb49361887a002e966fe0248e64b6892be097f",
+    "extension/core/swtypes.h": "59ac96a60971906883408492db7455be2b69c2f7b9c33b0e28b0574e9e62e438",
+    "extension/extension.cpp": "2c9326747631261dcceff02441c9242b611a3a15e64f78d8a8b1a2b7f4a3dc50",
+    "extension/extension.h": "2af4f18e6b29abb9b3349f131332b82758443b1e3c099d104709d58f20206371",
+    "extension/hooks/swgchooks.cpp": "048ee33af2e292637be5e3f39e9e8ae44b83acfff5b91953d3cd30bbd66af9c6",
+    "extension/hooks/swgchooks.h": "f2e8e57ba1c2ddb971f7617aa01e75fc78df6a7272958c4c5f13c545d0608bb9",
+    "extension/hooks/swgsdetours.cpp": "077392afe9a07fd06380118eef1d2ce4592778c8b6a70b097c7a660988d299bb",
+    "extension/hooks/swgsdetours.h": "589cd716d9d717260d25e08aa28a406d0692597aa6b1565e8ab3038fbc192cda",
+    "extension/hooks/swgshooks.cpp": "b4e0426f8099d2ce5ebad8f79144a98b0b3de8062e4760a509bb20d3195ee18e",
+    "extension/hooks/swgshooks.h": "7185a644f7a0c8874d433263d81fb2d6bc54d4fda83ee355a9bbfcf5c5ba0c62",
+    "extension/http/swhttp.cpp": "cf34b30c403d8b928b81742e98a5200c6117db96c65bd36feaf44b814bb84082",
+    "extension/http/swhttp.h": "f5331691cf3cf2dbe36c1cd6bd55bd39c93e0c3c37f492c54edebcef0228b653",
+    "extension/http/swhttprequest.cpp": "3ba07c83837224ecde903508852e7ec1f6b88083ad70521104f87c4509094922",
+    "extension/http/swhttprequest.h": "e6e676d284e246b4de125c4688c48360d64653e46b72e6be8f60025b6bab45a9",
+    "extension/natives/gcnatives.cpp": "ae2fda2f2c57a36794a6212559b688425999da2d1bc2b63e5058e41a13914175",
+    "extension/natives/gcnatives.h": "5d2870d2358736f3e4767eaf06766cdc4a7af5066620fa209f02143259fdf3ca",
+    "extension/natives/gsnatives.cpp": "3151d3ea22f55fc2fdfdf26f9e0186d05d9003bd299e095f41b8ccc801291ab4",
+    "extension/natives/gsnatives.h": "46da15d868d44d590af78faf177a1e6ef981e56b3aa664c9afad71d3a7350839",
+    "extension/natives/ssnatives.cpp": "4ba91f9a23bbf5ae360c75f002cc519d553027d582f1b113d99cda084508011c",
+    "extension/natives/ssnatives.h": "a51c6701115845fc72b37a137bbf66fcb89fd879f0265d3672e2a2bf89b7bb1c",
+    "extension/sdk/smsdk_config.h": "f1b0cb954c3690d022dd1c74cfcdb282f21b7c21a795dd33d185af273013de6c",
+    "extension/sdk/smsdk_ext.cpp": "65e47a43ecf14a93653badf5c470a1d8a7c7f25b8bb9b9e7dbee1388d73daafb",
+    "extension/sdk/smsdk_ext.h": "7100fb30b2f4b0cc58fc19eee9aae9b5a5f1324211f6d0bdf8b4c72930e28534",
+    "extension/steamtools/blob.h": "e0b7531c85093661a87a8bbc5a82ac6607b31dfe73e2bf9b698706f57bcc0585",
+    "extension/steamtools/ticket.h": "c11f22200702275ab425a04cc18b194de33c1b71316e5d143f534466e54a9917",
+    "scripting/include/steamworks.inc": "a3e5a7a220dd4d7b46dab3226b41c68f2eb24c4ddf4943f0b943f87566b4f2d5",
+    "scripting/steamwork_test.sp": "edd15a4932e6eaf8ab16ffeb44a462e860026e4c09d1f432ed8a1319ec70fde1",
+    "extension/AMBuilder": "9713f0d6e6d4053942de1396ed022c594b8e3b82c2423fd491d9461c46538af8",
+    "AMBuildScript": "52bcf2d88f5c9a67e1fb6e7e62578389827bb54236536e36ff1048f8d378d65f",
+    "configure.py": "75440757b5d872c9b346898dd17b909bf3efca0f200b5a3d4f51700b895fb520",
+    "Makefile": "cb03aa07100ff57fa7c71299a6b767eaab0f6a339f1366c1a6a819f6b158678e",
+    "PackageScript": "656a5cc37e33543408760c0fc914328dc0105f136d65a6abbd39801d9158d518",
+    "plugin-package-map.json": "3ba96325a9e83f0f521f979accaec9bc71594faa0ef961b08fb624e6460ef878"
+  },
+  "extension_binding": {
+    "symbol": "__ext_SteamWorks",
+    "library_registered": "SteamWorks",
+    "name": "SteamWorks",
+    "file": "steamworks.ext",
+    "conditional_source": "name = \"SteamWorks\", file = \"steamworks.ext\", #if defined AUTOLOAD_EXTENSIONS autoload = 1, #else autoload = 0, #endif #if defined REQUIRE_EXTENSIONS required = 1, #else required = 0, #endif"
+  },
+  "declarations": [
+    {
+      "kind": "native",
+      "name": "SteamWorks_IsVACEnabled",
+      "return_type": "bool",
+      "parameters": [],
+      "signature": "native bool SteamWorks_IsVACEnabled();",
+      "line": 220
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_GetPublicIP",
+      "return_type": "bool",
+      "parameters": [
+        "int ipaddr[4]"
+      ],
+      "signature": "native bool SteamWorks_GetPublicIP(int ipaddr[4]);",
+      "line": 228
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_GetPublicIPCell",
+      "return_type": "int",
+      "parameters": [],
+      "signature": "native int SteamWorks_GetPublicIPCell();",
+      "line": 235
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_IsLoaded",
+      "return_type": "bool",
+      "parameters": [],
+      "signature": "native bool SteamWorks_IsLoaded();",
+      "line": 242
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_SetGameData",
+      "return_type": "bool",
+      "parameters": [
+        "const char[] data"
+      ],
+      "signature": "native bool SteamWorks_SetGameData(const char[] data);",
+      "line": 250
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_SetGameDescription",
+      "return_type": "bool",
+      "parameters": [
+        "const char[] description"
+      ],
+      "signature": "native bool SteamWorks_SetGameDescription(const char[] description);",
+      "line": 258
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_SetMapName",
+      "return_type": "bool",
+      "parameters": [
+        "const char[] mapName"
+      ],
+      "signature": "native bool SteamWorks_SetMapName(const char[] mapName);",
+      "line": 266
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_IsConnected",
+      "return_type": "bool",
+      "parameters": [],
+      "signature": "native bool SteamWorks_IsConnected();",
+      "line": 273
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_SetRule",
+      "return_type": "bool",
+      "parameters": [
+        "const char[] key",
+        "const char[] value"
+      ],
+      "signature": "native bool SteamWorks_SetRule(const char[] key, const char[] value);",
+      "line": 282
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_ClearRules",
+      "return_type": "bool",
+      "parameters": [],
+      "signature": "native bool SteamWorks_ClearRules();",
+      "line": 289
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_GetUserGroupStatus",
+      "return_type": "bool",
+      "parameters": [
+        "int client",
+        "int groupid"
+      ],
+      "signature": "native bool SteamWorks_GetUserGroupStatus(int client, int groupid);",
+      "line": 298
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_GetUserGroupStatusAuthID",
+      "return_type": "bool",
+      "parameters": [
+        "int authid",
+        "int groupid"
+      ],
+      "signature": "native bool SteamWorks_GetUserGroupStatusAuthID(int authid, int groupid);",
+      "line": 307
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_HasLicenseForApp",
+      "return_type": "EUserHasLicenseForAppResult",
+      "parameters": [
+        "int client",
+        "int app"
+      ],
+      "signature": "native EUserHasLicenseForAppResult SteamWorks_HasLicenseForApp(int client, int app);",
+      "line": 316
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_HasLicenseForAppId",
+      "return_type": "EUserHasLicenseForAppResult",
+      "parameters": [
+        "int authid",
+        "int app"
+      ],
+      "signature": "native EUserHasLicenseForAppResult SteamWorks_HasLicenseForAppId(int authid, int app);",
+      "line": 325
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_GetClientSteamID",
+      "return_type": "int",
+      "parameters": [
+        "int client",
+        "char[] steamId",
+        "int length"
+      ],
+      "signature": "native int SteamWorks_GetClientSteamID(int client, char[] steamId, int length);",
+      "line": 340
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_RequestStatsAuthID",
+      "return_type": "bool",
+      "parameters": [
+        "int authid",
+        "int appid"
+      ],
+      "signature": "native bool SteamWorks_RequestStatsAuthID(int authid, int appid);",
+      "line": 352
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_RequestStats",
+      "return_type": "bool",
+      "parameters": [
+        "int client",
+        "int appid"
+      ],
+      "signature": "native bool SteamWorks_RequestStats(int client, int appid);",
+      "line": 364
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_GetStatCell",
+      "return_type": "bool",
+      "parameters": [
+        "int client",
+        "const char[] key",
+        "int &value"
+      ],
+      "signature": "native bool SteamWorks_GetStatCell(int client, const char[] key, int &value);",
+      "line": 374
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_GetStatAuthIDCell",
+      "return_type": "bool",
+      "parameters": [
+        "int authid",
+        "const char[] key",
+        "int &value"
+      ],
+      "signature": "native bool SteamWorks_GetStatAuthIDCell(int authid, const char[] key, int &value);",
+      "line": 384
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_GetStatFloat",
+      "return_type": "bool",
+      "parameters": [
+        "int client",
+        "const char[] key",
+        "float &value"
+      ],
+      "signature": "native bool SteamWorks_GetStatFloat(int client, const char[] key, float &value);",
+      "line": 394
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_GetStatAuthIDFloat",
+      "return_type": "bool",
+      "parameters": [
+        "int authid",
+        "const char[] key",
+        "float &value"
+      ],
+      "signature": "native bool SteamWorks_GetStatAuthIDFloat(int authid, const char[] key, float &value);",
+      "line": 404
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_CreateHTTPRequest",
+      "return_type": "Handle",
+      "parameters": [
+        "EHTTPMethod method",
+        "const char[] url"
+      ],
+      "signature": "native Handle SteamWorks_CreateHTTPRequest(EHTTPMethod method, const char[] url);",
+      "line": 413
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_SetHTTPRequestContextValue",
+      "return_type": "bool",
+      "parameters": [
+        "Handle request",
+        "any data1",
+        "any data2=0"
+      ],
+      "signature": "native bool SteamWorks_SetHTTPRequestContextValue(Handle request, any data1, any data2=0);",
+      "line": 423
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_SetHTTPRequestNetworkActivityTimeout",
+      "return_type": "bool",
+      "parameters": [
+        "Handle request",
+        "int timeout"
+      ],
+      "signature": "native bool SteamWorks_SetHTTPRequestNetworkActivityTimeout(Handle request, int timeout);",
+      "line": 432
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_SetHTTPRequestHeaderValue",
+      "return_type": "bool",
+      "parameters": [
+        "Handle request",
+        "const char[] name",
+        "const char[] value"
+      ],
+      "signature": "native bool SteamWorks_SetHTTPRequestHeaderValue(Handle request, const char[] name, const char[] value);",
+      "line": 442
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_SetHTTPRequestGetOrPostParameter",
+      "return_type": "bool",
+      "parameters": [
+        "Handle request",
+        "const char[] name",
+        "const char[] value"
+      ],
+      "signature": "native bool SteamWorks_SetHTTPRequestGetOrPostParameter(Handle request, const char[] name, const char[] value);",
+      "line": 452
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_SetHTTPRequestUserAgentInfo",
+      "return_type": "bool",
+      "parameters": [
+        "Handle request",
+        "const char[] userAgentInfo"
+      ],
+      "signature": "native bool SteamWorks_SetHTTPRequestUserAgentInfo(Handle request, const char[] userAgentInfo);",
+      "line": 461
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_SetHTTPRequestRequiresVerifiedCertificate",
+      "return_type": "bool",
+      "parameters": [
+        "Handle request",
+        "bool requireVerifiedCertificate"
+      ],
+      "signature": "native bool SteamWorks_SetHTTPRequestRequiresVerifiedCertificate(Handle request, bool requireVerifiedCertificate);",
+      "line": 470
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_SetHTTPRequestAbsoluteTimeoutMS",
+      "return_type": "bool",
+      "parameters": [
+        "Handle request",
+        "int timeoutMs"
+      ],
+      "signature": "native bool SteamWorks_SetHTTPRequestAbsoluteTimeoutMS(Handle request, int timeoutMs);",
+      "line": 479
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_SetHTTPCallbacks",
+      "return_type": "bool",
+      "parameters": [
+        "Handle request",
+        "SteamWorksHTTPRequestCompleted onCompleted = INVALID_FUNCTION",
+        "SteamWorksHTTPHeadersReceived onHeaders = INVALID_FUNCTION",
+        "SteamWorksHTTPDataReceived onData = INVALID_FUNCTION",
+        "Handle caller = null"
+      ],
+      "signature": "native bool SteamWorks_SetHTTPCallbacks( Handle request, SteamWorksHTTPRequestCompleted onCompleted = INVALID_FUNCTION, SteamWorksHTTPHeadersReceived onHeaders = INVALID_FUNCTION, SteamWorksHTTPDataReceived onData = INVALID_FUNCTION, Handle caller = null );",
+      "line": 647
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_SendHTTPRequest",
+      "return_type": "bool",
+      "parameters": [
+        "Handle request"
+      ],
+      "signature": "native bool SteamWorks_SendHTTPRequest(Handle request);",
+      "line": 661
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_SendHTTPRequestAndStreamResponse",
+      "return_type": "bool",
+      "parameters": [
+        "Handle request"
+      ],
+      "signature": "native bool SteamWorks_SendHTTPRequestAndStreamResponse(Handle request);",
+      "line": 669
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_DeferHTTPRequest",
+      "return_type": "bool",
+      "parameters": [
+        "Handle request"
+      ],
+      "signature": "native bool SteamWorks_DeferHTTPRequest(Handle request);",
+      "line": 677
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_PrioritizeHTTPRequest",
+      "return_type": "bool",
+      "parameters": [
+        "Handle request"
+      ],
+      "signature": "native bool SteamWorks_PrioritizeHTTPRequest(Handle request);",
+      "line": 685
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_GetHTTPResponseHeaderSize",
+      "return_type": "bool",
+      "parameters": [
+        "Handle request",
+        "const char[] header",
+        "int &size"
+      ],
+      "signature": "native bool SteamWorks_GetHTTPResponseHeaderSize(Handle request, const char[] header, int &size);",
+      "line": 695
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_GetHTTPResponseHeaderValue",
+      "return_type": "bool",
+      "parameters": [
+        "Handle request",
+        "const char[] header",
+        "char[] value",
+        "int size"
+      ],
+      "signature": "native bool SteamWorks_GetHTTPResponseHeaderValue(Handle request, const char[] header, char[] value, int size);",
+      "line": 706
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_GetHTTPResponseBodySize",
+      "return_type": "bool",
+      "parameters": [
+        "Handle request",
+        "int &size"
+      ],
+      "signature": "native bool SteamWorks_GetHTTPResponseBodySize(Handle request, int &size);",
+      "line": 715
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_GetHTTPResponseBodyData",
+      "return_type": "bool",
+      "parameters": [
+        "Handle request",
+        "char[] body",
+        "int length"
+      ],
+      "signature": "native bool SteamWorks_GetHTTPResponseBodyData(Handle request, char[] body, int length);",
+      "line": 725
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_GetHTTPResponseBodyString",
+      "return_type": "bool",
+      "parameters": [
+        "Handle request",
+        "char[] body",
+        "int length",
+        "int &written",
+        "bool &truncated"
+      ],
+      "signature": "native bool SteamWorks_GetHTTPResponseBodyString(Handle request, char[] body, int length, int &written, bool &truncated);",
+      "line": 743
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_GetHTTPStreamingResponseBodyData",
+      "return_type": "bool",
+      "parameters": [
+        "Handle request",
+        "int offset",
+        "char[] body",
+        "int length"
+      ],
+      "signature": "native bool SteamWorks_GetHTTPStreamingResponseBodyData(Handle request, int offset, char[] body, int length);",
+      "line": 754
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_GetHTTPDownloadProgressPct",
+      "return_type": "bool",
+      "parameters": [
+        "Handle request",
+        "float &percent"
+      ],
+      "signature": "native bool SteamWorks_GetHTTPDownloadProgressPct(Handle request, float &percent);",
+      "line": 763
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_GetHTTPRequestWasTimedOut",
+      "return_type": "bool",
+      "parameters": [
+        "Handle request",
+        "bool &wasTimedOut"
+      ],
+      "signature": "native bool SteamWorks_GetHTTPRequestWasTimedOut(Handle request, bool &wasTimedOut);",
+      "line": 772
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_SetHTTPRequestRawPostBody",
+      "return_type": "bool",
+      "parameters": [
+        "Handle request",
+        "const char[] contentType",
+        "const char[] body",
+        "int bodyLength"
+      ],
+      "signature": "native bool SteamWorks_SetHTTPRequestRawPostBody(Handle request, const char[] contentType, const char[] body, int bodyLength);",
+      "line": 783
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_SetHTTPRequestRawPostBodyFromFile",
+      "return_type": "bool",
+      "parameters": [
+        "Handle request",
+        "const char[] contentType",
+        "const char[] fileName"
+      ],
+      "signature": "native bool SteamWorks_SetHTTPRequestRawPostBodyFromFile(Handle request, const char[] contentType, const char[] fileName);",
+      "line": 793
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_GetHTTPResponseBodyCallback",
+      "return_type": "bool",
+      "parameters": [
+        "Handle request",
+        "SteamWorksHTTPBodyCallback callback",
+        "any data = 0",
+        "Handle plugin = null"
+      ],
+      "signature": "native bool SteamWorks_GetHTTPResponseBodyCallback(Handle request, SteamWorksHTTPBodyCallback callback, any data = 0, Handle plugin = null);",
+      "line": 804
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_WriteHTTPResponseBodyToFile",
+      "return_type": "bool",
+      "parameters": [
+        "Handle request",
+        "const char[] fileName"
+      ],
+      "signature": "native bool SteamWorks_WriteHTTPResponseBodyToFile(Handle request, const char[] fileName);",
+      "line": 813
+    },
+    {
+      "kind": "forward",
+      "name": "SW_OnValidateClient",
+      "return_type": "void",
+      "parameters": [
+        "int ownerauthid",
+        "int authid"
+      ],
+      "signature": "forward void SW_OnValidateClient(int ownerauthid, int authid);",
+      "line": 821
+    },
+    {
+      "kind": "forward",
+      "name": "SteamWorks_OnValidateClient",
+      "return_type": "void",
+      "parameters": [
+        "int ownerauthid",
+        "int authid"
+      ],
+      "signature": "forward void SteamWorks_OnValidateClient(int ownerauthid, int authid);",
+      "line": 831
+    },
+    {
+      "kind": "forward",
+      "name": "SteamWorks_SteamServersConnected",
+      "return_type": "void",
+      "parameters": [],
+      "signature": "forward void SteamWorks_SteamServersConnected();",
+      "line": 839
+    },
+    {
+      "kind": "forward",
+      "name": "SteamWorks_SteamServersConnectFailure",
+      "return_type": "void",
+      "parameters": [
+        "EResult result"
+      ],
+      "signature": "forward void SteamWorks_SteamServersConnectFailure(EResult result);",
+      "line": 848
+    },
+    {
+      "kind": "forward",
+      "name": "SteamWorks_SteamServersDisconnected",
+      "return_type": "void",
+      "parameters": [
+        "EResult result"
+      ],
+      "signature": "forward void SteamWorks_SteamServersDisconnected(EResult result);",
+      "line": 857
+    },
+    {
+      "kind": "forward",
+      "name": "SteamWorks_RestartRequested",
+      "return_type": "Action",
+      "parameters": [],
+      "signature": "forward Action SteamWorks_RestartRequested();",
+      "line": 868
+    },
+    {
+      "kind": "forward",
+      "name": "SteamWorks_TokenRequested",
+      "return_type": "void",
+      "parameters": [
+        "char[] token",
+        "int maxlen"
+      ],
+      "signature": "forward void SteamWorks_TokenRequested(char[] token, int maxlen);",
+      "line": 878
+    },
+    {
+      "kind": "forward",
+      "name": "SteamWorks_OnClientGroupStatus",
+      "return_type": "void",
+      "parameters": [
+        "int authid",
+        "int groupid",
+        "bool isMember",
+        "bool isOfficer"
+      ],
+      "signature": "forward void SteamWorks_OnClientGroupStatus(int authid, int groupid, bool isMember, bool isOfficer);",
+      "line": 888
+    },
+    {
+      "kind": "forward",
+      "name": "SteamWorks_GCSendMessage",
+      "return_type": "EGCResults",
+      "parameters": [
+        "int messageType",
+        "const char[] data",
+        "int dataLength"
+      ],
+      "signature": "forward EGCResults SteamWorks_GCSendMessage(int messageType, const char[] data, int dataLength);",
+      "line": 898
+    },
+    {
+      "kind": "forward",
+      "name": "SteamWorks_GCMsgAvailable",
+      "return_type": "void",
+      "parameters": [
+        "int dataLength"
+      ],
+      "signature": "forward void SteamWorks_GCMsgAvailable(int dataLength);",
+      "line": 905
+    },
+    {
+      "kind": "forward",
+      "name": "SteamWorks_GCRetrieveMessage",
+      "return_type": "EGCResults",
+      "parameters": [
+        "int messageType",
+        "const char[] destination",
+        "int destinationLength",
+        "int messageSize"
+      ],
+      "signature": "forward EGCResults SteamWorks_GCRetrieveMessage(int messageType, const char[] destination, int destinationLength, int messageSize);",
+      "line": 916
+    },
+    {
+      "kind": "native",
+      "name": "SteamWorks_SendMessageToGC",
+      "return_type": "EGCResults",
+      "parameters": [
+        "int messageType",
+        "const char[] data",
+        "int dataLength"
+      ],
+      "signature": "native EGCResults SteamWorks_SendMessageToGC(int messageType, const char[] data, int dataLength);",
+      "line": 926
+    }
+  ],
+  "enums": [
+    {
+      "name": "EUserHasLicenseForAppResult",
+      "members": [
+        {
+          "name": "k_EUserHasLicenseResultHasLicense",
+          "value": 0
+        },
+        {
+          "name": "k_EUserHasLicenseResultDoesNotHaveLicense",
+          "value": 1
+        },
+        {
+          "name": "k_EUserHasLicenseResultNoAuth",
+          "value": 2
+        }
+      ],
+      "line": 7
+    },
+    {
+      "name": "EResult",
+      "members": [
+        {
+          "name": "k_EResultOK",
+          "value": 1
+        },
+        {
+          "name": "k_EResultFail",
+          "value": 2
+        },
+        {
+          "name": "k_EResultNoConnection",
+          "value": 3
+        },
+        {
+          "name": "k_EResultInvalidPassword",
+          "value": 5
+        },
+        {
+          "name": "k_EResultLoggedInElsewhere",
+          "value": 6
+        },
+        {
+          "name": "k_EResultInvalidProtocolVer",
+          "value": 7
+        },
+        {
+          "name": "k_EResultInvalidParam",
+          "value": 8
+        },
+        {
+          "name": "k_EResultFileNotFound",
+          "value": 9
+        },
+        {
+          "name": "k_EResultBusy",
+          "value": 10
+        },
+        {
+          "name": "k_EResultInvalidState",
+          "value": 11
+        },
+        {
+          "name": "k_EResultInvalidName",
+          "value": 12
+        },
+        {
+          "name": "k_EResultInvalidEmail",
+          "value": 13
+        },
+        {
+          "name": "k_EResultDuplicateName",
+          "value": 14
+        },
+        {
+          "name": "k_EResultAccessDenied",
+          "value": 15
+        },
+        {
+          "name": "k_EResultTimeout",
+          "value": 16
+        },
+        {
+          "name": "k_EResultBanned",
+          "value": 17
+        },
+        {
+          "name": "k_EResultAccountNotFound",
+          "value": 18
+        },
+        {
+          "name": "k_EResultInvalidSteamID",
+          "value": 19
+        },
+        {
+          "name": "k_EResultServiceUnavailable",
+          "value": 20
+        },
+        {
+          "name": "k_EResultNotLoggedOn",
+          "value": 21
+        },
+        {
+          "name": "k_EResultPending",
+          "value": 22
+        },
+        {
+          "name": "k_EResultEncryptionFailure",
+          "value": 23
+        },
+        {
+          "name": "k_EResultInsufficientPrivilege",
+          "value": 24
+        },
+        {
+          "name": "k_EResultLimitExceeded",
+          "value": 25
+        },
+        {
+          "name": "k_EResultRevoked",
+          "value": 26
+        },
+        {
+          "name": "k_EResultExpired",
+          "value": 27
+        },
+        {
+          "name": "k_EResultAlreadyRedeemed",
+          "value": 28
+        },
+        {
+          "name": "k_EResultDuplicateRequest",
+          "value": 29
+        },
+        {
+          "name": "k_EResultAlreadyOwned",
+          "value": 30
+        },
+        {
+          "name": "k_EResultIPNotFound",
+          "value": 31
+        },
+        {
+          "name": "k_EResultPersistFailed",
+          "value": 32
+        },
+        {
+          "name": "k_EResultLockingFailed",
+          "value": 33
+        },
+        {
+          "name": "k_EResultLogonSessionReplaced",
+          "value": 34
+        },
+        {
+          "name": "k_EResultConnectFailed",
+          "value": 35
+        },
+        {
+          "name": "k_EResultHandshakeFailed",
+          "value": 36
+        },
+        {
+          "name": "k_EResultIOFailure",
+          "value": 37
+        },
+        {
+          "name": "k_EResultRemoteDisconnect",
+          "value": 38
+        },
+        {
+          "name": "k_EResultShoppingCartNotFound",
+          "value": 39
+        },
+        {
+          "name": "k_EResultBlocked",
+          "value": 40
+        },
+        {
+          "name": "k_EResultIgnored",
+          "value": 41
+        },
+        {
+          "name": "k_EResultNoMatch",
+          "value": 42
+        },
+        {
+          "name": "k_EResultAccountDisabled",
+          "value": 43
+        },
+        {
+          "name": "k_EResultServiceReadOnly",
+          "value": 44
+        },
+        {
+          "name": "k_EResultAccountNotFeatured",
+          "value": 45
+        },
+        {
+          "name": "k_EResultAdministratorOK",
+          "value": 46
+        },
+        {
+          "name": "k_EResultContentVersion",
+          "value": 47
+        },
+        {
+          "name": "k_EResultTryAnotherCM",
+          "value": 48
+        },
+        {
+          "name": "k_EResultPasswordRequiredToKickSession",
+          "value": 49
+        },
+        {
+          "name": "k_EResultAlreadyLoggedInElsewhere",
+          "value": 50
+        },
+        {
+          "name": "k_EResultSuspended",
+          "value": 51
+        },
+        {
+          "name": "k_EResultCancelled",
+          "value": 52
+        },
+        {
+          "name": "k_EResultDataCorruption",
+          "value": 53
+        },
+        {
+          "name": "k_EResultDiskFull",
+          "value": 54
+        },
+        {
+          "name": "k_EResultRemoteCallFailed",
+          "value": 55
+        },
+        {
+          "name": "k_EResultPasswordUnset",
+          "value": 56
+        },
+        {
+          "name": "k_EResultExternalAccountUnlinked",
+          "value": 57
+        },
+        {
+          "name": "k_EResultPSNTicketInvalid",
+          "value": 58
+        },
+        {
+          "name": "k_EResultExternalAccountAlreadyLinked",
+          "value": 59
+        },
+        {
+          "name": "k_EResultRemoteFileConflict",
+          "value": 60
+        },
+        {
+          "name": "k_EResultIllegalPassword",
+          "value": 61
+        },
+        {
+          "name": "k_EResultSameAsPreviousValue",
+          "value": 62
+        },
+        {
+          "name": "k_EResultAccountLogonDenied",
+          "value": 63
+        },
+        {
+          "name": "k_EResultCannotUseOldPassword",
+          "value": 64
+        },
+        {
+          "name": "k_EResultInvalidLoginAuthCode",
+          "value": 65
+        },
+        {
+          "name": "k_EResultAccountLogonDeniedNoMail",
+          "value": 66
+        },
+        {
+          "name": "k_EResultHardwareNotCapableOfIPT",
+          "value": 67
+        },
+        {
+          "name": "k_EResultIPTInitError",
+          "value": 68
+        },
+        {
+          "name": "k_EResultParentalControlRestricted",
+          "value": 69
+        },
+        {
+          "name": "k_EResultFacebookQueryError",
+          "value": 70
+        },
+        {
+          "name": "k_EResultExpiredLoginAuthCode",
+          "value": 71
+        },
+        {
+          "name": "k_EResultIPLoginRestrictionFailed",
+          "value": 72
+        },
+        {
+          "name": "k_EResultAccountLockedDown",
+          "value": 73
+        },
+        {
+          "name": "k_EResultAccountLogonDeniedVerifiedEmailRequired",
+          "value": 74
+        },
+        {
+          "name": "k_EResultNoMatchingURL",
+          "value": 75
+        },
+        {
+          "name": "k_EResultBadResponse",
+          "value": 76
+        },
+        {
+          "name": "k_EResultRequirePasswordReEntry",
+          "value": 77
+        },
+        {
+          "name": "k_EResultValueOutOfRange",
+          "value": 78
+        },
+        {
+          "name": "k_EResultUnexpectedError",
+          "value": 79
+        },
+        {
+          "name": "k_EResultDisabled",
+          "value": 80
+        },
+        {
+          "name": "k_EResultInvalidCEGSubmission",
+          "value": 81
+        },
+        {
+          "name": "k_EResultRestrictedDevice",
+          "value": 82
+        },
+        {
+          "name": "k_EResultRegionLocked",
+          "value": 83
+        },
+        {
+          "name": "k_EResultRateLimitExceeded",
+          "value": 84
+        },
+        {
+          "name": "k_EResultAccountLoginDeniedNeedTwoFactor",
+          "value": 85
+        },
+        {
+          "name": "k_EResultItemDeleted",
+          "value": 86
+        },
+        {
+          "name": "k_EResultAccountLoginDeniedThrottle",
+          "value": 87
+        },
+        {
+          "name": "k_EResultTwoFactorCodeMismatch",
+          "value": 88
+        },
+        {
+          "name": "k_EResultTwoFactorActivationCodeMismatch",
+          "value": 89
+        },
+        {
+          "name": "k_EResultAccountAssociatedToMultiplePartners",
+          "value": 90
+        },
+        {
+          "name": "k_EResultNotModified",
+          "value": 91
+        },
+        {
+          "name": "k_EResultNoMobileDevice",
+          "value": 92
+        },
+        {
+          "name": "k_EResultTimeNotSynced",
+          "value": 93
+        },
+        {
+          "name": "k_EResultSmsCodeFailed",
+          "value": 94
+        },
+        {
+          "name": "k_EResultAccountLimitExceeded",
+          "value": 95
+        },
+        {
+          "name": "k_EResultAccountActivityLimitExceeded",
+          "value": 96
+        },
+        {
+          "name": "k_EResultPhoneActivityLimitExceeded",
+          "value": 97
+        },
+        {
+          "name": "k_EResultRefundToWallet",
+          "value": 98
+        },
+        {
+          "name": "k_EResultEmailSendFailure",
+          "value": 99
+        },
+        {
+          "name": "k_EResultNotSettled",
+          "value": 100
+        },
+        {
+          "name": "k_EResultNeedCaptcha",
+          "value": 101
+        },
+        {
+          "name": "k_EResultGSLTDenied",
+          "value": 102
+        },
+        {
+          "name": "k_EResultGSOwnerDenied",
+          "value": 103
+        },
+        {
+          "name": "k_EResultInvalidItemType",
+          "value": 104
+        }
+      ],
+      "line": 15
+    },
+    {
+      "name": "EHTTPMethod",
+      "members": [
+        {
+          "name": "k_EHTTPMethodInvalid",
+          "value": 0
+        },
+        {
+          "name": "k_EHTTPMethodGET",
+          "value": 1
+        },
+        {
+          "name": "k_EHTTPMethodHEAD",
+          "value": 2
+        },
+        {
+          "name": "k_EHTTPMethodPOST",
+          "value": 3
+        },
+        {
+          "name": "k_EHTTPMethodPUT",
+          "value": 4
+        },
+        {
+          "name": "k_EHTTPMethodDELETE",
+          "value": 5
+        },
+        {
+          "name": "k_EHTTPMethodOPTIONS",
+          "value": 6
+        },
+        {
+          "name": "k_EHTTPMethodPATCH",
+          "value": 7
+        }
+      ],
+      "line": 124
+    },
+    {
+      "name": "EHTTPStatusCode",
+      "members": [
+        {
+          "name": "k_EHTTPStatusCodeInvalid",
+          "value": 0
+        },
+        {
+          "name": "k_EHTTPStatusCode100Continue",
+          "value": 100
+        },
+        {
+          "name": "k_EHTTPStatusCode101SwitchingProtocols",
+          "value": 101
+        },
+        {
+          "name": "k_EHTTPStatusCode200OK",
+          "value": 200
+        },
+        {
+          "name": "k_EHTTPStatusCode201Created",
+          "value": 201
+        },
+        {
+          "name": "k_EHTTPStatusCode202Accepted",
+          "value": 202
+        },
+        {
+          "name": "k_EHTTPStatusCode203NonAuthoritative",
+          "value": 203
+        },
+        {
+          "name": "k_EHTTPStatusCode204NoContent",
+          "value": 204
+        },
+        {
+          "name": "k_EHTTPStatusCode205ResetContent",
+          "value": 205
+        },
+        {
+          "name": "k_EHTTPStatusCode206PartialContent",
+          "value": 206
+        },
+        {
+          "name": "k_EHTTPStatusCode300MultipleChoices",
+          "value": 300
+        },
+        {
+          "name": "k_EHTTPStatusCode301MovedPermanently",
+          "value": 301
+        },
+        {
+          "name": "k_EHTTPStatusCode302Found",
+          "value": 302
+        },
+        {
+          "name": "k_EHTTPStatusCode303SeeOther",
+          "value": 303
+        },
+        {
+          "name": "k_EHTTPStatusCode304NotModified",
+          "value": 304
+        },
+        {
+          "name": "k_EHTTPStatusCode305UseProxy",
+          "value": 305
+        },
+        {
+          "name": "k_EHTTPStatusCode307TemporaryRedirect",
+          "value": 307
+        },
+        {
+          "name": "k_EHTTPStatusCode400BadRequest",
+          "value": 400
+        },
+        {
+          "name": "k_EHTTPStatusCode401Unauthorized",
+          "value": 401
+        },
+        {
+          "name": "k_EHTTPStatusCode402PaymentRequired",
+          "value": 402
+        },
+        {
+          "name": "k_EHTTPStatusCode403Forbidden",
+          "value": 403
+        },
+        {
+          "name": "k_EHTTPStatusCode404NotFound",
+          "value": 404
+        },
+        {
+          "name": "k_EHTTPStatusCode405MethodNotAllowed",
+          "value": 405
+        },
+        {
+          "name": "k_EHTTPStatusCode406NotAcceptable",
+          "value": 406
+        },
+        {
+          "name": "k_EHTTPStatusCode407ProxyAuthRequired",
+          "value": 407
+        },
+        {
+          "name": "k_EHTTPStatusCode408RequestTimeout",
+          "value": 408
+        },
+        {
+          "name": "k_EHTTPStatusCode409Conflict",
+          "value": 409
+        },
+        {
+          "name": "k_EHTTPStatusCode410Gone",
+          "value": 410
+        },
+        {
+          "name": "k_EHTTPStatusCode411LengthRequired",
+          "value": 411
+        },
+        {
+          "name": "k_EHTTPStatusCode412PreconditionFailed",
+          "value": 412
+        },
+        {
+          "name": "k_EHTTPStatusCode413RequestEntityTooLarge",
+          "value": 413
+        },
+        {
+          "name": "k_EHTTPStatusCode414RequestURITooLong",
+          "value": 414
+        },
+        {
+          "name": "k_EHTTPStatusCode415UnsupportedMediaType",
+          "value": 415
+        },
+        {
+          "name": "k_EHTTPStatusCode416RequestedRangeNotSatisfiable",
+          "value": 416
+        },
+        {
+          "name": "k_EHTTPStatusCode417ExpectationFailed",
+          "value": 417
+        },
+        {
+          "name": "k_EHTTPStatusCode4xxUnknown",
+          "value": 418
+        },
+        {
+          "name": "k_EHTTPStatusCode429TooManyRequests",
+          "value": 429
+        },
+        {
+          "name": "k_EHTTPStatusCode500InternalServerError",
+          "value": 500
+        },
+        {
+          "name": "k_EHTTPStatusCode501NotImplemented",
+          "value": 501
+        },
+        {
+          "name": "k_EHTTPStatusCode502BadGateway",
+          "value": 502
+        },
+        {
+          "name": "k_EHTTPStatusCode503ServiceUnavailable",
+          "value": 503
+        },
+        {
+          "name": "k_EHTTPStatusCode504GatewayTimeout",
+          "value": 504
+        },
+        {
+          "name": "k_EHTTPStatusCode505HTTPVersionNotSupported",
+          "value": 505
+        },
+        {
+          "name": "k_EHTTPStatusCode5xxUnknown",
+          "value": 599
+        }
+      ],
+      "line": 145
+    },
+    {
+      "name": "EGCResults",
+      "members": [
+        {
+          "name": "k_EGCResultOK",
+          "value": 0
+        },
+        {
+          "name": "k_EGCResultNoMessage",
+          "value": 1
+        },
+        {
+          "name": "k_EGCResultBufferTooSmall",
+          "value": 2
+        },
+        {
+          "name": "k_EGCResultNotLoggedOn",
+          "value": 3
+        },
+        {
+          "name": "k_EGCResultInvalidMessage",
+          "value": 4
+        }
+      ],
+      "line": 206
+    }
+  ],
+  "callback_typesets": [
+    {
+      "name": "SteamWorksHTTPRequestCompleted",
+      "line": 489,
+      "signatures": [
+        "function void (Handle request, bool failed, bool requestSuccessful, EHTTPStatusCode statusCode);",
+        "function void (Handle request, bool failed, bool requestSuccessful, EHTTPStatusCode statusCode, any data1);",
+        "function void (Handle request, bool failed, bool requestSuccessful, EHTTPStatusCode statusCode, any data1, any data2);"
+      ]
+    },
+    {
+      "name": "SteamWorksHTTPHeadersReceived",
+      "line": 531,
+      "signatures": [
+        "function void (Handle request, bool failed);",
+        "function void (Handle request, bool failed, any data1);",
+        "function void (Handle request, bool failed, any data1, any data2);"
+      ]
+    },
+    {
+      "name": "SteamWorksHTTPDataReceived",
+      "line": 567,
+      "signatures": [
+        "function void (Handle request, bool failed, int offset, int bytesReceived);",
+        "function void (Handle request, bool failed, int offset, int bytesReceived, any data1);",
+        "function void (Handle request, bool failed, int offset, int bytesReceived, any data1, any data2);"
+      ]
+    },
+    {
+      "name": "SteamWorksHTTPBodyCallback",
+      "line": 610,
+      "signatures": [
+        "function void (const char[] data);",
+        "function void (const char[] data, any value);",
+        "function void (const int[] data, any value, int datalen);"
+      ]
+    }
+  ],
+  "native_registrations": [
+    {
+      "name": "SteamWorks_CreateHTTPRequest",
+      "implementation": "sm_CreateHTTPRequest",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 843
+    },
+    {
+      "name": "SteamWorks_SetHTTPRequestContextValue",
+      "implementation": "sm_SetHTTPRequestContextValue",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 844
+    },
+    {
+      "name": "SteamWorks_SetHTTPRequestNetworkActivityTimeout",
+      "implementation": "sm_SetHTTPRequestNetworkActivityTimeout",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 845
+    },
+    {
+      "name": "SteamWorks_SetHTTPRequestHeaderValue",
+      "implementation": "sm_SetHTTPRequestHeaderValue",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 846
+    },
+    {
+      "name": "SteamWorks_SetHTTPRequestGetOrPostParameter",
+      "implementation": "sm_SetHTTPRequestGetOrPostParameter",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 847
+    },
+    {
+      "name": "SteamWorks_SetHTTPRequestUserAgentInfo",
+      "implementation": "sm_SetHTTPRequestUserAgentInfo",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 848
+    },
+    {
+      "name": "SteamWorks_SetHTTPRequestRequiresVerifiedCertificate",
+      "implementation": "sm_SetHTTPRequestRequiresVerifiedCertificate",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 849
+    },
+    {
+      "name": "SteamWorks_SetHTTPRequestAbsoluteTimeoutMS",
+      "implementation": "sm_SetHTTPRequestAbsoluteTimeoutMS",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 850
+    },
+    {
+      "name": "SteamWorks_SetHTTPCallbacks",
+      "implementation": "sm_SetCallbacks",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 851
+    },
+    {
+      "name": "SteamWorks_SendHTTPRequest",
+      "implementation": "sm_SendHTTPRequest",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 852
+    },
+    {
+      "name": "SteamWorks_DeferHTTPRequest",
+      "implementation": "sm_DeferHTTPRequest",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 853
+    },
+    {
+      "name": "SteamWorks_PrioritizeHTTPRequest",
+      "implementation": "sm_PrioritizeHTTPRequest",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 854
+    },
+    {
+      "name": "SteamWorks_GetHTTPResponseHeaderSize",
+      "implementation": "sm_GetHTTPResponseHeaderSize",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 855
+    },
+    {
+      "name": "SteamWorks_GetHTTPResponseHeaderValue",
+      "implementation": "sm_GetHTTPResponseHeaderValue",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 856
+    },
+    {
+      "name": "SteamWorks_GetHTTPResponseBodySize",
+      "implementation": "sm_GetHTTPResponseBodySize",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 857
+    },
+    {
+      "name": "SteamWorks_GetHTTPResponseBodyData",
+      "implementation": "sm_GetHTTPResponseBodyData",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 858
+    },
+    {
+      "name": "SteamWorks_GetHTTPResponseBodyString",
+      "implementation": "sm_GetHTTPResponseBodyString",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 859
+    },
+    {
+      "name": "SteamWorks_GetHTTPDownloadProgressPct",
+      "implementation": "sm_GetHTTPDownloadProgressPct",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 860
+    },
+    {
+      "name": "SteamWorks_GetHTTPRequestWasTimedOut",
+      "implementation": "sm_GetHTTPRequestWasTimedOut",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 861
+    },
+    {
+      "name": "SteamWorks_SetHTTPRequestRawPostBody",
+      "implementation": "sm_SetHTTPRequestRawPostBody",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 862
+    },
+    {
+      "name": "SteamWorks_SetHTTPRequestRawPostBodyFromFile",
+      "implementation": "sm_SetHTTPRequestRawPostBodyFromFile",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 863
+    },
+    {
+      "name": "SteamWorks_GetHTTPResponseBodyCallback",
+      "implementation": "sm_GetHTTPResponseBodyCallback",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 864
+    },
+    {
+      "name": "SteamWorks_WriteHTTPResponseBodyToFile",
+      "implementation": "sm_WriteHTTPResponseBodyToFile",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 865
+    },
+    {
+      "name": "SteamWorks_SendHTTPRequestAndStreamResponse",
+      "implementation": "sm_SendHTTPRequestAndStreamResponse",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 866
+    },
+    {
+      "name": "SteamWorks_GetHTTPStreamingResponseBodyData",
+      "implementation": "sm_GetHTTPStreamingResponseBodyData",
+      "file": "extension/http/swhttprequest.cpp",
+      "line": 867
+    },
+    {
+      "name": "SteamWorks_SendMessageToGC",
+      "implementation": "sm_GCSendMessage",
+      "file": "extension/natives/gcnatives.cpp",
+      "line": 46
+    },
+    {
+      "name": "SteamWorks_IsVACEnabled",
+      "implementation": "sm_IsVACEnabled",
+      "file": "extension/natives/gsnatives.cpp",
+      "line": 320
+    },
+    {
+      "name": "SteamWorks_GetPublicIP",
+      "implementation": "sm_GetPublicIP",
+      "file": "extension/natives/gsnatives.cpp",
+      "line": 321
+    },
+    {
+      "name": "SteamWorks_GetPublicIPCell",
+      "implementation": "sm_GetPublicIPCell",
+      "file": "extension/natives/gsnatives.cpp",
+      "line": 322
+    },
+    {
+      "name": "SteamWorks_IsLoaded",
+      "implementation": "sm_IsLoaded",
+      "file": "extension/natives/gsnatives.cpp",
+      "line": 323
+    },
+    {
+      "name": "SteamWorks_SetGameData",
+      "implementation": "sm_SetGameData",
+      "file": "extension/natives/gsnatives.cpp",
+      "line": 324
+    },
+    {
+      "name": "SteamWorks_SetGameDescription",
+      "implementation": "sm_SetGameDescription",
+      "file": "extension/natives/gsnatives.cpp",
+      "line": 325
+    },
+    {
+      "name": "SteamWorks_SetMapName",
+      "implementation": "sm_SetMapName",
+      "file": "extension/natives/gsnatives.cpp",
+      "line": 326
+    },
+    {
+      "name": "SteamWorks_IsConnected",
+      "implementation": "sm_IsConnected",
+      "file": "extension/natives/gsnatives.cpp",
+      "line": 327
+    },
+    {
+      "name": "SteamWorks_SetRule",
+      "implementation": "sm_SetRule",
+      "file": "extension/natives/gsnatives.cpp",
+      "line": 328
+    },
+    {
+      "name": "SteamWorks_ClearRules",
+      "implementation": "sm_ClearRules",
+      "file": "extension/natives/gsnatives.cpp",
+      "line": 329
+    },
+    {
+      "name": "SteamWorks_HasLicenseForApp",
+      "implementation": "sm_UserHasLicenseForApp",
+      "file": "extension/natives/gsnatives.cpp",
+      "line": 330
+    },
+    {
+      "name": "SteamWorks_HasLicenseForAppId",
+      "implementation": "sm_UserHasLicenseForAppId",
+      "file": "extension/natives/gsnatives.cpp",
+      "line": 331
+    },
+    {
+      "name": "SteamWorks_GetClientSteamID",
+      "implementation": "sm_GetClientSteamID",
+      "file": "extension/natives/gsnatives.cpp",
+      "line": 332
+    },
+    {
+      "name": "SteamWorks_GetUserGroupStatus",
+      "implementation": "sm_GetUserGroupStatus",
+      "file": "extension/natives/gsnatives.cpp",
+      "line": 333
+    },
+    {
+      "name": "SteamWorks_GetUserGroupStatusAuthID",
+      "implementation": "sm_GetUserGroupStatusAuthID",
+      "file": "extension/natives/gsnatives.cpp",
+      "line": 334
+    },
+    {
+      "name": "SteamWorks_RequestStatsAuthID",
+      "implementation": "sm_RequestStatsAuthID",
+      "file": "extension/natives/ssnatives.cpp",
+      "line": 250
+    },
+    {
+      "name": "SteamWorks_RequestStats",
+      "implementation": "sm_RequestUserStats",
+      "file": "extension/natives/ssnatives.cpp",
+      "line": 251
+    },
+    {
+      "name": "SteamWorks_GetStatCell",
+      "implementation": "sm_GetStatCell",
+      "file": "extension/natives/ssnatives.cpp",
+      "line": 252
+    },
+    {
+      "name": "SteamWorks_GetStatAuthIDCell",
+      "implementation": "sm_GetStatAuthIDCell",
+      "file": "extension/natives/ssnatives.cpp",
+      "line": 253
+    },
+    {
+      "name": "SteamWorks_GetStatFloat",
+      "implementation": "sm_GetStatFloat",
+      "file": "extension/natives/ssnatives.cpp",
+      "line": 254
+    },
+    {
+      "name": "SteamWorks_GetStatAuthIDFloat",
+      "implementation": "sm_GetStatAuthIDFloat",
+      "file": "extension/natives/ssnatives.cpp",
+      "line": 255
+    }
+  ],
+  "forward_registrations": [
+    {
+      "name": "SW_OnValidateClient",
+      "registration_arguments": "ET_Ignore, 2, nullptr, Param_Cell, Param_Cell",
+      "file": "extension/core/swforwards.cpp",
+      "line": 44
+    },
+    {
+      "name": "SteamWorks_OnValidateClient",
+      "registration_arguments": "ET_Ignore, 2, nullptr, Param_Cell, Param_Cell",
+      "file": "extension/core/swforwards.cpp",
+      "line": 45
+    },
+    {
+      "name": "SteamWorks_SteamServersConnected",
+      "registration_arguments": "ET_Ignore, 0, nullptr",
+      "file": "extension/core/swforwards.cpp",
+      "line": 46
+    },
+    {
+      "name": "SteamWorks_SteamServersConnectFailure",
+      "registration_arguments": "ET_Ignore, 1, nullptr, Param_Cell",
+      "file": "extension/core/swforwards.cpp",
+      "line": 47
+    },
+    {
+      "name": "SteamWorks_SteamServersDisconnected",
+      "registration_arguments": "ET_Ignore, 1, nullptr, Param_Cell",
+      "file": "extension/core/swforwards.cpp",
+      "line": 48
+    },
+    {
+      "name": "SteamWorks_OnClientGroupStatus",
+      "registration_arguments": "ET_Ignore, 4, nullptr, Param_Cell, Param_Cell, Param_Cell, Param_Cell",
+      "file": "extension/core/swforwards.cpp",
+      "line": 49
+    },
+    {
+      "name": "SteamWorks_GCSendMessage",
+      "registration_arguments": "ET_Event, 3, nullptr, Param_Cell, Param_String, Param_Cell",
+      "file": "extension/hooks/swgchooks.cpp",
+      "line": 47
+    },
+    {
+      "name": "SteamWorks_GCMsgAvailable",
+      "registration_arguments": "ET_Ignore, 1, nullptr, Param_Cell",
+      "file": "extension/hooks/swgchooks.cpp",
+      "line": 48
+    },
+    {
+      "name": "SteamWorks_GCRetrieveMessage",
+      "registration_arguments": "ET_Event, 4, nullptr, Param_Cell, Param_String, Param_Cell, Param_Cell",
+      "file": "extension/hooks/swgchooks.cpp",
+      "line": 49
+    },
+    {
+      "name": "SteamWorks_RestartRequested",
+      "registration_arguments": "ET_Hook, 0, nullptr",
+      "file": "extension/hooks/swgshooks.cpp",
+      "line": 54
+    },
+    {
+      "name": "SteamWorks_TokenRequested",
+      "registration_arguments": "ET_Ignore, 2, nullptr, Param_String, Param_Cell",
+      "file": "extension/hooks/swgshooks.cpp",
+      "line": 55
+    },
+    {
+      "name": "SteamWorks_BeginAuthSession",
+      "registration_arguments": "ET_Ignore, 3, nullptr, Param_Array, Param_Cell, Param_Cell",
+      "file": "extension/hooks/swgshooks.cpp",
+      "line": 56
+    }
+  ],
+  "optional_natives": [
+    "SteamWorks_ClearRules",
+    "SteamWorks_CreateHTTPRequest",
+    "SteamWorks_DeferHTTPRequest",
+    "SteamWorks_GetClientSteamID",
+    "SteamWorks_GetHTTPDownloadProgressPct",
+    "SteamWorks_GetHTTPResponseBodyCallback",
+    "SteamWorks_GetHTTPResponseBodyData",
+    "SteamWorks_GetHTTPResponseBodySize",
+    "SteamWorks_GetHTTPResponseBodyString",
+    "SteamWorks_GetHTTPResponseHeaderSize",
+    "SteamWorks_GetHTTPResponseHeaderValue",
+    "SteamWorks_GetHTTPStreamingResponseBodyData",
+    "SteamWorks_GetPublicIP",
+    "SteamWorks_GetPublicIPCell",
+    "SteamWorks_GetStatAuthIDCell",
+    "SteamWorks_GetStatAuthIDFloat",
+    "SteamWorks_GetStatCell",
+    "SteamWorks_GetStatFloat",
+    "SteamWorks_GetUserGroupStatus",
+    "SteamWorks_GetUserGroupStatusAuthID",
+    "SteamWorks_HasLicenseForApp",
+    "SteamWorks_HasLicenseForAppId",
+    "SteamWorks_IsConnected",
+    "SteamWorks_IsLoaded",
+    "SteamWorks_IsVACEnabled",
+    "SteamWorks_PrioritizeHTTPRequest",
+    "SteamWorks_RequestStats",
+    "SteamWorks_RequestStatsAuthID",
+    "SteamWorks_SendHTTPRequest",
+    "SteamWorks_SendHTTPRequestAndStreamResponse",
+    "SteamWorks_SendMessageToGC",
+    "SteamWorks_SetGameData",
+    "SteamWorks_SetGameDescription",
+    "SteamWorks_SetHTTPCallbacks",
+    "SteamWorks_SetHTTPRequestAbsoluteTimeoutMS",
+    "SteamWorks_SetHTTPRequestContextValue",
+    "SteamWorks_SetHTTPRequestGetOrPostParameter",
+    "SteamWorks_SetHTTPRequestHeaderValue",
+    "SteamWorks_SetHTTPRequestNetworkActivityTimeout",
+    "SteamWorks_SetHTTPRequestRawPostBody",
+    "SteamWorks_SetHTTPRequestRawPostBodyFromFile",
+    "SteamWorks_SetHTTPRequestRequiresVerifiedCertificate",
+    "SteamWorks_SetHTTPRequestUserAgentInfo",
+    "SteamWorks_SetRule",
+    "SteamWorks_WriteHTTPResponseBodyToFile"
+  ],
+  "comparison": {
+    "declared_natives_not_registered": [],
+    "registered_natives_not_declared": [],
+    "declared_forwards_not_registered": [],
+    "registered_forwards_not_declared": [
+      "SteamWorks_BeginAuthSession"
+    ],
+    "declared_natives_not_optional": [
+      "SteamWorks_GetHTTPRequestWasTimedOut",
+      "SteamWorks_SetMapName"
+    ],
+    "optional_natives_not_declared": []
+  }
+}

@@ -1,17 +1,33 @@
 # Cobertura de pruebas de `steamworks.inc`
 
-Este documento resume qué partes de la biblioteca fueron verificadas en runtime
-contra un servidor dedicado de Left 4 Dead 2, qué partes quedaron solo
-parcialmente verificadas, qué partes no se ejercitaron todavía y qué partes se
-consideran no soportadas en este contexto.
+La [matriz P5-R17](runtime-compatibility/p5/validation-results.json) cierra los
+33 casos aplicables a Linux x86; T13/T14/T34 no aplican al perfil.
+[T25/T29](runtime-compatibility/last-two-srcds-progress.md) incorporan 18 checks
+humanos/sociales, 104 deterministas de Connect en VM x86 y 66 pruebas Python.
+Quince suites x86 repetidas pasan, incluidos los sanitizadores sin supresiones
+y la comparación de API pública. ELF e include permanecen idénticos a R16.
 
-La referencia de API evaluada es:
+Se conservan las aceptaciones anteriores por hash y alcance: T11 capacidades/GC
+local; T23 forwards; T15 buffers; T16 carga tardía/recarga quiescente; T20 descarga
+del propietario HTTP; autenticación/stats optimizados; T26/T35 instalación y
+reversión; T32 recuperación Steam y T33 carga local medida durante veinte minutos.
+El cierre no certifica todos los métodos SDK, GC remoto, varias horas de carga,
+Windows/x64, otro proveedor de identidad o todo el negocio de los consumidores.
+Los SMX HTTP antiguos con tres argumentos deben recompilarse; Connect corregido
+pasó arranque frío/HTTP/ACK/cambio de mapa. ZIP R17 regenerados, R16 intactos; el ZIP de revisión incorpora evidencia y
+parche externo. Se recompilan 18 harnesses runtime, cuatro fixtures Connect y
+dos controles de includes; 55 entradas SDK y 152 fuentes comprobadas. Build
+optimizado idéntico tras fijar la fecha del compilador; el primer build y su
+diferencia solo de fecha/build-id quedan documentados. Roundtrip rollback local
+y replay de diagnósticos extraídos pasan. Sin nueva operación SRCDS, commit ni producción.
 
-- `scripting/include/steamworks.inc`
+## Referencia histórica del plugin de ejemplo
 
-El plugin usado para la validación práctica fue:
-
-- `scripts/steamwork_test.sp`
+Las secciones siguientes conservan observaciones previas de
+`scripting/steamwork_test.sp` contra `scripting/include/steamworks.inc`. Describen
+su ensayo original; la aceptación del candidato actual se limita a los harnesses,
+hashes y resultados de la matriz P5-R17. Los informes y paquetes anteriores se
+conservan intactos y no se transfieren entre binarios distintos.
 
 ## Verificado
 
@@ -77,7 +93,7 @@ Resultado:
 
 Documentación relacionada:
 
-- [ISteamHTTP](C:\GitHub\SteamWorks\docs\ISteamHTTP.md)
+- [ISteamHTTP](ISteamHTTP.md)
 
 ### `ISteamUserStats`
 
@@ -97,8 +113,8 @@ Resultado:
 
 Documentación relacionada:
 
-- [ISteamUserStats](C:\GitHub\SteamWorks\docs\ISteamUserStats.md)
-- [GetSchemaForGame_550](C:\GitHub\SteamWorks\docs\GetSchemaForGame_550.md)
+- [ISteamUserStats](ISteamUserStats.md)
+- [GetSchemaForGame_550](GetSchemaForGame_550.md)
 
 ### Forwards observados
 
@@ -181,4 +197,4 @@ Conclusión:
 
 Documentación relacionada:
 
-- [ISteamFriends](C:\GitHub\SteamWorks\docs\ISteamFriends.md)
+- [ISteamFriends](ISteamFriends.md)

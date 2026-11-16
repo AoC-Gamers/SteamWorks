@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "task": "T08 same-process reinit acceptance with SourceTVSupport",
+  "timestamp_utc": "2026-11-15T15:31:26.328023+00:00",
+  "status": "passed_scoped",
+  "branch": "develop",
+  "candidate_sha256": "82347b99d5130bd411cdc0b35d215dc87fc82d394a2252ccd83d5d4940b6ca5a",
+  "public_include_sha256": "b4e021b2df9fd81101754f0795da2d5c2eee04c125a8e4997a0b19595fc3affb",
+  "public_API_changed": false,
+  "product_binary_changed_for_acceptance": false,
+  "target": {
+    "container": "competitive_dev",
+    "supervisor": "LinuxGSM",
+    "port": 27015,
+    "platform": "linux-x86",
+    "lab_basepath": "addons/sourcemod_acceptance",
+    "usual_game_launch_flags_and_configs_preserved": true
+  },
+  "process": {
+    "PID": 58894,
+    "start_ticks": 1143564,
+    "new_game_commands": [
+      "map c2m2_fairgrounds",
+      "map c2m1_highway"
+    ],
+    "same_process_and_module_hashes_verified": true,
+    "profile_installations": 1,
+    "plugin_rows": 137
+  },
+  "lifecycle": {
+    "init_successes_including_cold_start": 3,
+    "original_GS_shutdowns_including_final_quit": 3,
+    "runtime_reactivations_after_shutdown": 2,
+    "public_connected_forward_deliveries_per_reinit": [
+      1,
+      1
+    ],
+    "three_typed_GameServer_hooks_reinstalled_per_reinit": true,
+    "no_application_client_finalize_during_map_reinit": true,
+    "application_client_finalized_once_on_final_unload": true,
+    "controlled_quit_without_crash_markers": true,
+    "new_cores": 0,
+    "SourceTVSupport_still_owns_shared_SDK_init": true,
+    "SteamWorks_owns_engine_CALL_and_SDK_shutdown": true
+  },
+  "HTTP": {
+    "full_cases_before_and_after_each_reinit": 24,
+    "fresh_completion_probe_after_releasing_obsolete_response": 1,
+    "completed": 25,
+    "failed": 0,
+    "streaming_header_callbacks": 3,
+    "streaming_bytes": 18,
+    "streaming_context_both_cells_valid": true,
+    "held_request_entered_before_second_shutdown": true,
+    "held_response_released_after_reinit_and_HTTP_pass": true,
+    "hold_seconds": 31.311,
+    "held_request_timeout_ms": 60000,
+    "stale_completions_after_release": 0,
+    "retained_plugin_handle_closed_without_error": true,
+    "post_release_observation_seconds": 7
+  },
+  "restoration": {
+    "original_DEV_steam_connected": true,
+    "four_original_hashes_and_selector_verified": true,
+    "original_extension_mapped": true,
+    "lab_removed": true,
+    "local_fixtures_stopped": true
+  },
+  "limitations": [
+    "Scope is identified Linux x86 pair and this ELF; no other platform/provider accepted.",
+    "No real human authenticated in this followup; prior auth/identity/stats acceptances stay attributed to their binaries.",
+    "No hot extension unload, Steam disconnect recovery, GC or long-duration soak acceptance.",
+    "Callback silence is observed for the held response and measured window; it is not a proof for all stale-generation races.",
+    "No global P5 acceptance; original archived baseline remains unchanged."
+  ],
+  "committed": false,
+  "published": false,
+  "production_touched": false,
+  "full_matrix_accepted": false
+}

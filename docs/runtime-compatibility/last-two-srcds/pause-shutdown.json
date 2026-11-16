@@ -1,0 +1,19 @@
+{
+  "timestamp_utc": "2026-11-16T01:17:07.227537+00:00",
+  "quit_completed": true,
+  "lab_stopped": true,
+  "stopped_pid": 160884,
+  "trace": [
+    "[SW-PENDING] ready",
+    "[SW-CONS] observer_ready",
+    "[Connect HTTP tests] checks=83 failures=0",
+    "[SW-PENDING] status armed=1 observations=0 checks=0 failures=0",
+    "[SW-CONS] protected_config_exec_blocked=1",
+    "[SW-SOCIAL] ready late=1",
+    "[SW-SOCIAL] ready late=1"
+  ],
+  "error_log_sizes": {
+    "errors_20261116.log": 1117
+  },
+  "crash_markers": []
+}

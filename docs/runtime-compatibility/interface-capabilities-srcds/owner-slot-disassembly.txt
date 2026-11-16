@@ -1,0 +1,40 @@
+
+/home/lechuga/GitHub/l4d2_sourcemod/SteamWorks/.build/p5-r14/build/package/addons/sourcemod/extensions/steamworks.ext.so:     file format elf32-i386
+
+
+Disassembly of section .init:
+
+Disassembly of section .plt:
+
+Disassembly of section .plt.got:
+
+Disassembly of section .text:
+
+00006ea0 <_ZN12_GLOBAL__N_1L14sm_IsConnectedEPN10SourcePawn14IPluginContextEPKi>:
+    6ea0:	53                   	push   %ebx
+    6ea1:	e8 4a c8 ff ff       	call   36f0 <__x86.get_pc_thunk.bx>
+    6ea6:	81 c3 4e c1 02 00    	add    $0x2c14e,%ebx
+    6eac:	83 ec 14             	sub    $0x14,%esp
+    6eaf:	8d 83 2c 12 00 00    	lea    0x122c(%ebx),%eax
+    6eb5:	ff 70 18             	push   0x18(%eax)
+    6eb8:	e8 83 d3 ff ff       	call   4240 <_ZN20SteamWorksGameServer13GetGameServerEv>
+    6ebd:	83 c4 10             	add    $0x10,%esp
+    6ec0:	85 c0                	test   %eax,%eax
+    6ec2:	74 1c                	je     6ee0 <_ZN12_GLOBAL__N_1L14sm_IsConnectedEPN10SourcePawn14IPluginContextEPKi+0x40>
+    6ec4:	83 ec 0c             	sub    $0xc,%esp
+    6ec7:	8b 10                	mov    (%eax),%edx
+    6ec9:	50                   	push   %eax
+    6eca:	ff 52 20             	call   *0x20(%edx)
+    6ecd:	0f b6 c0             	movzbl %al,%eax
+    6ed0:	83 c4 10             	add    $0x10,%esp
+    6ed3:	83 c4 08             	add    $0x8,%esp
+    6ed6:	5b                   	pop    %ebx
+    6ed7:	c3                   	ret
+    6ed8:	8d b4 26 00 00 00 00 	lea    0x0(%esi,%eiz,1),%esi
+    6edf:	90                   	nop
+    6ee0:	83 c4 08             	add    $0x8,%esp
+    6ee3:	31 c0                	xor    %eax,%eax
+    6ee5:	5b                   	pop    %ebx
+    6ee6:	c3                   	ret
+
+Disassembly of section .fini:

@@ -1,0 +1,19 @@
+{
+  "pid": 58894,
+  "entries": [
+    "[SW-LIFETIME] entry=SteamInit address=f1467430 opcode=e9 target=f0b5b00e",
+    "[SW-LIFETIME] entry=SteamShutdown address=f1467690 opcode=ff target=d9938ac0",
+    "[SW-LIFETIME] entry=EngineInitCall address=f12538eb opcode=e8 target=d9938b44"
+  ],
+  "SDK_init_bridge_bytes": "e94da7f4e9",
+  "SDK_init_consumer_target": "0xdaaa5760",
+  "owner_mappings": {
+    "SDK_init": "daa91000-dabf1000 r-xp 0008d000 103:02 3148099                           /data/serverfiles/left4dead2/addons/sourcemod_acceptance/extensions/sourcetvsupport.ext.2.l4d2.so",
+    "engine_init_CALL": "d992f000-d9950000 r-xp 00003000 103:02 3148112                           /data/serverfiles/left4dead2/addons/sourcemod_acceptance/extensions/steamworks.ext.so",
+    "SDK_shutdown": "d992f000-d9950000 r-xp 00003000 103:02 3148112                           /data/serverfiles/left4dead2/addons/sourcemod_acceptance/extensions/steamworks.ext.so"
+  },
+  "SDK_init_consumer": "SourceTVSupport",
+  "engine_CALL_observer": "SteamWorks",
+  "SDK_shutdown_observer": "SteamWorks",
+  "inspection": "Read-only harness after both runtime cycles; no memory writes or hook substitution."
+}

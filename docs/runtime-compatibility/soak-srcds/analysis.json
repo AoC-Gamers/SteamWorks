@@ -1,0 +1,123 @@
+{
+  "status": "passed_scoped",
+  "checks": {
+    "same_process_all_samples": true,
+    "no_unexpected_errors": true,
+    "runtime_Steam_stay_connected_at_samples": true,
+    "all_quiescent_HTTP_handles_zero": true,
+    "all_sent_completed_closed_at_drain": true,
+    "minimum_load_completed": true,
+    "peak_pending_bounded": true,
+    "final_RSS_delta_bounded": true,
+    "final_FD_delta_bounded": true,
+    "final_thread_delta_bounded": true,
+    "last_10_load_RSS_slope_bounded": true,
+    "last_10_load_FD_slope_bounded": true,
+    "no_per_frame_harness_logging": true,
+    "extension_log_count_flat": true,
+    "stream_payload_total_exact": true,
+    "latency_p95_kind_0": true,
+    "latency_p95_kind_1": true,
+    "latency_p95_kind_2": true,
+    "latency_p95_kind_3": true
+  },
+  "failed_checks": [],
+  "sample_count": 28,
+  "same_PID": 152698,
+  "same_start_ticks": 4027743,
+  "observed_total_minutes": 26.056389353300013,
+  "load_segment_minutes": 20,
+  "completed": 1980,
+  "closed": 1980,
+  "peak_pending": 3,
+  "stream_bytes": 2970,
+  "stream_callbacks": 990,
+  "idle_RSS_median_KiB": 338028,
+  "final_RSS_KiB": 338596,
+  "final_RSS_delta_KiB": 568,
+  "idle_FDs_median": 53,
+  "final_FDs": 53,
+  "final_FD_delta": 0,
+  "idle_threads_median": 12,
+  "final_threads": 12,
+  "last_10_load_RSS_slope_KiB_per_minute": 0.0,
+  "last_10_load_FD_slope_per_minute": 0.0,
+  "CPU_idle_mean_one_core_percent": 7.463591230773811,
+  "CPU_load_mean_one_core_percent": 7.617354352611741,
+  "CPU_recovery_mean_one_core_percent": 7.361656940543255,
+  "frame_idle_mean_ms": 33.333,
+  "frame_load_mean_ms": 33.33285,
+  "frame_load_max_ms": 36.254,
+  "latency": [
+    {
+      "kind": 0,
+      "completed": 495,
+      "sum_ms": 41297.996,
+      "max_ms": 136.352,
+      "bins": [
+        116,
+        148,
+        231,
+        0,
+        0,
+        0
+      ],
+      "mean_ms": 83.43029494949495,
+      "p95_upper_bound_ms": 250
+    },
+    {
+      "kind": 1,
+      "completed": 495,
+      "sum_ms": 107025.414,
+      "max_ms": 268.493,
+      "bins": [
+        0,
+        0,
+        396,
+        99,
+        0,
+        0
+      ],
+      "mean_ms": 216.21295757575757,
+      "p95_upper_bound_ms": 1000
+    },
+    {
+      "kind": 2,
+      "completed": 495,
+      "sum_ms": 41136.109,
+      "max_ms": 135.131,
+      "bins": [
+        116,
+        152,
+        227,
+        0,
+        0,
+        0
+      ],
+      "mean_ms": 83.1032505050505,
+      "p95_upper_bound_ms": 250
+    },
+    {
+      "kind": 3,
+      "completed": 495,
+      "sum_ms": 1524322.75,
+      "max_ms": 3135.62,
+      "bins": [
+        0,
+        0,
+        0,
+        0,
+        495,
+        0
+      ],
+      "mean_ms": 3079.439898989899,
+      "p95_upper_bound_ms": 5000
+    }
+  ],
+  "failures": 0,
+  "HTTP_handles_after_each_drain": 0,
+  "limits_frozen_before_runtime": true,
+  "owner_all_handle_counts_at_drain": [
+    0
+  ]
+}

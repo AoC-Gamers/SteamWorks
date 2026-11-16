@@ -1,0 +1,15 @@
+{
+  "updated_utc": "2026-11-15T18:57:20.830086+00:00",
+  "phase": "T26_T35_acceptance_passed_original_DEV_restored",
+  "container": "competitive_dev",
+  "port": 27015,
+  "lab_selector": "addons/sourcemod_acceptance",
+  "private_recovery": "/data/serverfiles/left4dead2/addons/sourcemod_acceptance/recovery",
+  "restore_original_DEV_after_acceptance": true,
+  "committed": false,
+  "production_touched": false,
+  "lab_removed": true,
+  "original_DEV_restored": true,
+  "fixture_stopped": true,
+  "evidence": "docs/runtime-compatibility/p5-r9-rollback-srcds/results.json"
+}

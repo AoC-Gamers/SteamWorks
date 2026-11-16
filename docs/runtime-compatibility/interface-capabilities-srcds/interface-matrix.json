@@ -1,0 +1,115 @@
+{
+  "profile": "l4d2-23990100-linux-x86",
+  "matrix": [
+    {
+      "kind": 0,
+      "family": "ISteamClient",
+      "admitted_registry_version": "SteamClient020",
+      "candidate_getter": "GetSteamClient",
+      "static_resolution_route": "SDK cached client or factory fallback (internal branch not distinguished)",
+      "route_evidence": "Actual candidate getter invoked at audited executable RVA; resolver slot audited in hashed sm_IsConnected. Factory/cache sub-branch is not traced.",
+      "normal_state": "available_minimum_probe_passed",
+      "query": "GetIPCCallCount (diagnostic counter)",
+      "unknown_GC_override_state": "available_unchanged",
+      "restored_state": "available_minimum_probe_passed"
+    },
+    {
+      "kind": 1,
+      "family": "ISteamGameServer",
+      "admitted_registry_version": "SteamGameServer015",
+      "candidate_getter": "GetGameServer",
+      "static_resolution_route": "GetISteamGameServer(user,pipe)",
+      "route_evidence": "Actual candidate getter invoked at audited executable RVA; resolver slot audited in hashed sm_IsConnected. Factory/cache sub-branch is not traced.",
+      "normal_state": "available_minimum_probe_passed",
+      "query": "BLoggedOn",
+      "unknown_GC_override_state": "available_unchanged",
+      "restored_state": "available_minimum_probe_passed"
+    },
+    {
+      "kind": 2,
+      "family": "ISteamUtils",
+      "admitted_registry_version": "SteamUtils010",
+      "candidate_getter": "GetUtils",
+      "static_resolution_route": "GetISteamUtils(pipe)",
+      "route_evidence": "Actual candidate getter invoked at audited executable RVA; resolver slot audited in hashed sm_IsConnected. Factory/cache sub-branch is not traced.",
+      "normal_state": "available_minimum_probe_passed",
+      "query": "GetAppID=550 / GetConnectedUniverse=Public",
+      "unknown_GC_override_state": "available_unchanged",
+      "restored_state": "available_minimum_probe_passed"
+    },
+    {
+      "kind": 3,
+      "family": "ISteamNetworking",
+      "admitted_registry_version": "SteamNetworking006",
+      "candidate_getter": "GetNetworking",
+      "static_resolution_route": "GetISteamNetworking(user,pipe)",
+      "route_evidence": "Actual candidate getter invoked at audited executable RVA; resolver slot audited in hashed sm_IsConnected. Factory/cache sub-branch is not traced.",
+      "normal_state": "available_minimum_probe_passed",
+      "query": "IsP2PPacketAvailable(channel 0), no consume",
+      "unknown_GC_override_state": "available_unchanged",
+      "restored_state": "available_minimum_probe_passed"
+    },
+    {
+      "kind": 4,
+      "family": "ISteamGameServerStats",
+      "admitted_registry_version": "SteamGameServerStats001",
+      "candidate_getter": "GetServerStats",
+      "static_resolution_route": "GetISteamGameServerStats(user,pipe)",
+      "route_evidence": "Actual candidate getter invoked at audited executable RVA; resolver slot audited in hashed sm_IsConnected. Factory/cache sub-branch is not traced.",
+      "normal_state": "available_minimum_probe_passed",
+      "query": "GetUserStat(zero identity, missing key) refuses local read",
+      "unknown_GC_override_state": "available_unchanged",
+      "restored_state": "available_minimum_probe_passed"
+    },
+    {
+      "kind": 5,
+      "family": "ISteamHTTP",
+      "admitted_registry_version": "STEAMHTTP_INTERFACE_VERSION003",
+      "candidate_getter": "GetHTTP",
+      "static_resolution_route": "GetISteamHTTP(user,pipe)",
+      "route_evidence": "Actual candidate getter invoked at audited executable RVA; resolver slot audited in hashed sm_IsConnected. Factory/cache sub-branch is not traced.",
+      "normal_state": "available_minimum_probe_passed",
+      "query": "CreateHTTPRequest / ReleaseHTTPRequest; public loopback smoke separately",
+      "unknown_GC_override_state": "available_unchanged",
+      "restored_state": "available_minimum_probe_passed"
+    },
+    {
+      "kind": 6,
+      "family": "ISteamMatchmaking",
+      "admitted_registry_version": "SteamMatchMaking009",
+      "candidate_getter": "GetMatchmaking",
+      "static_resolution_route": "GetISteamMatchmaking(user,pipe)",
+      "route_evidence": "Actual candidate getter invoked at audited executable RVA; resolver slot audited in hashed sm_IsConnected. Factory/cache sub-branch is not traced.",
+      "normal_state": "not_provided_in_gameserver_context",
+      "query": "No method call: getter returns null in this gameserver context",
+      "unknown_GC_override_state": "not_provided_unchanged",
+      "restored_state": "not_provided_unchanged"
+    },
+    {
+      "kind": 7,
+      "family": "ISteamGameCoordinator",
+      "admitted_registry_version": "SteamGameCoordinator001",
+      "candidate_getter": "GetGameCoordinator",
+      "static_resolution_route": "GetISteamGenericInterface(user,pipe)",
+      "route_evidence": "Actual candidate getter invoked at audited executable RVA; resolver slot audited in hashed sm_IsConnected. Factory/cache sub-branch is not traced.",
+      "normal_state": "available_minimum_probe_passed",
+      "query": "IsMessageAvailable / empty RetrieveMessage=NoMessage; public SendMessageToGC locally intercepted",
+      "unknown_GC_override_state": "rejected_null_public_NotLoggedOn",
+      "restored_state": "available_minimum_probe_passed"
+    },
+    {
+      "kind": 8,
+      "family": "ISteamGameServer014",
+      "admitted_registry_version": "SteamGameServer014",
+      "candidate_getter": "GetGameServerAuth014",
+      "static_resolution_route": "SteamInternal_FindOrCreateGameServerInterface(user)",
+      "route_evidence": "Actual candidate getter invoked at audited executable RVA; resolver slot audited in hashed sm_IsConnected. Factory/cache sub-branch is not traced.",
+      "normal_state": "available_minimum_probe_passed",
+      "query": "BLoggedOn via distinct typed 014 prefix",
+      "unknown_GC_override_state": "available_unchanged",
+      "restored_state": "available_minimum_probe_passed"
+    }
+  ],
+  "GC_backend_session_or_message_delivery_proven": false,
+  "all_possible_methods_or_alternative_versions_proven": false
+}

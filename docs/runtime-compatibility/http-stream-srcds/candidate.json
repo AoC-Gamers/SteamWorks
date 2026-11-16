@@ -1,0 +1,5 @@
+{
+  "sha256": "bc76b00d0614f8f8489f8d3d30e3d654976f3bfde689f17d8731018d6c7ac639",
+  "format": "ELF32 little-endian ET_DYN EM_386",
+  "source_verified_against": "docs/runtime-compatibility/http-stream-context/results.json"
+}

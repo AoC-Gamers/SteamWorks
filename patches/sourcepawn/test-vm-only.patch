@@ -1,0 +1,28 @@
+--- a/AMBuildScript
++++ b/AMBuildScript
+@@ -177,7 +177,6 @@
+         # Disable some stuff we don't use, that gives us better binary
+         # compatibility on Linux.
+         cxx.cxxflags += [
+-            '-fno-rtti',
+             '-Wno-non-virtual-dtor',
+             '-Wno-overloaded-virtual',
+         ]
+@@ -380,9 +379,6 @@
+ 
+         self.BuildStaticCoreLib(builder)
+         self.BuildDynamicCoreLib(builder)
+-        self.BuildSpcomp(builder)
+-        self.BuildSpshell(builder)
+-        self.BuildVerifier(builder)
+ 
+     def BuildStaticCoreLib(self, builder):
+         cxx = builder.cxx
+@@ -393,7 +389,6 @@
+         vars = self.vars.copy()
+         vars['binary'] = binary
+ 
+-        builder.Build('compiler/AMBuilder', vars)
+         builder.Build('libsmx/AMBuilder', vars)
+         builder.Build('vm/AMBuilder', vars)
+ 

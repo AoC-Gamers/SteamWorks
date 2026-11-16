@@ -1,0 +1,24 @@
+{
+  "trace": [
+    "[SW-PENDING] ready",
+    "[SW-CONS] observer_ready",
+    "[Connect HTTP tests] checks=83 failures=0",
+    "[SW-PENDING] status armed=1 observations=0 checks=0 failures=0",
+    "[SW-CONS] protected_config_exec_blocked=1",
+    "[SW-SOCIAL] ready late=1",
+    "[SW-SOCIAL] ready late=1"
+  ],
+  "active_plugins": [
+    "  1 \"SteamWorks Pending Identity Observer\" (1.0.0) by Lechuga",
+    "  2 \"SteamWorks Consumer Observer\" (1.0.0) by Lechuga",
+    "  3 \"Connect HTTP Body Contract Tests\" (1.0.0) by Lechuga",
+    "  4 \"L4D2 Family Share Core\" (2.0.1) by Lechuga",
+    "  5 \"SteamWorks Consumer Social Observer\" (1.0.0) by Lechuga"
+  ],
+  "expected_invalid_fixture_transport_errors": 4,
+  "expected_oversize_ACK_rejections": 2,
+  "unexpected_error_messages": [],
+  "unclassified_error_lines": [],
+  "shared_CFG_unchanged": true,
+  "private_key_file_present": false
+}
