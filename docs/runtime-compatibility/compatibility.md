@@ -1,41 +1,35 @@
 # Registro de compatibilidad
 
-[P5-R18](p5-integration.md) integra el cierre T25/T29 de R16 y conserva las
-aceptaciones previas por hash y alcance. [Matriz T01–T36](p5/validation-results.json):
-33 casos aceptados, tres no aplicables (T13/T14/T34), ninguno pendiente en el perfil.
+[P5-R19](p5-integration.md) incorpora REV-GC-01 y REV-HTTP-02. La API pública sigue
+igual a P0; el include cambia comentarios de contrato. El ELF `72664c65…` tiene
+[aceptación SRCDS propia de alcance GC/HTTP](review12-srcds-acceptance.md).
+**Recepción positiva GC remota pendiente; no se declara aceptación global nueva.**
 
-| Superficie | Alcance aceptado |
+| Superficie | Evidencia del ELF actual |
 |---|---|
-| Plataforma | Linux L4D2 SRCDS x86, engine/Steam/SourceMod identificados por hash |
-| API pública | Igual a P0 en firmas, tipos, registros y opcionalidad; include `a3e5a7a2…` |
-| ELF | Optimizado `839ff075…`, reproducido con fecha de compilación fijada |
-| Auth/identidad/stats | Adaptador 014, forwards, cuenta real, lectura de stats, salidas fallidas preservadas, buffers y negativos |
-| T29 | Entrada real pendiente→autorizada; bot/desconectado anteriores; fallback/contradicción deterministas e invariante del proveedor real |
-| T25 | Consumidores existentes/recompilados y H08/H09; préstamo, perfil Web API, grupo; Connect corregido en frío/HTTP/ACK/mapa |
-| T11 | Ocho interfaces proporcionadas; Matchmaking ausente en gameserver; GC local y rechazo de versión desconocida |
-| Lifecycle | T08 reinicialización con SourceTVSupport, T16 carga tardía/recarga quiescente, T20 propietario HTTP pendiente |
-| Forwards | T23: cero/uno/varios consumidores y resultados en SourceMod real con argumentos sintéticos |
-| T32/T33 | Un ciclo real de recuperación Steam; veinte minutos de carga local y límites medidos |
-| Instalación/reversión | T26/T35 previos en sitio; R18 repite roundtrip local y conserva mismo ZIP rollback de R9 |
+| Plataforma | Linux L4D2 SRCDS x86; SourceMod/Steam/engine habituales, SourceTVSupport presente |
+| API | Firmas, tipos, registros y opcionalidad iguales a P0 |
+| HTTP | SteamHTTP real, 36 combinaciones cuerpo/capacidad, vacío/503, contexto/NUL/conteos/canarios |
+| Fallo HTTP | Antes del envío conserva salidas en SRCDS; fallos de reserva/lectura completa y rangos extremos son deterministas locales |
+| GC | Cola vacía real; proveedor local tipado para éxito/error, hook/VM reales y restauración de target |
+| Lifecycle del ensayo | Mismo PID con nuevo juego y quit limpio; no toda la matriz histórica repetida |
+| Reversión | Captura por lectura, mismos bytes ZIP R9, roundtrip en filesystem desechable |
 
-R18 repite 15 suites x86 y sanitizadores sin supresiones, recompila tres consumidores,
-18 harnesses runtime, cuatro fixtures Connect y dos controles de includes. Las
-66 pruebas Python de Connect pasan. Inventario actualizado: cero llamadas fuera
-de aridad declarada. Los SMX antiguos que usan tres argumentos HTTP siguen siendo
-incompatibles y requieren recompilación; no se modifica el proveedor para aceptarlos.
-El parche completo de Connect contra su base original se entrega fuera del payload
-instalable de SteamWorks. El source-review incluye ambas correcciones Windows y
-los atributos Git para conservar bytes auditados.
+R19 repite 15 suites x86 y sanitizadores sin supresiones. Compilan tres
+consumidores, 19 harnesses runtime, cuatro fixtures Connect y dos controles de
+includes. Sus 66 pruebas Python y build pasan sin modificar sus fuentes.
+Los proveedores/includes externos no se distribuyen para forzar recompilación.
+Los SMX HTTP de tres argumentos deben recompilarse para el contrato actual.
 
-No se infieren Windows/x64, otros proveedores/versiones, todos los métodos SDK,
-GC/Core remoto, partidas completas ni capacidad durante varias horas. T16 no
-incluye descarga forzada en callbacks activos; T20 no demuestra ausencia universal
-de fugas SDK. El baseline conserva su fallo conocido al salir.
+Auth/identidad/stats humanos, T11 completo, T16 recarga quiescente, T20 descarga
+del propietario, T23 multi-consumidores, T25/T29 sociales, T32 recuperación de red,
+T33 carga prolongada y T26/T35 en sitio conservan su evidencia histórica en
+`839ff075…`; no se atribuyen automáticamente al ELF modificado. La
+[matriz conciliada](p5/validation-results.json) identifica procedencia y alcance
+actual por caso. [Checkpoint anterior](p5/history/p5-r18-before-review12-integration-validation-results.json).
 
-Documentación y evidencia histórica se conservan: [estado anterior](p5/history/p5-r17-with-Windows-CI-fixes-compatibility.md),
-[cierre T25/T29](last-two-srcds-progress.md), [T32](connection-srcds-acceptance.md),
-[T33](soak-srcds-acceptance.md). Los ZIP R17 y anteriores no se modifican. R18 no opera servidores,
-publica ni despliega. Todo permanece en develop, sin commit.
-
-CI de producto cc52305 pasó build/enlace Linux y Windows; R18 lo incorpora como
-evidencia remota previa, sin disparar CI ni ampliar el perfil runtime aceptado.
+No se certifican recepción GC remota, otros proveedores, Windows/x64 runtime,
+todos los métodos SDK ni ausencia global de fugas/OOM. CI verde de R18 corresponde
+a sus commits históricos; no hay CI nuevo para los cambios nativos actuales.
+El baseline conserva su fallo conocido al salir. Los paquetes anteriores quedan
+intactos. Esta actualización no opera servidores ni hace commit, push o despliegue.

@@ -719,7 +719,7 @@ native bool SteamWorks_GetHTTPResponseBodySize(Handle request, int &size);
  *
  * @param request     HTTP request handle
  * @param body        Buffer that receives the response bytes
- * @param length      Maximum number of bytes to read
+ * @param length      Complete body size returned by SteamWorks_GetHTTPResponseBodySize
  * @return            true if retrieved successfully
  */
 native bool SteamWorks_GetHTTPResponseBodyData(Handle request, char[] body, int length);
@@ -728,15 +728,19 @@ native bool SteamWorks_GetHTTPResponseBodyData(Handle request, char[] body, int 
  * Gets the HTTP response body as a null-terminated string.
  *
  * This helper is intended for textual bodies such as JSON, HTML, or plain text.
- * It reads up to `length - 1` bytes and always appends a null terminator.
+ * It reads the complete body into temporary storage, then copies up to `length - 1`
+ * bytes and appends a null terminator on success. Requires a completed non-streaming request.
  * If the response body is larger than the provided buffer, the string will be truncated.
  *
+ * Allocation or SDK failure returns false without changing body/written/truncated.
+ * The full body must fit a signed SourcePawn size (at most 2147483647 bytes);
+ * larger bodies raise a native error before allocation. Temporary allocation can fail.
  * This native should not be used for binary payloads.
  *
  * @param request     HTTP request handle
  * @param body        Buffer that receives the string
  * @param length      Maximum buffer length, including the null terminator
- * @param written     Number of characters written, excluding the null terminator
+ * @param written     Number of bytes copied, excluding the final null terminator
  * @param truncated   Set to true if the body did not fit in the buffer
  * @return            true if retrieved successfully
  */
@@ -907,10 +911,17 @@ forward void SteamWorks_GCMsgAvailable(int dataLength);
 /**
  * Retrieves a message received from the Game Coordinator.
  *
- * @param messageType       Variable that receives the message type
- * @param destination       Buffer that receives the message contents
- * @param destinationLength Maximum buffer size
- * @param messageSize       Variable that receives the actual size of the received message
+ * On SDK success with a size output, only the valid message prefix is copied.
+ * Unused capacity is zero-filled in a private snapshot, without modifying the engine buffer.
+ * On SDK errors or missing size output, messageType/messageSize are zero and the
+ * snapshot is all zeros. This still permits the historical result override.
+ * Incoherent success bounds, unrepresentable capacity or failed snapshot allocation
+ * skip the forward and preserve the SDK result. Zero capacity has empty backing storage.
+ *
+ * @param messageType       Message type on a size-validated success, otherwise zero
+ * @param destination       Binary snapshot, not necessarily NUL-terminated; only messageSize bytes are content
+ * @param destinationLength Original capacity, backed by zero-initialized snapshot storage
+ * @param messageSize       Valid copied bytes, zero on SDK error or missing size output
  * @return             Operation result (EGCResults)
  */
 forward EGCResults SteamWorks_GCRetrieveMessage(int messageType, const char[] destination, int destinationLength, int messageSize);

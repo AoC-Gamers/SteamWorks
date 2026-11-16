@@ -45,7 +45,7 @@ Documentos actuales:
 - [Registro de compatibilidad y migración H08/H09](runtime-compatibility/compatibility.md)
 - [T25 de R15: evidencia inicial parcial de consumidores y H08/H09](runtime-compatibility/consumer-compat-srcds-acceptance.md)
 - [T25/T29: cierre del perfil Linux x86 y corrección de Connect](runtime-compatibility/last-two-srcds-progress.md)
-- [P5-R18: correcciones de CI Windows, integración y artefactos renovados](runtime-compatibility/p5-integration.md)
+- [P5-R19: buffers GC/HTTP aceptados en alcance, GC remoto pendiente y artefactos renovados](runtime-compatibility/p5-integration.md)
 - [Preparación y reversión de P5](runtime-compatibility/p5-rollback.md)
 
 Objetivo de estos documentos:
@@ -66,3 +66,7 @@ Objetivo de estos documentos:
 - [T11: matriz de interfaces/capacidades y GC en SRCDS x86](runtime-compatibility/interface-capabilities-srcds-acceptance.md)
 - [T23: consumidores y resultados de forwards en SRCDS x86](runtime-compatibility/forward-consumers-srcds-acceptance.md)
 - [T16: carga tardía y descarga/recarga soportada en SRCDS x86](runtime-compatibility/t16-extension-srcds-acceptance.md)
+
+- [Revisión 12: buffers GC/HTTP, regresiones y límites del nuevo binario](runtime-compatibility/review12-buffers.md)
+
+- [Aceptación SRCDS x86 de buffers GC/HTTP](runtime-compatibility/review12-srcds-acceptance.md): 372 checks; HTTP real, GC vacío/local, límites y restauración.

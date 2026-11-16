@@ -1,35 +1,33 @@
 # Cobertura de pruebas de `steamworks.inc`
 
-La [matriz P5-R18](runtime-compatibility/p5/validation-results.json) cierra los
-33 casos aplicables a Linux x86; T13/T14/T34 no aplican al perfil.
-[T25/T29](runtime-compatibility/last-two-srcds-progress.md) incorporan 18 checks
-humanos/sociales, 104 deterministas de Connect en VM x86 y 66 pruebas Python.
-Quince suites x86 repetidas pasan, incluidos los sanitizadores sin supresiones
-y la comparación de API pública. ELF e include permanecen idénticos a R16.
+La [matriz P5-R19](runtime-compatibility/p5/validation-results.json) integra las
+correcciones GC/HTTP y separa los ensayos históricos del nuevo ELF `72664c65…`.
+**GC remoto positivo sigue pendiente; no se infiere aceptación global nueva.**
 
-Se conservan las aceptaciones anteriores por hash y alcance: T11 capacidades/GC
-local; T23 forwards; T15 buffers; T16 carga tardía/recarga quiescente; T20 descarga
-del propietario HTTP; autenticación/stats optimizados; T26/T35 instalación y
-reversión; T32 recuperación Steam y T33 carga local medida durante veinte minutos.
-El cierre no certifica todos los métodos SDK, GC remoto, varias horas de carga,
-Windows/x64, otro proveedor de identidad o todo el negocio de los consumidores.
-Los SMX HTTP antiguos con tres argumentos deben recompilarse; Connect corregido
-pasó arranque frío/HTTP/ACK/cambio de mapa. ZIP R18 regenerados, R17 y anteriores intactos; el ZIP de revisión incorpora evidencia y
-parche externo. Se recompilan 18 harnesses runtime, cuatro fixtures Connect y
-dos controles de includes; 55 entradas SDK y 152 fuentes comprobadas. Build
-optimizado idéntico tras fijar la fecha del compilador. La comparación histórica
-de R17 con fecha libre (solo fecha/build-id distintos) se conserva; no se repite
-ese ensayo en R18. Roundtrip rollback local
-y replay de diagnósticos extraídos pasan. La regresión de macro Windows permanece activa y el enlace tier0.lib está
-incluido. Se conserva CI remoto verde para cc52305, sin aceptación runtime
-Windows ni nuevo CI en esta actualización. Sin nueva operación SRCDS, commit ni producción.
+Pasan 15 suites x86, API frente a P0, sanitizadores sin supresiones, 133 checks
+GC instrumentados y 33 HTTP de proveedor estricto. El build optimizado reproduce
+el binario de la [aceptación de revisión 12](runtime-compatibility/review12-srcds-acceptance.md):
+372 checks en SRCDS, HTTP real, GC real vacío/local tipado, nuevo juego y quit
+limpio. Los mensajes del proveedor local no son contenido del backend Steam.
+
+Se recompilan tres consumidores, 19 harnesses, cuatro fixtures Connect y dos
+controles de includes; 55 entradas SDK y el fixture de 733 claves permanecen
+intactos. Las 66 pruebas Python y build de Connect pasan. Los ZIP se verifican
+extraídos, se repite build/integración sin `.git` y el roundtrip rollback local.
+Los sanitizadores y VM offline no certifican el proceso SRCDS completo.
+
+Los 33 casos aprobados y tres no aplicables del checkpoint anterior se conservan
+con su alcance y hash históricos. Los demás escenarios runtime no se repiten
+ni se transfieren automáticamente al ELF nuevo. No hay CI nuevo, Windows/x64
+runtime, OOM real ni validación de todos los métodos SDK. No se opera ningún
+servidor en esta regeneración, ni se hace commit o despliega.
 
 ## Referencia histórica del plugin de ejemplo
 
 Las secciones siguientes conservan observaciones previas de
 `scripting/steamwork_test.sp` contra `scripting/include/steamworks.inc`. Describen
 su ensayo original; la aceptación del candidato actual se limita a los harnesses,
-hashes y resultados de la matriz P5-R18. Los informes y paquetes anteriores se
+hashes y resultados y procedencia de la matriz P5-R19. Los informes y paquetes anteriores se
 conservan intactos y no se transfieren entre binarios distintos.
 
 ## Verificado

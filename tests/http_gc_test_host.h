@@ -39,8 +39,9 @@ struct IPluginContext {
  bool invalidFunction=false; bool invalidString=false,invalidOutput=false; int errors=0; int resolutions=0;
  cell_t storage[3]={0x11223344,0x12345678,0x55667788}; char data[64]="test";
  IPluginFunction function;
- int LocalToString(cell_t,char** out) { ++resolutions; if(invalidString)return 42; *out=data; return 0; }
- int LocalToPhysAddr(cell_t,cell_t** out) { ++resolutions; if(invalidOutput)return 42; *out=&storage[1]; return 0; }
+ std::map<cell_t,char*> strings;std::map<cell_t,cell_t*> outputs;
+ int LocalToString(cell_t address,char** out) { ++resolutions; if(invalidString)return 42; auto i=strings.find(address);*out=i==strings.end()?data:i->second; return 0; }
+ int LocalToPhysAddr(cell_t address,cell_t** out) { ++resolutions; if(invalidOutput)return 42; auto i=outputs.find(address);*out=i==outputs.end()?&storage[1]:i->second; return 0; }
  cell_t ThrowNativeError(const char*,...) { ++errors; return 0; }
  cell_t ThrowNativeErrorEx(int,const char*,...) { ++errors; return 0; }
  void* GetIdentity() { return this; } void* GetContext() { return this; }
@@ -101,7 +102,7 @@ struct ShareSystem { void AddNatives(void*,sp_nativeinfo_t*) {} } shareSystem;
 auto* sharesys=&shareSystem;
 
 struct TestHTTP : ISteamHTTP {
- int calls=0; bool succeeds=true; int releases=0; std::vector<HTTPRequestHandle> releasedHandles; uint32 size=4; uint32 lastLength=0; uint32 lastOffset=0; uint64 context=0; bool timeout=false;
+ int calls=0; bool succeeds=true; bool sizeSucceeds=true,bodySucceeds=true; int bodyReads=0;std::vector<uint8> body; int releases=0; std::vector<HTTPRequestHandle> releasedHandles; uint32 size=4; uint32 lastLength=0; uint32 lastOffset=0; uint64 context=0; bool timeout=false;
  HTTPRequestHandle CreateHTTPRequest(EHTTPMethod, const char *) override { ++calls;  return 1; }
  bool SetHTTPRequestContextValue(HTTPRequestHandle, uint64 ulContextValue) override { ++calls; context=ulContextValue; return succeeds; }
  bool SetHTTPRequestNetworkActivityTimeout(HTTPRequestHandle, uint32 unTimeoutSeconds) override { ++calls; lastLength=unTimeoutSeconds; return succeeds; }
@@ -113,8 +114,14 @@ struct TestHTTP : ISteamHTTP {
  bool PrioritizeHTTPRequest(HTTPRequestHandle) override { ++calls;  return succeeds; }
  bool GetHTTPResponseHeaderSize(HTTPRequestHandle, const char *, uint32 *unResponseHeaderSize) override { ++calls; *unResponseHeaderSize=size; return succeeds; }
  bool GetHTTPResponseHeaderValue(HTTPRequestHandle, const char *, uint8 *, uint32 unBufferSize) override { ++calls; lastLength=unBufferSize; return succeeds; }
- bool GetHTTPResponseBodySize(HTTPRequestHandle, uint32 *unBodySize) override { ++calls; *unBodySize=size; return succeeds; }
- bool GetHTTPResponseBodyData(HTTPRequestHandle, uint8 *, uint32 unBufferSize) override { ++calls; lastLength=unBufferSize; return succeeds; }
+ bool GetHTTPResponseBodySize(HTTPRequestHandle, uint32 *unBodySize) override { ++calls; *unBodySize=size; return succeeds && sizeSucceeds; }
+ bool GetHTTPResponseBodyData(HTTPRequestHandle, uint8* dest, uint32 unBufferSize) override {
+  ++calls;++bodyReads;lastLength=unBufferSize;
+  if(unBufferSize!=size || dest==nullptr || (!body.empty() && body.size()!=size))return false;
+  if(!succeeds || !bodySucceeds){if(size!=0)dest[0]=0xee;return false;}
+  for(uint32 i=0;i<size;++i)dest[i]=body.empty()?static_cast<uint8>('B'):body[i];
+  return true;
+ }
  bool GetHTTPStreamingResponseBodyData(HTTPRequestHandle, uint32 cOffset, uint8 *, uint32 unBufferSize) override { ++calls; lastLength=unBufferSize; lastOffset=cOffset; return succeeds; }
  bool ReleaseHTTPRequest(HTTPRequestHandle handle) override { ++calls; ++releases; releasedHandles.push_back(handle); return succeeds; }
  bool GetHTTPDownloadProgressPct(HTTPRequestHandle, float *pflPercentOut) override { ++calls; *pflPercentOut=42.5f; return succeeds; }

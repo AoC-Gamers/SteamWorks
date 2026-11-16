@@ -37,28 +37,28 @@ Left 4 Dead 2.
 
 ## Estado del proyecto
 
-La [matriz P5-R18](docs/runtime-compatibility/p5/validation-results.json) queda
-aceptada para el perfil Linux x86: 33 casos pasan y T13/T14/T34 no aplican.
-El [cierre T25/T29](docs/runtime-compatibility/last-two-srcds-progress.md) incorpora
-licencia prestada, perfil Web API y grupo reales, preautenticación/identidad del
-mismo cliente y Connect corregido: arranque frío, HTTP/ACK y cambio de mapa.
-Se mantienen las aceptaciones [T32](docs/runtime-compatibility/connection-srcds-acceptance.md)
-y [T33](docs/runtime-compatibility/soak-srcds-acceptance.md) en sus límites medidos.
+[P5-R19](docs/runtime-compatibility/p5-integration.md) integra las correcciones
+GC/HTTP de revisión 12, conserva la API pública y repite la validación x86.
+El nuevo ELF tiene aceptación SRCDS de HTTP real, GC real vacío y proveedor GC
+local tipado. **Recepción positiva GC remota pendiente.** La matriz distingue
+la aceptación actual de la evidencia histórica de P5-R18; no se declara cierre
+global nuevo ni se despliega. Paquetes y reversión renovados localmente.
 
-Quince suites x86 repetidas y API pública pasan; Connect añade 104 checks en VM
-x86 y conserva 66 pruebas Python correctas. Extensión `839ff075…` e include
-`a3e5a7a2…` permanecen idénticos. La aceptación no certifica todo el negocio de
-consumidores, otras plataformas ni proveedores distintos.
+La evidencia histórica de [T25/T29](docs/runtime-compatibility/last-two-srcds-progress.md),
+[T32](docs/runtime-compatibility/connection-srcds-acceptance.md) y
+[T33](docs/runtime-compatibility/soak-srcds-acceptance.md) conserva sus hashes y
+límites originales; no se presenta como repetida con el nuevo ELF.
 
-Los cuatro paquetes P5-R18 están en `.build/p5-r18/review/`, con manifiesto,
-checksums y reversión renovada. Los ZIP R17 y anteriores permanecen intactos. El ZIP de fuentes
-R18 incorpora las correcciones de CI Windows, evidencia y el parche completo
-de Connect contra su base original; los
-consumidores HTTP antiguos de tres argumentos requieren recompilación. La [reversión](docs/runtime-compatibility/p5-rollback.md)
-conserva los bytes ya ejercitados; el baseline mantiene su fallo conocido al salir.
-DEV original permanece intacto, comprobado por lectura antes/después; R18 no
-opera el servidor. Rama develop,
-sin commit, publicación ni despliegue en producción.
+Quince suites x86, API pública y sanitizadores pasan. Se recompilan consumidores
+y 19 harnesses; las 66 pruebas Python y el build de Connect pasan. Los cuatro
+paquetes P5-R19 están en `.build/p5-r19/review/`, con manifiesto, checksums y
+reversión renovada. Los paquetes anteriores permanecen intactos. Source-review
+incluye evidencia, recetas offline y el parche completo de Connect; los SMX HTTP
+antiguos de tres argumentos requieren recompilación. La
+[reversión](docs/runtime-compatibility/p5-rollback.md) conserva los bytes ZIP ya
+ejercitados; el baseline mantiene su fallo conocido al salir. DEV original se
+comprueba por lectura antes/después, sin operaciones de servidor en esta
+actualización. Rama develop, sin commit, publicación ni despliegue.
 
 El repositorio se mantiene principalmente para compilar y distribuir la extensión
 Linux de 32 bits usada por servidores dedicados de L4D2.
@@ -482,8 +482,9 @@ native bool SteamWorks_WriteHTTPResponseBodyToFile(Handle request, const char[] 
 
 #### Nota importante sobre body HTTP
 
-`SteamWorks_GetHTTPResponseBodyData` lee bytes. No garantiza que el buffer quede
-terminado en `\0`.
+`SteamWorks_GetHTTPResponseBodyData` requiere el tamaño completo obtenido con
+`SteamWorks_GetHTTPResponseBodySize`; no permite una lectura parcial. Lee bytes
+y no garantiza que el buffer quede terminado en `\0`.
 
 Para texto, JSON o HTML, usar preferentemente:
 
@@ -491,7 +492,8 @@ Para texto, JSON o HTML, usar preferentemente:
 SteamWorks_GetHTTPResponseBodyString(...)
 ```
 
-o cerrar manualmente el buffer después de leer bytes.
+o reservar espacio para el cuerpo completo y cerrar manualmente el buffer
+después de una lectura raw exitosa.
 
 Ejemplo conceptual:
 
@@ -959,9 +961,10 @@ docs/TestCoverage.md
 ```
 
 Las listas siguientes corresponden al plugin de ejemplo histórico. La cobertura
-vigente de GC local, streaming, forwards y recuperación Steam está en la
-[matriz P5-R18](docs/runtime-compatibility/p5/validation-results.json); los límites
-del ejemplo no son casos pendientes del candidato.
+archivada de GC local, streaming, forwards y recuperación Steam está en la
+[matriz histórica P5-R18](docs/runtime-compatibility/p5/history/p5-r18-before-review12-integration-validation-results.json); para los
+buffers del ELF modificado, consultar la [aceptación posterior](docs/runtime-compatibility/review12-srcds-acceptance.md).
+Los límites del ejemplo no son casos pendientes del candidato.
 
 Áreas verificadas:
 

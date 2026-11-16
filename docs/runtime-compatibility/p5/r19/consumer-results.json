@@ -1,0 +1,88 @@
+[
+  {
+    "file": ".build/p5-r19/consumers/steamwork_test.smx",
+    "sha256": "938bdf00080a1329a618c5e420479370a8cdfc4f7846ef01235377554da9b4bb",
+    "provenance": "recompiled_current_include",
+    "SteamWorks_imports": [
+      "SteamWorks_GetStatCell",
+      "SteamWorks_GetStatAuthIDCell",
+      "SteamWorks_GetStatFloat",
+      "SteamWorks_GetStatAuthIDFloat",
+      "SteamWorks_CreateHTTPRequest",
+      "SteamWorks_SetHTTPRequestContextValue",
+      "SteamWorks_SetHTTPRequestHeaderValue",
+      "SteamWorks_SetHTTPCallbacks",
+      "SteamWorks_SendHTTPRequest",
+      "SteamWorks_GetPublicIP",
+      "SteamWorks_GetPublicIPCell",
+      "SteamWorks_IsVACEnabled",
+      "SteamWorks_IsConnected",
+      "SteamWorks_IsLoaded",
+      "SteamWorks_GetHTTPResponseBodySize",
+      "SteamWorks_GetHTTPResponseBodyData",
+      "SteamWorks_GetClientSteamID",
+      "SteamWorks_GetUserGroupStatus",
+      "SteamWorks_GetUserGroupStatusAuthID",
+      "SteamWorks_HasLicenseForApp",
+      "SteamWorks_HasLicenseForAppId",
+      "SteamWorks_SetGameData",
+      "SteamWorks_SetGameDescription",
+      "SteamWorks_SetMapName",
+      "SteamWorks_SetRule",
+      "SteamWorks_ClearRules",
+      "SteamWorks_RequestStats",
+      "SteamWorks_RequestStatsAuthID"
+    ],
+    "missing_registered_natives": [],
+    "result": "passed_import_table_only",
+    "runtime_load_tested": false
+  },
+  {
+    "file": ".build/p5-r19/consumers/AoC.smx",
+    "sha256": "7e5bf9ae9e4f081448fecc4849554a2230067fb67482d827f0ea3b6e73bb5903",
+    "provenance": "recompiled_current_include",
+    "SteamWorks_imports": [
+      "SteamWorks_GetPublicIP",
+      "SteamWorks_GetUserGroupStatusAuthID"
+    ],
+    "missing_registered_natives": [],
+    "result": "passed_import_table_only",
+    "runtime_load_tested": false
+  },
+  {
+    "file": ".build/p5-r19/consumers/l4d2_familyshare_core.smx",
+    "sha256": "bd3dc031c03e4bdb2b86e4c7759abedd80cf2c438940e025fd67904b165a4d88",
+    "provenance": "recompiled_current_include",
+    "SteamWorks_imports": [
+      "SteamWorks_CreateHTTPRequest",
+      "SteamWorks_SetHTTPRequestContextValue",
+      "SteamWorks_SetHTTPRequestNetworkActivityTimeout",
+      "SteamWorks_SetHTTPRequestGetOrPostParameter",
+      "SteamWorks_SetHTTPCallbacks",
+      "SteamWorks_SendHTTPRequest",
+      "SteamWorks_GetHTTPResponseBodySize",
+      "SteamWorks_GetHTTPResponseBodyString"
+    ],
+    "missing_registered_natives": [],
+    "result": "passed_import_table_only",
+    "runtime_load_tested": false
+  },
+  {
+    "file": "/home/lechuga/GitHub/l4d2_sourcemod/L4D2-Family-Share/dist/sourcemod/artifact/addons/sourcemod/plugins/l4d2_familyshare_core.smx",
+    "sha256": "d6ebc4846dba9a50e7ba267cf102c7d648a0e48e96acfaabff276475cdf7bf8b",
+    "provenance": "existing_precompiled",
+    "SteamWorks_imports": [
+      "SteamWorks_CreateHTTPRequest",
+      "SteamWorks_SetHTTPRequestContextValue",
+      "SteamWorks_SetHTTPRequestNetworkActivityTimeout",
+      "SteamWorks_SetHTTPRequestGetOrPostParameter",
+      "SteamWorks_SetHTTPCallbacks",
+      "SteamWorks_SendHTTPRequest",
+      "SteamWorks_GetHTTPResponseBodySize",
+      "SteamWorks_GetHTTPResponseBodyString"
+    ],
+    "missing_registered_natives": [],
+    "result": "passed_import_table_only",
+    "runtime_load_tested": false
+  }
+]

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "baseline_commit": "cc523056f958a0a904b31dde90290b2364760c97",
+  "baseline_commit": "a0016a23adc70dd9c1bdf2bf22bf8ae0e685dbc6",
   "source_sha256": {
     "extension/CDetour/detourhelpers.h": "ea9e6d2866dfb4e763dc921d712f1694f47107e0faade9490ae10614f827c3a8",
     "extension/CDetour/detours.cpp": "e67c202073164a6575a33137139b454cbab250fffb5f377b4bb1929b94feeea3",
@@ -28,7 +28,7 @@
     "extension/core/swtypes.h": "efd060d68cb94eded7877cd97a5c031c860a1807a0e16e6f9965accc60016564",
     "extension/extension.cpp": "2c9326747631261dcceff02441c9242b611a3a15e64f78d8a8b1a2b7f4a3dc50",
     "extension/extension.h": "2af4f18e6b29abb9b3349f131332b82758443b1e3c099d104709d58f20206371",
-    "extension/hooks/swgchooks.cpp": "048ee33af2e292637be5e3f39e9e8ae44b83acfff5b91953d3cd30bbd66af9c6",
+    "extension/hooks/swgchooks.cpp": "7144084af716c17d73ef2b956c87c22a0ff147f2a4f532b790bf189324a7b11f",
     "extension/hooks/swgchooks.h": "f2e8e57ba1c2ddb971f7617aa01e75fc78df6a7272958c4c5f13c545d0608bb9",
     "extension/hooks/swgsdetours.cpp": "077392afe9a07fd06380118eef1d2ce4592778c8b6a70b097c7a660988d299bb",
     "extension/hooks/swgsdetours.h": "589cd716d9d717260d25e08aa28a406d0692597aa6b1565e8ab3038fbc192cda",
@@ -36,7 +36,7 @@
     "extension/hooks/swgshooks.h": "7185a644f7a0c8874d433263d81fb2d6bc54d4fda83ee355a9bbfcf5c5ba0c62",
     "extension/http/swhttp.cpp": "cf34b30c403d8b928b81742e98a5200c6117db96c65bd36feaf44b814bb84082",
     "extension/http/swhttp.h": "f5331691cf3cf2dbe36c1cd6bd55bd39c93e0c3c37f492c54edebcef0228b653",
-    "extension/http/swhttprequest.cpp": "f50471521d52898929487490e539717ed8d4aa2a16cab323b188b60690aa30c7",
+    "extension/http/swhttprequest.cpp": "e630708e94ab0ec0640c578da888c197a3d5a29a9b9005809ee3df6531662760",
     "extension/http/swhttprequest.h": "e6e676d284e246b4de125c4688c48360d64653e46b72e6be8f60025b6bab45a9",
     "extension/natives/gcnatives.cpp": "ae2fda2f2c57a36794a6212559b688425999da2d1bc2b63e5058e41a13914175",
     "extension/natives/gcnatives.h": "5d2870d2358736f3e4767eaf06766cdc4a7af5066620fa209f02143259fdf3ca",
@@ -49,7 +49,7 @@
     "extension/sdk/smsdk_ext.h": "7100fb30b2f4b0cc58fc19eee9aae9b5a5f1324211f6d0bdf8b4c72930e28534",
     "extension/steamtools/blob.h": "e0b7531c85093661a87a8bbc5a82ac6607b31dfe73e2bf9b698706f57bcc0585",
     "extension/steamtools/ticket.h": "c11f22200702275ab425a04cc18b194de33c1b71316e5d143f534466e54a9917",
-    "scripting/include/steamworks.inc": "a3e5a7a220dd4d7b46dab3226b41c68f2eb24c4ddf4943f0b943f87566b4f2d5",
+    "scripting/include/steamworks.inc": "969541624a2ba2f14aa07e040f96e6a50db40503baa21cba6206e0b1bd25aad8",
     "scripting/steamwork_test.sp": "edd15a4932e6eaf8ab16ffeb44a462e860026e4c09d1f432ed8a1319ec70fde1",
     "extension/AMBuilder": "20c4456b22475724800ba3312b8057c1a568a88586664e6181507a3982f48244",
     "AMBuildScript": "52bcf2d88f5c9a67e1fb6e7e62578389827bb54236536e36ff1048f8d378d65f",
@@ -488,7 +488,7 @@
         "bool &truncated"
       ],
       "signature": "native bool SteamWorks_GetHTTPResponseBodyString(Handle request, char[] body, int length, int &written, bool &truncated);",
-      "line": 743
+      "line": 747
     },
     {
       "kind": "native",
@@ -501,7 +501,7 @@
         "int length"
       ],
       "signature": "native bool SteamWorks_GetHTTPStreamingResponseBodyData(Handle request, int offset, char[] body, int length);",
-      "line": 754
+      "line": 758
     },
     {
       "kind": "native",
@@ -512,7 +512,7 @@
         "float &percent"
       ],
       "signature": "native bool SteamWorks_GetHTTPDownloadProgressPct(Handle request, float &percent);",
-      "line": 763
+      "line": 767
     },
     {
       "kind": "native",
@@ -523,7 +523,7 @@
         "bool &wasTimedOut"
       ],
       "signature": "native bool SteamWorks_GetHTTPRequestWasTimedOut(Handle request, bool &wasTimedOut);",
-      "line": 772
+      "line": 776
     },
     {
       "kind": "native",
@@ -536,7 +536,7 @@
         "int bodyLength"
       ],
       "signature": "native bool SteamWorks_SetHTTPRequestRawPostBody(Handle request, const char[] contentType, const char[] body, int bodyLength);",
-      "line": 783
+      "line": 787
     },
     {
       "kind": "native",
@@ -548,7 +548,7 @@
         "const char[] fileName"
       ],
       "signature": "native bool SteamWorks_SetHTTPRequestRawPostBodyFromFile(Handle request, const char[] contentType, const char[] fileName);",
-      "line": 793
+      "line": 797
     },
     {
       "kind": "native",
@@ -561,7 +561,7 @@
         "Handle plugin = null"
       ],
       "signature": "native bool SteamWorks_GetHTTPResponseBodyCallback(Handle request, SteamWorksHTTPBodyCallback callback, any data = 0, Handle plugin = null);",
-      "line": 804
+      "line": 808
     },
     {
       "kind": "native",
@@ -572,7 +572,7 @@
         "const char[] fileName"
       ],
       "signature": "native bool SteamWorks_WriteHTTPResponseBodyToFile(Handle request, const char[] fileName);",
-      "line": 813
+      "line": 817
     },
     {
       "kind": "forward",
@@ -583,7 +583,7 @@
         "int authid"
       ],
       "signature": "forward void SW_OnValidateClient(int ownerauthid, int authid);",
-      "line": 821
+      "line": 825
     },
     {
       "kind": "forward",
@@ -594,7 +594,7 @@
         "int authid"
       ],
       "signature": "forward void SteamWorks_OnValidateClient(int ownerauthid, int authid);",
-      "line": 831
+      "line": 835
     },
     {
       "kind": "forward",
@@ -602,7 +602,7 @@
       "return_type": "void",
       "parameters": [],
       "signature": "forward void SteamWorks_SteamServersConnected();",
-      "line": 839
+      "line": 843
     },
     {
       "kind": "forward",
@@ -612,7 +612,7 @@
         "EResult result"
       ],
       "signature": "forward void SteamWorks_SteamServersConnectFailure(EResult result);",
-      "line": 848
+      "line": 852
     },
     {
       "kind": "forward",
@@ -622,7 +622,7 @@
         "EResult result"
       ],
       "signature": "forward void SteamWorks_SteamServersDisconnected(EResult result);",
-      "line": 857
+      "line": 861
     },
     {
       "kind": "forward",
@@ -630,7 +630,7 @@
       "return_type": "Action",
       "parameters": [],
       "signature": "forward Action SteamWorks_RestartRequested();",
-      "line": 868
+      "line": 872
     },
     {
       "kind": "forward",
@@ -641,7 +641,7 @@
         "int maxlen"
       ],
       "signature": "forward void SteamWorks_TokenRequested(char[] token, int maxlen);",
-      "line": 878
+      "line": 882
     },
     {
       "kind": "forward",
@@ -654,7 +654,7 @@
         "bool isOfficer"
       ],
       "signature": "forward void SteamWorks_OnClientGroupStatus(int authid, int groupid, bool isMember, bool isOfficer);",
-      "line": 888
+      "line": 892
     },
     {
       "kind": "forward",
@@ -666,7 +666,7 @@
         "int dataLength"
       ],
       "signature": "forward EGCResults SteamWorks_GCSendMessage(int messageType, const char[] data, int dataLength);",
-      "line": 898
+      "line": 902
     },
     {
       "kind": "forward",
@@ -676,7 +676,7 @@
         "int dataLength"
       ],
       "signature": "forward void SteamWorks_GCMsgAvailable(int dataLength);",
-      "line": 905
+      "line": 909
     },
     {
       "kind": "forward",
@@ -689,7 +689,7 @@
         "int messageSize"
       ],
       "signature": "forward EGCResults SteamWorks_GCRetrieveMessage(int messageType, const char[] destination, int destinationLength, int messageSize);",
-      "line": 916
+      "line": 927
     },
     {
       "kind": "native",
@@ -701,7 +701,7 @@
         "int dataLength"
       ],
       "signature": "native EGCResults SteamWorks_SendMessageToGC(int messageType, const char[] data, int dataLength);",
-      "line": 926
+      "line": 937
     }
   ],
   "enums": [
@@ -1431,151 +1431,151 @@
       "name": "SteamWorks_CreateHTTPRequest",
       "implementation": "sm_CreateHTTPRequest",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 843
+      "line": 849
     },
     {
       "name": "SteamWorks_SetHTTPRequestContextValue",
       "implementation": "sm_SetHTTPRequestContextValue",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 844
+      "line": 850
     },
     {
       "name": "SteamWorks_SetHTTPRequestNetworkActivityTimeout",
       "implementation": "sm_SetHTTPRequestNetworkActivityTimeout",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 845
+      "line": 851
     },
     {
       "name": "SteamWorks_SetHTTPRequestHeaderValue",
       "implementation": "sm_SetHTTPRequestHeaderValue",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 846
+      "line": 852
     },
     {
       "name": "SteamWorks_SetHTTPRequestGetOrPostParameter",
       "implementation": "sm_SetHTTPRequestGetOrPostParameter",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 847
+      "line": 853
     },
     {
       "name": "SteamWorks_SetHTTPRequestUserAgentInfo",
       "implementation": "sm_SetHTTPRequestUserAgentInfo",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 848
+      "line": 854
     },
     {
       "name": "SteamWorks_SetHTTPRequestRequiresVerifiedCertificate",
       "implementation": "sm_SetHTTPRequestRequiresVerifiedCertificate",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 849
+      "line": 855
     },
     {
       "name": "SteamWorks_SetHTTPRequestAbsoluteTimeoutMS",
       "implementation": "sm_SetHTTPRequestAbsoluteTimeoutMS",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 850
+      "line": 856
     },
     {
       "name": "SteamWorks_SetHTTPCallbacks",
       "implementation": "sm_SetCallbacks",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 851
+      "line": 857
     },
     {
       "name": "SteamWorks_SendHTTPRequest",
       "implementation": "sm_SendHTTPRequest",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 852
+      "line": 858
     },
     {
       "name": "SteamWorks_DeferHTTPRequest",
       "implementation": "sm_DeferHTTPRequest",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 853
+      "line": 859
     },
     {
       "name": "SteamWorks_PrioritizeHTTPRequest",
       "implementation": "sm_PrioritizeHTTPRequest",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 854
+      "line": 860
     },
     {
       "name": "SteamWorks_GetHTTPResponseHeaderSize",
       "implementation": "sm_GetHTTPResponseHeaderSize",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 855
+      "line": 861
     },
     {
       "name": "SteamWorks_GetHTTPResponseHeaderValue",
       "implementation": "sm_GetHTTPResponseHeaderValue",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 856
+      "line": 862
     },
     {
       "name": "SteamWorks_GetHTTPResponseBodySize",
       "implementation": "sm_GetHTTPResponseBodySize",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 857
+      "line": 863
     },
     {
       "name": "SteamWorks_GetHTTPResponseBodyData",
       "implementation": "sm_GetHTTPResponseBodyData",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 858
+      "line": 864
     },
     {
       "name": "SteamWorks_GetHTTPResponseBodyString",
       "implementation": "sm_GetHTTPResponseBodyString",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 859
+      "line": 865
     },
     {
       "name": "SteamWorks_GetHTTPDownloadProgressPct",
       "implementation": "sm_GetHTTPDownloadProgressPct",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 860
+      "line": 866
     },
     {
       "name": "SteamWorks_GetHTTPRequestWasTimedOut",
       "implementation": "sm_GetHTTPRequestWasTimedOut",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 861
+      "line": 867
     },
     {
       "name": "SteamWorks_SetHTTPRequestRawPostBody",
       "implementation": "sm_SetHTTPRequestRawPostBody",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 862
+      "line": 868
     },
     {
       "name": "SteamWorks_SetHTTPRequestRawPostBodyFromFile",
       "implementation": "sm_SetHTTPRequestRawPostBodyFromFile",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 863
+      "line": 869
     },
     {
       "name": "SteamWorks_GetHTTPResponseBodyCallback",
       "implementation": "sm_GetHTTPResponseBodyCallback",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 864
+      "line": 870
     },
     {
       "name": "SteamWorks_WriteHTTPResponseBodyToFile",
       "implementation": "sm_WriteHTTPResponseBodyToFile",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 865
+      "line": 871
     },
     {
       "name": "SteamWorks_SendHTTPRequestAndStreamResponse",
       "implementation": "sm_SendHTTPRequestAndStreamResponse",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 866
+      "line": 872
     },
     {
       "name": "SteamWorks_GetHTTPStreamingResponseBodyData",
       "implementation": "sm_GetHTTPStreamingResponseBodyData",
       "file": "extension/http/swhttprequest.cpp",
-      "line": 867
+      "line": 873
     },
     {
       "name": "SteamWorks_SendMessageToGC",
@@ -1751,19 +1751,19 @@
       "name": "SteamWorks_GCSendMessage",
       "registration_arguments": "ET_Event, 3, nullptr, Param_Cell, Param_String, Param_Cell",
       "file": "extension/hooks/swgchooks.cpp",
-      "line": 47
+      "line": 51
     },
     {
       "name": "SteamWorks_GCMsgAvailable",
       "registration_arguments": "ET_Ignore, 1, nullptr, Param_Cell",
       "file": "extension/hooks/swgchooks.cpp",
-      "line": 48
+      "line": 52
     },
     {
       "name": "SteamWorks_GCRetrieveMessage",
       "registration_arguments": "ET_Event, 4, nullptr, Param_Cell, Param_String, Param_Cell, Param_Cell",
       "file": "extension/hooks/swgchooks.cpp",
-      "line": 49
+      "line": 53
     },
     {
       "name": "SteamWorks_RestartRequested",

@@ -1,17 +1,16 @@
 {
-  "schema_version": 3,
-  "checkpoint": "p5-r18",
-  "timestamp_utc": "2026-11-16T12:11:54.004482+00:00",
+  "schema_version": 1,
+  "checkpoint": "p5-r19",
+  "timestamp_utc": "2026-11-16T14:13:06.611894+00:00",
   "branch": "develop",
-  "baseline_commit": "cc523056f958a0a904b31dde90290b2364760c97",
-  "status": "integrated_accepted_scoped_linux_x86_with_Windows_CI_fixes",
-  "full_matrix_accepted": true,
+  "baseline_commit": "a0016a23adc70dd9c1bdf2bf22bf8ae0e685dbc6",
+  "original_public_API_baseline_commit": "46e3ee05fc29ad090a1d6f7b1cb5e3dca9855350",
+  "status": "integrated_review12_scoped_SRCDS_acceptance_remote_GC_pending",
+  "full_matrix_accepted": false,
   "committed": false,
   "published": false,
-  "candidate_previously_run_in_isolated_DEV": true,
   "production_touched": false,
   "public_api_changed": false,
-  "result_scope": "R18 integrates the two committed Windows CI fixes: macro-safe numeric_limits calls with the max macro still active and explicit tier0 import linking for tier1 ConVar. Existing remote CI passed Linux and Windows for cc52305; no new workflow/push in this update and no Windows runtime acceptance. Repeat fifteen x86 suites, native/offline VM sanitizers without suppressions, optimized identical Linux ELF, eighteen harnesses, three consumers, four Connect fixtures, two header controls and 66 Connect Python tests. Fresh source ZIP includes the Windows fixes, exact-byte Git attributes and complete committed Connect correction against c695bf0. Original Linux x86 matrix remains 33 passed and three N/A by exact runtime payload/evidence. Four new archives and fresh read-only rollback capture; local archive verification/restore only, no server operation. Earlier archives and evidence unchanged.",
   "target": "Linux x86 only; historical x64 diagnostics are not regenerated or shipped",
   "sdk": {
     "target": "1.58a",
@@ -57,43 +56,17 @@
     "status": "passed",
     "platform": "linux-x86",
     "enable_optimize": true,
-    "optimization_flags": "-O3 -DNDEBUG -m32",
-    "warnings_as_errors": true,
-    "path": ".build/p5-r18/reproducible-build/package/addons/sourcemod/extensions/steamworks.ext.so",
-    "sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-    "log": ".build/p5-r18/reproducible-build.log",
-    "identical_to_optimized_SRCDS_accepted_binary": true,
-    "current_candidate_executed_in_SRCDS": true,
-    "R9_archive_installed_in_SRCDS": true,
-    "canonical_75a9b5d9_variant_packaged": false,
-    "identical_to_R9_archive_installed_runtime": true,
-    "R10_archive_installed_in_SRCDS": false,
-    "R11_archive_installed_in_SRCDS": false,
-    "identical_to_T20_R10_installed_runtime": true,
-    "R12_archive_installed_in_SRCDS": true,
-    "identical_to_T16_R11_installed_runtime": true,
-    "R13_archive_installed_in_SRCDS": true,
-    "identical_to_T15_R12_installed_runtime": true,
-    "R14_archive_installed_in_SRCDS": true,
-    "identical_to_T23_R13_installed_ELF": true,
-    "packaged_include_sha256": "a3e5a7a220dd4d7b46dab3226b41c68f2eb24c4ddf4943f0b943f87566b4f2d5",
-    "packaged_include_change_from_R13": "RestartRequested comment only; signatures/registrations/typesets/optionality unchanged",
-    "R15_archive_installed_in_SRCDS": true,
-    "identical_to_T11_R14_installed_ELF": true,
-    "identical_to_T11_R14_installed_include": true,
-    "packaged_include_change_from_R14": "none",
-    "R16_archive_installed_in_SRCDS": true,
-    "identical_to_T25_R15_installed_ELF": true,
-    "identical_to_T25_R15_installed_include": true,
-    "packaged_include_change_from_R15": "none",
-    "R17_archive_installed_in_SRCDS": false,
-    "identical_to_T25_T29_R16_installed_payload": true,
-    "packaged_include_change_from_R16": "none",
+    "optimization_flags": "-O3 -DNDEBUG -m32 -Werror",
+    "path": ".build/p5-r19/reproducible-build/package/addons/sourcemod/extensions/steamworks.ext.so",
+    "sha256": "72664c658f6d28e78a975ec98c96879dc641f96725206f514f159ea17125fcb3",
+    "packaged_include_sha256": "969541624a2ba2f14aa07e040f96e6a50db40503baa21cba6206e0b1bd25aad8",
     "SOURCE_DATE_EPOCH": 1794700800,
-    "compile_date_reproducibility": "Compiler __DATE__ pinned to Nov 15 2026 to reproduce accepted bytes. R18 execution metadata records actual validation time; no wall-clock trial repeated.",
-    "R18_archive_installed_in_SRCDS": false,
-    "identical_to_accepted_R16_ELF_and_include": true,
-    "packaged_include_change_from_R17": "none"
+    "log": ".build/p5-r19/reproducible-build.log",
+    "identical_to_review12_SRCDS_accepted_ELF_and_include": true,
+    "identical_to_R18_ELF": false,
+    "current_candidate_executed_in_SRCDS": true,
+    "P5_R19_archive_installed_in_SRCDS": false,
+    "scope": "same native payload as prior review12 acceptance; refreshed ZIP is not installed"
   },
   "x86_suites": {
     "public_api": "passed",
@@ -105,110 +78,110 @@
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 0.156
+        "duration_seconds": 0.131
       },
       {
         "name": "test-stats-natives",
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 0.717
+        "duration_seconds": 0.713
       },
       {
         "name": "test-detours",
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 1.285
+        "duration_seconds": 1.351
       },
       {
         "name": "test-init-coexistence",
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 1.76
+        "duration_seconds": 1.823
       },
       {
         "name": "test-public-ip",
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 0.619
+        "duration_seconds": 0.669
       },
       {
         "name": "test-steamid-string",
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 0.42
+        "duration_seconds": 0.443
       },
       {
         "name": "test-typed-boundary",
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 3.106
+        "duration_seconds": 4.984
       },
       {
         "name": "test-resource-lifecycle",
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 8.954
+        "duration_seconds": 10.272
       },
       {
         "name": "test-restart-forward-semantics",
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 3.631
+        "duration_seconds": 4.849
       },
       {
         "name": "test-binary-evidence",
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 0.341
+        "duration_seconds": 0.362
       },
       {
         "name": "test-debug-log",
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 0.462
+        "duration_seconds": 0.459
       },
       {
         "name": "test-http-stream-context",
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 3.684
+        "duration_seconds": 3.947
       },
       {
         "name": "test-auth-forward",
         "exit_code": 0,
         "compiler": "clang++",
         "test_flags": "-m32 -fsanitize=address -shared-libasan -fsized-deallocation -fno-pie -no-pie",
-        "duration_seconds": 1.455
+        "duration_seconds": 1.41
       },
       {
         "name": "test-auth-binding",
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 4.404
+        "duration_seconds": 4.222
       },
       {
         "name": "test-sourcepawn-environment",
         "exit_code": 0,
         "compiler": "clang++",
         "test_flags": "-m32 -fsanitize=address -shared-libasan -fsized-deallocation -fno-pie -no-pie",
-        "duration_seconds": 0.121
+        "duration_seconds": 0.124
       }
     ]
   },
   "asan": {
-    "native_lifecycle_and_streaming": "passed, including init caller coexistence",
+    "native_lifecycle_and_streaming": "passed repeated R19; offline VM and native sanitizers, not SRCDS instrumentation",
     "auth_forward_checks": 227,
     "VM_ownership_cycles": 16,
     "auth_binding_checks": 18,
@@ -220,399 +193,187 @@
     "VM_installed_in_server": false,
     "image_id": "sha256:ce871f47542914ddaa60dd5a94df7c7e85c83908c764a5eeea3a0e9a651cb368",
     "init_coexistence_checks": 142,
-    "init_caller_admission_checks": 21
+    "init_caller_admission_checks": 21,
+    "GC_hook_checks": 133,
+    "HTTP_strict_text_checks": 33,
+    "focused_address_undefined_leak_checks": "passed",
+    "suppression_files": []
   },
   "runtime_acceptances": [
     {
       "path": "auth014-srcds/results.json",
       "candidate_sha256": "ddfdf9bf2f9bde625719ba171c59f7cac8b56cbe136a15e4911c7acbf00383ad",
-      "scope": "014 real auth, public validation forwards, real identity/integer stats, debug, quit and restoration",
       "current_candidate": false,
-      "auth_sources_match_current": true,
-      "applies_to_current_binary": false
+      "applies_to_current_binary": false,
+      "scope": "014 real auth, public validation forwards, real identity/integer stats, debug, quit and restoration"
     },
     {
       "path": "http-stream-srcds/results.json",
       "candidate_sha256": "bc76b00d0614f8f8489f8d3d30e3d654976f3bfde689f17d8731018d6c7ac639",
-      "scope": "32 completions / four HTTP rounds; 24 streaming bytes; context/payload; map; cancellation; quit and restoration",
       "current_candidate": false,
-      "applies_to_current_binary": false
+      "applies_to_current_binary": false,
+      "scope": "32 completions / four HTTP rounds; 24 streaming bytes; context/payload; map; cancellation; quit and restoration"
     },
     {
       "path": "p5-r3-auth-srcds/results.json",
       "candidate_sha256": "bc76b00d0614f8f8489f8d3d30e3d654976f3bfde689f17d8731018d6c7ac639",
-      "scope": "One real auth event; both validation forwards; identity/buffers/license; positive matching integer stats and failed float sentinels; quit/restoration",
       "current_candidate": false,
-      "applies_to_current_binary": false
+      "applies_to_current_binary": false,
+      "scope": "One real auth event; both validation forwards; identity/buffers/license; positive matching integer stats and failed float sentinels; quit/restoration"
     },
     {
       "path": "p5-r4-stats-srcds/results.json",
       "candidate_sha256": "bc76b00d0614f8f8489f8d3d30e3d654976f3bfde689f17d8731018d6c7ac639",
-      "scope": "Two read-only scans; 12 successful float keys by both routes; missing key rejected with unchanged outputs by all four getters before/after",
       "current_candidate": false,
-      "applies_to_current_binary": false
+      "applies_to_current_binary": false,
+      "scope": "Two read-only scans; 12 successful float keys by both routes; missing key rejected with unchanged outputs by all four getters before/after"
     },
     {
       "path": "p5-r5-rollback-srcds/results.json",
       "candidate_sha256": "bc76b00d0614f8f8489f8d3d30e3d654976f3bfde689f17d8731018d6c7ac639",
-      "restored_sha256": "9ca37aadcd83448d49126d6a72babcb8ec97ec5a06c171b4821ae0ee3cf05d70",
-      "scope": "T35 in-place archive restore and baseline restart/HTTP passed; candidate and baseline process exit have unresolved SIGSEGV",
       "current_candidate": false,
-      "applies_to_current_binary": false
+      "applies_to_current_binary": false,
+      "scope": "T35 in-place archive restore and baseline restart/HTTP passed; candidate and baseline process exit have unresolved SIGSEGV"
     },
     {
-      "evidence": "t08-coexist-srcds/results.json",
+      "path": "t08-coexist-srcds/results.json",
       "candidate_sha256": "82347b99d5130bd411cdc0b35d215dc87fc82d394a2252ccd83d5d4940b6ca5a",
-      "scope": "T08 two same-PID reinitializations with SourceTVSupport, HTTP/streaming, one held obsolete request and final quit",
-      "status": "passed_scoped",
-      "applies_to_current_binary": false
+      "current_candidate": false,
+      "applies_to_current_binary": false,
+      "scope": "T08 two same-PID reinitializations with SourceTVSupport, HTTP/streaming, one held obsolete request and final quit"
     },
     {
-      "evidence": "p5-r6-auth-srcds/results.json",
+      "path": "p5-r6-auth-srcds/results.json",
       "candidate_sha256": "82347b99d5130bd411cdc0b35d215dc87fc82d394a2252ccd83d5d4940b6ca5a",
-      "status": "passed_scoped",
+      "current_candidate": false,
       "applies_to_current_binary": false,
       "scope": "R6 ZIP payload, real human auth/identity/license and integer stats; two float/missing-key scans, controlled quit and original DEV restore"
     },
     {
       "path": "p5-r7-rollback-srcds/results.json",
       "candidate_sha256": "82347b99d5130bd411cdc0b35d215dc87fc82d394a2252ccd83d5d4940b6ca5a",
-      "restored_sha256": "9ca37aadcd83448d49126d6a72babcb8ec97ec5a06c171b4821ae0ee3cf05d70",
-      "scope": "R7 ZIP install; T35 actual in-place restore, baseline startup/Steam/HTTP and normal DEV restoration; candidate clean exit; known archived baseline SIGSEGV retained",
-      "status": "passed_scoped_restore_and_restart",
-      "applies_to_current_binary": false
+      "current_candidate": false,
+      "applies_to_current_binary": false,
+      "scope": "R7 ZIP install; T35 actual in-place restore, baseline startup/Steam/HTTP and normal DEV restoration; candidate clean exit; known archived baseline SIGSEGV retained"
     },
     {
       "path": "optimized-srcds/results.json",
       "candidate_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-      "status": "passed_scoped",
-      "applies_to_current_binary": true,
+      "current_candidate": false,
+      "applies_to_current_binary": false,
       "scope": "Optimized build directly mapped in PID 87189: two reinits with SourceTVSupport; 25 HTTP completions, 18 streaming bytes and held request; real 014 auth/public forwards/identity/integer and float/missing-key stats; clean quit and original DEV restored"
     },
     {
       "path": "p5-r9-rollback-srcds/results.json",
       "candidate_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-      "restored_sha256": "9ca37aadcd83448d49126d6a72babcb8ec97ec5a06c171b4821ae0ee3cf05d70",
-      "status": "passed_scoped_install_restore_and_restart",
-      "applies_to_current_binary": true,
+      "current_candidate": false,
+      "applies_to_current_binary": false,
       "scope": "Actual R9 archive installation; T35 real in-place restore/start/Steam/HTTP; optimized candidate clean quit; known unchanged baseline SIGSEGV retained; original DEV restored"
     },
     {
       "path": "t20-owner-srcds/results.json",
       "candidate_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-      "status": "passed_scoped",
-      "applies_to_current_binary": true,
+      "current_candidate": false,
+      "applies_to_current_binary": false,
       "scope": "T20 two plugin owner unload/reload cycles with held HTTP, visible owner handle reclamation and fresh probes; same PID/modules, clean quit and DEV restoration"
     },
     {
       "path": "t16-extension-srcds/results.json",
       "candidate_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-      "status": "passed_scoped",
-      "applies_to_current_binary": true,
+      "current_candidate": false,
+      "applies_to_current_binary": false,
       "scope": "T16 cold late load; two quiescent console unload/reload cycles with no consumers, real unmapping/hook restoration/pipes stable, post-reload newgame/HTTP and clean quit. Minimal isolated plugins."
     },
     {
       "path": "identity-negatives-srcds/results.json",
       "candidate_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-      "scope": "T15 buffers passed; reachable T29 negatives passed, remaining identity paths partial; isolated R12 followup",
-      "current_candidate": true,
-      "applies_to_current_binary": true
+      "current_candidate": false,
+      "applies_to_current_binary": false,
+      "scope": "T15 buffers passed; reachable T29 negatives passed, remaining identity paths partial; isolated R12 followup"
     },
     {
       "path": "forward-consumers-srcds/results.json",
       "candidate_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-      "scope": "T23 registered managed-forward dispatch in live SourceMod/VM with synthetic parameters; hook mapping deterministic/binary only; not SDK event generation or GC capability",
-      "current_candidate": true,
-      "applies_to_current_binary": true
+      "current_candidate": false,
+      "applies_to_current_binary": false,
+      "scope": "T23 registered managed-forward dispatch in live SourceMod/VM with synthetic parameters; hook mapping deterministic/binary only; not SDK event generation or GC capability"
     },
     {
       "path": "interface-capabilities-srcds/results.json",
       "candidate_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-      "scope": "T11 nine-family actual candidate getter matrix; eight minimum probes, Matchmaking absent, GC local queue/hook and unknown-version refusal/restoration; no backend GC delivery claim",
-      "current_candidate": true,
-      "applies_to_current_binary": true
+      "current_candidate": false,
+      "applies_to_current_binary": false,
+      "scope": "T11 nine-family actual candidate getter matrix; eight minimum probes, Matchmaking absent, GC local queue/hook and unknown-version refusal/restoration; no backend GC delivery claim"
     },
     {
       "path": "consumer-compat-srcds/results.json",
       "candidate_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-      "scope": "T25 partial: six real precompiled/recompiled consumer scoped paths and human H08/H09 old/current include fixtures passed; external Connect incompatibility reproduced, full business/dependency matrix unaccepted",
-      "current_candidate": true,
-      "applies_to_current_binary": true
+      "current_candidate": false,
+      "applies_to_current_binary": false,
+      "scope": "T25 partial: six real precompiled/recompiled consumer scoped paths and human H08/H09 old/current include fixtures passed; external Connect incompatibility reproduced, full business/dependency matrix unaccepted"
     },
     {
       "path": "connection-srcds/results.json",
       "candidate_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-      "scope": "T32 one actual bounded network disconnect/reconnect, stable runtime/interfaces/retained and fresh HTTP, 81 checks; original DEV restored; no prolonged/remote-HTTP/positive-human-stat claim",
-      "current_candidate": true,
-      "applies_to_current_binary": true
+      "current_candidate": false,
+      "applies_to_current_binary": false,
+      "scope": "T32 one actual bounded network disconnect/reconnect, stable runtime/interfaces/retained and fresh HTTP, 81 checks; original DEV restored; no prolonged/remote-HTTP/positive-human-stat claim"
     },
     {
       "path": "soak-srcds/results.json",
       "candidate_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-      "scope": "T33 scoped twenty-minute mixed loopback HTTP with idle/recovery resource/performance measurements, fixed preregistered thresholds; no production/multi-hour capacity or zero heap-leak claim",
-      "current_candidate": true,
-      "applies_to_current_binary": true
+      "current_candidate": false,
+      "applies_to_current_binary": false,
+      "scope": "T33 scoped twenty-minute mixed loopback HTTP with idle/recovery resource/performance measurements, fixed preregistered thresholds; no production/multi-hour capacity or zero heap-leak claim"
     },
     {
       "path": "last-two-resume-srcds/results.json",
       "candidate_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+      "current_candidate": false,
+      "applies_to_current_binary": false,
+      "scope": "T25/T29 original Linux x86 contract acceptance; actual human/social/pending identity and corrected Connect cold HTTP/ACK/map; defensive identity variants deterministic and binary-provider scoped"
+    },
+    {
+      "path": "review12-srcds/results.json",
+      "candidate_sha256": "72664c658f6d28e78a975ec98c96879dc641f96725206f514f159ea17125fcb3",
       "current_candidate": true,
-      "scope": "T25/T29 original Linux x86 contract acceptance; actual human/social/pending identity and corrected Connect cold HTTP/ACK/map; defensive identity variants deterministic and binary-provider scoped",
-      "applies_to_current_binary": true
+      "applies_to_current_binary": true,
+      "scope": "372 checks: HTTP real, GC real empty queue and typed LOCAL provider; no positive remote GC reception"
     }
   ],
-  "consumers": {
-    "compilations": 3,
-    "import_tables": 4,
-    "source_files_scanned": 2710,
-    "files_with_references": 52,
-    "external_Connect_arity_mismatches": 0,
-    "report": "p5/consumers.json",
-    "inventory": "p5/consumers-inventory.json",
-    "external_Connect_followup": "last-two-resume-srcds/Connect-source-manifest.json",
-    "current_contract_report": "p5/r18/extra-consumer-checks.json",
-    "Connect_source_hashes_match_accepted_runtime": true,
-    "Connect_runtime_repeated_in_R17": false,
-    "Connect_runtime_repeated_in_R18": false,
-    "Connect_committed_correction": "5f62f3c6877d5ee21dc912ad498c881921ea15d7",
-    "Connect_diff_base": "c695bf0ceca8192a2cee704242a969ab973be0ba"
-  },
-  "rollback": {
-    "captured_utc": "2026-11-16T12:08:21.535795+00:00",
-    "absent": [
-      "gamedata/steamworks.txt"
-    ],
-    "read_only": true,
-    "files_sha256": {
-      "extensions/steamworks.ext.so": "9ca37aadcd83448d49126d6a72babcb8ec97ec5a06c171b4821ae0ee3cf05d70",
-      "scripting/include/steamworks.inc": "e51bcd397139edc3d144f130c45f0f8edbf55d12278736e0134e4c650ec64f17"
+  "findings": {
+    "REV-HTTP-02": {
+      "status": "accepted_real_SteamHTTP_in_observed_scope",
+      "rounds": 2,
+      "completed_requests": 6,
+      "capacity_body_combinations": 36,
+      "pending_read_failures_with_unchanged_outputs": 6,
+      "nonempty_truncation": "passed",
+      "empty_body": "passed",
+      "SDK_partial_write_failure_and_allocation_failure": "deterministic local tests only; not injected into real SteamHTTP"
     },
-    "isolated_DEV_restore_previously_exercised": true,
-    "live_restore_evidence": [
-      "auth014-srcds/cleanup.json",
-      "http-stream-srcds/cleanup.json",
-      "p5-r3-auth-srcds/cleanup.json",
-      "p5-r4-stats-srcds/cleanup.json",
-      "p5-r5-rollback-srcds/cleanup.json",
-      "t08-coexist-srcds/cleanup.json",
-      "p5-r6-auth-srcds/cleanup.json",
-      "p5-r7-rollback-srcds/cleanup.json",
-      "optimized-srcds/cleanup.json",
-      "p5-r9-rollback-srcds/cleanup.json"
-    ],
-    "in_place_restore_from_regenerated_ZIP_exercised": true,
-    "VM_installed_or_restored": false,
-    "capture_method": "docker cp of owned files; read-only absence check; no server/process changes",
-    "container_state_at_capture": "running",
-    "clean_process_shutdown": false,
-    "baseline_unchanged": true,
-    "prior_in_place_R5_archive_restore_evidence": "p5-r5-rollback-srcds/results.json",
-    "baseline_shutdown_failure_preserved": true,
-    "current_archive_installed_in_SRCDS": false,
-    "prior_R5_in_place_baseline_startup": "p5-r5-rollback-srcds/results.json",
-    "current_rollback_archive_applied_in_place": false,
-    "in_place_archive_restore_evidence": "p5-r9-rollback-srcds/results.json",
-    "clean_process_shutdown_scope": "Archived baseline final quit only; optimized candidate final quit passed.",
-    "prior_R7_in_place_archive_restore_evidence": "p5-r7-rollback-srcds/results.json",
-    "R7_archive_applied_in_place": true,
-    "R8_archive_applied_in_place": false,
-    "R9_archive_applied_in_place": true,
-    "in_place_archive_restore_scope": "Regenerated R18 rollback ZIP from a fresh read-only capture; exact bytes identical to R9 applied archive. New local filesystem roundtrip only, no R18 server installation or restore.",
-    "R10_archive_applied_in_place": false,
-    "current_rollback_archive_bytes_exercised": true,
-    "current_rollback_SHA_identical_to_R9_exercised": true,
-    "exercised_rollback_archive_sha256": "55153d557f3af7f71f1016c8c394dc74fe29e0cdc9511044c21de29e8bc6dffc",
-    "R11_archive_applied_in_place": false,
-    "R12_archive_applied_in_place": false,
-    "R13_archive_applied_in_place": false,
-    "R14_archive_applied_in_place": false,
-    "R15_archive_applied_in_place": false,
-    "R16_archive_applied_in_place": false,
-    "R17_archive_applied_in_place": false,
-    "R18_archive_applied_in_place": false
+    "REV-GC-01": {
+      "status": "accepted_SRCDS_snapshot_scope; remote_positive_receive_unverified",
+      "real_provider": "80 empty-queue RetrieveMessage calls through candidate hook and real VM; no messages consumed",
+      "local_provider": "10 calls using typed local ISteamGameCoordinator; actual candidate AddHooks/RetrieveMessage/SourceHook and VM; real target restored before native returns",
+      "synthetic_scenarios": [
+        "3-byte binary in capacity 4096 with zero tail",
+        "full binary capacity 16 without NUL",
+        "zero capacity success",
+        "NoMessage with provider output words untouched",
+        "BufferTooSmall required size 17 with capacity 16"
+      ],
+      "not_remote_GC_content": true
+    }
   },
-  "checks": {
-    "integration_suites": 15,
-    "review_artifacts_tests": 12,
-    "remote_CI": "passed existing SteamWorks 43861680010 for committed product cc52305 (Linux and Windows) and Connect 43860123701 for 5f62f3c; no new CI triggered for uncommitted R18 documentation/artifacts",
-    "native_and_VM_ASan_LSan_UBSan": "passed x86 including optimized auth bounds and CDetour backup; no suppressions",
-    "package_validator": "passed staged tree and final extracted ZIP",
-    "archived_rollback_filesystem_roundtrip": "R18 actual archives in disposable filesystem; rollback ZIP identical to R9 live restore",
-    "actionlint": "passed",
-    "bash_syntax": "passed",
-    "git_diff_check": "passed",
-    "workflow_streaming_regression": "passed remote CI 43861680010 on committed product cc52305: Test streaming HTTP context (x86, UBSan); no new CI run for R18 documentation/artifacts",
-    "stats_schema_fixture": "733 keys regenerated identical to optimized SRCDS acceptance",
-    "stats_harness_compilation": "all eighteen runtime harnesses warning-free",
-    "workflow_init_coexistence_regression": "passed remote CI 43861680010 on committed product cc52305: Test init observer coexistence (x86, UBSan); no new CI run for R18 documentation/artifacts",
-    "restart_semantic_checks": 109,
-    "diagnostic_forward_fixture": "ELF32 build matches R13 laboratory-loaded helper; not in candidate runtime",
-    "workflow_restart_semantics_regression": "passed remote CI 43861680010 on committed product cc52305: Test restart forward semantics (x86, UBSan); no new CI run for R18 documentation/artifacts",
-    "diagnostic_capability_fixture": "ELF32 build matches R14 laboratory-loaded helper; source only in source-review, outside candidate runtime",
-    "Connect_Python_tests": 66,
-    "Connect_fixtures_compiled": 4,
-    "legacy_current_header_controls_compiled": 2,
-    "legacy_three_argument_call_rejected": true,
-    "compiler_date_reproducibility": "SOURCE_DATE_EPOCH=1794700800; byte-identical accepted ELF",
-    "Windows_max_macro_regression": "passed with macro active; existing negative control preserved",
-    "exact_byte_Git_attributes": "included in source review; audited SDK wrappers and evidence keep recorded bytes"
-  },
-  "artifact_directory": ".build/p5-r18/review/",
-  "historical_checkpoint": "p5/history/p5-r17-with-Windows-CI-fixes-validation-results.json",
-  "source_sha256": {
-    "extension/AMBuilder": "20c4456b22475724800ba3312b8057c1a568a88586664e6181507a3982f48244",
-    "extension/CDetour/detourhelpers.h": "ea9e6d2866dfb4e763dc921d712f1694f47107e0faade9490ae10614f827c3a8",
-    "extension/CDetour/detours.cpp": "e67c202073164a6575a33137139b454cbab250fffb5f377b4bb1929b94feeea3",
-    "extension/CDetour/detours.h": "ea62f0ee139da2edec9e369b0eda94c559fb24dbf6cb13e9fe0a55a2efc79e9f",
-    "extension/asm/asm.c": "75ab667354202ee77c404f090e9bf1610ba0a72e6e3acebd3d6410d8cdd918c0",
-    "extension/asm/asm.h": "6d78a17764bb9ebd727904d9441b7ab96372545067a9e4167b4c278b48614e27",
-    "extension/core/swauthticket.h": "1ab8813f6850ed9c3231f921432600ac80b1e012e78f674a5898ee0c91f3b0bc",
-    "extension/core/swclientlifecycle.cpp": "4dc8ddb708b867cf6e968d7b998d13e7c3cea015a2f1040864507e258826619a",
-    "extension/core/swclientlifecycle.h": "801de18713143e1409fc441a02f45805f280cd1b49eb04141a24a520092f64e4",
-    "extension/core/swdebug.cpp": "87f9ee88c07ff1e76b9f35570da1f7f5f9f7c11089c561398fdf2d52afcff49d",
-    "extension/core/swdebug.h": "5804bce8237d1fc8111d0b93c1262ad8d20be740906877756c690fc54f22e335",
-    "extension/core/swdebuglog.h": "56aa29452f60b5c93ac66a52f62f7bdf454c233d17f2a3858ec9fe6e54ec5fa9",
-    "extension/core/swforwards.cpp": "d930c86595966ed13effc7b39032863bc947ec7577c0809f212b2d441f0ad1bd",
-    "extension/core/swforwards.h": "edc92f86e061ee8512d1d645a55faeb5ba6267da602632817c8c02009eec4dba",
-    "extension/core/swgameauth014.h": "bceac91310f61c80ed666e67ac8338b9e8b67e4065fc666be48b2ae36d879000",
-    "extension/core/swgamedata.cpp": "08762de8bdd474dd611e729df5be54291a12467d6e4c26c524f157b104976771",
-    "extension/core/swgamedata.h": "fdfb11ec5485dc30ac65e3a21da0f2a3daed12221b3681a347f84f0b628de2a7",
-    "extension/core/swgameserver.cpp": "a5a1c75d4d330254186282f58b9af00ea3c56b2dcdc652dc5e6d419368e99100",
-    "extension/core/swgameserver.h": "b2218bd75897a23277e36b551d05b041a33ade23a466ece2a4e02a24810d9847",
-    "extension/core/swidentity.cpp": "e6fc10a80d4846c5fd21e3cb36b45d054191e0eed226796ba1a3eb9f680ddba3",
-    "extension/core/swinitcallsite.h": "f841e15d5c237f7b9bd25ef59da828fc57403adf8e790324c2985a16f26c57f8",
-    "extension/core/swinterfaces.h": "b3860e743113c78da93010179a7e8004b24061a22616f7dc737783fd2fd96966",
-    "extension/core/swlifecycleprofile.h": "034fa2eba2e0a5dcccd7d906b949a410f971f5c168e01746b7aeec799a2d54fa",
-    "extension/core/swpawn.h": "53424cd236fa2aa5ed09d851abde77a809c4f72517670bdfa1571d895c86fd06",
-    "extension/core/swtypes.h": "efd060d68cb94eded7877cd97a5c031c860a1807a0e16e6f9965accc60016564",
-    "extension/extension.cpp": "2c9326747631261dcceff02441c9242b611a3a15e64f78d8a8b1a2b7f4a3dc50",
-    "extension/extension.h": "2af4f18e6b29abb9b3349f131332b82758443b1e3c099d104709d58f20206371",
-    "extension/hooks/swgchooks.cpp": "048ee33af2e292637be5e3f39e9e8ae44b83acfff5b91953d3cd30bbd66af9c6",
-    "extension/hooks/swgchooks.h": "f2e8e57ba1c2ddb971f7617aa01e75fc78df6a7272958c4c5f13c545d0608bb9",
-    "extension/hooks/swgsdetours.cpp": "077392afe9a07fd06380118eef1d2ce4592778c8b6a70b097c7a660988d299bb",
-    "extension/hooks/swgsdetours.h": "589cd716d9d717260d25e08aa28a406d0692597aa6b1565e8ab3038fbc192cda",
-    "extension/hooks/swgshooks.cpp": "b4e0426f8099d2ce5ebad8f79144a98b0b3de8062e4760a509bb20d3195ee18e",
-    "extension/hooks/swgshooks.h": "7185a644f7a0c8874d433263d81fb2d6bc54d4fda83ee355a9bbfcf5c5ba0c62",
-    "extension/http/swhttp.cpp": "cf34b30c403d8b928b81742e98a5200c6117db96c65bd36feaf44b814bb84082",
-    "extension/http/swhttp.h": "f5331691cf3cf2dbe36c1cd6bd55bd39c93e0c3c37f492c54edebcef0228b653",
-    "extension/http/swhttprequest.cpp": "f50471521d52898929487490e539717ed8d4aa2a16cab323b188b60690aa30c7",
-    "extension/http/swhttprequest.h": "e6e676d284e246b4de125c4688c48360d64653e46b72e6be8f60025b6bab45a9",
-    "extension/natives/gcnatives.cpp": "ae2fda2f2c57a36794a6212559b688425999da2d1bc2b63e5058e41a13914175",
-    "extension/natives/gcnatives.h": "5d2870d2358736f3e4767eaf06766cdc4a7af5066620fa209f02143259fdf3ca",
-    "extension/natives/gsnatives.cpp": "3151d3ea22f55fc2fdfdf26f9e0186d05d9003bd299e095f41b8ccc801291ab4",
-    "extension/natives/gsnatives.h": "46da15d868d44d590af78faf177a1e6ef981e56b3aa664c9afad71d3a7350839",
-    "extension/natives/ssnatives.cpp": "4ba91f9a23bbf5ae360c75f002cc519d553027d582f1b113d99cda084508011c",
-    "extension/natives/ssnatives.h": "a51c6701115845fc72b37a137bbf66fcb89fd879f0265d3672e2a2bf89b7bb1c",
-    "extension/sdk/smsdk_config.h": "f1b0cb954c3690d022dd1c74cfcdb282f21b7c21a795dd33d185af273013de6c",
-    "extension/sdk/smsdk_ext.cpp": "65e47a43ecf14a93653badf5c470a1d8a7c7f25b8bb9b9e7dbee1388d73daafb",
-    "extension/sdk/smsdk_ext.h": "7100fb30b2f4b0cc58fc19eee9aae9b5a5f1324211f6d0bdf8b4c72930e28534",
-    "extension/steamtools/blob.h": "e0b7531c85093661a87a8bbc5a82ac6607b31dfe73e2bf9b698706f57bcc0585",
-    "extension/steamtools/ticket.h": "c11f22200702275ab425a04cc18b194de33c1b71316e5d143f534466e54a9917",
-    "scripts/build-linux-l4d2.sh": "6e3a17da5eea0cce764391d1845afb774d99c6a168bc63bff082db65d088e30f",
-    "scripts/build-test-sourcepawn.sh": "f6abdf66ffd45b0cd3b37e422ee7cab45b03b3c381049a21561939591b8f2e09",
-    "scripts/build-windows-l4d2.ps1": "bae0fb7a6c5c8ccdbd8a31ed7e2981ec75357a464fea3328bf03ba86e76a00d8",
-    "scripts/ci-validate-artifact.sh": "00912b02f34ef4b3bfaeb5f73bb2bda7e71d463affa5cd1bf6745aef77715958",
-    "scripts/fetch-linux-deps.sh": "719e2a5851fa8582c254c2b059125895fb962f46f45ec9c13993b704761bff71",
-    "scripts/fetch-windows-deps.ps1": "b1090e39bb5af5826187507563b5cc5c213f7fd3b5369db751363e05c5a5095c",
-    "scripts/generate-stats-acceptance-schema.py": "67ec36d8a43b671a0714df0bec9341461a029c699709585777070f9c491e2c9b",
-    "scripts/inspect-steamworks-module.py": "f51d31adbfe655aa68662c89a1beb70aa028deb03810aa64300f4aff892b717b",
-    "scripts/inventory-steamworks.py": "877c9eb1c88656d7981a082ca73be692d8f172e9b14d3277499d655ec3559227",
-    "scripts/package-release.py": "b6d415805d2719369294b81f843c6c0535901f1e2993e9b22c8823a046106fd6",
-    "scripts/prepare-review-artifacts.py": "1457b9241ba9139f443b6e1ca37e80876331227cb2954cbe8793a2d73b39567a",
-    "scripts/stage-artifact.py": "50f2a2c591ff66a6e0ead1bb9b3e1f3ec8f7561cb1c2617865602a8c651c1989",
-    "scripts/test-auth-binding.sh": "c9f03b34b55788a82ef33178ef34e1c37de52dd9283bba53677c0e298a67650b",
-    "scripts/test-auth-forward.sh": "85dabf69c7f2c23572506589812b414cd49c97694bee431332272bb01ad9d47e",
-    "scripts/test-binary-evidence.sh": "f0eba9355bbf6ae06742de026aa26d481a20d9504ace46e1525e30308168530d",
-    "scripts/test-debug-log.sh": "ab53c5c253dcacd7172a72e51e53703d85a80d34357e77e4bf7c620d016ecd0f",
-    "scripts/test-detours.sh": "85e449cde0488eab7676d21d1a73d68d0b9e87c47cf334b46f0f4fb89d1439f1",
-    "scripts/test-http-stream-context.sh": "c3dc3fe11c37675dfc2fdb25b9881bb48ca787f0681f904277a80b34bd883665",
-    "scripts/test-init-coexistence.sh": "4af784698319f6f9e66f57bf663c21b5afda0f26bc08b29276b49e0c533cb4d3",
-    "scripts/test-integration.py": "1d15020ee0468647fbedd4bbe15a7a2c895c69ffd91e751c066499f1bd82420a",
-    "scripts/test-public-ip.sh": "767bbbc2771050efac35d5bc909d3cc0122c37a1edf86c3cd8dcdb2a5d76c4cd",
-    "scripts/test-resource-lifecycle.sh": "d59f6354b0eebf1b5a3e07b74010ea5cfaa9093ee6265bd7df14a8247e25043f",
-    "scripts/test-sourcepawn-environment.sh": "d4bbe852941108bc666401e395514177230d3caec905280f2d88c96b6ea0d5e3",
-    "scripts/test-sourcepawn-vm-asan.sh": "c42d41450b397f3d501e3b525c4873fb0a7d7548532a88d1e37a3384d04ba0f0",
-    "scripts/test-stats-natives.sh": "b0bd7d760a65d8de48b971566c2cc176a64b5f9aac62044d5ebe58a2f5ad2f3d",
-    "scripts/test-steamid-string.sh": "60a34343807a12d7c0c1dedb9ff030355b329aba8961af82a348d5b3fc41c58b",
-    "scripts/test-typed-boundary.sh": "d8be9c9ebab63a6d8972ef14754fb0bf0886e2c399148d3536df8b149a6ba5ee",
-    "scripts/validate-runtime-evidence.py": "5fd7d7d14b3e89a0a9f473dc24d18768fcd54bb30d1d59cf2f3b03defb659924",
-    "tests/README.md": "0bfd99c09f98076d403d157f5ec16aadfa0218a4ca2724c9b94547ed562e028d",
-    "tests/auth_binding_test.cpp": "4f6783f00d9ef7456967a40df64298b4823c5ed0daa440ed88fc0e3901c233c6",
-    "tests/auth_forward_receiver.sp": "108e3d8dc7609cfc0486c5080f3ec9a37b34376c91c86a3e84abf1fc227e8ae0",
-    "tests/auth_forward_test.cpp": "8b764f4afec580e441fa9f5252fe0b9f9f6f67fd043b31380b34362fdc0779d9",
-    "tests/binary_trampoline_test.cpp": "ca23ba2c1ca7030533da7734369ed6ff066fe38ce5339841ce896e49a95127e2",
-    "tests/cdetour_restore_test.cpp": "ac1f720f4c5adbd5d0d521db30da06bffbee8cdafa6460e0f4d68996f927340b",
-    "tests/client_lifecycle_test.cpp": "468cfd168ee5f65b754d500efd14fcf0bd674730e8fba54f2269a8c9823016b3",
-    "tests/debug_log_test.cpp": "252b8a7c1998fc862509c4d24e5fd48e4ef1488060e2751cdcdeb77eceadd651",
-    "tests/detours_lifecycle_test.cpp": "693bd0741739b6b33d801d9ca4d1e729a7d099ae17296e9a98f39fb5397e95b7",
-    "tests/detours_test_host.h": "e0d7520d765a3b7134a7f0b01e9615b813cdaed05f05cd923ecd4f45c3d99d93",
-    "tests/diagnostics/README.md": "a8a9d87a5fbaf2e610bb229d737a4784d283328f9d536388c484daf09a176e1b",
-    "tests/diagnostics/extension_load_probe.cpp": "208c9447310df69198774c12e74bc7d9a50d2ae901185e48ff20f453d6c5c88d",
-    "tests/diagnostics/gameserver_interface_probe.cpp": "a3321c97eceb633ef8f9a40998ac258e3a2fb3093e9d5abd12ef30399a73b40d",
-    "tests/diagnostics/http_stream_context_probe.cpp": "d2780e0f0c071d772e4580c5ac6bed9323837d0412b398c83c042ed0a0b8195b",
-    "tests/diagnostics/run_http_stream_context_probe.py": "3656799b36960dd71ee41ce89f6fd2cbc8cf8ca57708cec3c907b17f08f49406",
-    "tests/fixtures/gameserver014-prefix.json": "18f6d25487002f73afcffc2a1c146087c661e9017731d5ce73afa5e4a2582123",
-    "tests/forwards_lifecycle_test.cpp": "130526e8404c73bd04f9ad9980bed402bfd8ea322cbf08af39c6c7e3248b4167",
-    "tests/hooks_lifecycle_test.cpp": "d32c9f2083c8587e290604e8d12c68a9c4d5bcabea0c8fe37176a68f95b1e192",
-    "tests/http_gc_boundary_test.cpp": "087fe867b8dff153767ab9491f3273ed433d90d121cb74b0b305dca2e8398358",
-    "tests/http_gc_test_host.h": "0f0f9bb1b696ec1bd9a5ffd2c5bf9a5a093650348735bd03007fd2092b071f4d",
-    "tests/http_lifecycle_test.cpp": "8e9417263efa9f0dec957ea4c13293e35f0131e8dca08a668842988ce9239d08",
-    "tests/http_stream_context_test.cpp": "71fb75ebecd45d60022e8ea05625ffbd38623ca4e39417d6b66f95be7e8c0b24",
-    "tests/init_call_profile_test.cpp": "8c0b3b1ea3cded7b076ecb7f7f7bec20745e87a132300425a9a3a5026175f83f",
-    "tests/init_coexistence_test.cpp": "0ad26557ae4902e4f8e0a2698a99a17e7863460f6c46f7de371d2b0e01f55a93",
-    "tests/interface_registry_test.cpp": "2cb5426c4d8b81819127255205d3a9b8ca30c8f10f16b250f89eeadc47ce9c8c",
-    "tests/lifecycle_profile_identity_test.cpp": "300867c0ed2a638f435fbd4778e478f786c94b19170a66cfd9b98bebae526650",
-    "tests/lifecycle_profile_rejection_test.cpp": "c50ab965a59890330b7a9becf14496399f4cff850268030c5a8c05f197fb4d45",
-    "tests/public_ip_test.cpp": "fbaa92686816d702892f46ed04d85af537c0793b8e7bbbb50df759bd312a0841",
-    "tests/public_ip_test_host.h": "612b3c8a75aa47d48612c4b6432ca26246c3433c956abda5b9426aff1952ede2",
-    "tests/review_artifacts_test.py": "8cb8c706493701e31d2a418a238bea962ca5044f6a00de02b6a8cbf87df117b0",
-    "tests/runtime/README.md": "25a3bb6800961659e714807d9b6f4d6617cb8f0ec9a2172a1439e336ffa0fcf4",
-    "tests/runtime/http_fixture.py": "07a62b5e2150e7a258fc32cb5cdcfd1c30ab29901a53f2e9f951290ced9c3054",
-    "tests/runtime/steamworks_acceptance.sp": "ec2694f432e1e6a362e38192e79ccf952a9262de7622722bc41b58d073aec881",
-    "tests/runtime/steamworks_lifecycle_inspect.sp": "98d76a6866ea4a9ebd121e46a31d6594db30b7315273c31b85fd7ac81d59daa6",
-    "tests/runtime/steamworks_lifecycle_pending.sp": "6c028a2e292a135bed132f985a65788d4a25e3eaece614d3db9fda994f7d3a2c",
-    "tests/runtime/steamworks_pending_owner.sp": "9dc7ad66a42ec5ee1f44a997f4604bdf236f42d539d7feae3d140dcd5fb1963f",
-    "tests/runtime/steamworks_rollback_acceptance.sp": "a5ec3331828e75cc55569b8e49884bd6d99daf51e3abd130e66e55bcc4551b3e",
-    "tests/runtime/steamworks_stats_acceptance.sp": "033fbeed423ecabb8cf313920e013d42974c7533c264ade715f033070ac773ac",
-    "tests/runtime_evidence_test.py": "e2e22a898ed494955a284a80f93175a094ceaadb9df05f558cf5170d9bfea712",
-    "tests/runtime_lifecycle_test.cpp": "79d9d370d980d4532d0dc69efbb3cb91e1a9da31dc3e8b829849d71ff877872f",
-    "tests/sourcepawn-vm.Dockerfile": "878b8bcc019a518ed2775a20d1d4fd39a832b34b73f63da763755b0bb9097648",
-    "tests/sourcepawn_environment_test.cpp": "67f7a6db3a0ac2715d65c89e45a6b980999a81b04b1f1002acfa608f5eabfda9",
-    "tests/stats_natives_test.cpp": "d499fa3f1c9cadb5f8ac6dbf254667cead6db76cf13961d4d981a7e0eb8b5c41",
-    "tests/stats_requests_test.cpp": "c3a355aed7c6c078144af3bd79942b5eb716ce24f30c2d29ea7065cbde4b59c1",
-    "tests/stats_test_host.h": "832541ff7f2e9d7092158129fee350597736921d8a1c3f951d0f3753f7cb59df",
-    "tests/steam_callbacks_test_host.h": "49f5b9a70f9983dffadb8e565e44ddbc8475a3256745e4b22d2f9d07abdf71ea",
-    "tests/steamid_string_test.cpp": "3088ded3a47393b70d0d618475243f59247e1e8470703a1c8c8f99e7264a8182",
-    "tests/stubs/auth_server014.h": "30ef7188cc75c7966e4080afd418b710e92af215a2a87bb01459e2cac6311e30",
-    "tests/stubs/native_server015.h": "82842bd30e8fd26ec062b4b81ad7b3b86ea5bfa452d2d72b4ea5557ee1f17071",
-    "tests/stubs/sourcehook.h": "0a91de5937e44eac13be0707fc0e4d5f6f7c62114ae0f0cea318035ff4bceb10",
-    "tests/typed_boundary_test.cpp": "25b9b1dc4f760cd33eb7d4a2a1eb0391cf8cd1a15aee18a02192c8ad9033a4a8",
-    "patches/sourcepawn/README.md": "40172e50fefa0853b66c5baa767cf4ec5211bc13cb0b6b7fbc2e7dbd37f1010d",
-    "patches/sourcepawn/environment-ownership.patch": "f07d26c38b2fb384fd120c1e1828ca92fc1c7ac8767bae7f88469a572f2a8185",
-    "patches/sourcepawn/test-vm-only.patch": "1fe0826dd430ed15dbdb097d92ced36070a3cff884ec306459f09f913c45bd0b",
-    ".github/workflows/main.yml": "4819ca0a63746f281f1ff2f9ec8273a4cf358ed06ebb85fffdfcf364e2c2b0de",
-    "tests/runtime/steamworks_extension_observer.sp": "5c8a9027151fc0fbf6c7d47e4318f041ee3fcc19ebb276bd87323d27b4a35dba",
-    "tests/runtime/steamworks_identity_acceptance.sp": "7bcb083fc03a713e57805df1c47994c7c8cee1bc4930303a3e474983e9ae124e",
-    "scripting/include/steamworks.inc": "a3e5a7a220dd4d7b46dab3226b41c68f2eb24c4ddf4943f0b943f87566b4f2d5",
-    "tests/restart_forward_semantics_test.cpp": "5902f90dec6acf45719e9dbd0d448edad2573e5529c4394e69ba68e14417cd52",
-    "tests/runtime/steamworks_forward_fixture.cpp": "c095213519ef7d9c076a8afca3206d5161185522d6aef83d2f17d5e4d6f7d176",
-    "tests/runtime/forward_fixture_sdk_config.h": "e0e0811ddd6c2c576a163e393e7b4b122fcc77d5734fbf301278d28c918fcb3a",
-    "tests/runtime/steamworks_forward_receiver.sp": "6fb4d5b0165456a91cd3ca09704e52bd0b3fda7de728cd8fe742fe7081f73587",
-    "tests/runtime/steamworks_forward_acceptance.sp": "4d0712dc73e003a3bcfdf701bd9729fae404408513b8650e2a139ba26b1e936e",
-    "scripts/build-forward-fixture.sh": "a591db4cc6305f5860ce5a21347af551cd2ca9404a8e615ca1e91848d836a2b3",
-    "scripts/test-restart-forward-semantics.sh": "cafca4d2189c150b4771b001479164a66665a0432fa8dd8bd949b01f4091d77e",
-    "tests/runtime/steamworks_capability_acceptance.sp": "9595cce9c6ab2a927fdf400ffbf6602084d51a49f23102067af5aa033c45d82a",
-    "tests/runtime/steamworks_capability_fixture.cpp": "f21ba798322ff0042223093ea6768af51173e588efe53d94d56fe7aa707c854c",
-    "tests/runtime/capability_fixture_sdk_config.h": "3d0b0838a0b65971829e89a8739a1a35a188d73bf83cd1ae15f3cb0673d39a56",
-    "scripts/build-capability-fixture.sh": "e261a6a6f20577ff690f532baae5be83c7435c26792216f27cdeb318580b91b9",
-    "tests/runtime/steamworks_consumer_observer.sp": "64ee4a9321895cfc79c6030eb5f64fa1a15c3d402b565ab84ed6b06e91a6a67f",
-    "tests/runtime/steamworks_consumer_contract.sp": "328a186d43a4d22614760a48d20eec8faca414d23e5b75e2305cf3cb2afce82b",
-    "tests/runtime/steamworks_legacy_http_consumer.sp": "6e7b1bf22aba395be4aae11f614802fc75f7575b91fd654028998857cc669171",
-    "tests/runtime/steamworks_connection_observer.sp": "67366fc45916a4370b13be56f3691388d0aaa5639d56051022772e537249e6b7",
-    "tests/runtime/steamworks_soak_observer.sp": "db990d12cc782c2b7d1546c60905601d33c628896294633b2c4237312df005da",
-    "tests/runtime/steamworks_identity_pending.sp": "a7b39b5e2d8fb7583d36907e8d042bb6b806bdca615fdcd62e2d658c25f93112",
-    "tests/runtime/steamworks_consumer_social.sp": "f8fdb974dca13b43aaefbb56acdd36805c3886ebc1a524ecb1af8a09445591c3"
-  },
+  "pending_acceptance": [
+    {
+      "id": "GC-REMOTE",
+      "status": "pending_external_scenario",
+      "required": "authorized positive message retrieved from the real Steam GC provider; no substitution by local provider or empty queue",
+      "current_evidence": "review12-srcds/results.json"
+    }
+  ],
   "cases": [
     {
       "id": "T01",
@@ -629,15 +390,20 @@
         "test-stats-natives: exact AccountID/universe and context AppID",
         "p5-r3-auth-srcds/results.json",
         "p5-r6-auth-srcds/results.json",
-        "optimized-srcds/results.json"
+        "optimized-srcds/results.json",
+        "p5/r19/integration.json"
       ],
-      "actual": "Current optimized 839ff075: authorized human, AppID 550 requests by client/AccountID accepted; integer stat agrees by both routes.",
+      "actual": "Historical evidence retained at the referenced checkpoint; current local x86 tests repeated. See current_ELF_runtime_validation for the new binary.",
       "prior_candidate_evidence": {
         "path": "auth014-srcds/results.json",
         "candidate_sha256": "ddfdf9bf2f9bde625719ba171c59f7cac8b56cbe136a15e4911c7acbf00383ad",
         "scope": "Real authorized human, matching integer stats and failed float sentinel / textual identity observed in R3; not transferred to final candidate."
       },
-      "historical_case_snapshot": "p5/history/p5-r8-with-optimized-followups-validation-results.json#T01"
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T01",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+      "historical_actual": "Current optimized 839ff075: authorized human, AppID 550 requests by client/AccountID accepted; integer stat agrees by both routes.",
+      "current_ELF_runtime_validation": "not repeated; historical integration evidence is not transferred automatically"
     },
     {
       "id": "T02",
@@ -654,15 +420,20 @@
         "test-stats-natives: untouched sentinel on failed float read",
         "p5-r3-auth-srcds/results.json",
         "p5-r6-auth-srcds/results.json",
-        "optimized-srcds/results.json"
+        "optimized-srcds/results.json",
+        "p5/r19/integration.json"
       ],
-      "actual": "Current optimized host: integer stat key as float fails by client/AccountID, preserving sentinels; deterministic output guards pass.",
+      "actual": "Historical evidence retained at the referenced checkpoint; current local x86 tests repeated. See current_ELF_runtime_validation for the new binary.",
       "prior_candidate_evidence": {
         "path": "auth014-srcds/results.json",
         "candidate_sha256": "ddfdf9bf2f9bde625719ba171c59f7cac8b56cbe136a15e4911c7acbf00383ad",
         "scope": "Real authorized human, matching integer stats and failed float sentinel / textual identity observed in R3; not transferred to final candidate."
       },
-      "historical_case_snapshot": "p5/history/p5-r8-with-optimized-followups-validation-results.json#T02"
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T02",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+      "historical_actual": "Current optimized host: integer stat key as float fails by client/AccountID, preserving sentinels; deterministic output guards pass.",
+      "current_ELF_runtime_validation": "not repeated; historical integration evidence is not transferred automatically"
     },
     {
       "id": "T03",
@@ -681,15 +452,20 @@
         "p5-r3-auth-srcds/results.json",
         "p5-r4-stats-srcds/results.json",
         "p5-r6-auth-srcds/results.json",
-        "optimized-srcds/results.json"
+        "optimized-srcds/results.json",
+        "p5/r19/integration.json"
       ],
-      "actual": "Current optimized host: two scans of 733 public keys, same 12 finite successful floats bit-matching by both routes; 16 missing-key getter reads preserve all outputs including NaN sentinel bits.",
+      "actual": "Historical evidence retained at the referenced checkpoint; current local x86 tests repeated. See current_ELF_runtime_validation for the new binary.",
       "prior_candidate_evidence": {
         "path": "auth014-srcds/results.json",
         "candidate_sha256": "ddfdf9bf2f9bde625719ba171c59f7cac8b56cbe136a15e4911c7acbf00383ad",
         "scope": "Real authorized human, matching integer stats and failed float sentinel / textual identity observed in R3; not transferred to final candidate."
       },
-      "historical_case_snapshot": "p5/history/p5-r8-with-optimized-followups-validation-results.json#T03"
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T03",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+      "historical_actual": "Current optimized host: two scans of 733 public keys, same 12 finite successful floats bit-matching by both routes; 16 missing-key getter reads preserve all outputs including NaN sentinel bits.",
+      "current_ELF_runtime_validation": "not repeated; historical integration evidence is not transferred automatically"
     },
     {
       "id": "T04",
@@ -704,9 +480,15 @@
         "I"
       ],
       "evidence": [
-        "test-public-ip: IPv4 and non-IPv4 rejection"
+        "test-public-ip: IPv4 and non-IPv4 rejection",
+        "p5/r19/integration.json"
       ],
-      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U."
+      "actual": "Passed repeated R19 x86 suites with simulated providers; scope remains unit/deterministic.",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": null,
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T04",
+      "historical_actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U.",
+      "current_ELF_runtime_validation": "not required for this deterministic scope"
     },
     {
       "id": "T05",
@@ -719,9 +501,15 @@
       ],
       "pending_levels": [],
       "evidence": [
-        "test-public-ip: signed/unsigned char variants"
+        "test-public-ip: signed/unsigned char variants",
+        "p5/r19/integration.json"
       ],
-      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U."
+      "actual": "Passed repeated R19 x86 suites with simulated providers; scope remains unit/deterministic.",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": null,
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T05",
+      "historical_actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U.",
+      "current_ELF_runtime_validation": "not required for this deterministic scope"
     },
     {
       "id": "T06",
@@ -736,9 +524,15 @@
         "I"
       ],
       "evidence": [
-        "test-detours: partial and total creation failure"
+        "test-detours: partial and total creation failure",
+        "p5/r19/integration.json"
       ],
-      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U."
+      "actual": "Passed repeated R19 x86 suites with simulated providers; scope remains unit/deterministic.",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": null,
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T06",
+      "historical_actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U.",
+      "current_ELF_runtime_validation": "not required for this deterministic scope"
     },
     {
       "id": "T07",
@@ -753,9 +547,15 @@
         "I"
       ],
       "evidence": [
-        "test-detours: original init false suppresses consumers"
+        "test-detours: original init false suppresses consumers",
+        "p5/r19/integration.json"
       ],
-      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U."
+      "actual": "Passed repeated R19 x86 suites with simulated providers; scope remains unit/deterministic.",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": null,
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T07",
+      "historical_actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U.",
+      "current_ELF_runtime_validation": "not required for this deterministic scope"
     },
     {
       "id": "T08",
@@ -771,7 +571,6 @@
       "pending_levels": [],
       "evidence": [
         "http-stream-srcds/results.json",
-        "p5/r18/test-resource-lifecycle.log",
         "p5-r5-rollback-srcds/results.json",
         "p5-r5-rollback-srcds/shutdown-core-stacks.json",
         "t08-shutdown/results.json",
@@ -779,10 +578,16 @@
         "t08-init-coexistence/results.json",
         "t08-coexist-srcds/results.json",
         "optimized-srcds/results.json",
-        "p5-r9-rollback-srcds/results.json"
+        "p5-r9-rollback-srcds/results.json",
+        "p5/r19/integration.json",
+        "review12-srcds/results.json"
       ],
-      "actual": "Current optimized PID 87189 with SourceTVSupport: cold init plus two full same-PID reinits, one connected forward per reinit, 25 HTTP completions, 18 stream bytes, held obsolete response silent for seven seconds after release, safe close. Three shutdown observations including final quit; no crash, SM errors or new core; original DEV restored.",
-      "historical_case_snapshot": "p5/history/p5-r8-with-optimized-followups-validation-results.json#T08"
+      "actual": "Historical evidence retained at the referenced checkpoint; current local x86 tests repeated. See current_ELF_runtime_validation for the new binary.",
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T08",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+      "historical_actual": "Current optimized PID 87189 with SourceTVSupport: cold init plus two full same-PID reinits, one connected forward per reinit, 25 HTTP completions, 18 stream bytes, held obsolete response silent for seven seconds after release, safe close. Three shutdown observations including final quit; no crash, SM errors or new core; original DEV restored.",
+      "current_ELF_runtime_validation": "one same-PID map/new-game, HTTP before/after and clean quit only; not the entire older reinitialization matrix"
     },
     {
       "id": "T09",
@@ -797,9 +602,15 @@
         "I"
       ],
       "evidence": [
-        "test-resource-lifecycle: rollback, duplicate stop, close exactly once"
+        "test-resource-lifecycle: rollback, duplicate stop, close exactly once",
+        "p5/r19/integration.json"
       ],
-      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U."
+      "actual": "Passed repeated R19 x86 suites with simulated providers; scope remains unit/deterministic.",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": null,
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T09",
+      "historical_actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U.",
+      "current_ELF_runtime_validation": "not required for this deterministic scope"
     },
     {
       "id": "T10",
@@ -814,9 +625,15 @@
         "I"
       ],
       "evidence": [
-        "test-typed-boundary: unknown/cross-family version rejected before factory"
+        "test-typed-boundary: unknown/cross-family version rejected before factory",
+        "p5/r19/integration.json"
       ],
-      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U."
+      "actual": "Passed repeated R19 x86 suites with simulated providers; scope remains unit/deterministic.",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": null,
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T10",
+      "historical_actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U.",
+      "current_ELF_runtime_validation": "not required for this deterministic scope"
     },
     {
       "id": "T11",
@@ -836,10 +653,16 @@
         "t08-coexist-srcds/results.json",
         "p5-r6-auth-srcds/results.json",
         "optimized-srcds/results.json",
-        "interface-capabilities-srcds/results.json"
+        "interface-capabilities-srcds/results.json",
+        "p5/r19/integration.json",
+        "review12-srcds/results.json"
       ],
-      "actual": "R14 SRCDS x86: all nine registry families classified via actual candidate getters with typed minimum probes. Eight provided; MatchMaking009 not provided for gameserver, no null call or alternate-version guess. GC001 empty queue returns NoMessage, public send locally intercepted with binary parameters/result preserved. GC999 multiline gamedata refused once; GC null/public NotLoggedOn, other interfaces and HTTP remain functional. Removing override and cold start restores GC. Five accepted rounds, 144 checks, zero accepted failures. SDK backend GC delivery and full interface method coverage not inferred; initial observer assumptions/parse errors preserved separately. R15 packages the accepted observer, typed helper and build recipe, recompiles them without warnings and reproduces the same helper ELF. Runtime extension/include bytes match R14; no new SRCDS run.",
-      "historical_case_snapshot": "p5/history/p5-r14-with-T11-followup-validation-results.json#T11"
+      "actual": "Historical evidence retained at the referenced checkpoint; current local x86 tests repeated. See current_ELF_runtime_validation for the new binary.",
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T11",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+      "historical_actual": "R14 SRCDS x86: all nine registry families classified via actual candidate getters with typed minimum probes. Eight provided; MatchMaking009 not provided for gameserver, no null call or alternate-version guess. GC001 empty queue returns NoMessage, public send locally intercepted with binary parameters/result preserved. GC999 multiline gamedata refused once; GC null/public NotLoggedOn, other interfaces and HTTP remain functional. Removing override and cold start restores GC. Five accepted rounds, 144 checks, zero accepted failures. SDK backend GC delivery and full interface method coverage not inferred; initial observer assumptions/parse errors preserved separately. R15 packages the accepted observer, typed helper and build recipe, recompiles them without warnings and reproduces the same helper ELF. Runtime extension/include bytes match R14; no new SRCDS run.",
+      "current_ELF_runtime_validation": "typed GC getter, empty real queue and local typed provider; not all interface families repeated"
     },
     {
       "id": "T12",
@@ -854,11 +677,15 @@
       "evidence": [
         "t08-coexist-srcds/results.json",
         "t08-coexist-srcds/detour-ownership.json",
-        "p5/r18/test-init-coexistence.log",
-        "optimized-srcds/results.json"
+        "optimized-srcds/results.json",
+        "p5/r19/integration.json"
       ],
-      "actual": "Current optimized engine CALL observer and shutdown detour remain in SteamWorks, SDK init bridge in SourceTVSupport. Three original successful init observations, two same-process reinits; optimized bounded-backup and snapshot tests pass.",
-      "historical_case_snapshot": "p5/history/p5-r8-with-optimized-followups-validation-results.json#T12"
+      "actual": "Historical evidence retained at the referenced checkpoint; current local x86 tests repeated. See current_ELF_runtime_validation for the new binary.",
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T12",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": null,
+      "historical_actual": "Current optimized engine CALL observer and shutdown detour remain in SteamWorks, SDK init bridge in SourceTVSupport. Three original successful init observations, two same-process reinits; optimized bounded-backup and snapshot tests pass.",
+      "current_ELF_runtime_validation": "not repeated; historical integration evidence is not transferred automatically"
     },
     {
       "id": "T13",
@@ -902,15 +729,20 @@
         "p5-r3-auth-srcds/results.json",
         "p5-r6-auth-srcds/results.json",
         "optimized-srcds/results.json",
-        "identity-negatives-srcds/results.json"
+        "identity-negatives-srcds/results.json",
+        "p5/r19/integration.json"
       ],
-      "actual": "R12 SRCDS x86: authorized human matches SourceMod; bot and human capacities sufficient/exact/truncated/5/2/1/0 honor counts, NUL and canaries. -1/INT_MIN rejected unchanged; invalid address rejected; zero/negative address precedence observed. Native errors logged normally. R13 recompiles and packages the same accepted identity harness; extension runtime bytes unchanged.",
+      "actual": "Historical evidence retained at the referenced checkpoint; current local x86 tests repeated. See current_ELF_runtime_validation for the new binary.",
       "prior_candidate_evidence": {
         "path": "auth014-srcds/results.json",
         "candidate_sha256": "ddfdf9bf2f9bde625719ba171c59f7cac8b56cbe136a15e4911c7acbf00383ad",
         "scope": "Real authorized human, matching integer stats and failed float sentinel / textual identity observed in R3; not transferred to final candidate."
       },
-      "historical_case_snapshot": "p5/history/p5-r14-with-T11-followup-validation-results.json#T15"
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T15",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+      "historical_actual": "R12 SRCDS x86: authorized human matches SourceMod; bot and human capacities sufficient/exact/truncated/5/2/1/0 honor counts, NUL and canaries. -1/INT_MIN rejected unchanged; invalid address rejected; zero/negative address precedence observed. Native errors logged normally. R13 recompiles and packages the same accepted identity harness; extension runtime bytes unchanged.",
+      "current_ELF_runtime_validation": "not repeated; historical integration evidence is not transferred automatically"
     },
     {
       "id": "T16",
@@ -926,10 +758,15 @@
       "evidence": [
         "t08-coexist-srcds/results.json",
         "optimized-srcds/results.json",
-        "t16-extension-srcds/results.json"
+        "t16-extension-srcds/results.json",
+        "p5/r19/integration.json"
       ],
-      "actual": "R11 optimized 839ff075 in SRCDS x86 PID 105960: cold host connected without SteamWorks, console late load and HTTP pass. Two quiescent console unload/reload cycles after removing probe consumer: module unmaps, library/cvar removed, exact engine CALL/shutdown bytes restored, SourceTVSupport init bytes unchanged, client/server pipes remain 1/2. Three add/two remove library events, four HTTP smokes, one subsequent newgame with successful init and HTTP, clean quit and DEV restored. Minimal isolated harness set; no force, active-callback unload, full consumer-stack or global heap claim. R12 recompiles and includes the accepted independent observer source without changing extension runtime bytes.",
-      "historical_case_snapshot": "p5/history/p5-r14-with-T11-followup-validation-results.json#T16"
+      "actual": "Historical evidence retained at the referenced checkpoint; current local x86 tests repeated. See current_ELF_runtime_validation for the new binary.",
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T16",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+      "historical_actual": "R11 optimized 839ff075 in SRCDS x86 PID 105960: cold host connected without SteamWorks, console late load and HTTP pass. Two quiescent console unload/reload cycles after removing probe consumer: module unmaps, library/cvar removed, exact engine CALL/shutdown bytes restored, SourceTVSupport init bytes unchanged, client/server pipes remain 1/2. Three add/two remove library events, four HTTP smokes, one subsequent newgame with successful init and HTTP, clean quit and DEV restored. Minimal isolated harness set; no force, active-callback unload, full consumer-stack or global heap claim. R12 recompiles and includes the accepted independent observer source without changing extension runtime bytes.",
+      "current_ELF_runtime_validation": "not repeated; historical integration evidence is not transferred automatically"
     },
     {
       "id": "T17",
@@ -947,11 +784,16 @@
         "t08-coexist-srcds/initial-http.json",
         "t08-coexist-srcds/after-reinit-1-http.json",
         "t08-coexist-srcds/after-reinit-2-http.json",
-        "p5/r18/test-http-stream-context.log",
-        "optimized-srcds/results.json"
+        "optimized-srcds/results.json",
+        "p5/r19/integration.json",
+        "review12-srcds/results.json"
       ],
-      "actual": "Current optimized host: three eight-case rounds and one probe, 25 completions with zero harness failures, text/binary NUL/empty/503/refused/timeout/invalid TLS; 18 streaming bytes and both context cells intact.",
-      "historical_case_snapshot": "p5/history/p5-r8-with-optimized-followups-validation-results.json#T17"
+      "actual": "Historical evidence retained at the referenced checkpoint; current local x86 tests repeated. See current_ELF_runtime_validation for the new binary.",
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T17",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+      "historical_actual": "Current optimized host: three eight-case rounds and one probe, 25 completions with zero harness failures, text/binary NUL/empty/503/refused/timeout/invalid TLS; 18 streaming bytes and both context cells intact.",
+      "current_ELF_runtime_validation": "36 real SteamHTTP body/capacity reads, six completions, pending-read output preservation; other historical HTTP branches not repeated"
     },
     {
       "id": "T18",
@@ -969,11 +811,15 @@
         "t08-coexist-srcds/initial-http.json",
         "t08-coexist-srcds/after-reinit-1-http.json",
         "t08-coexist-srcds/after-reinit-2-http.json",
-        "p5/r18/test-http-stream-context.log",
-        "optimized-srcds/results.json"
+        "optimized-srcds/results.json",
+        "p5/r19/integration.json"
       ],
-      "actual": "Current optimized host: complete HTTP cases, 3 streaming headers and 18 valid binary bytes with full context across reinits; exact scalar conditions also pass deterministic tests.",
-      "historical_case_snapshot": "p5/history/p5-r8-with-optimized-followups-validation-results.json#T18"
+      "actual": "Historical evidence retained at the referenced checkpoint; current local x86 tests repeated. See current_ELF_runtime_validation for the new binary.",
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T18",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+      "historical_actual": "Current optimized host: complete HTTP cases, 3 streaming headers and 18 valid binary bytes with full context across reinits; exact scalar conditions also pass deterministic tests.",
+      "current_ELF_runtime_validation": "not repeated; historical integration evidence is not transferred automatically"
     },
     {
       "id": "T19",
@@ -988,9 +834,15 @@
         "I"
       ],
       "evidence": [
-        "test-typed-boundary: HTTP lengths and handle ownership boundaries"
+        "test-typed-boundary: HTTP lengths and handle ownership boundaries",
+        "p5/r19/integration.json"
       ],
-      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U."
+      "actual": "Passed repeated R19 x86 suites with simulated providers; scope remains unit/deterministic.",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": null,
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T19",
+      "historical_actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U.",
+      "current_ELF_runtime_validation": "not required for this deterministic scope"
     },
     {
       "id": "T20",
@@ -1005,12 +857,16 @@
       "pending_levels": [],
       "evidence": [
         "t08-coexist-srcds/results.json",
-        "p5/r18/test-resource-lifecycle.log",
         "optimized-srcds/results.json",
-        "t20-owner-srcds/results.json"
+        "t20-owner-srcds/results.json",
+        "p5/r19/integration.json"
       ],
-      "actual": "Current R10 839ff075 in SRCDS x86: positive held response dispatches while owner remains loaded and safely closes in callback. Two pending-owner unload cycles each remove visible owner HTTPHandle 1->0; same filename reloaded before old response release, fresh probes pass before/after, no old completion/error/crash in seven-second post-release window per cycle. Same process/modules, clean quit and original DEV restored. Global heap/SDK allocation behavior and extension hot unload not inferred. R11 recompiles and packages the same accepted owner harness; runtime ELF unchanged. R12 keeps the same owner harness and runtime; no new server run.",
-      "historical_case_snapshot": "p5/history/p5-r14-with-T11-followup-validation-results.json#T20"
+      "actual": "Historical evidence retained at the referenced checkpoint; current local x86 tests repeated. See current_ELF_runtime_validation for the new binary.",
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T20",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+      "historical_actual": "Current R10 839ff075 in SRCDS x86: positive held response dispatches while owner remains loaded and safely closes in callback. Two pending-owner unload cycles each remove visible owner HTTPHandle 1->0; same filename reloaded before old response release, fresh probes pass before/after, no old completion/error/crash in seven-second post-release window per cycle. Same process/modules, clean quit and original DEV restored. Global heap/SDK allocation behavior and extension hot unload not inferred. R11 recompiles and packages the same accepted owner harness; runtime ELF unchanged. R12 keeps the same owner harness and runtime; no new server run.",
+      "current_ELF_runtime_validation": "not repeated; historical integration evidence is not transferred automatically"
     },
     {
       "id": "T21",
@@ -1024,12 +880,16 @@
       ],
       "pending_levels": [],
       "evidence": [
-        "p5/r18/test-resource-lifecycle.log",
         "t08-coexist-srcds/results.json",
-        "optimized-srcds/results.json"
+        "optimized-srcds/results.json",
+        "p5/r19/integration.json"
       ],
-      "actual": "Current optimized held response crosses real shutdown; no obsolete callback in seven-second post-release window, safe retained-handle close. Broader races remain open.",
-      "historical_case_snapshot": "p5/history/p5-r8-with-optimized-followups-validation-results.json#T21"
+      "actual": "Historical evidence retained at the referenced checkpoint; current local x86 tests repeated. See current_ELF_runtime_validation for the new binary.",
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T21",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+      "historical_actual": "Current optimized held response crosses real shutdown; no obsolete callback in seven-second post-release window, safe retained-handle close. Broader races remain open.",
+      "current_ELF_runtime_validation": "not repeated; historical integration evidence is not transferred automatically"
     },
     {
       "id": "T22",
@@ -1045,9 +905,15 @@
         "R"
       ],
       "evidence": [
-        "test-typed-boundary: production GC native, simulated success/no message/small buffer"
+        "test-typed-boundary: production GC native, simulated success/no message/small buffer",
+        "p5/r19/integration.json"
       ],
-      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U."
+      "actual": "Passed repeated R19 x86 suites with simulated providers; scope remains unit/deterministic.",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": null,
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T22",
+      "historical_actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U.",
+      "current_ELF_runtime_validation": "not required for this deterministic scope"
     },
     {
       "id": "T23",
@@ -1061,16 +927,20 @@
       ],
       "pending_levels": [],
       "evidence": [
-        "p5/r18/test-auth-binding.log",
-        "p5/r18/test-auth-forward.log",
         "t08-coexist-srcds/results.json",
         "p5-r6-auth-srcds/results.json",
         "optimized-srcds/results.json",
         "forward-consumers-srcds/results.json",
-        "forward-consumers-srcds/restart-semantics-final.log"
+        "forward-consumers-srcds/restart-semantics-final.log",
+        "p5/r19/integration.json",
+        "review12-srcds/results.json"
       ],
-      "actual": "R13 SRCDS x86: twelve real candidate managed forwards, seven receiver configurations (0/1/2/3 consumers and unload/reload/reverse order), eight result scenarios each: 672 dispatches, 4803 checks, zero positive failures. ET_Ignore/ET_Hook/ET_Event, parameters, high-bit/binary/embedded NUL, auth no-copyback, token copyback and dispatch status vs result verified. Wrong-order negative control detected. Restart hook mapping has 109 deterministic optimized x86 checks and matching baseline/candidate binary comparison; misleading include comment corrected, historical implementation/signature preserved. Direct synthetic IForward dispatch does not establish real SDK event generation or GC availability (T11/T32). R14 incorporates the corrected include comment and test sources, recompiles both forward SMX and the diagnostic helper, and runs the 109 restart checks as a permanent integrated suite plus ASan/LSan/UBSan. Runtime ELF unchanged; no new server run.",
-      "historical_case_snapshot": "p5/history/p5-r14-with-T11-followup-validation-results.json#T23"
+      "actual": "Historical evidence retained at the referenced checkpoint; current local x86 tests repeated. See current_ELF_runtime_validation for the new binary.",
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T23",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+      "historical_actual": "R13 SRCDS x86: twelve real candidate managed forwards, seven receiver configurations (0/1/2/3 consumers and unload/reload/reverse order), eight result scenarios each: 672 dispatches, 4803 checks, zero positive failures. ET_Ignore/ET_Hook/ET_Event, parameters, high-bit/binary/embedded NUL, auth no-copyback, token copyback and dispatch status vs result verified. Wrong-order negative control detected. Restart hook mapping has 109 deterministic optimized x86 checks and matching baseline/candidate binary comparison; misleading include comment corrected, historical implementation/signature preserved. Direct synthetic IForward dispatch does not establish real SDK event generation or GC availability (T11/T32). R14 incorporates the corrected include comment and test sources, recompiles both forward SMX and the diagnostic helper, and runs the 109 restart checks as a permanent integrated suite plus ASan/LSan/UBSan. Runtime ELF unchanged; no new server run.",
+      "current_ELF_runtime_validation": "one consumer of actual GC receive forward for 80 real empty-queue and ten local-provider calls; historical multi-consumer matrix not repeated"
     },
     {
       "id": "T24",
@@ -1083,11 +953,15 @@
       ],
       "pending_levels": [],
       "evidence": [
-        "p5/r18/integration.json",
-        "p5/api-inventory.json"
+        "p5/api-inventory.json",
+        "p5/r19/integration.json"
       ],
-      "actual": "Current inventory matches P0 declarations, registrations, enum/typeset values and optionality; 14 x86 suites pass.",
-      "historical_case_snapshot": "p5/history/p5-r8-with-optimized-followups-validation-results.json#T24"
+      "actual": "Current R19 public API comparison / allowlisted archive validation; see local evidence and artifact manifest.",
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T24",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": null,
+      "historical_actual": "Current inventory matches P0 declarations, registrations, enum/typeset values and optionality; 14 x86 suites pass.",
+      "current_ELF_runtime_validation": "local packaging/API scope, not a live-server acceptance"
     },
     {
       "id": "T25",
@@ -1106,11 +980,16 @@
         "optimized-srcds/results.json",
         "consumer-compat-srcds/results.json",
         "last-two-srcds/results.json",
-        "last-two-resume-srcds/results.json"
+        "last-two-resume-srcds/results.json",
+        "p5/r19/integration.json"
       ],
-      "actual": "R15 actual candidate in LinuxGSM SRCDS x86: six real consumers (preexisting P5-R2 example/AoC and Family Share dist, plus three fresh recompilations) load/unload and pass scoped paths. Example HTTP 200/body16/close; AoC actual IP callback consumes SDK output with host metadata restored; Family Share native guards and one asynchronous local fallback per variant. 37 observer checks pass. Two newly compiled contract fixtures using archived/current include pass 11 H08/H09 checks each with an authorized real human: AppID 550 accepted by client/AccountID, 0/1 refused, stat reads match, buffer count/NUL/truncation/one/zero correct, failed stat outputs preserved. These fixtures are not historical precompiled SMX. Three-argument legacy HTTP call shape is rejected with expected native error 23/unchanged output and current-header compile error 034; full Connect not executed. T25 remains partial; no external repo/product/API edits. Protected config hashes/mtimes stable; same lab PID, controlled quit and original DEV restored. R16 integrates scoped results, preserves both external Connect gaps/full-business limits, packages new fixtures and recompiles all 14 harnesses. No new runtime acceptance in this update. Current two-case followup fixes both external Connect call sites and local declaration through a shared complete-text reader. Thirteen deterministic scenarios/83 actual x86 SourcePawn VM checks pass, 66 Python tests and compilation pass, inventory arity mismatches zero. Actual Connect and six real providers load; local assignment GET200 and actual competitive ACK callbacks reject oversized body preserving exact input and retire same input after valid ACK. Invalid first fixture attempts preserved. Human sharing/profile/group and broader business paths remain unaccepted. Resume 2026-11-16: 12 real social checks pass, including borrowed account distinction, Web API profile with owner disconnected and authorized group member/officer callback. Corrected full Connect passes cold start with six real providers, assignment HTTP200, exact synthetic competitive ACK and same-process map/HTTP200. 104 deterministic x86 VM checks and 66 Python tests pass. Original precompiled/recompiled agreed contracts satisfied; entire business logic or remote Core not inferred. Legacy three-argument HTTP binaries require recompilation. Genuine cold-start failure preserved and fixed in external consumer, no producer API change. R17 integrates the scoped R16 closure, verifies all 152 current producer source hashes and frozen acceptance evidence, recompiles observers/consumers and repeats local integration; no new server operation. R18 includes committed consumer/Windows corrections in refreshed source review and repeats local validation. Runtime acceptance retained by identical ELF/include; no new server operations.",
-      "historical_case_snapshot": "p5/history/p5-r15-with-T25-partial-followup-validation-results.json#T25",
-      "scope_reconciliation": "Earlier partial real-host/full-business wording is preserved in p5/history/p5-r16-before-human-resume-validation-results.json; closure uses original planned U/I or I contract and explicit evidence limits."
+      "actual": "Historical evidence retained at the referenced checkpoint; current local x86 tests repeated. See current_ELF_runtime_validation for the new binary.",
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T25",
+      "scope_reconciliation": "Earlier partial real-host/full-business wording is preserved in p5/history/p5-r16-before-human-resume-validation-results.json; closure uses original planned U/I or I contract and explicit evidence limits.",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+      "historical_actual": "R15 actual candidate in LinuxGSM SRCDS x86: six real consumers (preexisting P5-R2 example/AoC and Family Share dist, plus three fresh recompilations) load/unload and pass scoped paths. Example HTTP 200/body16/close; AoC actual IP callback consumes SDK output with host metadata restored; Family Share native guards and one asynchronous local fallback per variant. 37 observer checks pass. Two newly compiled contract fixtures using archived/current include pass 11 H08/H09 checks each with an authorized real human: AppID 550 accepted by client/AccountID, 0/1 refused, stat reads match, buffer count/NUL/truncation/one/zero correct, failed stat outputs preserved. These fixtures are not historical precompiled SMX. Three-argument legacy HTTP call shape is rejected with expected native error 23/unchanged output and current-header compile error 034; full Connect not executed. T25 remains partial; no external repo/product/API edits. Protected config hashes/mtimes stable; same lab PID, controlled quit and original DEV restored. R16 integrates scoped results, preserves both external Connect gaps/full-business limits, packages new fixtures and recompiles all 14 harnesses. No new runtime acceptance in this update. Current two-case followup fixes both external Connect call sites and local declaration through a shared complete-text reader. Thirteen deterministic scenarios/83 actual x86 SourcePawn VM checks pass, 66 Python tests and compilation pass, inventory arity mismatches zero. Actual Connect and six real providers load; local assignment GET200 and actual competitive ACK callbacks reject oversized body preserving exact input and retire same input after valid ACK. Invalid first fixture attempts preserved. Human sharing/profile/group and broader business paths remain unaccepted. Resume 2026-11-16: 12 real social checks pass, including borrowed account distinction, Web API profile with owner disconnected and authorized group member/officer callback. Corrected full Connect passes cold start with six real providers, assignment HTTP200, exact synthetic competitive ACK and same-process map/HTTP200. 104 deterministic x86 VM checks and 66 Python tests pass. Original precompiled/recompiled agreed contracts satisfied; entire business logic or remote Core not inferred. Legacy three-argument HTTP binaries require recompilation. Genuine cold-start failure preserved and fixed in external consumer, no producer API change. R17 integrates the scoped R16 closure, verifies all 152 current producer source hashes and frozen acceptance evidence, recompiles observers/consumers and repeats local integration; no new server operation. R18 includes committed consumer/Windows corrections in refreshed source review and repeats local validation. Runtime acceptance retained by identical ELF/include; no new server operations.",
+      "current_ELF_runtime_validation": "not repeated; historical integration evidence is not transferred automatically"
     },
     {
       "id": "T26",
@@ -1124,14 +1003,18 @@
       ],
       "pending_levels": [],
       "evidence": [
-        ".build/p5-r18/review/manifest.json",
         "t08-coexist-srcds/results.json",
         "p5-r6-auth-srcds/results.json",
         "p5-r7-rollback-srcds/results.json",
-        "p5-r9-rollback-srcds/results.json"
+        "p5-r9-rollback-srcds/results.json",
+        "p5/r19/integration.json"
       ],
-      "actual": "T26 passed actual R9 candidate ZIP installed inside guest while stopped, optimized ELF/include mapped and startup/Steam/HTTP/context/callback correct with 135 plugin rows and clean quit. R10 rebuilt runtime payload is byte-identical; new R10 candidate ZIP docs/label locally verified, not newly installed. R11 keeps the same runtime files and rollback ZIP SHA; no new R11 server run. R12 runtime/rollback bytes match exercised artifacts; only candidate ZIP docs/label refreshed. R14 preserves the exercised ELF and rollback ZIP. Candidate include changes only documentation; new R14 archive installation is not claimed. R15 extension/include match the T11 R14 installed payload, and rollback ZIP matches the R9 exercised archive; new R15 ZIP not installed/applied in place. R16 retains exact rollback ZIP hash and repeats local roundtrip only; R16 candidate ZIP not installed. R17 fresh read-only baseline and local archived restore roundtrip pass; rollback ZIP preserves exact R9 exercised SHA. New candidate ZIP not installed. R18 renews read-only capture and local archived roundtrip; exact rollback SHA still exercised in R9, new candidate ZIP not installed.",
-      "historical_case_snapshot": "p5/history/p5-r14-with-T11-followup-validation-results.json#T26"
+      "actual": "Historical evidence retained at the referenced checkpoint; current local x86 tests repeated. See current_ELF_runtime_validation for the new binary.",
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T26",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+      "historical_actual": "T26 passed actual R9 candidate ZIP installed inside guest while stopped, optimized ELF/include mapped and startup/Steam/HTTP/context/callback correct with 135 plugin rows and clean quit. R10 rebuilt runtime payload is byte-identical; new R10 candidate ZIP docs/label locally verified, not newly installed. R11 keeps the same runtime files and rollback ZIP SHA; no new R11 server run. R12 runtime/rollback bytes match exercised artifacts; only candidate ZIP docs/label refreshed. R14 preserves the exercised ELF and rollback ZIP. Candidate include changes only documentation; new R14 archive installation is not claimed. R15 extension/include match the T11 R14 installed payload, and rollback ZIP matches the R9 exercised archive; new R15 ZIP not installed/applied in place. R16 retains exact rollback ZIP hash and repeats local roundtrip only; R16 candidate ZIP not installed. R17 fresh read-only baseline and local archived restore roundtrip pass; rollback ZIP preserves exact R9 exercised SHA. New candidate ZIP not installed. R18 renews read-only capture and local archived roundtrip; exact rollback SHA still exercised in R9, new candidate ZIP not installed.",
+      "current_ELF_runtime_validation": "not repeated; historical integration evidence is not transferred automatically"
     },
     {
       "id": "T27",
@@ -1144,10 +1027,15 @@
       ],
       "pending_levels": [],
       "evidence": [
-        ".build/p5-r18/review/manifest.json",
-        "scripts/prepare-review-artifacts.py"
+        "scripts/prepare-review-artifacts.py",
+        "p5/r19/integration.json"
       ],
-      "actual": "Allowlisted payload reviewed: no SDK/game libraries, secrets, server config, auth tickets or test SMX; license included"
+      "actual": "Current R19 public API comparison / allowlisted archive validation; see local evidence and artifact manifest.",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": null,
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T27",
+      "historical_actual": "Allowlisted payload reviewed: no SDK/game libraries, secrets, server config, auth tickets or test SMX; license included",
+      "current_ELF_runtime_validation": "local packaging/API scope, not a live-server acceptance"
     },
     {
       "id": "T28",
@@ -1162,9 +1050,15 @@
         "I"
       ],
       "evidence": [
-        "native suites: bad Pawn addresses before output/side effects"
+        "native suites: bad Pawn addresses before output/side effects",
+        "p5/r19/integration.json"
       ],
-      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U."
+      "actual": "Passed repeated R19 x86 suites with simulated providers; scope remains unit/deterministic.",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": null,
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T28",
+      "historical_actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U.",
+      "current_ELF_runtime_validation": "not required for this deterministic scope"
     },
     {
       "id": "T29",
@@ -1184,16 +1078,21 @@
         "optimized-srcds/results.json",
         "identity-negatives-srcds/results.json",
         "last-two-srcds/results.json",
-        "last-two-resume-srcds/results.json"
+        "last-two-resume-srcds/results.json",
+        "p5/r19/integration.json"
       ],
-      "actual": "R12 real host: owned bot rejected for stats, public/individual zero-account textual fallback; disconnected client rejects identity/stats; client 0/out of range rejected before capacity. Early human connection rejects invalid entity reference (native error 23); same serial later authorized matches SourceMod and RequestStats accepts. This does not prove connected unauthorized false branch or inconsistent validated identity. R13 retains this partial scope and repeats deterministic identity suites; no additional real-host paths are inferred. R14 preserves remaining real-host identity gaps. R15 retains the remaining real-host identity gaps. Current followup audits actual loaded SourceMod getter/reference disassembly; AccountID-only or inconsistent validated values cannot arise normally from the same synchronous CSteamID provider. Guards remain covered by production-native deterministic x86 tests, not represented as induced real identities. A new serial-reference pending-client probe is compiled and armed without modifying auth/entity memory; real pending/authorized entry remains awaited. Resume 2026-11-16: actual connected nonbot unauthorized serial reference reaches RequestStats false with SP_ERROR_NONE, followed by same-client authorized positive control; six checks pass. Validated AccountID-only/inconsistent values are not normally reachable in the audited synchronous provider; production-native deterministic guards and binary provider invariant cover these defensive alternatives. Original U/I criterion satisfied; no forged real identities or memory changes, other providers not covered. R17 integrates the scoped R16 closure, verifies all 152 current producer source hashes and frozen acceptance evidence, recompiles observers/consumers and repeats local integration; no new server operation. R18 includes committed consumer/Windows corrections in refreshed source review and repeats local validation. Runtime acceptance retained by identical ELF/include; no new server operations.",
+      "actual": "Historical evidence retained at the referenced checkpoint; current local x86 tests repeated. See current_ELF_runtime_validation for the new binary.",
       "prior_candidate_evidence": {
         "path": "auth014-srcds/results.json",
         "candidate_sha256": "ddfdf9bf2f9bde625719ba171c59f7cac8b56cbe136a15e4911c7acbf00383ad",
         "scope": "Real authorized human, matching integer stats and failed float sentinel / textual identity observed in R3; not transferred to final candidate."
       },
-      "historical_case_snapshot": "p5/history/p5-r8-with-optimized-followups-validation-results.json#T29",
-      "scope_reconciliation": "Earlier partial real-host/full-business wording is preserved in p5/history/p5-r16-before-human-resume-validation-results.json; closure uses original planned U/I or I contract and explicit evidence limits."
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T29",
+      "scope_reconciliation": "Earlier partial real-host/full-business wording is preserved in p5/history/p5-r16-before-human-resume-validation-results.json; closure uses original planned U/I or I contract and explicit evidence limits.",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+      "historical_actual": "R12 real host: owned bot rejected for stats, public/individual zero-account textual fallback; disconnected client rejects identity/stats; client 0/out of range rejected before capacity. Early human connection rejects invalid entity reference (native error 23); same serial later authorized matches SourceMod and RequestStats accepts. This does not prove connected unauthorized false branch or inconsistent validated identity. R13 retains this partial scope and repeats deterministic identity suites; no additional real-host paths are inferred. R14 preserves remaining real-host identity gaps. R15 retains the remaining real-host identity gaps. Current followup audits actual loaded SourceMod getter/reference disassembly; AccountID-only or inconsistent validated values cannot arise normally from the same synchronous CSteamID provider. Guards remain covered by production-native deterministic x86 tests, not represented as induced real identities. A new serial-reference pending-client probe is compiled and armed without modifying auth/entity memory; real pending/authorized entry remains awaited. Resume 2026-11-16: actual connected nonbot unauthorized serial reference reaches RequestStats false with SP_ERROR_NONE, followed by same-client authorized positive control; six checks pass. Validated AccountID-only/inconsistent values are not normally reachable in the audited synchronous provider; production-native deterministic guards and binary provider invariant cover these defensive alternatives. Original U/I criterion satisfied; no forged real identities or memory changes, other providers not covered. R17 integrates the scoped R16 closure, verifies all 152 current producer source hashes and frozen acceptance evidence, recompiles observers/consumers and repeats local integration; no new server operation. R18 includes committed consumer/Windows corrections in refreshed source review and repeats local validation. Runtime acceptance retained by identical ELF/include; no new server operations.",
+      "current_ELF_runtime_validation": "not repeated; historical integration evidence is not transferred automatically"
     },
     {
       "id": "T30",
@@ -1208,9 +1107,15 @@
         "I"
       ],
       "evidence": [
-        "stats/typed suites: high bits, AppID mismatch, size bounds"
+        "stats/typed suites: high bits, AppID mismatch, size bounds",
+        "p5/r19/integration.json"
       ],
-      "actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U."
+      "actual": "Passed repeated R19 x86 suites with simulated providers; scope remains unit/deterministic.",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": null,
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T30",
+      "historical_actual": "Passed in current Linux x86 suites with simulated providers; scope limited to U.",
+      "current_ELF_runtime_validation": "not required for this deterministic scope"
     },
     {
       "id": "T31",
@@ -1229,10 +1134,15 @@
         "tests/lifecycle_profile_identity_test.cpp",
         "tests/lifecycle_profile_rejection_test.cpp",
         "../p4/validation-results.json",
-        "optimized-srcds/results.json"
+        "optimized-srcds/results.json",
+        "p5/r19/integration.json"
       ],
-      "actual": "Actual selector rejects unknown/ambiguous identity and architecture before patching; current optimized known-pair startup/reinit passes in SRCDS. Unknown real binary not installed.",
-      "historical_case_snapshot": "p5/history/p5-r8-with-optimized-followups-validation-results.json#T31"
+      "actual": "Historical evidence retained at the referenced checkpoint; current local x86 tests repeated. See current_ELF_runtime_validation for the new binary.",
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T31",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": null,
+      "historical_actual": "Actual selector rejects unknown/ambiguous identity and architecture before patching; current optimized known-pair startup/reinit passes in SRCDS. Unknown real binary not installed.",
+      "current_ELF_runtime_validation": "not repeated; historical integration evidence is not transferred automatically"
     },
     {
       "id": "T32",
@@ -1248,10 +1158,15 @@
       "evidence": [
         "p5-integration.md",
         "compatibility.md",
-        "connection-srcds/results.json"
+        "connection-srcds/results.json",
+        "p5/r19/integration.json"
       ],
-      "actual": "R16 actual ZIP in isolated LinuxGSM SRCDS x86: one 51.52s scoped egress DROP cycle yields real SDK disconnect reason3 and automatic reconnect. Same PID/start ticks/module mappings, IsLoaded true while IsConnected false, nine getter results unchanged (eight provided/Matchmaking absent), retained HTTP response and fresh loopback HTTP/context pass during and after outage; invalid stat output preserved. 81 checks/zero failures, three HTTP completions, clean quit/no error logs. Exact container cgroup+UID firewall rules removed and independently verified; original DEV restored with four hashes. Fifteen x86 suites pass. Does not accept prolonged outages, remote HTTP/GC or positive human stats.",
-      "historical_case_snapshot": "p5/history/p5-r16-before-T32-followup-validation-results.json#T32"
+      "actual": "Historical evidence retained at the referenced checkpoint; current local x86 tests repeated. See current_ELF_runtime_validation for the new binary.",
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T32",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+      "historical_actual": "R16 actual ZIP in isolated LinuxGSM SRCDS x86: one 51.52s scoped egress DROP cycle yields real SDK disconnect reason3 and automatic reconnect. Same PID/start ticks/module mappings, IsLoaded true while IsConnected false, nine getter results unchanged (eight provided/Matchmaking absent), retained HTTP response and fresh loopback HTTP/context pass during and after outage; invalid stat output preserved. 81 checks/zero failures, three HTTP completions, clean quit/no error logs. Exact container cgroup+UID firewall rules removed and independently verified; original DEV restored with four hashes. Fifteen x86 suites pass. Does not accept prolonged outages, remote HTTP/GC or positive human stats.",
+      "current_ELF_runtime_validation": "not repeated; historical integration evidence is not transferred automatically"
     },
     {
       "id": "T33",
@@ -1267,10 +1182,15 @@
       "evidence": [
         "p5-integration.md",
         "compatibility.md",
-        "soak-srcds/results.json"
+        "soak-srcds/results.json",
+        "p5/r19/integration.json"
       ],
-      "actual": "R16 actual ZIP in isolated LinuxGSM SRCDS x86: 3min idle, 20min mixed loopback HTTP with drain windows, 3min recovery after warmup; 1980 requests/completions/closes, zero failures. Text/stream binary/context/503/delay verified; HTTP handles zero at every quiescent sample. Same PID/start ticks/modules, runtime/Steam present, no premature map end/error/per-frame logging. Final RSS delta 568 KiB, FD delta 0, last-ten RSS slope 0.000 KiB/min meet preregistered limits; CPU/frame/latency measured versus idle. Clean quit and original DEV restored. Fifteen x86 suites pass. Scoped 20min loopback soak, no production capacity/multi-hour/zero heap-leak claim.",
-      "historical_case_snapshot": "p5/history/p5-r16-with-T32-before-T33-followup-validation-results.json#T33"
+      "actual": "Historical evidence retained at the referenced checkpoint; current local x86 tests repeated. See current_ELF_runtime_validation for the new binary.",
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T33",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+      "historical_actual": "R16 actual ZIP in isolated LinuxGSM SRCDS x86: 3min idle, 20min mixed loopback HTTP with drain windows, 3min recovery after warmup; 1980 requests/completions/closes, zero failures. Text/stream binary/context/503/delay verified; HTTP handles zero at every quiescent sample. Same PID/start ticks/modules, runtime/Steam present, no premature map end/error/per-frame logging. Final RSS delta 568 KiB, FD delta 0, last-ten RSS slope 0.000 KiB/min meet preregistered limits; CPU/frame/latency measured versus idle. Clean quit and original DEV restored. Fifteen x86 suites pass. Scoped 20min loopback soak, no production capacity/multi-hour/zero heap-leak claim.",
+      "current_ELF_runtime_validation": "not repeated; historical integration evidence is not transferred automatically"
     },
     {
       "id": "T34",
@@ -1295,15 +1215,19 @@
       ],
       "pending_levels": [],
       "evidence": [
-        ".build/p5-r18/review/manifest.json",
         "auth014-srcds/cleanup.json",
         "http-stream-srcds/cleanup.json",
         "p5-r5-rollback-srcds/results.json",
         "p5-r7-rollback-srcds/results.json",
-        "p5-r9-rollback-srcds/results.json"
+        "p5-r9-rollback-srcds/results.json",
+        "p5/r19/integration.json"
       ],
-      "actual": "T35 passed actual R9 ZIP in-place restore after optimized 839ff075, exact original hashes/absent gamedata/configs preserved, fresh baseline PID and Steam/HTTP with identical 135 plugins. R10 regenerated rollback ZIP is byte-identical to that exercised archive and runtime payload unchanged. No new R10 server run; baseline known exit SIGSEGV preserved, clean baseline quit not accepted. R11 keeps the same runtime files and rollback ZIP SHA; no new R11 server run. R12 runtime/rollback bytes match exercised artifacts; only candidate ZIP docs/label refreshed. R14 preserves the exercised ELF and rollback ZIP. Candidate include changes only documentation; new R14 archive installation is not claimed. R15 extension/include match the T11 R14 installed payload, and rollback ZIP matches the R9 exercised archive; new R15 ZIP not installed/applied in place. R16 retains exact rollback ZIP hash and repeats local roundtrip only; R16 candidate ZIP not installed. R17 fresh read-only baseline and local archived restore roundtrip pass; rollback ZIP preserves exact R9 exercised SHA. New candidate ZIP not installed. R18 renews read-only capture and local archived roundtrip; exact rollback SHA still exercised in R9, new candidate ZIP not installed.",
-      "historical_case_snapshot": "p5/history/p5-r14-with-T11-followup-validation-results.json#T35"
+      "actual": "Historical evidence retained at the referenced checkpoint; current local x86 tests repeated. See current_ELF_runtime_validation for the new binary.",
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T35",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+      "historical_actual": "T35 passed actual R9 ZIP in-place restore after optimized 839ff075, exact original hashes/absent gamedata/configs preserved, fresh baseline PID and Steam/HTTP with identical 135 plugins. R10 regenerated rollback ZIP is byte-identical to that exercised archive and runtime payload unchanged. No new R10 server run; baseline known exit SIGSEGV preserved, clean baseline quit not accepted. R11 keeps the same runtime files and rollback ZIP SHA; no new R11 server run. R12 runtime/rollback bytes match exercised artifacts; only candidate ZIP docs/label refreshed. R14 preserves the exercised ELF and rollback ZIP. Candidate include changes only documentation; new R14 archive installation is not claimed. R15 extension/include match the T11 R14 installed payload, and rollback ZIP matches the R9 exercised archive; new R15 ZIP not installed/applied in place. R16 retains exact rollback ZIP hash and repeats local roundtrip only; R16 candidate ZIP not installed. R17 fresh read-only baseline and local archived restore roundtrip pass; rollback ZIP preserves exact R9 exercised SHA. New candidate ZIP not installed. R18 renews read-only capture and local archived roundtrip; exact rollback SHA still exercised in R9, new candidate ZIP not installed.",
+      "current_ELF_runtime_validation": "not repeated; historical integration evidence is not transferred automatically"
     },
     {
       "id": "T36",
@@ -1317,476 +1241,255 @@
       ],
       "pending_levels": [],
       "evidence": [
-        "p5/r18/test-auth-forward.log",
-        "p5/r18/test-auth-binding.log",
         "p5-r6-auth-srcds/results.json",
-        "optimized-srcds/results.json"
+        "optimized-srcds/results.json",
+        "p5/r19/integration.json"
       ],
-      "actual": "Current optimized actual 014 target: one real auth forward, SourceMod dispatch 0, Steam validation 0 and both public validation forwards once. 227 synthetic CForward/VM and 18 SourceHook checks establish byte contract; optimized length-bound checks pass. No real ticket bytes or forward IDs inspected.",
+      "actual": "Historical evidence retained at the referenced checkpoint; current local x86 tests repeated. See current_ELF_runtime_validation for the new binary.",
       "integration_scope": "Real SourceMod host auth/validation counts plus synthetic SourceHook/CForward/VM byte-contract tests; no comparison of real ticket contents.",
       "prior_candidate_evidence": {
         "path": "auth014-srcds/results.json",
         "candidate_sha256": "ddfdf9bf2f9bde625719ba171c59f7cac8b56cbe136a15e4911c7acbf00383ad",
         "scope": "One real auth forward event and both public validation forwards. Synthetic marshalling tests establish byte contract; no real ticket comparison."
       },
-      "historical_case_snapshot": "p5/history/p5-r8-with-optimized-followups-validation-results.json#T36"
+      "historical_case_snapshot": "p5/history/p5-r18-before-review12-integration-validation-results.json#T36",
+      "status_scope": "Existing passing scoped evidence plus repeated R19 local suites; NOT a claim that every historical runtime path was repeated with the new ELF",
+      "historical_runtime_ELF_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+      "historical_actual": "Current optimized actual 014 target: one real auth forward, SourceMod dispatch 0, Steam validation 0 and both public validation forwards once. 227 synthetic CForward/VM and 18 SourceHook checks establish byte contract; optimized length-bound checks pass. No real ticket bytes or forward IDs inspected.",
+      "current_ELF_runtime_validation": "not repeated; historical integration evidence is not transferred automatically"
     }
   ],
+  "historical_case_totals": {
+    "passed_scoped": 33,
+    "not_applicable": 3,
+    "applies_to": "historical/local scopes stated per case, not fresh full runtime matrix on the changed ELF"
+  },
+  "result_scope": "R19 integrates REV-GC-01/REV-HTTP-02 and their exact native-payload acceptance. Fifteen x86 suites and sanitizers repeated; optimized accepted ELF reproduced; current consumer/harness compilation and fresh read-only rollback. Preserve historical runtime proof explicitly bound to old ELF; do not infer full current runtime acceptance. GC remote positive remains pending. New ZIPs validated locally only.",
+  "source_sha256": {
+    ".github/workflows/main.yml": "4819ca0a63746f281f1ff2f9ec8273a4cf358ed06ebb85fffdfcf364e2c2b0de",
+    "extension/AMBuilder": "20c4456b22475724800ba3312b8057c1a568a88586664e6181507a3982f48244",
+    "extension/CDetour/detourhelpers.h": "ea9e6d2866dfb4e763dc921d712f1694f47107e0faade9490ae10614f827c3a8",
+    "extension/CDetour/detours.cpp": "e67c202073164a6575a33137139b454cbab250fffb5f377b4bb1929b94feeea3",
+    "extension/CDetour/detours.h": "ea62f0ee139da2edec9e369b0eda94c559fb24dbf6cb13e9fe0a55a2efc79e9f",
+    "extension/asm/asm.c": "75ab667354202ee77c404f090e9bf1610ba0a72e6e3acebd3d6410d8cdd918c0",
+    "extension/asm/asm.h": "6d78a17764bb9ebd727904d9441b7ab96372545067a9e4167b4c278b48614e27",
+    "extension/core/swauthticket.h": "1ab8813f6850ed9c3231f921432600ac80b1e012e78f674a5898ee0c91f3b0bc",
+    "extension/core/swclientlifecycle.cpp": "4dc8ddb708b867cf6e968d7b998d13e7c3cea015a2f1040864507e258826619a",
+    "extension/core/swclientlifecycle.h": "801de18713143e1409fc441a02f45805f280cd1b49eb04141a24a520092f64e4",
+    "extension/core/swdebug.cpp": "87f9ee88c07ff1e76b9f35570da1f7f5f9f7c11089c561398fdf2d52afcff49d",
+    "extension/core/swdebug.h": "5804bce8237d1fc8111d0b93c1262ad8d20be740906877756c690fc54f22e335",
+    "extension/core/swdebuglog.h": "56aa29452f60b5c93ac66a52f62f7bdf454c233d17f2a3858ec9fe6e54ec5fa9",
+    "extension/core/swforwards.cpp": "d930c86595966ed13effc7b39032863bc947ec7577c0809f212b2d441f0ad1bd",
+    "extension/core/swforwards.h": "edc92f86e061ee8512d1d645a55faeb5ba6267da602632817c8c02009eec4dba",
+    "extension/core/swgameauth014.h": "bceac91310f61c80ed666e67ac8338b9e8b67e4065fc666be48b2ae36d879000",
+    "extension/core/swgamedata.cpp": "08762de8bdd474dd611e729df5be54291a12467d6e4c26c524f157b104976771",
+    "extension/core/swgamedata.h": "fdfb11ec5485dc30ac65e3a21da0f2a3daed12221b3681a347f84f0b628de2a7",
+    "extension/core/swgameserver.cpp": "a5a1c75d4d330254186282f58b9af00ea3c56b2dcdc652dc5e6d419368e99100",
+    "extension/core/swgameserver.h": "b2218bd75897a23277e36b551d05b041a33ade23a466ece2a4e02a24810d9847",
+    "extension/core/swidentity.cpp": "e6fc10a80d4846c5fd21e3cb36b45d054191e0eed226796ba1a3eb9f680ddba3",
+    "extension/core/swinitcallsite.h": "f841e15d5c237f7b9bd25ef59da828fc57403adf8e790324c2985a16f26c57f8",
+    "extension/core/swinterfaces.h": "b3860e743113c78da93010179a7e8004b24061a22616f7dc737783fd2fd96966",
+    "extension/core/swlifecycleprofile.h": "034fa2eba2e0a5dcccd7d906b949a410f971f5c168e01746b7aeec799a2d54fa",
+    "extension/core/swpawn.h": "53424cd236fa2aa5ed09d851abde77a809c4f72517670bdfa1571d895c86fd06",
+    "extension/core/swtypes.h": "efd060d68cb94eded7877cd97a5c031c860a1807a0e16e6f9965accc60016564",
+    "extension/extension.cpp": "2c9326747631261dcceff02441c9242b611a3a15e64f78d8a8b1a2b7f4a3dc50",
+    "extension/extension.h": "2af4f18e6b29abb9b3349f131332b82758443b1e3c099d104709d58f20206371",
+    "extension/hooks/swgchooks.cpp": "7144084af716c17d73ef2b956c87c22a0ff147f2a4f532b790bf189324a7b11f",
+    "extension/hooks/swgchooks.h": "f2e8e57ba1c2ddb971f7617aa01e75fc78df6a7272958c4c5f13c545d0608bb9",
+    "extension/hooks/swgsdetours.cpp": "077392afe9a07fd06380118eef1d2ce4592778c8b6a70b097c7a660988d299bb",
+    "extension/hooks/swgsdetours.h": "589cd716d9d717260d25e08aa28a406d0692597aa6b1565e8ab3038fbc192cda",
+    "extension/hooks/swgshooks.cpp": "b4e0426f8099d2ce5ebad8f79144a98b0b3de8062e4760a509bb20d3195ee18e",
+    "extension/hooks/swgshooks.h": "7185a644f7a0c8874d433263d81fb2d6bc54d4fda83ee355a9bbfcf5c5ba0c62",
+    "extension/http/swhttp.cpp": "cf34b30c403d8b928b81742e98a5200c6117db96c65bd36feaf44b814bb84082",
+    "extension/http/swhttp.h": "f5331691cf3cf2dbe36c1cd6bd55bd39c93e0c3c37f492c54edebcef0228b653",
+    "extension/http/swhttprequest.cpp": "e630708e94ab0ec0640c578da888c197a3d5a29a9b9005809ee3df6531662760",
+    "extension/http/swhttprequest.h": "e6e676d284e246b4de125c4688c48360d64653e46b72e6be8f60025b6bab45a9",
+    "extension/natives/gcnatives.cpp": "ae2fda2f2c57a36794a6212559b688425999da2d1bc2b63e5058e41a13914175",
+    "extension/natives/gcnatives.h": "5d2870d2358736f3e4767eaf06766cdc4a7af5066620fa209f02143259fdf3ca",
+    "extension/natives/gsnatives.cpp": "3151d3ea22f55fc2fdfdf26f9e0186d05d9003bd299e095f41b8ccc801291ab4",
+    "extension/natives/gsnatives.h": "46da15d868d44d590af78faf177a1e6ef981e56b3aa664c9afad71d3a7350839",
+    "extension/natives/ssnatives.cpp": "4ba91f9a23bbf5ae360c75f002cc519d553027d582f1b113d99cda084508011c",
+    "extension/natives/ssnatives.h": "a51c6701115845fc72b37a137bbf66fcb89fd879f0265d3672e2a2bf89b7bb1c",
+    "extension/sdk/smsdk_config.h": "f1b0cb954c3690d022dd1c74cfcdb282f21b7c21a795dd33d185af273013de6c",
+    "extension/sdk/smsdk_ext.cpp": "65e47a43ecf14a93653badf5c470a1d8a7c7f25b8bb9b9e7dbee1388d73daafb",
+    "extension/sdk/smsdk_ext.h": "7100fb30b2f4b0cc58fc19eee9aae9b5a5f1324211f6d0bdf8b4c72930e28534",
+    "extension/steamtools/blob.h": "e0b7531c85093661a87a8bbc5a82ac6607b31dfe73e2bf9b698706f57bcc0585",
+    "extension/steamtools/ticket.h": "c11f22200702275ab425a04cc18b194de33c1b71316e5d143f534466e54a9917",
+    "patches/sourcepawn/README.md": "40172e50fefa0853b66c5baa767cf4ec5211bc13cb0b6b7fbc2e7dbd37f1010d",
+    "patches/sourcepawn/environment-ownership.patch": "f07d26c38b2fb384fd120c1e1828ca92fc1c7ac8767bae7f88469a572f2a8185",
+    "patches/sourcepawn/test-vm-only.patch": "1fe0826dd430ed15dbdb097d92ced36070a3cff884ec306459f09f913c45bd0b",
+    "scripting/include/steamworks.inc": "969541624a2ba2f14aa07e040f96e6a50db40503baa21cba6206e0b1bd25aad8",
+    "scripts/build-buffer-fixture.sh": "7a1ffbe8ad324f9e24c403e679e706459fdb98b53cc0854f61a26629203b03df",
+    "scripts/build-capability-fixture.sh": "e261a6a6f20577ff690f532baae5be83c7435c26792216f27cdeb318580b91b9",
+    "scripts/build-forward-fixture.sh": "a591db4cc6305f5860ce5a21347af551cd2ca9404a8e615ca1e91848d836a2b3",
+    "scripts/build-linux-l4d2.sh": "6e3a17da5eea0cce764391d1845afb774d99c6a168bc63bff082db65d088e30f",
+    "scripts/build-test-sourcepawn.sh": "f6abdf66ffd45b0cd3b37e422ee7cab45b03b3c381049a21561939591b8f2e09",
+    "scripts/build-windows-l4d2.ps1": "bae0fb7a6c5c8ccdbd8a31ed7e2981ec75357a464fea3328bf03ba86e76a00d8",
+    "scripts/ci-validate-artifact.sh": "00912b02f34ef4b3bfaeb5f73bb2bda7e71d463affa5cd1bf6745aef77715958",
+    "scripts/fetch-linux-deps.sh": "719e2a5851fa8582c254c2b059125895fb962f46f45ec9c13993b704761bff71",
+    "scripts/fetch-windows-deps.ps1": "b1090e39bb5af5826187507563b5cc5c213f7fd3b5369db751363e05c5a5095c",
+    "scripts/generate-stats-acceptance-schema.py": "67ec36d8a43b671a0714df0bec9341461a029c699709585777070f9c491e2c9b",
+    "scripts/inspect-steamworks-module.py": "f51d31adbfe655aa68662c89a1beb70aa028deb03810aa64300f4aff892b717b",
+    "scripts/inventory-steamworks.py": "877c9eb1c88656d7981a082ca73be692d8f172e9b14d3277499d655ec3559227",
+    "scripts/package-release.py": "b6d415805d2719369294b81f843c6c0535901f1e2993e9b22c8823a046106fd6",
+    "scripts/prepare-review-artifacts.py": "1457b9241ba9139f443b6e1ca37e80876331227cb2954cbe8793a2d73b39567a",
+    "scripts/stage-artifact.py": "50f2a2c591ff66a6e0ead1bb9b3e1f3ec8f7561cb1c2617865602a8c651c1989",
+    "scripts/test-auth-binding.sh": "c9f03b34b55788a82ef33178ef34e1c37de52dd9283bba53677c0e298a67650b",
+    "scripts/test-auth-forward.sh": "85dabf69c7f2c23572506589812b414cd49c97694bee431332272bb01ad9d47e",
+    "scripts/test-binary-evidence.sh": "f0eba9355bbf6ae06742de026aa26d481a20d9504ace46e1525e30308168530d",
+    "scripts/test-debug-log.sh": "ab53c5c253dcacd7172a72e51e53703d85a80d34357e77e4bf7c620d016ecd0f",
+    "scripts/test-detours.sh": "85e449cde0488eab7676d21d1a73d68d0b9e87c47cf334b46f0f4fb89d1439f1",
+    "scripts/test-http-stream-context.sh": "c3dc3fe11c37675dfc2fdb25b9881bb48ca787f0681f904277a80b34bd883665",
+    "scripts/test-init-coexistence.sh": "4af784698319f6f9e66f57bf663c21b5afda0f26bc08b29276b49e0c533cb4d3",
+    "scripts/test-integration.py": "1d15020ee0468647fbedd4bbe15a7a2c895c69ffd91e751c066499f1bd82420a",
+    "scripts/test-public-ip.sh": "767bbbc2771050efac35d5bc909d3cc0122c37a1edf86c3cd8dcdb2a5d76c4cd",
+    "scripts/test-resource-lifecycle.sh": "d59f6354b0eebf1b5a3e07b74010ea5cfaa9093ee6265bd7df14a8247e25043f",
+    "scripts/test-restart-forward-semantics.sh": "cafca4d2189c150b4771b001479164a66665a0432fa8dd8bd949b01f4091d77e",
+    "scripts/test-sourcepawn-environment.sh": "d4bbe852941108bc666401e395514177230d3caec905280f2d88c96b6ea0d5e3",
+    "scripts/test-sourcepawn-vm-asan.sh": "c42d41450b397f3d501e3b525c4873fb0a7d7548532a88d1e37a3384d04ba0f0",
+    "scripts/test-stats-natives.sh": "b0bd7d760a65d8de48b971566c2cc176a64b5f9aac62044d5ebe58a2f5ad2f3d",
+    "scripts/test-steamid-string.sh": "60a34343807a12d7c0c1dedb9ff030355b329aba8961af82a348d5b3fc41c58b",
+    "scripts/test-typed-boundary.sh": "0fa3ed43b82b4325ffe31b213d3ca9e836974e27e96a57080af1e8552af8d282",
+    "scripts/validate-runtime-evidence.py": "5fd7d7d14b3e89a0a9f473dc24d18768fcd54bb30d1d59cf2f3b03defb659924",
+    "tests/README.md": "0bfd99c09f98076d403d157f5ec16aadfa0218a4ca2724c9b94547ed562e028d",
+    "tests/auth_binding_test.cpp": "4f6783f00d9ef7456967a40df64298b4823c5ed0daa440ed88fc0e3901c233c6",
+    "tests/auth_forward_receiver.sp": "108e3d8dc7609cfc0486c5080f3ec9a37b34376c91c86a3e84abf1fc227e8ae0",
+    "tests/auth_forward_test.cpp": "8b764f4afec580e441fa9f5252fe0b9f9f6f67fd043b31380b34362fdc0779d9",
+    "tests/binary_trampoline_test.cpp": "ca23ba2c1ca7030533da7734369ed6ff066fe38ce5339841ce896e49a95127e2",
+    "tests/cdetour_restore_test.cpp": "ac1f720f4c5adbd5d0d521db30da06bffbee8cdafa6460e0f4d68996f927340b",
+    "tests/client_lifecycle_test.cpp": "468cfd168ee5f65b754d500efd14fcf0bd674730e8fba54f2269a8c9823016b3",
+    "tests/debug_log_test.cpp": "252b8a7c1998fc862509c4d24e5fd48e4ef1488060e2751cdcdeb77eceadd651",
+    "tests/detours_lifecycle_test.cpp": "693bd0741739b6b33d801d9ca4d1e729a7d099ae17296e9a98f39fb5397e95b7",
+    "tests/detours_test_host.h": "e0d7520d765a3b7134a7f0b01e9615b813cdaed05f05cd923ecd4f45c3d99d93",
+    "tests/diagnostics/README.md": "a8a9d87a5fbaf2e610bb229d737a4784d283328f9d536388c484daf09a176e1b",
+    "tests/diagnostics/extension_load_probe.cpp": "208c9447310df69198774c12e74bc7d9a50d2ae901185e48ff20f453d6c5c88d",
+    "tests/diagnostics/gameserver_interface_probe.cpp": "a3321c97eceb633ef8f9a40998ac258e3a2fb3093e9d5abd12ef30399a73b40d",
+    "tests/diagnostics/http_stream_context_probe.cpp": "d2780e0f0c071d772e4580c5ac6bed9323837d0412b398c83c042ed0a0b8195b",
+    "tests/diagnostics/run_http_stream_context_probe.py": "3656799b36960dd71ee41ce89f6fd2cbc8cf8ca57708cec3c907b17f08f49406",
+    "tests/fixtures/gameserver014-prefix.json": "18f6d25487002f73afcffc2a1c146087c661e9017731d5ce73afa5e4a2582123",
+    "tests/forwards_lifecycle_test.cpp": "130526e8404c73bd04f9ad9980bed402bfd8ea322cbf08af39c6c7e3248b4167",
+    "tests/hooks_lifecycle_test.cpp": "7b43c2c94c47a94f1f96b8be2daceb781003d69f127c9214d130ebed95502361",
+    "tests/http_gc_boundary_test.cpp": "ffa2bcb194a36df364cd4ec67ad34111de07c2e0942af6cde3e718422d248ce6",
+    "tests/http_gc_test_host.h": "8d590da576fd643d44a120488ba292c5eb7ae4b36539cbcf3800fcf718900fdb",
+    "tests/http_lifecycle_test.cpp": "8e9417263efa9f0dec957ea4c13293e35f0131e8dca08a668842988ce9239d08",
+    "tests/http_stream_context_test.cpp": "71fb75ebecd45d60022e8ea05625ffbd38623ca4e39417d6b66f95be7e8c0b24",
+    "tests/http_text_response_test.cpp": "c54a2170d8ff472571ebf77e834f18b9531a8a7d691ca244f004c56bfe889811",
+    "tests/init_call_profile_test.cpp": "8c0b3b1ea3cded7b076ecb7f7f7bec20745e87a132300425a9a3a5026175f83f",
+    "tests/init_coexistence_test.cpp": "0ad26557ae4902e4f8e0a2698a99a17e7863460f6c46f7de371d2b0e01f55a93",
+    "tests/interface_registry_test.cpp": "2cb5426c4d8b81819127255205d3a9b8ca30c8f10f16b250f89eeadc47ce9c8c",
+    "tests/lifecycle_profile_identity_test.cpp": "300867c0ed2a638f435fbd4778e478f786c94b19170a66cfd9b98bebae526650",
+    "tests/lifecycle_profile_rejection_test.cpp": "c50ab965a59890330b7a9becf14496399f4cff850268030c5a8c05f197fb4d45",
+    "tests/public_ip_test.cpp": "fbaa92686816d702892f46ed04d85af537c0793b8e7bbbb50df759bd312a0841",
+    "tests/public_ip_test_host.h": "612b3c8a75aa47d48612c4b6432ca26246c3433c956abda5b9426aff1952ede2",
+    "tests/restart_forward_semantics_test.cpp": "5902f90dec6acf45719e9dbd0d448edad2573e5529c4394e69ba68e14417cd52",
+    "tests/review_artifacts_test.py": "8cb8c706493701e31d2a418a238bea962ca5044f6a00de02b6a8cbf87df117b0",
+    "tests/runtime/README.md": "15e6f5676d9382211f3449b95ab70a1b9945e60dd6b970bad575fc13e1c3d399",
+    "tests/runtime/buffer_fixture_sdk_config.h": "711077b59e17109b0a91913eb04fecb7a346aa695442e21b66cdc3a38eba7251",
+    "tests/runtime/capability_fixture_sdk_config.h": "3d0b0838a0b65971829e89a8739a1a35a188d73bf83cd1ae15f3cb0673d39a56",
+    "tests/runtime/forward_fixture_sdk_config.h": "e0e0811ddd6c2c576a163e393e7b4b122fcc77d5734fbf301278d28c918fcb3a",
+    "tests/runtime/http_fixture.py": "07a62b5e2150e7a258fc32cb5cdcfd1c30ab29901a53f2e9f951290ced9c3054",
+    "tests/runtime/steamworks_acceptance.sp": "ec2694f432e1e6a362e38192e79ccf952a9262de7622722bc41b58d073aec881",
+    "tests/runtime/steamworks_buffer_acceptance.sp": "a7771a9af6ee362e0628ab6cb0d12010d2404974cc0aaaebcaf90fd250ded606",
+    "tests/runtime/steamworks_buffer_fixture.cpp": "9fe2d3a5b4ad15875adb371efe2c5ad4e736c73b563219a3d4d4deb4471a874e",
+    "tests/runtime/steamworks_capability_acceptance.sp": "9595cce9c6ab2a927fdf400ffbf6602084d51a49f23102067af5aa033c45d82a",
+    "tests/runtime/steamworks_capability_fixture.cpp": "f21ba798322ff0042223093ea6768af51173e588efe53d94d56fe7aa707c854c",
+    "tests/runtime/steamworks_connection_observer.sp": "67366fc45916a4370b13be56f3691388d0aaa5639d56051022772e537249e6b7",
+    "tests/runtime/steamworks_consumer_contract.sp": "328a186d43a4d22614760a48d20eec8faca414d23e5b75e2305cf3cb2afce82b",
+    "tests/runtime/steamworks_consumer_observer.sp": "64ee4a9321895cfc79c6030eb5f64fa1a15c3d402b565ab84ed6b06e91a6a67f",
+    "tests/runtime/steamworks_consumer_social.sp": "f8fdb974dca13b43aaefbb56acdd36805c3886ebc1a524ecb1af8a09445591c3",
+    "tests/runtime/steamworks_extension_observer.sp": "5c8a9027151fc0fbf6c7d47e4318f041ee3fcc19ebb276bd87323d27b4a35dba",
+    "tests/runtime/steamworks_forward_acceptance.sp": "4d0712dc73e003a3bcfdf701bd9729fae404408513b8650e2a139ba26b1e936e",
+    "tests/runtime/steamworks_forward_fixture.cpp": "c095213519ef7d9c076a8afca3206d5161185522d6aef83d2f17d5e4d6f7d176",
+    "tests/runtime/steamworks_forward_receiver.sp": "6fb4d5b0165456a91cd3ca09704e52bd0b3fda7de728cd8fe742fe7081f73587",
+    "tests/runtime/steamworks_identity_acceptance.sp": "7bcb083fc03a713e57805df1c47994c7c8cee1bc4930303a3e474983e9ae124e",
+    "tests/runtime/steamworks_identity_pending.sp": "a7b39b5e2d8fb7583d36907e8d042bb6b806bdca615fdcd62e2d658c25f93112",
+    "tests/runtime/steamworks_legacy_http_consumer.sp": "6e7b1bf22aba395be4aae11f614802fc75f7575b91fd654028998857cc669171",
+    "tests/runtime/steamworks_lifecycle_inspect.sp": "98d76a6866ea4a9ebd121e46a31d6594db30b7315273c31b85fd7ac81d59daa6",
+    "tests/runtime/steamworks_lifecycle_pending.sp": "6c028a2e292a135bed132f985a65788d4a25e3eaece614d3db9fda994f7d3a2c",
+    "tests/runtime/steamworks_pending_owner.sp": "9dc7ad66a42ec5ee1f44a997f4604bdf236f42d539d7feae3d140dcd5fb1963f",
+    "tests/runtime/steamworks_rollback_acceptance.sp": "a5ec3331828e75cc55569b8e49884bd6d99daf51e3abd130e66e55bcc4551b3e",
+    "tests/runtime/steamworks_soak_observer.sp": "db990d12cc782c2b7d1546c60905601d33c628896294633b2c4237312df005da",
+    "tests/runtime/steamworks_stats_acceptance.sp": "033fbeed423ecabb8cf313920e013d42974c7533c264ade715f033070ac773ac",
+    "tests/runtime_evidence_test.py": "e2e22a898ed494955a284a80f93175a094ceaadb9df05f558cf5170d9bfea712",
+    "tests/runtime_lifecycle_test.cpp": "79d9d370d980d4532d0dc69efbb3cb91e1a9da31dc3e8b829849d71ff877872f",
+    "tests/sourcepawn-vm.Dockerfile": "878b8bcc019a518ed2775a20d1d4fd39a832b34b73f63da763755b0bb9097648",
+    "tests/sourcepawn_environment_test.cpp": "67f7a6db3a0ac2715d65c89e45a6b980999a81b04b1f1002acfa608f5eabfda9",
+    "tests/stats_natives_test.cpp": "d499fa3f1c9cadb5f8ac6dbf254667cead6db76cf13961d4d981a7e0eb8b5c41",
+    "tests/stats_requests_test.cpp": "c3a355aed7c6c078144af3bd79942b5eb716ce24f30c2d29ea7065cbde4b59c1",
+    "tests/stats_test_host.h": "832541ff7f2e9d7092158129fee350597736921d8a1c3f951d0f3753f7cb59df",
+    "tests/steam_callbacks_test_host.h": "49f5b9a70f9983dffadb8e565e44ddbc8475a3256745e4b22d2f9d07abdf71ea",
+    "tests/steamid_string_test.cpp": "3088ded3a47393b70d0d618475243f59247e1e8470703a1c8c8f99e7264a8182",
+    "tests/stubs/auth_server014.h": "30ef7188cc75c7966e4080afd418b710e92af215a2a87bb01459e2cac6311e30",
+    "tests/stubs/native_server015.h": "82842bd30e8fd26ec062b4b81ad7b3b86ea5bfa452d2d72b4ea5557ee1f17071",
+    "tests/stubs/sourcehook.h": "0a91de5937e44eac13be0707fc0e4d5f6f7c62114ae0f0cea318035ff4bceb10",
+    "tests/typed_boundary_test.cpp": "25b9b1dc4f760cd33eb7d4a2a1eb0391cf8cd1a15aee18a02192c8ad9033a4a8"
+  },
+  "consumers": {
+    "compiled": 3,
+    "report": "p5/r19/consumer-compilations.json",
+    "import_tables": "p5/r19/consumer-results.json",
+    "extra_contracts": "p5/r19/extra-consumer-checks.json",
+    "Connect_tests": 66,
+    "Connect_build": "passed with outputs in SteamWorks scratch only",
+    "Connect_accepted_runtime_manifest_matches_current_sources": true,
+    "Connect_runtime_repeated": false
+  },
+  "rollback": {
+    "captured_utc": "2026-11-16T14:10:11.356677+00:00",
+    "files_sha256": {
+      "extensions/steamworks.ext.so": "9ca37aadcd83448d49126d6a72babcb8ec97ec5a06c171b4821ae0ee3cf05d70",
+      "scripting/include/steamworks.inc": "e51bcd397139edc3d144f130c45f0f8edbf55d12278736e0134e4c650ec64f17"
+    },
+    "absent": [
+      "gamedata/steamworks.txt"
+    ],
+    "read_only": true,
+    "capture_method": "docker cp of owned files; read-only absence check; no server/process changes",
+    "baseline_unchanged": true,
+    "current_archive_applied_in_place": false,
+    "capture_scope": "read-only SteamWorks-owned files only",
+    "baseline_clean_shutdown_accepted": false,
+    "known_baseline_exit_SIGSEGV_preserved": true,
+    "roundtrip": "current candidate to archived baseline in disposable filesystem; no server operation",
+    "prior_applied_archive_sha256": "55153d557f3af7f71f1016c8c394dc74fe29e0cdc9511044c21de29e8bc6dffc",
+    "prior_in_place_evidence": "p5-r9-rollback-srcds/results.json",
+    "archive_sha256": "55153d557f3af7f71f1016c8c394dc74fe29e0cdc9511044c21de29e8bc6dffc"
+  },
+  "checks": {
+    "public_API": "all P0 contract fields passed",
+    "SDK": "55 inputs unchanged",
+    "runtime_harnesses_compiled": 19,
+    "stats_fixture": "733 keys unchanged",
+    "remote_CI": "not run for these uncommitted native changes; historical Windows CI does not certify current changes",
+    "no_new_server_operation": true,
+    "source_ZIP_clean_build_and_15_suites": "passed",
+    "diagnostic_extracted_replay": "227 forward checks and 16 ownership cycles passed; first launch lacked executable mode, chmod prescribed in README applied and replay passed",
+    "Connect_patch_roundtrip": "passed complete patch; all tracked target bytes match",
+    "rollback_roundtrip": "passed actual ZIPs; foreign CFG/plugin bytes and owned gamedata absence preserved",
+    "DEV_same_PID_selector_protected_hashes_before_after": true
+  },
+  "artifact_directory": ".build/p5-r19/review/",
+  "historical_checkpoint": "p5/history/p5-r18-before-review12-integration-validation-results.json",
+  "prior_checkpoint_committed_CI": "a0016a2 / historical successful R18 workflows only; not current native changes",
   "limitations": [
-    "Acceptance is scoped to documented Linux L4D2 x86 engine/SDK/provider and original T01-T36 contracts; no Windows/x64 or unknown version inference.",
-    "T13/T14/T34 do not apply to this profile.",
-    "T25 covers agreed consumer interfaces and tested paths, not whole BanSystem/Connect gameplay, remote Core or every optional dependency. Historical old/current header controls are fresh fixtures, not genuinely historical binaries.",
-    "Corrected Connect must be recompiled with five-argument HTTP reader contract. Legacy three-argument binaries remain rejected. R18 source review now includes the external correction patch and new internal helpers/tests; producer addons payload does not contain Connect.",
-    "T29 fallback/mismatched validated identity alternatives are deterministically tested, not induced on a real account; audited actual provider returns both validated identities from the same CSteamID. Other providers require separate evidence.",
-    "T11 minimum capabilities/GC local only; no remote GC backend delivery or all SDK methods.",
-    "T16 serial quiescent unload/reload only, no forced unload on active callback stacks. T20 measured pending-owner release windows are not a global SDK heap leak proof.",
-    "T32 one bounded loss/recovery cycle; T33 measured twenty-minute loopback workload, not multi-hour production capacity.",
-    "Archived baseline still faults at quit; candidate clean shutdown does not certify baseline shutdown.",
-    "R18 repeats optimized producer build, local x86 integration/sanitizers, consumer compilation and archived restore; new candidate ZIP is not installed. Previous runtime acceptance applies by exact ELF/include hashes, not by archive label.",
-    "Windows build/link CI is compiler evidence only, not SRCDS Windows runtime acceptance. R18 has no new remote CI run; cited successful CI belongs to unchanged committed product base cc52305. Earlier R17 archive remains historical; new R18 source archive contains both Windows fixes and complete Connect correction."
+    "Positive content from remote Steam GC remains pending",
+    "Other historical integration paths remain on their recorded ELF; not repeated in this packaging update",
+    "No Windows/x64 runtime or new remote CI",
+    "No global leak/OOM certification; deterministic/offline sanitizers remain separate from stock SRCDS",
+    "R19 candidate ZIP not installed; rollback only tested in local filesystem in this update"
   ],
-  "release_deployed": false,
-  "isolated_acceptance_run_in_followup": false,
-  "consumer_inventory_captured_before_auth_followup": false,
-  "deployed_in_this_update": false,
-  "container_started_at_user_request": false,
-  "stats_acceptance_summary": {
-    "evidence": "optimized-srcds/results.json",
-    "rounds": 2,
-    "schema_keys_per_round": 733,
-    "successful_float_keys": 12,
-    "missing_getter_reads": 16,
-    "all_outputs_preserved_on_failure": true,
-    "stats_writes": false,
-    "candidate_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-    "current_candidate_accepted": true
-  },
-  "observed_failures": [
-    {
-      "case": "T08",
-      "scope": "SIGSEGV on final process exit in candidate and archived baseline",
-      "evidence": "p5-r5-rollback-srcds/shutdown-core-stacks.json",
-      "exact_cause_resolved": true,
-      "corrected_candidate_evidence": "t08-shutdown/results.json",
-      "baseline_intentionally_unchanged": true
-    },
-    {
-      "case": "T08",
-      "scope": "Same-process reinitialization with usual SourceTVSupport consumer",
-      "evidence": "t08-reinit-srcds/results.json",
-      "immediate_dispatch_owner_identified": true,
-      "corrected": true,
-      "correction_implemented_locally": true,
-      "runtime_acceptance_pending": false,
-      "correction_evidence": "t08-init-coexistence/results.json",
-      "corrected_candidate_evidence": "t08-coexist-srcds/results.json",
-      "corrected_candidate_sha256": "82347b99d5130bd411cdc0b35d215dc87fc82d394a2252ccd83d5d4940b6ca5a",
-      "original_failed_candidate_unchanged": true
-    },
-    {
-      "scope": "Archived unchanged rollback baseline final quit",
-      "evidence": "p5-r7-rollback-srcds/core-audit.json",
-      "signal": 11,
-      "candidate_failed": false,
-      "cause_reanalyzed": false,
-      "baseline_intentionally_unchanged": true
-    },
-    {
-      "scope": "Archived unchanged rollback baseline final quit after R9 in-place restore",
-      "evidence": "p5-r9-rollback-srcds/core-audit.json",
-      "signal": 11,
-      "candidate_failed": false,
-      "cause_reanalyzed": false,
-      "baseline_intentionally_unchanged": true
-    }
-  ],
-  "historical_checkpoint_index": {
-    "history/p5-r5-with-t08-followups-compatibility.md": "94e4b09e839095af3554eb9ce1d4f164d26599b5c33131a2458964e4be6fe4cb",
-    "history/p5-r5-with-t08-followups-p5-integration.md": "3b9632cdf18a5e37aceac94acdd212918d005020586db55d7dc94b1c52f2a07c",
-    "history/p5-r5-with-t08-followups-p5-rollback.md": "80b59a5614c4f385acceb4ee51f21c376050fcdaa0af4028f2ce66a7bad87409",
-    "history/p5-r5-with-t08-followups-validation-results.json": "24d9806864ef143b55debc819c4e71fe4e602ba61a8f7638151c7c97b71a3042"
-  },
-  "historical_followup_snapshots": {
-    "path": "p5/history/p5-r8-with-optimized-followups-validation-results.json",
-    "fields_preserved_in_snapshot": [
-      "t08_shutdown_followup",
-      "t08_reinit_followup",
-      "t08_init_coexistence_fix",
-      "t08_coexist_srcds_followup",
-      "R7_reconciliation",
-      "R8_reconciliation",
-      "acceptance_followup_after_review_packaging",
-      "acceptance_followup_after_R6_packaging",
-      "acceptance_followup_after_R7_packaging",
-      "post_checkpoint_followups"
-    ]
-  },
-  "R9_reconciliation": {
-    "current_accepted_runtime_evidence": "optimized-srcds/results.json",
-    "optimized_build_correction": "optimized-build/results.json",
-    "same_runtime_SHA": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-    "known_baseline_restore_history": "p5-r7-rollback-srcds/results.json",
-    "canonical_variant_runtime_evidence": null,
-    "previous_matrix": "p5/history/p5-r8-with-optimized-followups-validation-results.json",
-    "prior_packages_unchanged": true,
-    "R9_archive_runtime_acceptance_repeated": true,
-    "accepted_install_rollback_evidence": "p5-r9-rollback-srcds/results.json"
-  },
-  "acceptance_followup_after_R9_packaging": {
-    "evidence": "p5-r9-rollback-srcds/results.json",
-    "prior_matrix": "p5/history/p5-r9-before-install-rollback-acceptance-validation-results.json",
-    "existing_archives_unchanged": true,
-    "production_touched": false
-  },
-  "R10_reconciliation": {
-    "current_runtime_acceptance": "optimized-srcds/results.json",
-    "accepted_install_rollback_evidence": "p5-r9-rollback-srcds/results.json",
-    "same_runtime_SHA": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-    "R9_candidate_archive_sha256": "327fc386c05454c90b8070f000102f8afbf143ff02e5092228942a8279e1dba1",
-    "exercised_rollback_archive_sha256": "55153d557f3af7f71f1016c8c394dc74fe29e0cdc9511044c21de29e8bc6dffc",
-    "T26_T35_remain_passed_scoped": true,
-    "new_R10_candidate_ZIP_installed": false,
-    "prior_packages_unchanged": true,
-    "previous_matrix": "p5/history/p5-r9-with-install-rollback-followup-validation-results.json"
-  },
-  "post_packaging_T20_followup": {
-    "evidence": "t20-owner-srcds/results.json",
-    "report": "t20-owner-srcds-acceptance.md",
-    "candidate_SHA_unchanged": true,
-    "product_sources_unchanged": true,
-    "test_harness_change": {
-      "path": "tests/runtime/steamworks_pending_owner.sp",
-      "packaged_R10_before_sha256": "7b75ab4ecb7e5562fce03a51a7927551175e5111e67c013b77c0f1945c0e0def",
-      "current_after_sha256": "9dc7ad66a42ec5ee1f44a997f4604bdf236f42d539d7feae3d140dcd5fb1963f"
-    },
-    "previous_matrix": "p5/history/p5-r10-before-T20-owner-acceptance-validation-results.json",
-    "R10_source_review_archive_unchanged": true,
-    "incorporated_into_source_review_checkpoint": "p5-r11",
-    "updated_harness_compiled_in_current_checkpoint": true
-  },
-  "R11_reconciliation": {
-    "current_runtime_acceptance": "optimized-srcds/results.json",
-    "T20_evidence": "t20-owner-srcds/results.json",
-    "accepted_install_rollback_evidence": "p5-r9-rollback-srcds/results.json",
-    "same_runtime_SHA": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-    "T20_T26_T35_remain_passed_scoped": true,
-    "updated_owner_harness_in_source_review": true,
-    "new_R11_candidate_ZIP_installed": false,
-    "prior_packages_unchanged": true,
-    "previous_matrix": "p5/history/p5-r10-with-T20-followup-validation-results.json"
-  },
-  "post_packaging_T16_followup": {
-    "evidence": "t16-extension-srcds/results.json",
-    "report": "t16-extension-srcds-acceptance.md",
-    "candidate_SHA_unchanged": true,
-    "extension_sources_unchanged": true,
-    "new_harness_after_R11_packaging": {
-      "path": "tests/runtime/steamworks_extension_observer.sp",
-      "sha256": "5c8a9027151fc0fbf6c7d47e4318f041ee3fcc19ebb276bd87323d27b4a35dba"
-    },
-    "previous_matrix": "p5/history/p5-r11-before-T16-extension-acceptance-validation-results.json",
-    "R11_source_review_archive_unchanged": true,
-    "incorporated_into_source_review_checkpoint": "p5-r12",
-    "observer_compiled_in_current_checkpoint": true
-  },
-  "R12_reconciliation": {
-    "current_runtime_acceptance": "optimized-srcds/results.json",
-    "T16_evidence": "t16-extension-srcds/results.json",
-    "T20_evidence": "t20-owner-srcds/results.json",
-    "accepted_install_rollback_evidence": "p5-r9-rollback-srcds/results.json",
-    "same_runtime_SHA": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-    "T16_T20_T26_T35_remain_passed_scoped": true,
-    "independent_observer_in_source_review": true,
-    "new_R12_candidate_ZIP_installed": false,
-    "prior_packages_unchanged": true,
-    "previous_matrix": "p5/history/p5-r11-with-T16-followup-validation-results.json"
-  },
-  "post_packaging_T15_T29_followup": {
-    "path": "identity-negatives-srcds/results.json",
-    "T15": "passed",
-    "T29": "partial",
-    "open_cases": [
-      "T11",
-      "T23",
-      "T25",
-      "T29",
-      "T32",
-      "T33"
-    ],
-    "archives_regenerated": true,
-    "source_review_archive_has_new_harness": true,
-    "new_harness_in_separate_followup_archive": true,
-    "full_integration_repeated": true,
-    "fresh_deterministic_runs": "stats-natives, typed-boundary, steamid-string x86 UBSan; warning-free harness compilation",
-    "historical_snapshot": "p5/history/p5-r12-before-T15-T29-identity-acceptance-validation-results.json",
-    "incorporated_into_source_review_checkpoint": "p5-r13",
-    "identity_harness_compiled_in_current_checkpoint": true
-  },
-  "R13_reconciliation": {
-    "current_runtime_acceptance": "optimized-srcds/results.json",
-    "T15_T29_evidence": "identity-negatives-srcds/results.json",
-    "same_runtime_SHA": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-    "T15_passed": true,
-    "T29_remains_partial": true,
-    "T16_T20_T26_T35_remain_passed_scoped": true,
-    "identity_harness_in_source_review": true,
-    "new_R13_candidate_ZIP_installed": true,
-    "prior_packages_unchanged": true,
-    "previous_matrix": "p5/history/p5-r12-with-T15-T29-followup-validation-results.json",
-    "R12_archive_installation_observation": "p5/r13/r12-archive-installation-observation.json"
-  },
-  "post_packaging_T23_followup": {
-    "path": "forward-consumers-srcds/results.json",
-    "status": "passed_scoped",
-    "previous_matrix": "p5/history/p5-r13-before-T23-forward-acceptance-validation-results.json",
-    "positive_checks": 4803,
-    "positive_dispatches": 672,
-    "restart_mapping_checks": 109,
-    "negative_order_control_detected": true,
-    "repeated_x86_suites": 14,
-    "API_signatures_and_registrations_unchanged": true,
-    "runtime_ELF_unchanged": true,
-    "header_comment_corrected": true,
-    "current_header_sha256": "a3e5a7a220dd4d7b46dab3226b41c68f2eb24c4ddf4943f0b943f87566b4f2d5",
-    "R13_packaged_header_contains_prior_comment": true,
-    "R13_archives_regenerated": false,
-    "new_harnesses_and_header_correction_in_separate_followup_archive": true,
-    "open_cases": [
-      "T11",
-      "T25",
-      "T29",
-      "T32",
-      "T33"
-    ],
-    "incorporated_into_source_review_checkpoint": "p5-r14",
-    "current_checkpoint_packages_test_sources_and_comment": true,
-    "current_checkpoint_repeats_integrated_validation": true
-  },
-  "R14_reconciliation": {
-    "T23_evidence": "forward-consumers-srcds/results.json",
-    "same_ELF_SHA": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-    "T23_passed_scoped": true,
-    "T29_remains_partial": true,
-    "T15_T16_T20_T26_T35_remain_passed_scoped": true,
-    "forward_fixtures_and_corrected_comment_in_source_review": true,
-    "corrected_comment_in_candidate_include": true,
-    "new_R14_candidate_ZIP_installed": true,
-    "prior_packages_unchanged": true,
-    "previous_matrix": "p5/history/p5-r13-with-T23-followup-validation-results.json"
-  },
-  "post_packaging_T11_followup": {
-    "path": "interface-capabilities-srcds/results.json",
-    "status": "passed_scoped",
-    "previous_matrix": "p5/history/p5-r14-before-T11-interface-acceptance-validation-results.json",
-    "normal_available_families": 8,
-    "not_provided_family": "SteamMatchMaking009",
-    "GC_backend_delivery_accepted": false,
-    "initial_invalid_fixtures_preserved": true,
-    "R14_archives_regenerated": false,
-    "new_fixture_sources_delivered_separately": true,
-    "open_cases": [
-      "T25",
-      "T29",
-      "T32",
-      "T33"
-    ],
-    "incorporated_into_source_review_checkpoint": "p5-r15",
-    "current_checkpoint_packages_capability_fixture_sources": true,
-    "current_checkpoint_repeats_integrated_validation": true
-  },
-  "R15_reconciliation": {
-    "T11_evidence": "interface-capabilities-srcds/results.json",
-    "same_ELF_SHA": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-    "T11_passed_profile_minimum": true,
-    "T23_passed_scoped": true,
-    "T29_remains_partial": true,
-    "T15_T16_T20_T26_T35_remain_passed_scoped": true,
-    "capability_fixture_sources_in_source_review": true,
-    "new_R15_candidate_ZIP_installed": true,
-    "runtime_payload_matches_T11_R14_installed": true,
-    "prior_packages_unchanged": true,
-    "previous_matrix": "p5/history/p5-r14-with-T11-followup-validation-results.json"
-  },
-  "post_packaging_T25_followup": {
-    "path": "consumer-compat-srcds/results.json",
-    "status": "partial",
-    "previous_matrix": "p5/history/p5-r15-before-T25-consumer-validation-results.json",
-    "six_real_variants_passed_scoped": true,
-    "human_H08_H09_fixture_variants_passed": 2,
-    "current_contract_checks": 22,
-    "consumer_checks": 37,
-    "external_Connect_arity_remaining": true,
-    "R15_archives_regenerated": false,
-    "new_fixture_sources_delivered_separately": true,
-    "open_cases": [
-      "T25",
-      "T29",
-      "T32",
-      "T33"
-    ],
-    "incorporated_into_source_review_checkpoint": "p5-r16",
-    "current_checkpoint_repeats_integrated_validation": true,
-    "current_checkpoint_packages_consumer_fixture_sources": true
-  },
-  "R16_reconciliation": {
-    "T25_evidence": "consumer-compat-srcds/results.json",
-    "T25_status": "partial",
-    "real_consumer_variants": 6,
-    "observer_checks": 37,
-    "new_legacy_current_include_human_checks": 22,
-    "pending_Connect_call_sites": 2,
-    "remaining_full_consumer_business_paths": true,
-    "T29_status": "partial",
-    "T32_T33_status": "both passed in scoped subsequent followups",
-    "current_fixture_sources_packaged": true,
-    "new_R16_candidate_ZIP_installed": true,
-    "runtime_payload_matches_T25_R15_installed": true,
-    "previous_matrix": "p5/history/p5-r15-with-T25-partial-followup-validation-results.json",
-    "prior_packages_unchanged": true
-  },
-  "post_packaging_T32_followup": {
-    "path": "connection-srcds/results.json",
-    "status": "passed_scoped",
-    "R16_candidate_ZIP_installed": true,
-    "R16_archives_regenerated": false,
-    "new_fixture_source_delivered_separately": true,
-    "previous_matrix": "p5/history/p5-r16-before-T32-followup-validation-results.json",
-    "open_cases": [
-      "T25",
-      "T29",
-      "T33"
-    ],
-    "incorporated_into_source_review_checkpoint": "p5-r17"
-  },
-  "post_packaging_T33_followup": {
-    "path": "soak-srcds/results.json",
-    "status": "passed_scoped",
-    "R16_archives_regenerated": false,
-    "new_fixture_source_delivered_separately": true,
-    "previous_matrix": "p5/history/p5-r16-with-T32-before-T33-followup-validation-results.json",
-    "open_cases": [
-      "T25",
-      "T29"
-    ],
-    "incorporated_into_source_review_checkpoint": "p5-r17"
-  },
-  "post_packaging_last_two_followup": {
-    "path": "last-two-srcds/results.json",
-    "status": "paused_at_user_request",
-    "previous_matrix": "p5/history/p5-r16-with-T32-T33-before-last-two-followup-validation-results.json",
-    "Connect_arity_correction_done": true,
-    "producer_API_unchanged": true,
-    "lab_active_27015": false,
-    "remaining_cases": [
-      "T25",
-      "T29"
-    ],
-    "original_DEV_restored": true,
-    "pause_checkpoint": "last-two-srcds/pause.json"
-  },
-  "post_packaging_last_two_resume": {
-    "path": "last-two-resume-srcds/results.json",
-    "status": "accepted_scoped_linux_x86",
-    "previous_matrix": "p5/history/p5-r16-before-human-resume-validation-results.json",
-    "remaining_cases": [],
-    "original_DEV_restored": true,
-    "lab_active_27015": false,
-    "R16_archives_changed": false,
-    "producer_API_changed": false,
-    "external_Connect_cold_start_fixed": true,
-    "incorporated_into_source_review_checkpoint": "p5-r17"
-  },
   "server_operations_in_this_update": false,
-  "R17_reconciliation": {
-    "T25": "passed original agreed consumer contracts; whole business logic not certified",
-    "T29": "passed U/I, current-provider binary invariant plus actual pending human and deterministic defensive branches",
-    "T32_T33": "prior scoped runtime acceptances retained",
-    "applicable_cases_passed": 33,
-    "not_applicable_cases": [
-      "T13",
-      "T14",
-      "T34"
-    ],
-    "remaining_global_cases": [],
-    "current_sources_packaged": true,
-    "external_Connect_patch_and_new_internal_sources_in_source_review": true,
-    "current_archive_installed_in_SRCDS": false,
-    "runtime_payload_matches_R16": true,
-    "previous_matrix": "p5/history/p5-r16-with-T25-T29-closed-validation-results.json",
-    "prior_artifacts_unchanged": true,
-    "no_game_server_operation": true
-  },
-  "ci_followup": {
-    "path": "p5/r17/ci-max-macro/results.json",
-    "previous_matrix": "p5/history/p5-r17-before-remote-CI-fix-validation-results.json",
-    "public_API_changed": false,
-    "optimized_Linux_ELF_changed": false,
-    "source_changes": "Windows max-macro spelling plus regression control; 15 x86 suites repeated",
-    "offline_R17_archives_regenerated": false,
-    "offline_R17_source_archive_scope": "Historical pre-CI-fix snapshot preserved; superseded by R18 source review.",
-    "initial_remote_run": "https://github.com/AoC-Gamers/SteamWorks/actions/runs/43860126225",
-    "initial_run_conclusion": "Windows failure; Linux passed",
-    "corrected_remote_run": "https://github.com/AoC-Gamers/SteamWorks/actions/runs/43861680010",
-    "max_macro_fix_run": "https://github.com/AoC-Gamers/SteamWorks/actions/runs/43861100353",
-    "max_macro_compile_fix_verified_in_MSVC": true,
-    "Windows_link_followup": "p5/r17/ci-windows-tier0/results.json",
-    "Windows_link_dependency": "explicit SDK tier0.lib; actual missing imports verified",
-    "status": "incorporated_into_p5_r18",
-    "final_conclusion": "success",
-    "offline_R18_archives_contain_fixes": true
-  },
-  "original_public_API_baseline_commit": "46e3ee05fc29ad090a1d6f7b1cb5e3dca9855350",
-  "preexisting_published_product_commit": "cc523056f958a0a904b31dde90290b2364760c97",
-  "previous_R17_final_review": {
-    "status": "passed_after_corrections",
-    "evidence": "p5/r17/final-review/results.json",
-    "previous_matrix": "p5/history/p5-r17-before-final-review-validation-results.json",
-    "native_or_public_API_changed": false,
-    "clean_archive_replay_suites": 15,
-    "clean_archive_ELF_identical": true,
-    "findings_fixed": 3,
-    "remaining_findings": [],
-    "original_R17_archives_preserved": ".build/p5-r17/pre-final-review/",
-    "regenerated_R17_artifacts": ".build/p5-r17/review/",
-    "no_server_operation": true
-  },
-  "R18_reconciliation": {
-    "previous_matrix": "p5/history/p5-r17-with-Windows-CI-fixes-validation-results.json",
-    "Windows_max_and_tier0_fixes_in_source_review": true,
-    "public_API_unchanged": true,
-    "Linux_ELF_unchanged": true,
-    "remote_CI_already_passed_for_product_base": true,
-    "Windows_runtime_acceptance_inferred": false,
-    "new_checkpoint_committed_or_pushed": false,
-    "cases_passed": 33,
-    "not_applicable": [
-      "T13",
-      "T14",
-      "T34"
-    ],
-    "remaining_cases": [],
-    "Connect_complete_committed_patch_from_original_base": true,
-    "prior_archives_unchanged": true,
-    "new_archive_installed": false,
-    "server_operations": false
-  },
+  "deployed_in_this_update": false,
+  "release_deployed": false,
   "final_review": {
-    "checkpoint": "p5-r18",
-    "status": "passed_after_documentation_reconciliation",
-    "path": "p5/r18/final-review/results.json",
-    "previous_matrix": "p5/history/p5-r18-before-final-review-validation-results.json",
-    "native_code_changed": false,
-    "public_API_changed": false,
+    "status": "passed",
+    "results": "p5/r19/final-review/results.json",
+    "findings_fixed": 2,
     "new_unresolved_findings": [],
-    "original_R18_artifacts_preserved": ".build/p5-r18/pre-final-review/",
-    "current_artifact_directory": ".build/p5-r18/review/",
-    "CI_steps_crosschecked_against_stored_successful_run": [
-      "Test streaming HTTP context (x86, UBSan)",
-      "Test init observer coexistence (x86, UBSan)",
-      "Test restart forward semantics (x86, UBSan)"
-    ],
-    "committed": false,
-    "pushed": false,
-    "server_operation": false
+    "native_sources_or_public_API_changed": false,
+    "GC_remote_positive": "pending",
+    "initial_archives_preserved": true,
+    "native_tests_reused_by_exact_source_recipe_evidence_hashes": true,
+    "server_operations": false
   }
 }

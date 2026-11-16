@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "candidate_runtime_files": {
+    "addons/sourcemod/extensions/steamworks.ext.so": "72664c658f6d28e78a975ec98c96879dc641f96725206f514f159ea17125fcb3",
+    "addons/sourcemod/scripting/include/steamworks.inc": "969541624a2ba2f14aa07e040f96e6a50db40503baa21cba6206e0b1bd25aad8"
+  },
+  "restored_files": {
+    "extensions/steamworks.ext.so": "9ca37aadcd83448d49126d6a72babcb8ec97ec5a06c171b4821ae0ee3cf05d70",
+    "scripting/include/steamworks.inc": "e51bcd397139edc3d144f130c45f0f8edbf55d12278736e0134e4c650ec64f17"
+  },
+  "restored_absences": [
+    "gamedata/steamworks.txt"
+  ],
+  "foreign_config_and_plugin_preserved": true,
+  "actual_candidate_and_rollback_ZIPs_used": true,
+  "rollback_archive_sha256": "55153d557f3af7f71f1016c8c394dc74fe29e0cdc9511044c21de29e8bc6dffc",
+  "server_operated": false,
+  "known_baseline_exit_crash_not_retested_or_suppressed": true
+}

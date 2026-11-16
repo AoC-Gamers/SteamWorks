@@ -17,6 +17,10 @@
 */
 
 #include "swgchooks.h"
+#include <cstring>
+#include <limits>
+#include <memory>
+#include <new>
 
 
 namespace
@@ -125,22 +129,37 @@ EGCResults SteamWorksGCHooks::RetrieveMessage(uint32 *punMsgType, void *pubDest,
 	const uint64 generation = m_generation;
 	EGCResults res = SH_CALL(m_target, &ISteamGameCoordinator::RetrieveMessage)(punMsgType, pubDest, cubDest, pcubMsgSize);
 	if (!m_enabled || m_generation != generation) { RETURN_META_VALUE(MRES_SUPERCEDE, res); }
-	if (punMsgType)
-		pGCRetrieveMessageForward->PushCell(*punMsgType);
-	else
-		pGCRetrieveMessageForward->PushCell(0);
-
-	if (pubDest)
-		pGCRetrieveMessageForward->PushStringEx(reinterpret_cast<char *>(pubDest), cubDest, SM_PARAM_STRING_BINARY | SM_PARAM_STRING_COPY, 0);
-	else
-		pGCRetrieveMessageForward->PushStringEx(const_cast<char *>(""), 1, SM_PARAM_STRING_BINARY | SM_PARAM_STRING_COPY, 0);
-
+	// The public forward keeps its historical capacity argument. Back every
+	// advertised byte with initialized storage, never the unused engine tail.
+	// Leave room for SourcePawn's cell rounding within a signed object size.
+	const uint32 maxCapacity = static_cast<uint32>((std::numeric_limits<cell_t>::max)())
+		& ~static_cast<uint32>(sizeof(cell_t) - 1);
+	if (cubDest > maxCapacity) {
+		g_pSM->LogError(myself, "GC receive forward capacity exceeds SourcePawn snapshot range; callback skipped");
+		RETURN_META_VALUE(MRES_SUPERCEDE, res);
+	}
+	uint32 validBytes = 0;
+	uint32 messageType = 0;
+	if (res == k_EGCResultOK && pcubMsgSize != nullptr) {
+		validBytes = *pcubMsgSize;
+		if (validBytes > cubDest || (validBytes != 0 && pubDest == nullptr)) {
+			g_pSM->LogError(myself, "GC receive returned incoherent payload bounds; callback skipped");
+			RETURN_META_VALUE(MRES_SUPERCEDE, res);
+		}
+		if (punMsgType != nullptr) { messageType = *punMsgType; }
+	}
+	// On errors or absent size, no provider output is assumed initialized.
+	const size_t snapshotSize = cubDest == 0 ? 1 : static_cast<size_t>(cubDest);
+	std::unique_ptr<char[]> snapshot(new (std::nothrow) char[snapshotSize]());
+	if (!snapshot) {
+		g_pSM->LogError(myself, "Could not allocate GC receive forward snapshot; callback skipped");
+		RETURN_META_VALUE(MRES_SUPERCEDE, res);
+	}
+	if (validBytes != 0) { std::memcpy(snapshot.get(), pubDest, validBytes); }
+	pGCRetrieveMessageForward->PushCell(messageType);
+	pGCRetrieveMessageForward->PushStringEx(snapshot.get(), snapshotSize, SM_PARAM_STRING_BINARY | SM_PARAM_STRING_COPY, 0);
 	pGCRetrieveMessageForward->PushCell(cubDest);
-
-	if (pcubMsgSize)
-		pGCRetrieveMessageForward->PushCell(*pcubMsgSize);
-	else
-		pGCRetrieveMessageForward->PushCell(0);
+	pGCRetrieveMessageForward->PushCell(validBytes);
 
 	pGCRetrieveMessageForward->Execute(&Result);
 

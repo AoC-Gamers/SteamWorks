@@ -1,0 +1,46 @@
+{
+  "timestamp_utc": "2026-11-16T13:57:21.455374+00:00",
+  "phase": "GC-local-after-map",
+  "commands_redacted_for_binding": true,
+  "driver_trace": [
+    "[SW-BUFFER] GC_local scenario=0 capacity=4096 result=0 original_calls=1 provider_bytes_and_outputs_preserved=1 real_target_restored=1",
+    "[SW-BUFFER] GC_local scenario=1 capacity=16 result=0 original_calls=1 provider_bytes_and_outputs_preserved=1 real_target_restored=1",
+    "[SW-BUFFER] GC_local scenario=2 capacity=0 result=0 original_calls=1 provider_bytes_and_outputs_preserved=1 real_target_restored=1",
+    "[SW-BUFFER] GC_local scenario=3 capacity=16 result=1 original_calls=1 provider_bytes_and_outputs_preserved=1 real_target_restored=1",
+    "[SW-BUFFER] GC_local scenario=4 capacity=16 result=2 original_calls=1 provider_bytes_and_outputs_preserved=1 real_target_restored=1"
+  ],
+  "console_trace": [
+    "[SW-BUFFER] check=GC_local_binary_snapshot_valid_prefix_and_zero_tail pass=1",
+    "[SW-BUFFER] check=GC_local_result_outputs_and_target_restored pass=1",
+    "[SW-BUFFER] check=GC_local_one_candidate_hook_and_VM_callback pass=1",
+    "[SW-BUFFER] check=GC_local_binary_snapshot_valid_prefix_and_zero_tail pass=1",
+    "[SW-BUFFER] check=GC_local_result_outputs_and_target_restored pass=1",
+    "[SW-BUFFER] check=GC_local_one_candidate_hook_and_VM_callback pass=1",
+    "[SW-BUFFER] check=GC_local_binary_snapshot_valid_prefix_and_zero_tail pass=1",
+    "[SW-BUFFER] check=GC_local_result_outputs_and_target_restored pass=1",
+    "[SW-BUFFER] check=GC_local_one_candidate_hook_and_VM_callback pass=1",
+    "[SW-BUFFER] check=GC_local_binary_snapshot_valid_prefix_and_zero_tail pass=1",
+    "[SW-BUFFER] check=GC_local_result_outputs_and_target_restored pass=1",
+    "[SW-BUFFER] check=GC_local_one_candidate_hook_and_VM_callback pass=1",
+    "[SW-BUFFER] check=GC_local_binary_snapshot_valid_prefix_and_zero_tail pass=1",
+    "[SW-BUFFER] check=GC_local_result_outputs_and_target_restored pass=1",
+    "[SW-BUFFER] check=GC_local_one_candidate_hook_and_VM_callback pass=1",
+    "[SW-BUFFER] GC_local summary checks=309 failures=0"
+  ],
+  "processes": [
+    {
+      "pid": 35376,
+      "start_ticks": 1641953
+    }
+  ],
+  "error_log_metadata": {},
+  "Steam_connected": true,
+  "crash_markers": [],
+  "raw_console_and_logs_exported": false,
+  "binding": {
+    "candidate_sha256": "72664c658f6d28e78a975ec98c96879dc641f96725206f514f159ea17125fcb3",
+    "executable_getter_and_writable_slot_verified": true,
+    "mapped_file_inode_verified": true,
+    "exact_binary_profile": true
+  }
+}

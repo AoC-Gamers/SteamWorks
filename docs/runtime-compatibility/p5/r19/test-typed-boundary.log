@@ -1,0 +1,9 @@
+PASS: 216 registry/resolver checks (production resolver, real SDK declarations, simulated services)
+PASS: 45 typed boundary/identity checks (real SDK types, simulated Pawn memory)
+PASS: 57 HTTP/GC boundary checks (production natives, real SDK interfaces, simulated services)
+PASS: 33 strict HTTP text response checks (production native, exact-size SDK double)
+PASS: 45 typed boundary/identity checks (real SDK types, simulated Pawn memory)
+PASS: Windows-style max macro remains active across production boundaries
+PASS: 2 expected compilation rejections (SDK drift and AppID/AccountID mixing)
+PASS: audited SDK 1.55 auth prefix, 27 ordered slots, independent of SDK 015
+PASS: expected compile rejection of auth 014/native 015 mixing

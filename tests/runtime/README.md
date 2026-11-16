@@ -283,3 +283,16 @@ Configurar clave solo en convar protegida mediante archivo privado temporal,
 eliminarlo y no exportar IDs/nombres/tickets. Mantener Connect descargado durante
 la entrada humana si el backend de laboratorio no proporciona asignación.
 Resultados y límites: [cierre T25/T29](../../docs/runtime-compatibility/last-two-srcds-progress.md).
+
+## Buffers GC y texto HTTP
+
+`steamworks_buffer_acceptance.sp` y `steamworks_buffer_fixture.cpp` se usan
+únicamente en la copia aislada. El helper no envía mensajes: consulta GC real
+solo con cola vacía; el modo local cambia temporalmente el target mediante
+`AddHooks` del candidato y restaura el GC real antes de retornar. Requiere perfil
+de direcciones/rangos auditado para el ELF exacto, nunca offsets adivinados.
+No atribuir el contenido sintético al backend Steam. Compilar con
+`scripts/build-buffer-fixture.sh` y `spcomp64`; no incluirlos en el paquete público.
+`sm_sw_buffers_http` consulta el fixture loopback con capacidades 1/2/4/16/17/32,
+comprueba canarios, NUL, outputs y contexto, y cierra cada handle.
+[Procedimiento, alcance y evidencia](../../docs/runtime-compatibility/review12-srcds-acceptance.md).

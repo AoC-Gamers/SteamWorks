@@ -1,0 +1,7 @@
+{
+  "SDK_unchanged": true,
+  "SDK_files_checked": 55,
+  "harnesses_compiled_without_warnings": 19,
+  "stats_keys_fixture_identical_to_optimized_SRCDS_acceptance": true,
+  "product_sources_match_prior_R18_ELF": false
+}

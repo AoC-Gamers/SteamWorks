@@ -1,0 +1,47 @@
+[
+  {
+    "name": "steamwork_test",
+    "source": "l4d2_sourcemod/SteamWorks/scripting/steamwork_test.sp",
+    "source_sha256": "edd15a4932e6eaf8ab16ffeb44a462e860026e4c09d1f432ed8a1319ec70fde1",
+    "exit_code": 0,
+    "warnings": 0,
+    "command": [
+      "/home/lechuga/GitHub/l4d2_sourcemod/L4D2-Family-Share/deps/sourcemod-linux/addons/sourcemod/scripting/spcomp64",
+      "/home/lechuga/GitHub/l4d2_sourcemod/SteamWorks/scripting/steamwork_test.sp",
+      "-i/home/lechuga/GitHub/l4d2_sourcemod/SteamWorks/scripting/include",
+      "-i/home/lechuga/GitHub/l4d2_sourcemod/SteamWorks/scripting/include",
+      "-i/home/lechuga/GitHub/l4d2_sourcemod/L4D2-Family-Share/deps/sourcemod-linux/addons/sourcemod/scripting/include",
+      "-o/home/lechuga/GitHub/l4d2_sourcemod/SteamWorks/.build/review12/consumers/steamwork_test.smx"
+    ]
+  },
+  {
+    "name": "AoC",
+    "source": "AoC-L4D2-Competitive/left4dead2/addons/sourcemod/scripting/AoC.sp",
+    "source_sha256": "0a3f53d028ebf9b863cf56bf9274137f6172b9adffa8fe927c8384b4c1e201ba",
+    "exit_code": 0,
+    "warnings": 0,
+    "command": [
+      "/home/lechuga/GitHub/l4d2_sourcemod/L4D2-Family-Share/deps/sourcemod-linux/addons/sourcemod/scripting/spcomp64",
+      "/home/lechuga/GitHub/AoC-L4D2-Competitive/left4dead2/addons/sourcemod/scripting/AoC.sp",
+      "-i/home/lechuga/GitHub/l4d2_sourcemod/SteamWorks/scripting/include",
+      "-i/home/lechuga/GitHub/AoC-L4D2-Competitive/left4dead2/addons/sourcemod/scripting/include",
+      "-i/home/lechuga/GitHub/l4d2_sourcemod/L4D2-Family-Share/deps/sourcemod-linux/addons/sourcemod/scripting/include",
+      "-o/home/lechuga/GitHub/l4d2_sourcemod/SteamWorks/.build/review12/consumers/AoC.smx"
+    ]
+  },
+  {
+    "name": "l4d2_familyshare_core",
+    "source": "l4d2_sourcemod/L4D2-Family-Share/addons/sourcemod/scripting/l4d2_familyshare_core.sp",
+    "source_sha256": "fba56211fce7033fc619df9964bd9614dd9701c1aab1d10513c446ccb3c365aa",
+    "exit_code": 0,
+    "warnings": 0,
+    "command": [
+      "/home/lechuga/GitHub/l4d2_sourcemod/L4D2-Family-Share/deps/sourcemod-linux/addons/sourcemod/scripting/spcomp64",
+      "/home/lechuga/GitHub/l4d2_sourcemod/L4D2-Family-Share/addons/sourcemod/scripting/l4d2_familyshare_core.sp",
+      "-i/home/lechuga/GitHub/l4d2_sourcemod/SteamWorks/scripting/include",
+      "-i/home/lechuga/GitHub/l4d2_sourcemod/L4D2-Family-Share/addons/sourcemod/scripting/include",
+      "-i/home/lechuga/GitHub/l4d2_sourcemod/L4D2-Family-Share/deps/sourcemod-linux/addons/sourcemod/scripting/include",
+      "-o/home/lechuga/GitHub/l4d2_sourcemod/SteamWorks/.build/review12/consumers/l4d2_familyshare_core.smx"
+    ]
+  }
+]

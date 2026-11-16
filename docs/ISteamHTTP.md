@@ -29,7 +29,9 @@ El native:
 - `SteamWorks_GetHTTPResponseBodyData(...)`
 
 debe tratarse como una lectura de bytes del cuerpo HTTP, no como una función
-que garantice una cadena terminada en `\0`.
+que garantice una cadena terminada en `\0`. El tamaño de lectura debe ser el
+cuerpo completo devuelto por `SteamWorks_GetHTTPResponseBodySize`; esta API
+no permite solicitar únicamente un prefijo.
 
 En la práctica esto significa que:
 
@@ -52,9 +54,9 @@ la extensión expone además:
 
 Este helper:
 
-- lee hasta `length - 1`
+- lee el cuerpo completo mediante el SDK y copia hasta `length - 1` al destino
 - agrega terminador nulo cuando devuelve éxito
-- reporta cuántos caracteres escribió
+- reporta cuántos bytes copió, excluido el NUL final
 - reporta si el contenido fue truncado
 - simplifica el consumo desde SourcePawn
 
@@ -77,47 +79,10 @@ Shutdown o descarga del propietario lo invalidan; debe crearse uno nuevo tras
 reinicialización. Cerrar el handle desde un callback es admisible: su destrucción
 se difiere hasta salir del despacho. Véase [P3](runtime-compatibility/p3-resource-lifecycle.md).
 
-## Patrón recomendado
+## Patrón recomendado para texto
 
-1. Obtener primero el tamaño real del body con `SteamWorks_GetHTTPResponseBodySize(...)`
-2. Leer como máximo `buffer_size - 1`
-3. Cerrar manualmente el string con `buffer[readLength] = '\0'`
-
-Ejemplo conceptual:
-
-```pawn
-int size;
-if (SteamWorks_GetHTTPResponseBodySize(request, size) && size > 0)
-{
-	char body[1024];
-	int readLength = size;
-	if (readLength > sizeof(body) - 1)
-	{
-		readLength = sizeof(body) - 1;
-	}
-
-	if (SteamWorks_GetHTTPResponseBodyData(request, body, readLength))
-	{
-		body[readLength] = '\0';
-		PrintToServer("body=%s", body);
-	}
-}
-```
-
-## Implicancia práctica
-
-Si un plugin obtiene:
-
-- `failure=0`
-- `success=1`
-- `code=200`
-- y además un `body size` mayor que `0`
-
-pero imprime un body vacío, el problema más probable no es la request HTTP ni
-la extensión, sino la ausencia de terminador nulo al tratar el contenido como
-string.
-
-Si el body esperado es textual, también puede usarse directamente:
+Usar el helper de cinco argumentos cuando el destino tenga capacidad limitada.
+Lee el cuerpo completo mediante el SDK y solo después copia el prefijo que cabe:
 
 ```pawn
 char body[2048];
@@ -128,3 +93,36 @@ if (SteamWorks_GetHTTPResponseBodyString(request, body, sizeof(body), written, t
 	PrintToServer("written=%d truncated=%d body=%s", written, truncated, body);
 }
 ```
+
+Para lectura raw, consultar primero el tamaño y pasar **ese tamaño exacto**.
+Si el cuerpo no cabe completo, ampliar el destino o usar el helper textual;
+reducir `length` en `GetHTTPResponseBodyData` no produce un truncamiento válido.
+Si se imprimen los bytes como texto, reservar además un byte para NUL:
+
+```pawn
+int size;
+char body[1024];
+if (SteamWorks_GetHTTPResponseBodySize(request, size) && size >= 0 && size < sizeof(body))
+{
+	if (size == 0 || SteamWorks_GetHTTPResponseBodyData(request, body, size))
+	{
+		body[size] = '\0';
+		PrintToServer("body=%s", body);
+	}
+}
+```
+
+Este segundo ejemplo solo procesa cuerpos que caben íntegros; no trunca. Para
+payloads binarios, conservar el tamaño y no interpretar el buffer como cadena.
+Un estado HTTP 200 no acredita que la lectura del cuerpo haya tenido éxito:
+comprobar su retorno, longitud y espacio para NUL antes de imprimir.
+
+## Corrección posterior a P5-R18
+
+La [revisión 12](runtime-compatibility/review12-buffers.md) añade lectura completa
+temporal antes de truncar. Fallo del SDK o de reserva conserva destino y salidas.
+El límite completo es el rango con signo de tamaños SourcePawn; excederlo genera
+un error nativo antes de reservar. Requiere respuesta completada no streaming.
+Además de las pruebas deterministas x86, la [aceptación SRCDS](runtime-compatibility/review12-srcds-acceptance.md)
+valida cuerpos completos, truncados y vacíos con Steam HTTP real. Fallos extremos
+de reserva/lectura siguen probados mediante dobles locales, sin forzar OOM en SRCDS.

@@ -4,7 +4,29 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 
 ## [Unreleased]
 
+### Correcciones posteriores a P5-R18
+- GC entrega al forward un snapshot de capacidad inicializada, copiando solo
+  el mensaje válido; no lee salidas no garantizadas en errores. Mantiene
+  capacidad, resultados históricos, supercesión y guarda de generación.
+- El helper HTTP textual lee el cuerpo completo en memoria temporal antes de
+  truncar; rechaza tamaños no representables y conserva salidas ante fallos.
+- Regresiones previas reproducidas, proveedor HTTP estricto, matrices GC/HTTP,
+  integración x86 y sanitizadores sin supresiones. Aceptación posterior SRCDS x86:
+  372 checks sin fallos, HTTP real, GC real vacío y proveedor GC local tipado;
+  mensaje GC remoto positivo pendiente. Quit limpio y DEV restaurado. P5-R18
+  y OneDrive conservados como evidencia histórica.
+
 ### Validación
+
+- Revisión final R19: ejemplos HTTP coherentes con lectura raw completa y
+  conteos en bytes; recetas portables separadas del empaquetado local. Artefactos
+  revisados y anteriores preservados, sin cambios nativos/API ni cierre GC remoto.
+
+- P5-R19 incorpora la aceptación de revisión 12, repite 15 suites x86 y
+  sanitizadores sin supresiones, reproduce el ELF aceptado y renueva cuatro ZIP
+  con reversión por lectura/roundtrip local. GC remoto positivo queda pendiente;
+  evidencia histórica separada del nuevo ELF. Sin operaciones de servidor,
+  commit, publicación ni despliegue.
 - Revisión final R18: concilia tres campos auxiliares de CI con pasos exitosos
   de cc52305 y aclara que la comparación con fecha libre es histórica de R17.
   Evidencia original y primeros ZIP R18 preservados; paquetes y reversión

@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "clean_source_archive_build": true,
+  "no_Git_metadata_in_extraction": true,
+  "ELF_sha256": "72664c658f6d28e78a975ec98c96879dc641f96725206f514f159ea17125fcb3",
+  "matches_review12_accepted_native_payload": true,
+  "integration_suites": 15,
+  "API": "passed",
+  "external_SDK_and_compiler_supplied_read_only": true,
+  "runtime_acceptance_not_repeated": true
+}

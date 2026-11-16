@@ -6,7 +6,7 @@ SDK_DIR="${STEAMWORKS_SDK_DIR:-$ROOT_DIR/sdk_158a}"
 CXX="${CXX:-g++}"
 mkdir -p "$OUTPUT_DIR"
 read -r -a extra_flags <<< "${TEST_CXXFLAGS:-}"
-for suite in interface_registry_test typed_boundary_test http_gc_boundary_test; do
+for suite in interface_registry_test typed_boundary_test http_gc_boundary_test http_text_response_test; do
  "$CXX" -std=c++14 -Wall -Wextra -Werror -pedantic -O1 -g \
   -fsanitize=undefined -fno-sanitize-recover=all "${extra_flags[@]}" \
   -I"$ROOT_DIR/extension/sdk" -isystem "$SDK_DIR/public/steam" \

@@ -20,6 +20,8 @@
 #include "../core/swpawn.h"
 #include <cerrno>
 #include <cstdio>
+#include <memory>
+#include <new>
 
 namespace {
 
@@ -557,18 +559,22 @@ static cell_t sm_GetHTTPResponseBodyString(IPluginContext *pContext, const cell_
 		return 0;
 	}
 
-	bool truncated = false;
-	uint32_t readLength = size;
-	if (readLength >= static_cast<uint32_t>(params[3]))
-	{
-		readLength = static_cast<uint32_t>(params[3] - 1);
-		truncated = true;
+	// The public size/count domain is one signed Pawn cell. This also bounds
+	// a byte-array object on the supported x86 target, without an arbitrary cap.
+	if (size > static_cast<uint32>((std::numeric_limits<cell_t>::max)())) {
+		return pContext->ThrowNativeError("HTTP text body exceeds SourcePawn buffer size range");
+	}
+	std::unique_ptr<uint8[]> body;
+	if (size != 0) {
+		body.reset(new (std::nothrow) uint8[size]);
+		if (!body || !pHTTP->GetHTTPResponseBodyData(pRequest->request, body.get(), size)) { return 0; }
 	}
 
-	if (readLength > 0 && !pHTTP->GetHTTPResponseBodyData(pRequest->request, reinterpret_cast<uint8_t *>(pBuffer), readLength))
-	{
-		return 0;
-	}
+	const bool truncated = size >= static_cast<uint32>(params[3]);
+	const uint32 readLength = truncated ? static_cast<uint32>(params[3] - 1) : size;
+	// Steam requires a complete GetHTTPResponseBodyData read. Publish only after
+	// that succeeds; no partial body or output cells escape on allocation/I/O failure.
+	if (readLength != 0) { std::memcpy(pBuffer, body.get(), readLength); }
 
 	pBuffer[readLength] = '\0';
 	*pWritten = static_cast<cell_t>(readLength);

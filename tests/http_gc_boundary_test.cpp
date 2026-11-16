@@ -29,7 +29,10 @@ int main() {
   cell_t old=params[test.position]; params[test.position]=-1; int calls=http.calls;
   Check(test.native(&ctx,params)==0 && http.calls==calls,"negative HTTP length/timeout rejected before SDK");
   params[test.position]=0;
+  const uint32 bodySize=http.size;
+  if(test.native==sm_GetHTTPResponseBodyData)http.size=0; // A zero-length full read requires an empty SDK body.
   Check(test.native(&ctx,params)==1 && http.lastLength==0,"zero HTTP length/timeout retains contract");
+  http.size=bodySize;
   params[test.position]=old;
  }
  params[2]=-1;int calls=http.calls;

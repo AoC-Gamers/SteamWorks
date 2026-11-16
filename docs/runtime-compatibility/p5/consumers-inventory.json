@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scan_root_label": "GitHub",
-  "source_files_scanned": 2710,
+  "source_files_scanned": 2711,
   "excluded_directories": [
     ".git",
     "node_modules",
@@ -4286,7 +4286,7 @@
     },
     {
       "file": "l4d2_sourcemod/SteamWorks/scripting/include/steamworks.inc",
-      "sha256": "a3e5a7a220dd4d7b46dab3226b41c68f2eb24c4ddf4943f0b943f87566b4f2d5",
+      "sha256": "969541624a2ba2f14aa07e040f96e6a50db40503baa21cba6206e0b1bd25aad8",
       "hits": [
         {
           "symbol": "SteamWorks_IsVACEnabled",
@@ -4518,121 +4518,121 @@
         },
         {
           "symbol": "SteamWorks_GetHTTPResponseBodyString",
-          "line": 743,
+          "line": 747,
           "role": "declaration",
           "argument_count": 5
         },
         {
           "symbol": "SteamWorks_GetHTTPStreamingResponseBodyData",
-          "line": 754,
+          "line": 758,
           "role": "declaration",
           "argument_count": 4
         },
         {
           "symbol": "SteamWorks_GetHTTPDownloadProgressPct",
-          "line": 763,
+          "line": 767,
           "role": "declaration",
           "argument_count": 2
         },
         {
           "symbol": "SteamWorks_GetHTTPRequestWasTimedOut",
-          "line": 772,
+          "line": 776,
           "role": "declaration",
           "argument_count": 2
         },
         {
           "symbol": "SteamWorks_SetHTTPRequestRawPostBody",
-          "line": 783,
+          "line": 787,
           "role": "declaration",
           "argument_count": 4
         },
         {
           "symbol": "SteamWorks_SetHTTPRequestRawPostBodyFromFile",
-          "line": 793,
+          "line": 797,
           "role": "declaration",
           "argument_count": 3
         },
         {
           "symbol": "SteamWorks_GetHTTPResponseBodyCallback",
-          "line": 804,
+          "line": 808,
           "role": "declaration",
           "argument_count": 4
         },
         {
           "symbol": "SteamWorks_WriteHTTPResponseBodyToFile",
-          "line": 813,
+          "line": 817,
           "role": "declaration",
           "argument_count": 2
         },
         {
           "symbol": "SW_OnValidateClient",
-          "line": 821,
+          "line": 825,
           "role": "declaration",
           "argument_count": 2
         },
         {
           "symbol": "SteamWorks_OnValidateClient",
-          "line": 831,
+          "line": 835,
           "role": "declaration",
           "argument_count": 2
         },
         {
           "symbol": "SteamWorks_SteamServersConnected",
-          "line": 839,
+          "line": 843,
           "role": "declaration",
           "argument_count": 0
         },
         {
           "symbol": "SteamWorks_SteamServersConnectFailure",
-          "line": 848,
+          "line": 852,
           "role": "declaration",
           "argument_count": 1
         },
         {
           "symbol": "SteamWorks_SteamServersDisconnected",
-          "line": 857,
+          "line": 861,
           "role": "declaration",
           "argument_count": 1
         },
         {
           "symbol": "SteamWorks_RestartRequested",
-          "line": 868,
+          "line": 872,
           "role": "declaration",
           "argument_count": 0
         },
         {
           "symbol": "SteamWorks_TokenRequested",
-          "line": 878,
+          "line": 882,
           "role": "declaration",
           "argument_count": 2
         },
         {
           "symbol": "SteamWorks_OnClientGroupStatus",
-          "line": 888,
+          "line": 892,
           "role": "declaration",
           "argument_count": 4
         },
         {
           "symbol": "SteamWorks_GCSendMessage",
-          "line": 898,
+          "line": 902,
           "role": "declaration",
           "argument_count": 3
         },
         {
           "symbol": "SteamWorks_GCMsgAvailable",
-          "line": 905,
+          "line": 909,
           "role": "declaration",
           "argument_count": 1
         },
         {
           "symbol": "SteamWorks_GCRetrieveMessage",
-          "line": 916,
+          "line": 927,
           "role": "declaration",
           "argument_count": 4
         },
         {
           "symbol": "SteamWorks_SendMessageToGC",
-          "line": 926,
+          "line": 937,
           "role": "declaration",
           "argument_count": 3
         }
@@ -4643,7 +4643,7 @@
         "different_signature_text": []
       },
       "repository": "l4d2_sourcemod/SteamWorks",
-      "file_tracked_modified": false
+      "file_tracked_modified": true
     },
     {
       "file": "l4d2_sourcemod/SteamWorks/scripting/steamwork_test.sp",
@@ -5178,6 +5178,62 @@
         {
           "symbol": "SteamWorks_GetHTTPResponseBodyString",
           "line": 277,
+          "role": "call_or_reference",
+          "argument_count": 5
+        }
+      ],
+      "repository": "l4d2_sourcemod/SteamWorks",
+      "file_tracked_modified": false
+    },
+    {
+      "file": "l4d2_sourcemod/SteamWorks/tests/runtime/steamworks_buffer_acceptance.sp",
+      "sha256": "a7771a9af6ee362e0628ab6cb0d12010d2404974cc0aaaebcaf90fd250ded606",
+      "hits": [
+        {
+          "symbol": "SteamWorks_GCRetrieveMessage",
+          "line": 72,
+          "role": "handler",
+          "argument_count": 4
+        },
+        {
+          "symbol": "SteamWorks_CreateHTTPRequest",
+          "line": 98,
+          "role": "call_or_reference",
+          "argument_count": 2
+        },
+        {
+          "symbol": "SteamWorks_GetHTTPResponseBodyString",
+          "line": 103,
+          "role": "call_or_reference",
+          "argument_count": 5
+        },
+        {
+          "symbol": "SteamWorks_SetHTTPRequestContextValue",
+          "line": 105,
+          "role": "call_or_reference",
+          "argument_count": 3
+        },
+        {
+          "symbol": "SteamWorks_SetHTTPCallbacks",
+          "line": 106,
+          "role": "call_or_reference",
+          "argument_count": 2
+        },
+        {
+          "symbol": "SteamWorks_SendHTTPRequest",
+          "line": 107,
+          "role": "call_or_reference",
+          "argument_count": 1
+        },
+        {
+          "symbol": "SteamWorks_GetHTTPResponseBodySize",
+          "line": 114,
+          "role": "call_or_reference",
+          "argument_count": 2
+        },
+        {
+          "symbol": "SteamWorks_GetHTTPResponseBodyString",
+          "line": 120,
           "role": "call_or_reference",
           "argument_count": 5
         }
@@ -5979,9 +6035,9 @@
       "tracked_changes_present": false
     },
     "l4d2_sourcemod/SteamWorks": {
-      "commit": "cc523056f958a0a904b31dde90290b2364760c97",
+      "commit": "a0016a23adc70dd9c1bdf2bf22bf8ae0e685dbc6",
       "branch": "develop",
-      "tracked_changes_present": false
+      "tracked_changes_present": true
     }
   },
   "consumer_symbols_not_in_public_include": [
