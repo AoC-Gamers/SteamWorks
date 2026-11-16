@@ -37,7 +37,7 @@ Left 4 Dead 2.
 
 ## Estado del proyecto
 
-La [matriz P5-R17](docs/runtime-compatibility/p5/validation-results.json) queda
+La [matriz P5-R18](docs/runtime-compatibility/p5/validation-results.json) queda
 aceptada para el perfil Linux x86: 33 casos pasan y T13/T14/T34 no aplican.
 El [cierre T25/T29](docs/runtime-compatibility/last-two-srcds-progress.md) incorpora
 licencia prestada, perfil Web API y grupo reales, preautenticación/identidad del
@@ -50,12 +50,13 @@ x86 y conserva 66 pruebas Python correctas. Extensión `839ff075…` e include
 `a3e5a7a2…` permanecen idénticos. La aceptación no certifica todo el negocio de
 consumidores, otras plataformas ni proveedores distintos.
 
-Los cuatro paquetes P5-R17 están en `.build/p5-r17/review/`, con manifiesto,
-checksums y reversión renovada. Los ZIP R16 permanecen intactos. El ZIP de fuentes
-R17 incorpora evidencia y el parche externo de Connect para revisión; los
+Los cuatro paquetes P5-R18 están en `.build/p5-r18/review/`, con manifiesto,
+checksums y reversión renovada. Los ZIP R17 y anteriores permanecen intactos. El ZIP de fuentes
+R18 incorpora las correcciones de CI Windows, evidencia y el parche completo
+de Connect contra su base original; los
 consumidores HTTP antiguos de tres argumentos requieren recompilación. La [reversión](docs/runtime-compatibility/p5-rollback.md)
 conserva los bytes ya ejercitados; el baseline mantiene su fallo conocido al salir.
-DEV original permanece intacto, comprobado por lectura antes/después; R17 no
+DEV original permanece intacto, comprobado por lectura antes/después; R18 no
 opera el servidor. Rama develop,
 sin commit, publicación ni despliegue en producción.
 
@@ -959,7 +960,7 @@ docs/TestCoverage.md
 
 Las listas siguientes corresponden al plugin de ejemplo histórico. La cobertura
 vigente de GC local, streaming, forwards y recuperación Steam está en la
-[matriz P5-R17](docs/runtime-compatibility/p5/validation-results.json); los límites
+[matriz P5-R18](docs/runtime-compatibility/p5/validation-results.json); los límites
 del ejemplo no son casos pendientes del candidato.
 
 Áreas verificadas:

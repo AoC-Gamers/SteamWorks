@@ -45,7 +45,7 @@ Documentos actuales:
 - [Registro de compatibilidad y migración H08/H09](runtime-compatibility/compatibility.md)
 - [T25 de R15: evidencia inicial parcial de consumidores y H08/H09](runtime-compatibility/consumer-compat-srcds-acceptance.md)
 - [T25/T29: cierre del perfil Linux x86 y corrección de Connect](runtime-compatibility/last-two-srcds-progress.md)
-- [P5-R17: cierre T25/T29, integración y artefactos renovados](runtime-compatibility/p5-integration.md)
+- [P5-R18: correcciones de CI Windows, integración y artefactos renovados](runtime-compatibility/p5-integration.md)
 - [Preparación y reversión de P5](runtime-compatibility/p5-rollback.md)
 
 Objetivo de estos documentos:

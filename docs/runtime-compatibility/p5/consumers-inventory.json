@@ -1059,7 +1059,7 @@
         }
       ],
       "repository": "Connect/Connect-Sourcepawn",
-      "file_tracked_modified": true
+      "file_tracked_modified": false
     },
     {
       "file": "Connect/Connect-Sourcepawn/addons/sourcemod/scripting/connect/http.inc",
@@ -1169,7 +1169,7 @@
         }
       ],
       "repository": "Connect/Connect-Sourcepawn",
-      "file_tracked_modified": true
+      "file_tracked_modified": false
     },
     {
       "file": "Connect/Connect-Sourcepawn/addons/sourcemod/scripting/connect/http_body.inc",
@@ -1239,7 +1239,7 @@
         }
       ],
       "repository": "Connect/Connect-Sourcepawn",
-      "file_tracked_modified": true
+      "file_tracked_modified": false
     },
     {
       "file": "Connect/Connect-Sourcepawn/addons/sourcemod/scripting/connect/runtime.inc",
@@ -1253,7 +1253,7 @@
         }
       ],
       "repository": "Connect/Connect-Sourcepawn",
-      "file_tracked_modified": true
+      "file_tracked_modified": false
     },
     {
       "file": "Connect/Connect-Sourcepawn/addons/sourcemod/scripting/include/steamworks.inc",
@@ -1614,7 +1614,7 @@
         "different_signature_text": []
       },
       "repository": "Connect/Connect-Sourcepawn",
-      "file_tracked_modified": true
+      "file_tracked_modified": false
     },
     {
       "file": "Connect/Connect-Sourcepawn/tests/sourcepawn/http_body_contract_test.sp",
@@ -4643,7 +4643,7 @@
         "different_signature_text": []
       },
       "repository": "l4d2_sourcemod/SteamWorks",
-      "file_tracked_modified": true
+      "file_tracked_modified": false
     },
     {
       "file": "l4d2_sourcemod/SteamWorks/scripting/steamwork_test.sp",
@@ -5964,9 +5964,9 @@
       "tracked_changes_present": true
     },
     "Connect/Connect-Sourcepawn": {
-      "commit": "c695bf0ceca8192a2cee704242a969ab973be0ba",
+      "commit": "5f62f3c6877d5ee21dc912ad498c881921ea15d7",
       "branch": "develop",
-      "tracked_changes_present": true
+      "tracked_changes_present": false
     },
     "l4d2_sourcemod/L4D1_2-Plugins": {
       "commit": "6b29683eb5831c19d4eb552f6c1dbc3b6ef566b1",
@@ -5979,9 +5979,9 @@
       "tracked_changes_present": false
     },
     "l4d2_sourcemod/SteamWorks": {
-      "commit": "46e3ee05fc29ad090a1d6f7b1cb5e3dca9855350",
+      "commit": "cc523056f958a0a904b31dde90290b2364760c97",
       "branch": "develop",
-      "tracked_changes_present": true
+      "tracked_changes_present": false
     }
   },
   "consumer_symbols_not_in_public_include": [

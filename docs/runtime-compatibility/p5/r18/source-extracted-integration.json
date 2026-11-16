@@ -1,0 +1,112 @@
+{
+  "public_api": "passed",
+  "test_flags": "-m32",
+  "runtime_validation": false,
+  "suites": [
+    {
+      "name": "test-review-artifacts",
+      "exit_code": 0,
+      "compiler": "g++",
+      "test_flags": "-m32",
+      "duration_seconds": 0.121
+    },
+    {
+      "name": "test-stats-natives",
+      "exit_code": 0,
+      "compiler": "g++",
+      "test_flags": "-m32",
+      "duration_seconds": 0.704
+    },
+    {
+      "name": "test-detours",
+      "exit_code": 0,
+      "compiler": "g++",
+      "test_flags": "-m32",
+      "duration_seconds": 1.208
+    },
+    {
+      "name": "test-init-coexistence",
+      "exit_code": 0,
+      "compiler": "g++",
+      "test_flags": "-m32",
+      "duration_seconds": 1.662
+    },
+    {
+      "name": "test-public-ip",
+      "exit_code": 0,
+      "compiler": "g++",
+      "test_flags": "-m32",
+      "duration_seconds": 0.599
+    },
+    {
+      "name": "test-steamid-string",
+      "exit_code": 0,
+      "compiler": "g++",
+      "test_flags": "-m32",
+      "duration_seconds": 0.402
+    },
+    {
+      "name": "test-typed-boundary",
+      "exit_code": 0,
+      "compiler": "g++",
+      "test_flags": "-m32",
+      "duration_seconds": 2.912
+    },
+    {
+      "name": "test-resource-lifecycle",
+      "exit_code": 0,
+      "compiler": "g++",
+      "test_flags": "-m32",
+      "duration_seconds": 8.603
+    },
+    {
+      "name": "test-restart-forward-semantics",
+      "exit_code": 0,
+      "compiler": "g++",
+      "test_flags": "-m32",
+      "duration_seconds": 3.601
+    },
+    {
+      "name": "test-binary-evidence",
+      "exit_code": 0,
+      "compiler": "g++",
+      "test_flags": "-m32",
+      "duration_seconds": 0.356
+    },
+    {
+      "name": "test-debug-log",
+      "exit_code": 0,
+      "compiler": "g++",
+      "test_flags": "-m32",
+      "duration_seconds": 0.46
+    },
+    {
+      "name": "test-http-stream-context",
+      "exit_code": 0,
+      "compiler": "g++",
+      "test_flags": "-m32",
+      "duration_seconds": 3.72
+    },
+    {
+      "name": "test-auth-forward",
+      "exit_code": 0,
+      "compiler": "clang++",
+      "test_flags": "-m32 -fsanitize=address -shared-libasan -fsized-deallocation -fno-pie -no-pie",
+      "duration_seconds": 1.42
+    },
+    {
+      "name": "test-auth-binding",
+      "exit_code": 0,
+      "compiler": "g++",
+      "test_flags": "-m32",
+      "duration_seconds": 4.259
+    },
+    {
+      "name": "test-sourcepawn-environment",
+      "exit_code": 0,
+      "compiler": "clang++",
+      "test_flags": "-m32 -fsanitize=address -shared-libasan -fsized-deallocation -fno-pie -no-pie",
+      "duration_seconds": 0.113
+    }
+  ]
+}

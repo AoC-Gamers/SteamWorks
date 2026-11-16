@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "actual_archives_used": true,
+  "candidate_runtime_payload_sha256": {
+    "addons/sourcemod/extensions/steamworks.ext.so": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+    "addons/sourcemod/scripting/include/steamworks.inc": "a3e5a7a220dd4d7b46dab3226b41c68f2eb24c4ddf4943f0b943f87566b4f2d5"
+  },
+  "rollback_archive_sha256": "55153d557f3af7f71f1016c8c394dc74fe29e0cdc9511044c21de29e8bc6dffc",
+  "restored_files_sha256": {
+    "extensions/steamworks.ext.so": "9ca37aadcd83448d49126d6a72babcb8ec97ec5a06c171b4821ae0ee3cf05d70",
+    "scripting/include/steamworks.inc": "e51bcd397139edc3d144f130c45f0f8edbf55d12278736e0134e4c650ec64f17"
+  },
+  "absent_paths_removed": [
+    "gamedata/steamworks.txt"
+  ],
+  "unrelated_config_preserved": true,
+  "temporary_filesystem_only": true,
+  "server_operation": false
+}

@@ -1,6 +1,6 @@
 # Cobertura de pruebas de `steamworks.inc`
 
-La [matriz P5-R17](runtime-compatibility/p5/validation-results.json) cierra los
+La [matriz P5-R18](runtime-compatibility/p5/validation-results.json) cierra los
 33 casos aplicables a Linux x86; T13/T14/T34 no aplican al perfil.
 [T25/T29](runtime-compatibility/last-two-srcds-progress.md) incorporan 18 checks
 humanos/sociales, 104 deterministas de Connect en VM x86 y 66 pruebas Python.
@@ -14,19 +14,22 @@ reversión; T32 recuperación Steam y T33 carga local medida durante veinte minu
 El cierre no certifica todos los métodos SDK, GC remoto, varias horas de carga,
 Windows/x64, otro proveedor de identidad o todo el negocio de los consumidores.
 Los SMX HTTP antiguos con tres argumentos deben recompilarse; Connect corregido
-pasó arranque frío/HTTP/ACK/cambio de mapa. ZIP R17 regenerados, R16 intactos; el ZIP de revisión incorpora evidencia y
+pasó arranque frío/HTTP/ACK/cambio de mapa. ZIP R18 regenerados, R17 y anteriores intactos; el ZIP de revisión incorpora evidencia y
 parche externo. Se recompilan 18 harnesses runtime, cuatro fixtures Connect y
 dos controles de includes; 55 entradas SDK y 152 fuentes comprobadas. Build
-optimizado idéntico tras fijar la fecha del compilador; el primer build y su
-diferencia solo de fecha/build-id quedan documentados. Roundtrip rollback local
-y replay de diagnósticos extraídos pasan. Sin nueva operación SRCDS, commit ni producción.
+optimizado idéntico tras fijar la fecha del compilador. La comparación histórica
+de R17 con fecha libre (solo fecha/build-id distintos) se conserva; no se repite
+ese ensayo en R18. Roundtrip rollback local
+y replay de diagnósticos extraídos pasan. La regresión de macro Windows permanece activa y el enlace tier0.lib está
+incluido. Se conserva CI remoto verde para cc52305, sin aceptación runtime
+Windows ni nuevo CI en esta actualización. Sin nueva operación SRCDS, commit ni producción.
 
 ## Referencia histórica del plugin de ejemplo
 
 Las secciones siguientes conservan observaciones previas de
 `scripting/steamwork_test.sp` contra `scripting/include/steamworks.inc`. Describen
 su ensayo original; la aceptación del candidato actual se limita a los harnesses,
-hashes y resultados de la matriz P5-R17. Los informes y paquetes anteriores se
+hashes y resultados de la matriz P5-R18. Los informes y paquetes anteriores se
 conservan intactos y no se transfieren entre binarios distintos.
 
 ## Verificado

@@ -1,17 +1,17 @@
 {
   "schema_version": 3,
-  "checkpoint": "p5-r17",
-  "timestamp_utc": "2026-11-16T11:15:41.410883+00:00",
+  "checkpoint": "p5-r18",
+  "timestamp_utc": "2026-11-16T12:11:54.004482+00:00",
   "branch": "develop",
-  "baseline_commit": "46e3ee05fc29ad090a1d6f7b1cb5e3dca9855350",
-  "status": "integrated_accepted_scoped_linux_x86",
+  "baseline_commit": "cc523056f958a0a904b31dde90290b2364760c97",
+  "status": "integrated_accepted_scoped_linux_x86_with_Windows_CI_fixes",
   "full_matrix_accepted": true,
   "committed": false,
   "published": false,
   "candidate_previously_run_in_isolated_DEV": true,
   "production_touched": false,
   "public_api_changed": false,
-  "result_scope": "R17 integrates closure of T25/T29 plus prior scoped T32/T33 and all original Linux L4D2 x86 contracts: 33 passed, three not applicable. Repeated fifteen x86 suites, native and offline-VM sanitizers without suppressions, optimized producer build byte-identical after fixed compiler-date epoch, three consumers, eighteen runtime harnesses, four Connect fixtures and two old/current header controls. Connect 66 Python tests/build pass; its source hashes match accepted R16 runtime, public API unchanged. No new server acceptance or deployment. New R17 candidate archive locally verified only, rollback archive identical to bytes exercised in R9. Historical evidence and all previous archives preserved. Full consumer gameplay/remote Core, other platforms/providers, remote GC and multi-hour capacity not inferred.",
+  "result_scope": "R18 integrates the two committed Windows CI fixes: macro-safe numeric_limits calls with the max macro still active and explicit tier0 import linking for tier1 ConVar. Existing remote CI passed Linux and Windows for cc52305; no new workflow/push in this update and no Windows runtime acceptance. Repeat fifteen x86 suites, native/offline VM sanitizers without suppressions, optimized identical Linux ELF, eighteen harnesses, three consumers, four Connect fixtures, two header controls and 66 Connect Python tests. Fresh source ZIP includes the Windows fixes, exact-byte Git attributes and complete committed Connect correction against c695bf0. Original Linux x86 matrix remains 33 passed and three N/A by exact runtime payload/evidence. Four new archives and fresh read-only rollback capture; local archive verification/restore only, no server operation. Earlier archives and evidence unchanged.",
   "target": "Linux x86 only; historical x64 diagnostics are not regenerated or shipped",
   "sdk": {
     "target": "1.58a",
@@ -59,9 +59,9 @@
     "enable_optimize": true,
     "optimization_flags": "-O3 -DNDEBUG -m32",
     "warnings_as_errors": true,
-    "path": ".build/p5-r17/reproducible-build/package/addons/sourcemod/extensions/steamworks.ext.so",
+    "path": ".build/p5-r18/reproducible-build/package/addons/sourcemod/extensions/steamworks.ext.so",
     "sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
-    "log": ".build/p5-r17/reproducible-build.log",
+    "log": ".build/p5-r18/reproducible-build.log",
     "identical_to_optimized_SRCDS_accepted_binary": true,
     "current_candidate_executed_in_SRCDS": true,
     "R9_archive_installed_in_SRCDS": true,
@@ -90,7 +90,10 @@
     "identical_to_T25_T29_R16_installed_payload": true,
     "packaged_include_change_from_R16": "none",
     "SOURCE_DATE_EPOCH": 1794700800,
-    "compile_date_reproducibility": "Compiler __DATE__ pinned to accepted Nov 15 2026. Initial wall-clock Nov 16 build differed in date byte and resulting GNU build-id only; see p5/r17/build-date-comparison.json"
+    "compile_date_reproducibility": "Compiler __DATE__ pinned to Nov 15 2026 to reproduce accepted bytes. R18 execution metadata records actual validation time; no wall-clock trial repeated.",
+    "R18_archive_installed_in_SRCDS": false,
+    "identical_to_accepted_R16_ELF_and_include": true,
+    "packaged_include_change_from_R17": "none"
   },
   "x86_suites": {
     "public_api": "passed",
@@ -102,105 +105,105 @@
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 0.135
+        "duration_seconds": 0.156
       },
       {
         "name": "test-stats-natives",
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 0.658
+        "duration_seconds": 0.717
       },
       {
         "name": "test-detours",
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 1.314
+        "duration_seconds": 1.285
       },
       {
         "name": "test-init-coexistence",
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 1.733
+        "duration_seconds": 1.76
       },
       {
         "name": "test-public-ip",
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 0.634
+        "duration_seconds": 0.619
       },
       {
         "name": "test-steamid-string",
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 0.407
+        "duration_seconds": 0.42
       },
       {
         "name": "test-typed-boundary",
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 2.901
+        "duration_seconds": 3.106
       },
       {
         "name": "test-resource-lifecycle",
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 9.342
+        "duration_seconds": 8.954
       },
       {
         "name": "test-restart-forward-semantics",
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 3.748
+        "duration_seconds": 3.631
       },
       {
         "name": "test-binary-evidence",
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 0.355
+        "duration_seconds": 0.341
       },
       {
         "name": "test-debug-log",
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 0.472
+        "duration_seconds": 0.462
       },
       {
         "name": "test-http-stream-context",
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 3.731
+        "duration_seconds": 3.684
       },
       {
         "name": "test-auth-forward",
         "exit_code": 0,
         "compiler": "clang++",
         "test_flags": "-m32 -fsanitize=address -shared-libasan -fsized-deallocation -fno-pie -no-pie",
-        "duration_seconds": 1.402
+        "duration_seconds": 1.455
       },
       {
         "name": "test-auth-binding",
         "exit_code": 0,
         "compiler": "g++",
         "test_flags": "-m32",
-        "duration_seconds": 4.204
+        "duration_seconds": 4.404
       },
       {
         "name": "test-sourcepawn-environment",
         "exit_code": 0,
         "compiler": "clang++",
         "test_flags": "-m32 -fsanitize=address -shared-libasan -fsized-deallocation -fno-pie -no-pie",
-        "duration_seconds": 0.119
+        "duration_seconds": 0.121
       }
     ]
   },
@@ -367,12 +370,15 @@
     "report": "p5/consumers.json",
     "inventory": "p5/consumers-inventory.json",
     "external_Connect_followup": "last-two-resume-srcds/Connect-source-manifest.json",
-    "current_contract_report": "p5/r17/extra-consumer-checks.json",
+    "current_contract_report": "p5/r18/extra-consumer-checks.json",
     "Connect_source_hashes_match_accepted_runtime": true,
-    "Connect_runtime_repeated_in_R17": false
+    "Connect_runtime_repeated_in_R17": false,
+    "Connect_runtime_repeated_in_R18": false,
+    "Connect_committed_correction": "5f62f3c6877d5ee21dc912ad498c881921ea15d7",
+    "Connect_diff_base": "c695bf0ceca8192a2cee704242a969ab973be0ba"
   },
   "rollback": {
-    "captured_utc": "2026-11-16T11:11:09.806523+00:00",
+    "captured_utc": "2026-11-16T12:08:21.535795+00:00",
     "absent": [
       "gamedata/steamworks.txt"
     ],
@@ -411,7 +417,7 @@
     "R7_archive_applied_in_place": true,
     "R8_archive_applied_in_place": false,
     "R9_archive_applied_in_place": true,
-    "in_place_archive_restore_scope": "New R17 rollback ZIP regenerated locally from fresh read-only capture; exact ZIP SHA remains identical to R9 exercised bytes. No R17 ZIP applied to any server in this update.",
+    "in_place_archive_restore_scope": "Regenerated R18 rollback ZIP from a fresh read-only capture; exact bytes identical to R9 applied archive. New local filesystem roundtrip only, no R18 server installation or restore.",
     "R10_archive_applied_in_place": false,
     "current_rollback_archive_bytes_exercised": true,
     "current_rollback_SHA_identical_to_R9_exercised": true,
@@ -422,34 +428,37 @@
     "R14_archive_applied_in_place": false,
     "R15_archive_applied_in_place": false,
     "R16_archive_applied_in_place": false,
-    "R17_archive_applied_in_place": false
+    "R17_archive_applied_in_place": false,
+    "R18_archive_applied_in_place": false
   },
   "checks": {
     "integration_suites": 15,
     "review_artifacts_tests": 12,
-    "remote_CI": "not_run",
+    "remote_CI": "passed existing SteamWorks 43861680010 for committed product cc52305 (Linux and Windows) and Connect 43860123701 for 5f62f3c; no new CI triggered for uncommitted R18 documentation/artifacts",
     "native_and_VM_ASan_LSan_UBSan": "passed x86 including optimized auth bounds and CDetour backup; no suppressions",
     "package_validator": "passed staged tree and final extracted ZIP",
-    "archived_rollback_filesystem_roundtrip": "passed regenerated R17 ZIP bytes locally; rollback ZIP identical to R9 live restore",
+    "archived_rollback_filesystem_roundtrip": "R18 actual archives in disposable filesystem; rollback ZIP identical to R9 live restore",
     "actionlint": "passed",
     "bash_syntax": "passed",
     "git_diff_check": "passed",
-    "workflow_streaming_regression": "added x86 test step; actionlint passed; remote CI not run",
+    "workflow_streaming_regression": "passed remote CI 43861680010 on committed product cc52305: Test streaming HTTP context (x86, UBSan); no new CI run for R18 documentation/artifacts",
     "stats_schema_fixture": "733 keys regenerated identical to optimized SRCDS acceptance",
-    "stats_harness_compilation": "all eighteen runtime harnesses compiled without warnings, including network/soak, pending identity and real social observers",
-    "workflow_init_coexistence_regression": "added x86 step; actionlint passed; remote CI not run",
+    "stats_harness_compilation": "all eighteen runtime harnesses warning-free",
+    "workflow_init_coexistence_regression": "passed remote CI 43861680010 on committed product cc52305: Test init observer coexistence (x86, UBSan); no new CI run for R18 documentation/artifacts",
     "restart_semantic_checks": 109,
     "diagnostic_forward_fixture": "ELF32 build matches R13 laboratory-loaded helper; not in candidate runtime",
-    "workflow_restart_semantics_regression": "added x86/UBSan step; actionlint passed; remote CI not run",
+    "workflow_restart_semantics_regression": "passed remote CI 43861680010 on committed product cc52305: Test restart forward semantics (x86, UBSan); no new CI run for R18 documentation/artifacts",
     "diagnostic_capability_fixture": "ELF32 build matches R14 laboratory-loaded helper; source only in source-review, outside candidate runtime",
     "Connect_Python_tests": 66,
     "Connect_fixtures_compiled": 4,
     "legacy_current_header_controls_compiled": 2,
     "legacy_three_argument_call_rejected": true,
-    "compiler_date_reproducibility": "passed fixed SOURCE_DATE_EPOCH; original wall-clock comparison preserved"
+    "compiler_date_reproducibility": "SOURCE_DATE_EPOCH=1794700800; byte-identical accepted ELF",
+    "Windows_max_macro_regression": "passed with macro active; existing negative control preserved",
+    "exact_byte_Git_attributes": "included in source review; audited SDK wrappers and evidence keep recorded bytes"
   },
-  "artifact_directory": ".build/p5-r17/review/",
-  "historical_checkpoint": "p5/history/p5-r16-with-T25-T29-closed-validation-results.json",
+  "artifact_directory": ".build/p5-r18/review/",
+  "historical_checkpoint": "p5/history/p5-r17-with-Windows-CI-fixes-validation-results.json",
   "source_sha256": {
     "extension/AMBuilder": "20c4456b22475724800ba3312b8057c1a568a88586664e6181507a3982f48244",
     "extension/CDetour/detourhelpers.h": "ea9e6d2866dfb4e763dc921d712f1694f47107e0faade9490ae10614f827c3a8",
@@ -762,7 +771,7 @@
       "pending_levels": [],
       "evidence": [
         "http-stream-srcds/results.json",
-        "p5/r17/test-resource-lifecycle.log",
+        "p5/r18/test-resource-lifecycle.log",
         "p5-r5-rollback-srcds/results.json",
         "p5-r5-rollback-srcds/shutdown-core-stacks.json",
         "t08-shutdown/results.json",
@@ -845,7 +854,7 @@
       "evidence": [
         "t08-coexist-srcds/results.json",
         "t08-coexist-srcds/detour-ownership.json",
-        "p5/r17/test-init-coexistence.log",
+        "p5/r18/test-init-coexistence.log",
         "optimized-srcds/results.json"
       ],
       "actual": "Current optimized engine CALL observer and shutdown detour remain in SteamWorks, SDK init bridge in SourceTVSupport. Three original successful init observations, two same-process reinits; optimized bounded-backup and snapshot tests pass.",
@@ -938,7 +947,7 @@
         "t08-coexist-srcds/initial-http.json",
         "t08-coexist-srcds/after-reinit-1-http.json",
         "t08-coexist-srcds/after-reinit-2-http.json",
-        "p5/r17/test-http-stream-context.log",
+        "p5/r18/test-http-stream-context.log",
         "optimized-srcds/results.json"
       ],
       "actual": "Current optimized host: three eight-case rounds and one probe, 25 completions with zero harness failures, text/binary NUL/empty/503/refused/timeout/invalid TLS; 18 streaming bytes and both context cells intact.",
@@ -960,7 +969,7 @@
         "t08-coexist-srcds/initial-http.json",
         "t08-coexist-srcds/after-reinit-1-http.json",
         "t08-coexist-srcds/after-reinit-2-http.json",
-        "p5/r17/test-http-stream-context.log",
+        "p5/r18/test-http-stream-context.log",
         "optimized-srcds/results.json"
       ],
       "actual": "Current optimized host: complete HTTP cases, 3 streaming headers and 18 valid binary bytes with full context across reinits; exact scalar conditions also pass deterministic tests.",
@@ -996,7 +1005,7 @@
       "pending_levels": [],
       "evidence": [
         "t08-coexist-srcds/results.json",
-        "p5/r17/test-resource-lifecycle.log",
+        "p5/r18/test-resource-lifecycle.log",
         "optimized-srcds/results.json",
         "t20-owner-srcds/results.json"
       ],
@@ -1015,7 +1024,7 @@
       ],
       "pending_levels": [],
       "evidence": [
-        "p5/r17/test-resource-lifecycle.log",
+        "p5/r18/test-resource-lifecycle.log",
         "t08-coexist-srcds/results.json",
         "optimized-srcds/results.json"
       ],
@@ -1052,8 +1061,8 @@
       ],
       "pending_levels": [],
       "evidence": [
-        "p5/r17/test-auth-binding.log",
-        "p5/r17/test-auth-forward.log",
+        "p5/r18/test-auth-binding.log",
+        "p5/r18/test-auth-forward.log",
         "t08-coexist-srcds/results.json",
         "p5-r6-auth-srcds/results.json",
         "optimized-srcds/results.json",
@@ -1074,7 +1083,7 @@
       ],
       "pending_levels": [],
       "evidence": [
-        "p5/r17/integration.json",
+        "p5/r18/integration.json",
         "p5/api-inventory.json"
       ],
       "actual": "Current inventory matches P0 declarations, registrations, enum/typeset values and optionality; 14 x86 suites pass.",
@@ -1099,7 +1108,7 @@
         "last-two-srcds/results.json",
         "last-two-resume-srcds/results.json"
       ],
-      "actual": "R15 actual candidate in LinuxGSM SRCDS x86: six real consumers (preexisting P5-R2 example/AoC and Family Share dist, plus three fresh recompilations) load/unload and pass scoped paths. Example HTTP 200/body16/close; AoC actual IP callback consumes SDK output with host metadata restored; Family Share native guards and one asynchronous local fallback per variant. 37 observer checks pass. Two newly compiled contract fixtures using archived/current include pass 11 H08/H09 checks each with an authorized real human: AppID 550 accepted by client/AccountID, 0/1 refused, stat reads match, buffer count/NUL/truncation/one/zero correct, failed stat outputs preserved. These fixtures are not historical precompiled SMX. Three-argument legacy HTTP call shape is rejected with expected native error 23/unchanged output and current-header compile error 034; full Connect not executed. T25 remains partial; no external repo/product/API edits. Protected config hashes/mtimes stable; same lab PID, controlled quit and original DEV restored. R16 integrates scoped results, preserves both external Connect gaps/full-business limits, packages new fixtures and recompiles all 14 harnesses. No new runtime acceptance in this update. Current two-case followup fixes both external Connect call sites and local declaration through a shared complete-text reader. Thirteen deterministic scenarios/83 actual x86 SourcePawn VM checks pass, 66 Python tests and compilation pass, inventory arity mismatches zero. Actual Connect and six real providers load; local assignment GET200 and actual competitive ACK callbacks reject oversized body preserving exact input and retire same input after valid ACK. Invalid first fixture attempts preserved. Human sharing/profile/group and broader business paths remain unaccepted. Resume 2026-11-16: 12 real social checks pass, including borrowed account distinction, Web API profile with owner disconnected and authorized group member/officer callback. Corrected full Connect passes cold start with six real providers, assignment HTTP200, exact synthetic competitive ACK and same-process map/HTTP200. 104 deterministic x86 VM checks and 66 Python tests pass. Original precompiled/recompiled agreed contracts satisfied; entire business logic or remote Core not inferred. Legacy three-argument HTTP binaries require recompilation. Genuine cold-start failure preserved and fixed in external consumer, no producer API change. R17 integrates the scoped R16 closure, verifies all 152 current producer source hashes and frozen acceptance evidence, recompiles observers/consumers and repeats local integration; no new server operation.",
+      "actual": "R15 actual candidate in LinuxGSM SRCDS x86: six real consumers (preexisting P5-R2 example/AoC and Family Share dist, plus three fresh recompilations) load/unload and pass scoped paths. Example HTTP 200/body16/close; AoC actual IP callback consumes SDK output with host metadata restored; Family Share native guards and one asynchronous local fallback per variant. 37 observer checks pass. Two newly compiled contract fixtures using archived/current include pass 11 H08/H09 checks each with an authorized real human: AppID 550 accepted by client/AccountID, 0/1 refused, stat reads match, buffer count/NUL/truncation/one/zero correct, failed stat outputs preserved. These fixtures are not historical precompiled SMX. Three-argument legacy HTTP call shape is rejected with expected native error 23/unchanged output and current-header compile error 034; full Connect not executed. T25 remains partial; no external repo/product/API edits. Protected config hashes/mtimes stable; same lab PID, controlled quit and original DEV restored. R16 integrates scoped results, preserves both external Connect gaps/full-business limits, packages new fixtures and recompiles all 14 harnesses. No new runtime acceptance in this update. Current two-case followup fixes both external Connect call sites and local declaration through a shared complete-text reader. Thirteen deterministic scenarios/83 actual x86 SourcePawn VM checks pass, 66 Python tests and compilation pass, inventory arity mismatches zero. Actual Connect and six real providers load; local assignment GET200 and actual competitive ACK callbacks reject oversized body preserving exact input and retire same input after valid ACK. Invalid first fixture attempts preserved. Human sharing/profile/group and broader business paths remain unaccepted. Resume 2026-11-16: 12 real social checks pass, including borrowed account distinction, Web API profile with owner disconnected and authorized group member/officer callback. Corrected full Connect passes cold start with six real providers, assignment HTTP200, exact synthetic competitive ACK and same-process map/HTTP200. 104 deterministic x86 VM checks and 66 Python tests pass. Original precompiled/recompiled agreed contracts satisfied; entire business logic or remote Core not inferred. Legacy three-argument HTTP binaries require recompilation. Genuine cold-start failure preserved and fixed in external consumer, no producer API change. R17 integrates the scoped R16 closure, verifies all 152 current producer source hashes and frozen acceptance evidence, recompiles observers/consumers and repeats local integration; no new server operation. R18 includes committed consumer/Windows corrections in refreshed source review and repeats local validation. Runtime acceptance retained by identical ELF/include; no new server operations.",
       "historical_case_snapshot": "p5/history/p5-r15-with-T25-partial-followup-validation-results.json#T25",
       "scope_reconciliation": "Earlier partial real-host/full-business wording is preserved in p5/history/p5-r16-before-human-resume-validation-results.json; closure uses original planned U/I or I contract and explicit evidence limits."
     },
@@ -1115,13 +1124,13 @@
       ],
       "pending_levels": [],
       "evidence": [
-        ".build/p5-r17/review/manifest.json",
+        ".build/p5-r18/review/manifest.json",
         "t08-coexist-srcds/results.json",
         "p5-r6-auth-srcds/results.json",
         "p5-r7-rollback-srcds/results.json",
         "p5-r9-rollback-srcds/results.json"
       ],
-      "actual": "T26 passed actual R9 candidate ZIP installed inside guest while stopped, optimized ELF/include mapped and startup/Steam/HTTP/context/callback correct with 135 plugin rows and clean quit. R10 rebuilt runtime payload is byte-identical; new R10 candidate ZIP docs/label locally verified, not newly installed. R11 keeps the same runtime files and rollback ZIP SHA; no new R11 server run. R12 runtime/rollback bytes match exercised artifacts; only candidate ZIP docs/label refreshed. R14 preserves the exercised ELF and rollback ZIP. Candidate include changes only documentation; new R14 archive installation is not claimed. R15 extension/include match the T11 R14 installed payload, and rollback ZIP matches the R9 exercised archive; new R15 ZIP not installed/applied in place. R16 retains exact rollback ZIP hash and repeats local roundtrip only; R16 candidate ZIP not installed. R17 fresh read-only baseline and local archived restore roundtrip pass; rollback ZIP preserves exact R9 exercised SHA. New candidate ZIP not installed.",
+      "actual": "T26 passed actual R9 candidate ZIP installed inside guest while stopped, optimized ELF/include mapped and startup/Steam/HTTP/context/callback correct with 135 plugin rows and clean quit. R10 rebuilt runtime payload is byte-identical; new R10 candidate ZIP docs/label locally verified, not newly installed. R11 keeps the same runtime files and rollback ZIP SHA; no new R11 server run. R12 runtime/rollback bytes match exercised artifacts; only candidate ZIP docs/label refreshed. R14 preserves the exercised ELF and rollback ZIP. Candidate include changes only documentation; new R14 archive installation is not claimed. R15 extension/include match the T11 R14 installed payload, and rollback ZIP matches the R9 exercised archive; new R15 ZIP not installed/applied in place. R16 retains exact rollback ZIP hash and repeats local roundtrip only; R16 candidate ZIP not installed. R17 fresh read-only baseline and local archived restore roundtrip pass; rollback ZIP preserves exact R9 exercised SHA. New candidate ZIP not installed. R18 renews read-only capture and local archived roundtrip; exact rollback SHA still exercised in R9, new candidate ZIP not installed.",
       "historical_case_snapshot": "p5/history/p5-r14-with-T11-followup-validation-results.json#T26"
     },
     {
@@ -1135,7 +1144,7 @@
       ],
       "pending_levels": [],
       "evidence": [
-        ".build/p5-r17/review/manifest.json",
+        ".build/p5-r18/review/manifest.json",
         "scripts/prepare-review-artifacts.py"
       ],
       "actual": "Allowlisted payload reviewed: no SDK/game libraries, secrets, server config, auth tickets or test SMX; license included"
@@ -1177,7 +1186,7 @@
         "last-two-srcds/results.json",
         "last-two-resume-srcds/results.json"
       ],
-      "actual": "R12 real host: owned bot rejected for stats, public/individual zero-account textual fallback; disconnected client rejects identity/stats; client 0/out of range rejected before capacity. Early human connection rejects invalid entity reference (native error 23); same serial later authorized matches SourceMod and RequestStats accepts. This does not prove connected unauthorized false branch or inconsistent validated identity. R13 retains this partial scope and repeats deterministic identity suites; no additional real-host paths are inferred. R14 preserves remaining real-host identity gaps. R15 retains the remaining real-host identity gaps. Current followup audits actual loaded SourceMod getter/reference disassembly; AccountID-only or inconsistent validated values cannot arise normally from the same synchronous CSteamID provider. Guards remain covered by production-native deterministic x86 tests, not represented as induced real identities. A new serial-reference pending-client probe is compiled and armed without modifying auth/entity memory; real pending/authorized entry remains awaited. Resume 2026-11-16: actual connected nonbot unauthorized serial reference reaches RequestStats false with SP_ERROR_NONE, followed by same-client authorized positive control; six checks pass. Validated AccountID-only/inconsistent values are not normally reachable in the audited synchronous provider; production-native deterministic guards and binary provider invariant cover these defensive alternatives. Original U/I criterion satisfied; no forged real identities or memory changes, other providers not covered. R17 integrates the scoped R16 closure, verifies all 152 current producer source hashes and frozen acceptance evidence, recompiles observers/consumers and repeats local integration; no new server operation.",
+      "actual": "R12 real host: owned bot rejected for stats, public/individual zero-account textual fallback; disconnected client rejects identity/stats; client 0/out of range rejected before capacity. Early human connection rejects invalid entity reference (native error 23); same serial later authorized matches SourceMod and RequestStats accepts. This does not prove connected unauthorized false branch or inconsistent validated identity. R13 retains this partial scope and repeats deterministic identity suites; no additional real-host paths are inferred. R14 preserves remaining real-host identity gaps. R15 retains the remaining real-host identity gaps. Current followup audits actual loaded SourceMod getter/reference disassembly; AccountID-only or inconsistent validated values cannot arise normally from the same synchronous CSteamID provider. Guards remain covered by production-native deterministic x86 tests, not represented as induced real identities. A new serial-reference pending-client probe is compiled and armed without modifying auth/entity memory; real pending/authorized entry remains awaited. Resume 2026-11-16: actual connected nonbot unauthorized serial reference reaches RequestStats false with SP_ERROR_NONE, followed by same-client authorized positive control; six checks pass. Validated AccountID-only/inconsistent values are not normally reachable in the audited synchronous provider; production-native deterministic guards and binary provider invariant cover these defensive alternatives. Original U/I criterion satisfied; no forged real identities or memory changes, other providers not covered. R17 integrates the scoped R16 closure, verifies all 152 current producer source hashes and frozen acceptance evidence, recompiles observers/consumers and repeats local integration; no new server operation. R18 includes committed consumer/Windows corrections in refreshed source review and repeats local validation. Runtime acceptance retained by identical ELF/include; no new server operations.",
       "prior_candidate_evidence": {
         "path": "auth014-srcds/results.json",
         "candidate_sha256": "ddfdf9bf2f9bde625719ba171c59f7cac8b56cbe136a15e4911c7acbf00383ad",
@@ -1286,14 +1295,14 @@
       ],
       "pending_levels": [],
       "evidence": [
-        ".build/p5-r17/review/manifest.json",
+        ".build/p5-r18/review/manifest.json",
         "auth014-srcds/cleanup.json",
         "http-stream-srcds/cleanup.json",
         "p5-r5-rollback-srcds/results.json",
         "p5-r7-rollback-srcds/results.json",
         "p5-r9-rollback-srcds/results.json"
       ],
-      "actual": "T35 passed actual R9 ZIP in-place restore after optimized 839ff075, exact original hashes/absent gamedata/configs preserved, fresh baseline PID and Steam/HTTP with identical 135 plugins. R10 regenerated rollback ZIP is byte-identical to that exercised archive and runtime payload unchanged. No new R10 server run; baseline known exit SIGSEGV preserved, clean baseline quit not accepted. R11 keeps the same runtime files and rollback ZIP SHA; no new R11 server run. R12 runtime/rollback bytes match exercised artifacts; only candidate ZIP docs/label refreshed. R14 preserves the exercised ELF and rollback ZIP. Candidate include changes only documentation; new R14 archive installation is not claimed. R15 extension/include match the T11 R14 installed payload, and rollback ZIP matches the R9 exercised archive; new R15 ZIP not installed/applied in place. R16 retains exact rollback ZIP hash and repeats local roundtrip only; R16 candidate ZIP not installed. R17 fresh read-only baseline and local archived restore roundtrip pass; rollback ZIP preserves exact R9 exercised SHA. New candidate ZIP not installed.",
+      "actual": "T35 passed actual R9 ZIP in-place restore after optimized 839ff075, exact original hashes/absent gamedata/configs preserved, fresh baseline PID and Steam/HTTP with identical 135 plugins. R10 regenerated rollback ZIP is byte-identical to that exercised archive and runtime payload unchanged. No new R10 server run; baseline known exit SIGSEGV preserved, clean baseline quit not accepted. R11 keeps the same runtime files and rollback ZIP SHA; no new R11 server run. R12 runtime/rollback bytes match exercised artifacts; only candidate ZIP docs/label refreshed. R14 preserves the exercised ELF and rollback ZIP. Candidate include changes only documentation; new R14 archive installation is not claimed. R15 extension/include match the T11 R14 installed payload, and rollback ZIP matches the R9 exercised archive; new R15 ZIP not installed/applied in place. R16 retains exact rollback ZIP hash and repeats local roundtrip only; R16 candidate ZIP not installed. R17 fresh read-only baseline and local archived restore roundtrip pass; rollback ZIP preserves exact R9 exercised SHA. New candidate ZIP not installed. R18 renews read-only capture and local archived roundtrip; exact rollback SHA still exercised in R9, new candidate ZIP not installed.",
       "historical_case_snapshot": "p5/history/p5-r14-with-T11-followup-validation-results.json#T35"
     },
     {
@@ -1308,8 +1317,8 @@
       ],
       "pending_levels": [],
       "evidence": [
-        "p5/r17/test-auth-forward.log",
-        "p5/r17/test-auth-binding.log",
+        "p5/r18/test-auth-forward.log",
+        "p5/r18/test-auth-binding.log",
         "p5-r6-auth-srcds/results.json",
         "optimized-srcds/results.json"
       ],
@@ -1327,13 +1336,14 @@
     "Acceptance is scoped to documented Linux L4D2 x86 engine/SDK/provider and original T01-T36 contracts; no Windows/x64 or unknown version inference.",
     "T13/T14/T34 do not apply to this profile.",
     "T25 covers agreed consumer interfaces and tested paths, not whole BanSystem/Connect gameplay, remote Core or every optional dependency. Historical old/current header controls are fresh fixtures, not genuinely historical binaries.",
-    "Corrected Connect must be recompiled with five-argument HTTP reader contract. Legacy three-argument binaries remain rejected. R17 source review now includes the external correction patch and new internal helpers/tests; producer addons payload does not contain Connect.",
+    "Corrected Connect must be recompiled with five-argument HTTP reader contract. Legacy three-argument binaries remain rejected. R18 source review now includes the external correction patch and new internal helpers/tests; producer addons payload does not contain Connect.",
     "T29 fallback/mismatched validated identity alternatives are deterministically tested, not induced on a real account; audited actual provider returns both validated identities from the same CSteamID. Other providers require separate evidence.",
     "T11 minimum capabilities/GC local only; no remote GC backend delivery or all SDK methods.",
     "T16 serial quiescent unload/reload only, no forced unload on active callback stacks. T20 measured pending-owner release windows are not a global SDK heap leak proof.",
     "T32 one bounded loss/recovery cycle; T33 measured twenty-minute loopback workload, not multi-hour production capacity.",
     "Archived baseline still faults at quit; candidate clean shutdown does not certify baseline shutdown.",
-    "R17 repeats optimized producer build, local x86 integration/sanitizers, consumer compilation and archived restore; new candidate ZIP is not installed. Previous runtime acceptance applies by exact ELF/include hashes, not by archive label."
+    "R18 repeats optimized producer build, local x86 integration/sanitizers, consumer compilation and archived restore; new candidate ZIP is not installed. Previous runtime acceptance applies by exact ELF/include hashes, not by archive label.",
+    "Windows build/link CI is compiler evidence only, not SRCDS Windows runtime acceptance. R18 has no new remote CI run; cited successful CI belongs to unchanged committed product base cc52305. Earlier R17 archive remains historical; new R18 source archive contains both Windows fixes and complete Connect correction."
   ],
   "release_deployed": false,
   "isolated_acceptance_run_in_followup": false,
@@ -1706,7 +1716,28 @@
     "prior_artifacts_unchanged": true,
     "no_game_server_operation": true
   },
-  "final_review": {
+  "ci_followup": {
+    "path": "p5/r17/ci-max-macro/results.json",
+    "previous_matrix": "p5/history/p5-r17-before-remote-CI-fix-validation-results.json",
+    "public_API_changed": false,
+    "optimized_Linux_ELF_changed": false,
+    "source_changes": "Windows max-macro spelling plus regression control; 15 x86 suites repeated",
+    "offline_R17_archives_regenerated": false,
+    "offline_R17_source_archive_scope": "Historical pre-CI-fix snapshot preserved; superseded by R18 source review.",
+    "initial_remote_run": "https://github.com/AoC-Gamers/SteamWorks/actions/runs/43860126225",
+    "initial_run_conclusion": "Windows failure; Linux passed",
+    "corrected_remote_run": "https://github.com/AoC-Gamers/SteamWorks/actions/runs/43861680010",
+    "max_macro_fix_run": "https://github.com/AoC-Gamers/SteamWorks/actions/runs/43861100353",
+    "max_macro_compile_fix_verified_in_MSVC": true,
+    "Windows_link_followup": "p5/r17/ci-windows-tier0/results.json",
+    "Windows_link_dependency": "explicit SDK tier0.lib; actual missing imports verified",
+    "status": "incorporated_into_p5_r18",
+    "final_conclusion": "success",
+    "offline_R18_archives_contain_fixes": true
+  },
+  "original_public_API_baseline_commit": "46e3ee05fc29ad090a1d6f7b1cb5e3dca9855350",
+  "preexisting_published_product_commit": "cc523056f958a0a904b31dde90290b2364760c97",
+  "previous_R17_final_review": {
     "status": "passed_after_corrections",
     "evidence": "p5/r17/final-review/results.json",
     "previous_matrix": "p5/history/p5-r17-before-final-review-validation-results.json",
@@ -1719,20 +1750,43 @@
     "regenerated_R17_artifacts": ".build/p5-r17/review/",
     "no_server_operation": true
   },
-  "ci_followup": {
-    "path": "p5/r17/ci-max-macro/results.json",
-    "previous_matrix": "p5/history/p5-r17-before-remote-CI-fix-validation-results.json",
+  "R18_reconciliation": {
+    "previous_matrix": "p5/history/p5-r17-with-Windows-CI-fixes-validation-results.json",
+    "Windows_max_and_tier0_fixes_in_source_review": true,
+    "public_API_unchanged": true,
+    "Linux_ELF_unchanged": true,
+    "remote_CI_already_passed_for_product_base": true,
+    "Windows_runtime_acceptance_inferred": false,
+    "new_checkpoint_committed_or_pushed": false,
+    "cases_passed": 33,
+    "not_applicable": [
+      "T13",
+      "T14",
+      "T34"
+    ],
+    "remaining_cases": [],
+    "Connect_complete_committed_patch_from_original_base": true,
+    "prior_archives_unchanged": true,
+    "new_archive_installed": false,
+    "server_operations": false
+  },
+  "final_review": {
+    "checkpoint": "p5-r18",
+    "status": "passed_after_documentation_reconciliation",
+    "path": "p5/r18/final-review/results.json",
+    "previous_matrix": "p5/history/p5-r18-before-final-review-validation-results.json",
+    "native_code_changed": false,
     "public_API_changed": false,
-    "optimized_Linux_ELF_changed": false,
-    "source_changes": "Windows max-macro spelling plus regression control; 15 x86 suites repeated",
-    "offline_R17_archives_regenerated": false,
-    "offline_R17_source_archive_scope": "Preserved snapshot before post-push CI fix; current git sources carry correction.",
-    "initial_remote_run": "https://github.com/AoC-Gamers/SteamWorks/actions/runs/43860126225",
-    "initial_run_conclusion": "Windows failure; Linux passed",
-    "corrected_remote_run": "pending push after Windows link fix",
-    "max_macro_fix_run": "https://github.com/AoC-Gamers/SteamWorks/actions/runs/43861100353",
-    "max_macro_compile_fix_verified_in_MSVC": true,
-    "Windows_link_followup": "p5/r17/ci-windows-tier0/results.json",
-    "Windows_link_dependency": "explicit SDK tier0.lib; actual missing imports verified"
+    "new_unresolved_findings": [],
+    "original_R18_artifacts_preserved": ".build/p5-r18/pre-final-review/",
+    "current_artifact_directory": ".build/p5-r18/review/",
+    "CI_steps_crosschecked_against_stored_successful_run": [
+      "Test streaming HTTP context (x86, UBSan)",
+      "Test init observer coexistence (x86, UBSan)",
+      "Test restart forward semantics (x86, UBSan)"
+    ],
+    "committed": false,
+    "pushed": false,
+    "server_operation": false
   }
 }

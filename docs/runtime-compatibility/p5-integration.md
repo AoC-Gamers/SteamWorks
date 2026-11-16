@@ -1,113 +1,125 @@
-# P5-R17: integración del cierre T25/T29 de R16
+# P5-R18: integración de las correcciones de CI de Windows
 
-Rama `develop`, base `46e3ee05fc29ad090a1d6f7b1cb5e3dca9855350`.
-La [matriz T01–T36](p5/validation-results.json) cierra sus 33 casos aplicables al
-perfil Linux L4D2 x86; T13/T14/T34 no aplican. No quedan casos pendientes dentro
-del alcance original. La aceptación técnica no autoriza publicación o despliegue.
+Rama `develop`; base de producto `cc523056f958a0a904b31dde90290b2364760c97`.
+Esta actualización de documentación y paquetes permanece sin commit ni push.
+La API pública se compara con P0 (`46e3ee0…`) y se conserva sin cambios.
+[Matriz T01–T36](p5/validation-results.json): 33 casos aceptados y T13/T14/T34
+no aplicables al perfil Linux L4D2 x86. No quedan casos pendientes en ese alcance.
 
-## Cierre incorporado
+## Correcciones incorporadas y evidencia remota
 
-[T25/T29 de R16](last-two-srcds-progress.md) aporta 18 checks reales: licencia
-prestada, propietario distinto, perfil Web API con propietario desconectado,
-grupo autorizado y cliente conectado/no autorizado que después acepta stats con
-el mismo serial. La invariante del proveedor SourceMod realmente cargado y las
-pruebas deterministas cubren las alternativas defensivas de identidad; no se
-presentan como identidades inconsistentes inducidas en una cuenta real.
+El primer CI de R17 detectó la colisión de la macro Windows `max` con cuatro
+llamadas a `std::numeric_limits::max()`. La forma protegida por paréntesis compila
+sin desactivar la macro ni las comprobaciones. El control negativo anterior y
+el nuevo control x86 con la macro activa se conservan.
 
-Connect corrige sus dos llamadas HTTP antiguas mediante un lector de cinco
-argumentos y separa presencia de la extensión/contexto SDK. Un reintento de
-asignación único evita cadenas duplicadas y se cancela al terminar mapa/plugin.
-El SMX `0b6bfaa5…` pasó arranque frío con seis proveedores reales, HTTP200, ACK
-competitivo sintético y cambio de mapa en el mismo proceso con HTTP200 posterior.
-Los 104 checks SourcePawn de lector/contexto/timers pertenecen a ese ensayo R16;
-R17 recompila sus fixtures y verifica los hashes de sus fuentes, sin repetirlo
-sobre el servidor. Se conservan los fallos iniciales y su corrección.
+El siguiente CI confirmó esa compilación y encontró ocho imports de ConVar sin
+resolver. El enlace Windows ahora declara `tier0.lib` junto a `tier1.lib`;
+los símbolos se contrastaron con la librería SDK sin redistribuirla.
 
-[T32](connection-srcds-acceptance.md) conserva un ciclo real de pérdida y
-recuperación Steam, 81 checks y runtime/interfaces/HTTP estables.
-[T33](soak-srcds-acceptance.md) conserva tres minutos de reposo, veinte de carga
-mixta local y tres de recuperación, 1980 requests, recursos/latencia medidos y
-límites preregistrados. No se extrapolan horas ni capacidad de producción.
+[CI SteamWorks 43861680010](https://github.com/AoC-Gamers/SteamWorks/actions/runs/43861680010)
+pasó Linux, Windows, empaquetado y publicación sobre `cc52305`.
+[CI Connect 43860123701](https://github.com/AoC-Gamers/Connect-Sourcepawn/actions/runs/43860123701)
+pasó sobre `5f62f3c`. R18 conserva [ambas capturas](p5/r18/SteamWorks-CI.json),
+con [el resultado de Connect](p5/r18/Connect-CI.json). No se dispara CI ni se
+publica en esta actualización. Compilar Windows no acepta un perfil runtime
+Windows: la aceptación operativa continúa limitada a Linux x86.
 
-Las demás aceptaciones se conservan por hash y alcance: autenticación 014 y
-stats optimizados, T11 capacidades/GC local, T15 buffers, T16 recarga quiescente,
-T20 propietario HTTP, T23 forwards y T26/T35 instalación/reversión.
-La [matriz anterior con T25/T29 cerrados](p5/history/p5-r16-with-T25-T29-closed-validation-results.json)
-y los paquetes R16 permanecen intactos.
+## Validación local repetida
 
-## Validación integrada nueva
+- Quince suites x86 pasan, incluida comparación integral de API con P0 y
+  control de la macro Windows activa. ASan/LSan/UBSan nativos y VM offline
+  sin supresiones; reinicio, convivencia init, streaming y propiedad comprobados.
+- Build optimizado `-O3 -DNDEBUG -m32 -Werror`, fecha del compilador fijada con
+  `SOURCE_DATE_EPOCH=1794700800`. Reproduce el ELF aceptado
+  `839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192`.
+  El include conserva `a3e5a7a220dd4d7b46dab3226b41c68f2eb24c4ddf4943f0b943f87566b4f2d5`.
+  La fecha fijada es la del binario reproducido; la captura registra la fecha
+  real de esta validación. No se repite el ensayo con fecha libre de R17.
+- Dieciocho harnesses runtime, tres consumidores, cuatro fixtures Connect y
+  dos controles con includes antiguo/actual compilan sin warnings. La llamada
+  HTTP antigua de tres argumentos se rechaza con error 034 esperado.
+- Las 66 pruebas Python y el build de Connect pasan. Sus fuentes conservan los
+  hashes del SMX aceptado; los 104 checks runtime pertenecen al ensayo R16 y
+  no se presentan como ejecutados de nuevo en R18. Inventario sin aridades erróneas.
+- Se verifican 152 fuentes, 55 entradas SDK, imports SMX, fixture de 733 claves
+  stats y ambos helpers ELF32 de T11/T23. La VM diagnóstica conserva su hash y
+  procedencia; no se instala en un servidor.
+- Se valida el árbol candidato y su ZIP extraído; se reproduce build y quince
+  suites desde el ZIP de fuentes sin `.git`. Los diagnósticos extraídos repiten
+  227 checks de forward y 16 ciclos de propiedad de VM. Se aplica el parche
+  completo de Connect a una extracción de su base para verificar el resultado.
+- Captura baseline renovada por lectura, reversión desde ZIP en filesystem
+  desechable, configuración ajena preservada y ausencia de gamedata restaurada.
+  DEV se contrasta antes/después con mismo PID, selector, módulo y cuatro hashes.
 
-- Quince suites x86 pasan, incluida comparación de API con P0; ASan/LSan/UBSan
-  nativos y VM offline sin supresiones. Se repiten los checks de convivencia de
-  init, streaming, mapeo de reinicio, forwards y propiedad de la VM.
-- Build optimizado `-O3 -DNDEBUG -m32 -Werror`. Con `SOURCE_DATE_EPOCH=1794700800`
-  reproduce exactamente el ELF aceptado `839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192`.
-  El primer build con fecha del día solo difería en un byte de `__DATE__` y los
-  veinte bytes del build-id; [comparación preservada](p5/r17/build-date-comparison.json).
-  La fecha fijada es la del candidato, no la fecha de ejecución de este checkpoint.
-- Tres consumidores, dieciocho harnesses runtime y cuatro fixtures Connect
-  compilan sin warnings. Dos controles con includes antiguo/actual compilan;
-  la llamada antigua de tres argumentos se rechaza con error 034 esperado.
-- Las 66 pruebas Python de Connect y su build pasan. Sus fuentes coinciden con
-  las del SMX aceptado; no se atribuye identidad binaria a una recompilación con
-  timestamp distinto. El inventario renovado no tiene desajustes de aridad.
-- Se verifican 55 entradas SDK, 152 fuentes del productor, imports SMX, fixture
-  de 733 claves stats y ambos helpers ELF32 de T11/T23. Árbol candidato y ZIP
-  extraído se validan; reversión archivada se ensaya en filesystem desechable.
-  Los diagnósticos extraídos repiten 227 checks de forward y 16 ciclos de VM.
-- Se renueva la captura baseline por lectura y se contrasta DEV antes/después:
-  mismo PID, selector, módulo y cuatro hashes protegidos; sin laboratorio activo.
-  No se inicia, reinicia o modifica ningún servidor en esta actualización.
+[Logs R18](p5/r18/integration.json), [reproducción desde fuentes](p5/r18/source-extracted-integration.json),
+[reversión archivada](p5/r18/rollback-roundtrip.json), [SDK y harnesses](p5/r18/sdk-harness-checks.json)
+y [captura de reversión](p5/r18/baseline-observation.json). No se arranca, reinicia
+ni modifica ningún servidor en esta actualización.
 
-Logs nuevos en [p5/r17](p5/r17/integration.json), [replay de diagnósticos](p5/r17/diagnostic-replay.log)
-y comprobaciones DEV [antes](p5/r17/DEV-before.json)/[después](p5/r17/DEV-after.json). Los resultados runtime anteriores
-no se reescriben. CI remoto no ejecutado; todo permanece sin commit.
+## Alcance conservado por hash
 
-## Artefactos nuevos y reversión
+[T25/T29](last-two-srcds-progress.md) conserva préstamo real, perfil Web API del
+propietario desconectado, grupo autorizado y entrada pendiente→autorizada del
+mismo cliente. Las alternativas defensivas de identidad se cubren con pruebas
+deterministas e invariante binaria del proveedor, sin forjar cuentas reales.
 
-Conjunto `.build/p5-r17/review/`, con manifiesto, verificación y `SHA256SUMS`:
+[T32](connection-srcds-acceptance.md) conserva un ciclo real de recuperación Steam,
+81 checks y HTTP/interfaces estables. [T33](soak-srcds-acceptance.md) conserva veinte
+minutos de carga local, con ventanas de reposo/recuperación y límites medidos.
+Se mantienen autenticación/stats optimizados, T11 capacidades/GC local, T15 buffers,
+T16 recarga quiescente, T20 propietario HTTP, T23 forwards y T26/T35 instalación y
+reversión en sus alcances originales. ELF/include idénticos permiten atribuir
+estos resultados al payload R18; el ZIP R18 nuevo no se instala.
 
-| Archivo | Contenido y alcance |
+[La matriz R17 anterior](p5/history/p5-r17-with-Windows-CI-fixes-validation-results.json),
+las evidencias y todos los ZIP previos permanecen intactos. Los estados pendientes
+de las capturas históricas de CI quedan conciliados con los éxitos remotos citados.
+
+## Artefactos nuevos
+
+Conjunto `.build/p5-r18/review/`, con manifiesto, verificación y `SHA256SUMS`:
+
+| Archivo | Contenido |
 |---|---|
-| `steamworks-p5-r17-linux-x86-candidate.zip` | Solo extensión/include dentro de addons, licencia, mapa y documentación conciliada |
-| `steamworks-p5-r17-competitive-dev-rollback.zip` | Extensión/include originales capturados por lectura; ausencia de gamedata registrada |
-| `steamworks-p5-r17-source-review.zip` | Fuentes, tests, evidencia, parches y recetas; corrección externa Connect como diff y nuevos helpers/tests, sin SDK/includes ajenos |
-| `steamworks-p5-r17-vm-diagnostics.zip` | VM offline x86 y receptores sintéticos con licencia/procedencia; fuera de addons |
+| `steamworks-p5-r18-linux-x86-candidate.zip` | Extensión/include en addons, licencia, mapa y documentación actualizada |
+| `steamworks-p5-r18-competitive-dev-rollback.zip` | Extensión/include originales; ausencia de gamedata registrada |
+| `steamworks-p5-r18-source-review.zip` | Fuentes actuales con ambas correcciones Windows, atributos de bytes auditados, tests, evidencia y recetas offline; parche completo de Connect |
+| `steamworks-p5-r18-vm-diagnostics.zip` | VM offline x86 y receptores sintéticos con licencia/procedencia, fuera de addons |
 
-El ZIP candidato R17 nuevo se valida localmente; no se instala. ELF/include son
-idénticos al payload R16 aceptado. El rollback conserva exactamente el SHA
-`55153d55…` aplicado en sitio en R9; la [receta de reversión](p5-rollback.md) distingue
-ese ensayo previo del roundtrip local nuevo. El baseline mantiene su SIGSEGV al
-salir: no se certifica su cierre limpio. No se empaquetan CFG privados ni claves.
+El ZIP de fuentes incorpora `.gitattributes`, necesario para conservar los bytes
+que sustentan hashes de evidencia y wrappers SDK. Incluye el parche **completo**
+de Connect `c695bf0…`→`5f62f3c…`, no un diff vacío contra su HEAD ya corregido.
+Los helpers de Connect se incluyen para lectura; no hay SMX Connect en el payload
+de SteamWorks ni se distribuyen sus proveedores/includes externos. Ese consumidor
+permanece committed sin cambios nuevos; R18 solo actualiza SteamWorks.
 
-La corrección de Connect sigue sin commit en su repositorio develop y se incluye
-para revisión, fuera del payload de SteamWorks. Cualquier consumidor HTTP de
-tres argumentos requiere recompilación con el contrato actual. Una futura
-intervención que cambie Connect necesita capturar y restaurar también su propio
-SMX/configuración; el ZIP rollback de SteamWorks no sustituye esa captura.
+La [reversión](p5-rollback.md) conserva exactamente el ZIP `55153d55…` ejercitado
+en R9. El baseline mantiene su SIGSEGV conocido al salir; no se acepta su cierre
+limpio. No se distribuyen CFG, claves, datos de jugadores ni SDK/bibliotecas de juego.
 
 ## Límites vigentes
 
-La matriz es del perfil engine/Steam/SourceMod Linux x86 observado. No certifica
-Windows/x64, versiones desconocidas, otro proveedor de identidad, todos los
-métodos SDK, GC remoto, Core remoto ni todo el negocio/partidas de los consumidores.
-T16 es serial/quiescente y T20 usa ventanas acotadas; no hay descarga forzada con
-callbacks activos ni prueba universal de ausencia de fugas SDK. T33 no es carga
-de varias horas. Estos límites no se convierten en casos abiertos del alcance
-original. Sin commit, publicación ni despliegue.
+No se certifican Windows/x64 runtime, otras versiones/proveedores, todos los
+métodos SDK, GC/Core remoto, partidas completas ni capacidad durante varias horas.
+T16 es serial/quiescente; T20 y T33 usan ventanas medidas, sin prueba universal
+de ausencia de fugas SDK. Los consumidores HTTP antiguos de tres argumentos
+requieren recompilación; el rollback de SteamWorks no sustituye la captura propia
+del SMX/config de Connect antes de una eventual intervención autorizada.
+Los metadatos de CI corresponden a las bases de producto ya publicadas; los
+paquetes y documentos R18 no se publican ni se despliegan.
 
-## Revisión final
+## Revisión final de R18
 
-La [revisión final](p5/r17/final-review/results.json) corrige tres puntos de
-reproducibilidad/documentación: creación del padre del build en extracción
-limpia; VM explícita e inventario sin dependencia de Git/HEAD ajeno; cobertura
-GC/forwards y ejemplo histórico conciliados. Build e integración de 15 suites
-pasan desde las fuentes extraídas sin `.git`, con SDK/compilador/VM montados
-explícitamente y red deshabilitada. El ELF vuelve a coincidir byte por byte.
-La [reversión con ZIP reales](p5/r17/final-review/rollback-roundtrip.json) preserva
-hashes, elimina gamedata ausente y conserva configuración ajena en filesystem
-temporal. Sin cambios nativos, de API o de servidor. Se conservan los primeros
-ZIP R17 en `.build/p5-r17/pre-final-review/` y los corregidos en `review/`.
+La [revisión final](p5/r18/final-review/results.json) concilia tres descripciones
+auxiliares de CI con sus pasos realmente exitosos en `cc52305` y atribuye la
+comparación de fecha libre a R17. No altera código nativo ni evidencias históricas.
+Se revisan el diff, la matriz y los paquetes reales: hashes, límite de payload,
+parche completo de Connect y reversión temporal con archivos ajenos preservados.
+Los primeros ZIP R18 se conservan en `.build/p5-r18/pre-final-review/`; los
+paquetes corregidos permanecen en `.build/p5-r18/review/`. La revisión no acepta
+Windows runtime ni repite la reversión en SRCDS. Sin commit, push o despliegue.
 
 ## Reproducir desde los ZIP
 
@@ -140,7 +152,7 @@ docker run --rm --network none -v "$PWD:/workspace" \
   sha256:ce871f47542914ddaa60dd5a94df7c7e85c83908c764a5eeea3a0e9a651cb368 \
   bash review/run-integration.sh
 
-python3 scripts/stage-artifact.py . .build/p5-r17/reproducible-build/package .build/mi-candidato
+python3 scripts/stage-artifact.py . .build/p5-r18/reproducible-build/package .build/mi-candidato
 EXTS_ARTIFACT_DIR="$PWD/.build/mi-candidato" bash scripts/ci-validate-artifact.sh
 python3 scripts/prepare-review-artifacts.py --candidate .build/mi-candidato \
   --baseline /ruta/a/captura-baseline --output .build/mi-entrega --label mi-checkpoint
@@ -154,23 +166,3 @@ DEV y recolección histórica describen la captura original y necesitan sus
 repositorios/servidor, sin ejecutarse como parte de esta reproducción offline.
 La revisión final prueba ambos comandos desde una extracción sin `.git`.
 No se autoriza publicación ni operación del servidor.
-
-## Seguimiento de CI tras el push
-
-El [primer CI remoto](p5/r17/ci-max-macro/results.json) pasó build/empaquetado Linux
-y falló en MSVC por la macro Windows `max`. Se corrigen las cuatro llamadas a
-`numeric_limits::max` con la forma de C++ protegida por paréntesis, conservando
-la macro y todas las comprobaciones. El control negativo reproduce el fallo;
-el control corregido mantiene la macro activa y pasa. Quince suites x86 repetidas
-y build optimizado vuelven a pasar con API y ELF exactamente idénticos.
-
-Los ZIP offline R17 se preservan como la captura anterior a este ajuste posterior
-al push; su ZIP de fuentes no contiene esta corrección. Las fuentes Git incluyen
-el ajuste y su prueba. Esto no amplía el perfil de aceptación runtime a Windows
-ni opera servidores. El resultado remoto definitivo se informa con su ejecución.
-
-El segundo CI confirmó la compilación MSVC corregida y reveló ocho imports de
-ConVar sin resolver. Se declara explícitamente `tier0.lib` en el enlace Windows;
-los ocho símbolos están presentes en la librería SDK auditada. El build Linux
-repetido conserva el ELF aceptado. [Evidencia de enlace](p5/r17/ci-windows-tier0/results.json).
-La aceptación runtime continúa limitada al perfil Linux x86.

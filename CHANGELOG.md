@@ -5,6 +5,18 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 ## [Unreleased]
 
 ### Validación
+- Revisión final R18: concilia tres campos auxiliares de CI con pasos exitosos
+  de cc52305 y aclara que la comparación con fecha libre es histórica de R17.
+  Evidencia original y primeros ZIP R18 preservados; paquetes y reversión
+  comprobados de nuevo. Sin cambios nativos/de API, commit, push ni despliegue.
+- P5-R18 incorpora las correcciones Windows de macro max y enlace tier0.lib,
+  con CI de producto cc52305 verde para Linux y Windows. Repite 15 suites x86,
+  sanitizadores sin supresiones, build optimizado idéntico, 18 harnesses y
+  consumidores/Connect; conserva 33 casos aceptados y tres no aplicables al
+  perfil Linux x86. Regenera los cuatro paquetes y la captura de reversión,
+  incluye atributos de bytes auditados y parche completo de Connect contra su
+  base original. ZIP anteriores intactos; actualización sin commit/push ni
+  operación de servidores. CI Windows no implica aceptación runtime Windows.
 - CI Windows R17: tras confirmar la compilación con la macro `max`, declara
   tier0.lib para los ocho imports de diagnóstico/allocator usados por tier1
   ConVar. Imports contrastados con la librería SDK; build Linux repetido idéntico.

@@ -1,0 +1,38 @@
+{
+  "status": "passed",
+  "archives": {
+    "steamworks-p5-r18-linux-x86-candidate.zip": {
+      "members": 1622,
+      "sha256": "57e267ec6147aed3444a12887956b4419a911d2fcad8f53ab8ef0d459b482334"
+    },
+    "steamworks-p5-r18-source-review.zip": {
+      "members": 1804,
+      "sha256": "fd70c5eba1f90e0b95c3ad3d59343c3d707ba156e213de1f26809f1b65c92cf8"
+    },
+    "steamworks-p5-r18-vm-diagnostics.zip": {
+      "members": 18,
+      "sha256": "05a105c6e4c546b9259baecf45df41305c3f5fb4c1963d03d145c021797122b1"
+    },
+    "steamworks-p5-r18-competitive-dev-rollback.zip": {
+      "members": 2,
+      "sha256": "55153d557f3af7f71f1016c8c394dc74fe29e0cdc9511044c21de29e8bc6dffc"
+    }
+  },
+  "native_source_hashes_match_current_workspace": 152,
+  "public_include_unchanged": true,
+  "Windows_fixes_present_in_source_archive": true,
+  "Git_exact_byte_attributes_present": true,
+  "candidate_runtime_members": 2,
+  "rollback_real_archives_used": true,
+  "rollback_matches_R9_exercised_SHA": true,
+  "rollback_restored_files_sha256": {
+    "extensions/steamworks.ext.so": "9ca37aadcd83448d49126d6a72babcb8ec97ec5a06c171b4821ae0ee3cf05d70",
+    "scripting/include/steamworks.inc": "e51bcd397139edc3d144f130c45f0f8edbf55d12278736e0134e4c650ec64f17"
+  },
+  "rollback_absent_paths_removed": [
+    "gamedata/steamworks.txt"
+  ],
+  "foreign_configuration_preserved": true,
+  "Connect_patch_reproduces_all_target_files": 142,
+  "server_operation": false
+}

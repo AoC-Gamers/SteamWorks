@@ -1,0 +1,43 @@
+{
+  "status": "passed_after_corrections",
+  "checkpoint": "p5-r18",
+  "scope": "final review of R18 diff, active docs, actual archives and local rollback",
+  "findings": [
+    {
+      "id": "F01",
+      "severity": "P3",
+      "issue": "Three current workflow-check descriptions still claimed remote CI was not run",
+      "resolution": "Crosschecked each exact step name against successful stored CI for cc52305 and distinguished that run from uncommitted R18 refresh",
+      "status": "fixed"
+    },
+    {
+      "id": "F02",
+      "severity": "P3",
+      "issue": "Coverage prose did not clearly attribute free-date build comparison to historical R17",
+      "resolution": "Explicitly label historical R17 comparison; no claim of a new free-date R18 trial",
+      "status": "fixed"
+    }
+  ],
+  "new_unresolved_findings": [],
+  "native_code_changed": false,
+  "public_API_changed": false,
+  "prior_acceptance_evidence_rewritten": false,
+  "initial_R18_artifact_hashes": {
+    "verification.json": "6aa7e136ae1dc761f61faf1fd636d1bc4e86ac9986175f3d7abc9fe18f92c5f3",
+    "manifest.json": "e260711cf520bdaef18e394efc47277e78333832f866f29004b22abdd93fee52",
+    "SHA256SUMS": "2ad3e45539f53e935fc7926bb4342ae18b7a48c0bc42330d5d06f293306277c6",
+    "steamworks-p5-r18-linux-x86-candidate.zip": "57e267ec6147aed3444a12887956b4419a911d2fcad8f53ab8ef0d459b482334",
+    "steamworks-p5-r18-source-review.zip": "fd70c5eba1f90e0b95c3ad3d59343c3d707ba156e213de1f26809f1b65c92cf8",
+    "steamworks-p5-r18-vm-diagnostics.zip": "05a105c6e4c546b9259baecf45df41305c3f5fb4c1963d03d145c021797122b1",
+    "steamworks-p5-r18-competitive-dev-rollback.zip": "55153d557f3af7f71f1016c8c394dc74fe29e0cdc9511044c21de29e8bc6dffc"
+  },
+  "reversal_scope": "actual archives in temporary filesystem; no new in-place SRCDS restore",
+  "baseline_clean_exit_accepted": false,
+  "Windows_runtime_acceptance_inferred": false,
+  "committed": false,
+  "pushed": false,
+  "server_operation": false,
+  "archive_review": "archive-review.json",
+  "R18_native_validation_repeated_in_final_review": false,
+  "native_validation_scope": "Existing R18 15-suite, clean-source build and diagnostic replay retained by exact source/recipe hashes; only documentation/metadata changes in this final review."
+}
