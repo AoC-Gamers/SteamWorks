@@ -1,0 +1,14 @@
+{
+  "status": "link_fix_prepared_remote_CI_to_be_repeated",
+  "failed_run": "https://github.com/AoC-Gamers/SteamWorks/actions/runs/43861100353",
+  "Windows_compilation_after_max_fix": "passed",
+  "Windows_link": "failed: eight tier0 imports required by tier1 ConVar",
+  "fix": "Explicit tier0.lib in Windows link closure; Linux branch unchanged",
+  "all_missing_symbols_present_in_audited_import_library": true,
+  "public_API_changed": false,
+  "optimized_Linux_ELF_changed": false,
+  "optimized_Linux_ELF_sha256": "839ff0751b04141031bdc6dffc48662d0804f52227f2c91015bd87c6b84cf192",
+  "Windows_runtime_profile_accepted": false,
+  "server_operation": false,
+  "previous_offline_archives_preserved": true
+}

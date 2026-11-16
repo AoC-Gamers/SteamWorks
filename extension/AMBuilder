@@ -53,7 +53,9 @@ for sdk_name in SteamWorks.sdks:
     binary.compiler.linkflags += ['-Wl,-rpath,$ORIGIN/../../../../bin']
 
   if binary.compiler.target.platform == 'windows':
-    binary.compiler.postlink += (os.path.join(sdk.path, 'lib', 'public', 'tier1.lib'),)
+    # ConVar's tier1 closure imports diagnostics and the allocator from tier0.
+    binary.compiler.postlink += tuple(os.path.join(sdk.path, 'lib', 'public', library)
+                                      for library in ['tier1.lib', 'tier0.lib'])
     binary.compiler.postlink += (
       os.path.join(SteamWorks.steamworks_root, 'redistributable_bin', 'steam_api.lib'),
     )

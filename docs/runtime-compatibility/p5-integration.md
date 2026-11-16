@@ -168,3 +168,9 @@ Los ZIP offline R17 se preservan como la captura anterior a este ajuste posterio
 al push; su ZIP de fuentes no contiene esta corrección. Las fuentes Git incluyen
 el ajuste y su prueba. Esto no amplía el perfil de aceptación runtime a Windows
 ni opera servidores. El resultado remoto definitivo se informa con su ejecución.
+
+El segundo CI confirmó la compilación MSVC corregida y reveló ocho imports de
+ConVar sin resolver. Se declara explícitamente `tier0.lib` en el enlace Windows;
+los ocho símbolos están presentes en la librería SDK auditada. El build Linux
+repetido conserva el ELF aceptado. [Evidencia de enlace](p5/r17/ci-windows-tier0/results.json).
+La aceptación runtime continúa limitada al perfil Linux x86.

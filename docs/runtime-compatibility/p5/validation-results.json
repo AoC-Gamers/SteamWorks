@@ -451,7 +451,7 @@
   "artifact_directory": ".build/p5-r17/review/",
   "historical_checkpoint": "p5/history/p5-r16-with-T25-T29-closed-validation-results.json",
   "source_sha256": {
-    "extension/AMBuilder": "9713f0d6e6d4053942de1396ed022c594b8e3b82c2423fd491d9461c46538af8",
+    "extension/AMBuilder": "20c4456b22475724800ba3312b8057c1a568a88586664e6181507a3982f48244",
     "extension/CDetour/detourhelpers.h": "ea9e6d2866dfb4e763dc921d712f1694f47107e0faade9490ae10614f827c3a8",
     "extension/CDetour/detours.cpp": "e67c202073164a6575a33137139b454cbab250fffb5f377b4bb1929b94feeea3",
     "extension/CDetour/detours.h": "ea62f0ee139da2edec9e369b0eda94c559fb24dbf6cb13e9fe0a55a2efc79e9f",
@@ -1729,6 +1729,10 @@
     "offline_R17_source_archive_scope": "Preserved snapshot before post-push CI fix; current git sources carry correction.",
     "initial_remote_run": "https://github.com/AoC-Gamers/SteamWorks/actions/runs/43860126225",
     "initial_run_conclusion": "Windows failure; Linux passed",
-    "corrected_remote_run": "pending push"
+    "corrected_remote_run": "pending push after Windows link fix",
+    "max_macro_fix_run": "https://github.com/AoC-Gamers/SteamWorks/actions/runs/43861100353",
+    "max_macro_compile_fix_verified_in_MSVC": true,
+    "Windows_link_followup": "p5/r17/ci-windows-tier0/results.json",
+    "Windows_link_dependency": "explicit SDK tier0.lib; actual missing imports verified"
   }
 }

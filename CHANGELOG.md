@@ -5,6 +5,10 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 ## [Unreleased]
 
 ### Validación
+- CI Windows R17: tras confirmar la compilación con la macro `max`, declara
+  tier0.lib para los ocho imports de diagnóstico/allocator usados por tier1
+  ConVar. Imports contrastados con la librería SDK; build Linux repetido idéntico.
+  Sin cambios de API, runtime Linux o perfil de aceptación; sin despliegue.
 - Seguimiento CI R17: corrige colisión con la macro Windows `max` en cuatro
   límites numéricos sin desactivar macros ni comprobaciones. Control negativo
   reproducido y regresión x86 con la macro activa, 15 suites y build optimizado
