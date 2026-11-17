@@ -6,12 +6,16 @@ Cada native resuelve su interfaz admitida y mantiene su retorno/error ante
 indisponibilidad. La presencia de un método en el SDK no garantiza capacidad
 actual ni permiso para llamar sobre otro objeto.
 
-`SteamWorks_GetPublicIP` solo acepta una dirección de familia IPv4. La composición
-por octetos utiliza valores sin signo, sin depender de si `char` es signed.
+En el contexto L4D2 objetivo se espera una dirección IPv4 del gameserver.
+`SteamWorks_GetPublicIP` y `SteamWorks_GetPublicIPCell` comprueban que Steam
+devuelva una IPv4 establecida antes de leerla. La composición por octetos utiliza
+valores sin signo, sin depender de si `char` es signed.
 El resultado de una celda conserva el patrón de bits IPv4 incluso con bit alto;
 no interpretar un entero negativo como fallo de dirección por sí mismo.
-IPv6 no se trunca para convertirlo en IPv4. La regresión se ejecuta con char
-con signo y sin signo mediante `test-public-ip.sh`.
+Los casos IPv6 son entradas simuladas que verifican el rechazo defensivo de
+otras familias, sin truncarlas a IPv4; no acreditan que L4D2 entregue IPv6 ni
+soporte conexiones IPv6 del gameserver. La regresión se ejecuta con char con
+signo y sin signo mediante `test-public-ip.sh`.
 
 Los setters de metadata/reglas comunican datos al servidor Steam, no editan CFG
 ni prueban que un buscador remoto ya haya actualizado su caché. Comprueba el

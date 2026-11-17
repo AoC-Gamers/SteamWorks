@@ -74,8 +74,8 @@ La última requiere VM y runtime ASan compatibles sin supresiones. Consulta
 [integración offline](integration/README.md).
 
 `results.json` y logs van a la salida elegida, nunca a `docs/`. El resultado de
-API excluye números de línea y metadatos, no campos contractuales. El fixture P0
-no se regenera a partir del estado actual para hacer pasar una comparación.
+API excluye números de línea y metadatos, no campos contractuales. El inventario
+original de API (`fixtures/api/api-inventory-p0.json`) no se regenera a partir del estado actual para hacer pasar una comparación.
 
 ## Alcance y operación
 

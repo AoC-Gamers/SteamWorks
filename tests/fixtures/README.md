@@ -5,7 +5,7 @@ con `tests/fixtures/** -text` en `.gitattributes`.
 
 | Entrada | Procedencia y consumidor |
 |---|---|
-| `api/api-inventory-p0.json` | Inventario P0 original; comparación completa de contrato por integración |
+| `api/api-inventory-p0.json` | Inventario original de API, capturado antes de las correcciones; comparación completa de contrato por integración |
 | `stats/GetSchemaForGame_550.json` | Schema histórico AppID 550; generador de claves y harness stats |
 | `gameserver014-prefix.json` | Prefijo SDK 1.55 independiente; orden de slots auditado frente al adaptador |
 | `sourcepawn/auth_forward_receiver.sp` | Fuente compilada para marshalling y agregación con VM real |
@@ -14,6 +14,11 @@ con `tests/fixtures/** -text` en `.gitattributes`.
 | `runtime-profiles/modules/` | Metadatos SDK 1.55 Linux x86 y 1.58a Linux/Windows x86, consumidos por tests |
 | `runtime-profiles/observed-runtime/` | Metadatos de motor/runtime y traza mínima; hashes verificados transitivamente |
 | `sdk-provenance/sdk-toolchain.json` | Procedencia enlazada por el perfil documental, sin copiar SDK |
+
+El sufijo `p0` de `api/api-inventory-p0.json` conserva la etiqueta de la fase de
+inventario inicial del trabajo. Identifica la captura original que sirve de
+referencia independiente; no es una versión de la API ni un nivel de soporte.
+Se mantiene el nombre y los bytes para conservar su procedencia.
 
 Las entradas trasladadas proceden del commit `295e274de754fb65835188f115a2fd4dd917e289`.
 El perfil candidato solo cambia su referencia relativa de procedencia SDK a
@@ -36,7 +41,7 @@ relocaciones y eventos técnicos. Nombres de instancias, paths locales, PIDs,
 dispositivos/inodos y etiquetas de imágenes se omiten en la copia pública.
 `metadata_sanitization` registra los hashes documentales anteriores y la razón;
 los enlaces por digest se recalculan sin modificar las medidas ni activar perfiles.
-El inventario API P0, el schema, las declaraciones ABI y sus fixtures no se regeneran.
+El inventario original de API, el schema, las declaraciones ABI y sus fixtures no se regeneran.
 
 ## SDK seleccionado frente a evidencia histórica
 

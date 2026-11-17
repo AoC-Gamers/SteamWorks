@@ -1,8 +1,9 @@
 # SourcePawn: VM aislada para pruebas con ASan
 
 Base admitida: `11b22edb634b9764d19fd28699e03289cfd18520`, el submódulo
-SourcePawn de las dependencias SourceMod fijadas en P0. Estos parches se aplican
-solo a una copia en `.build`, nunca al checkout original ni a una instalación.
+SourcePawn de las dependencias SourceMod utilizadas por la VM de pruebas.
+Estos parches se aplican solo a una copia en `.build`, nunca al checkout original
+ni a una instalación.
 
 - `environment-ownership.patch`: conserva los motores mediante sus tipos
   concretos y completa el cierre del entorno desde su destructor. No añade un
@@ -18,9 +19,9 @@ reproducir el fallo con las mismas opciones de instrumentación y build.
 
 El flujo de aceptación es `tests/runners/test-sourcepawn-vm-asan.sh`: necesita un
 compilador Clang con runtime ASan, AMBuild y las dependencias ya presentes.
-`tests/integration/sourcepawn-vm.Dockerfile` prepara un toolchain local derivado del builder
-P0; registrar el digest resultante, pues sus paquetes se obtienen del repositorio
-Debian. El flujo de compilación/pruebas posterior es sin red.
+`tests/integration/sourcepawn-vm.Dockerfile` prepara un toolchain local a partir
+de una imagen base explícita; registra su digest, pues los paquetes se obtienen
+del repositorio Debian. El flujo de compilación/pruebas posterior es sin red.
 
 Este parche es una corrección revisable de la dependencia de pruebas. No supone
 que se haya corregido o reemplazado un binario precompilado del servidor. Véanse

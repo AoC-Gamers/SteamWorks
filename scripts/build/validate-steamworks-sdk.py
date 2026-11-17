@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def validate(sdk, lock_path=None):
     sdk = Path(sdk).resolve()
-    lock = json.loads(Path(lock_path or ROOT / 'steamworks-sdk.lock.json').read_text())
+    lock = json.loads(Path(lock_path or ROOT / 'scripts/build/steamworks-sdk.lock.json').read_text())
     if lock.get('schema_version') != 1 or lock.get('sdk_version') != '1.55':
         raise ValueError('Unsupported SDK lock; only Steamworks 1.55 is permitted')
     expected = lock['files']

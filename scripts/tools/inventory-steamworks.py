@@ -129,7 +129,7 @@ def api_inventory(root: Path) -> dict:
         raise ValueError("SourceMod library registration not found")
     hashes["addons/sourcemod/scripting/include/steamworks.inc"] = digest(include)
     for relative in ("tests/runtime/steamwork_test.sp", "extension/AMBuilder", "AMBuildScript",
-                     "configure.py", "Makefile", "PackageScript", "plugin-package-map.json"):
+                     "configure.py", "Makefile", "PackageScript", "scripts/package/package-map.json"):
         hashes[relative] = digest(root / relative)
     return {
         "schema_version": 1, "baseline_commit": revision(root), "source_sha256": hashes,

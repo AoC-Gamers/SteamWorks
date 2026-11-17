@@ -45,7 +45,7 @@ jobs:
         id: cache-key
         shell: bash
         run: |
-          echo "key=exts-linux-deps-${{ runner.os }}-${{ hashFiles('scripts/deps/fetch-linux-deps.sh', 'scripts/build/build-linux-l4d2.sh', 'scripts/package/stage-artifact.py', 'scripts/package/artifact_contract.py', 'scripts/package/package-release.py', 'plugin-package-map.json', 'Makefile', 'configure.py', 'AMBuildScript', 'PackageScript', 'steamworks-sdk.lock.json', 'scripts/build/validate-steamworks-sdk.py') }}" >> "$GITHUB_OUTPUT"
+          echo "key=exts-linux-deps-${{ runner.os }}-${{ hashFiles('scripts/deps/fetch-linux-deps.sh', 'scripts/build/build-linux-l4d2.sh', 'scripts/package/stage-artifact.py', 'scripts/package/artifact_contract.py', 'scripts/package/package-release.py', 'scripts/package/package-map.json', 'Makefile', 'configure.py', 'AMBuildScript', 'PackageScript', 'scripts/build/steamworks-sdk.lock.json', 'scripts/build/validate-steamworks-sdk.py') }}" >> "$GITHUB_OUTPUT"
 
       - name: Restore dependency cache
         id: deps-cache-restore
@@ -316,7 +316,7 @@ jobs:
         id: cache-key
         shell: bash
         run: |
-          echo "key=exts-windows-deps-${{ runner.os }}-${{ hashFiles('scripts/deps/fetch-windows-deps.ps1', 'scripts/build/build-windows-l4d2.ps1', 'scripts/package/stage-artifact.py', 'scripts/package/artifact_contract.py', 'scripts/package/package-release.py', 'plugin-package-map.json', 'Makefile', 'configure.py', 'AMBuildScript', 'PackageScript', 'steamworks-sdk.lock.json', 'scripts/build/validate-steamworks-sdk.py') }}" >> "$GITHUB_OUTPUT"
+          echo "key=exts-windows-deps-${{ runner.os }}-${{ hashFiles('scripts/deps/fetch-windows-deps.ps1', 'scripts/build/build-windows-l4d2.ps1', 'scripts/package/stage-artifact.py', 'scripts/package/artifact_contract.py', 'scripts/package/package-release.py', 'scripts/package/package-map.json', 'Makefile', 'configure.py', 'AMBuildScript', 'PackageScript', 'scripts/build/steamworks-sdk.lock.json', 'scripts/build/validate-steamworks-sdk.py') }}" >> "$GITHUB_OUTPUT"
 
       - name: Restore dependency cache
         id: deps-cache-restore

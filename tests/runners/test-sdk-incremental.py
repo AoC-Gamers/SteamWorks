@@ -30,7 +30,7 @@ def main():
     output.mkdir(parents=True, exist_ok=False)
     original_sdk = args.sdk.resolve()
     subprocess.run([sys.executable, str(ROOT / 'scripts/build/validate-steamworks-sdk.py'), str(original_sdk)], check=True)
-    lock = json.loads((ROOT / 'steamworks-sdk.lock.json').read_text())
+    lock = json.loads((ROOT / 'scripts/build/steamworks-sdk.lock.json').read_text())
     sdk = output / 'private-sdk'
     for name in lock['files']:
         target = sdk / name

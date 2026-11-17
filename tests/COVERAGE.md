@@ -5,21 +5,29 @@ ni una ejecución nueva; los resultados actuales se guardan fuera de Git.
 
 | Contrato | Suite/escenario | Nivel | Evidencia runtime histórica | Límite |
 |---|---|---|---|---|
-| API y firmas/opcionalidad | Fixture P0 + integración | Inventario local | No necesaria para comparar firmas | No prueba ABI/runtime |
-| Stats: fallo conserva salida, identidad y AppID | stats-natives; harness stats | Dobles y SRCDS | 2026-11-15; Linux x86; F2; R3/R4, usuario autorizado | Solicitud aceptada no significa lectura disponible |
-| Identidad: capacidad/NUL y preautorización | steamid-string; harness identity/consumer | Dobles y SRCDS | 2026-11-15/16; Linux x86; F4; T15/T25/T29 | No inferir grupo/perfil desde identidad |
+| API y firmas/opcionalidad | Inventario original de API + integración | Inventario local | No necesaria para comparar firmas | No prueba ABI/runtime |
+| Stats: fallo conserva salida, identidad y AppID | stats-natives; harness stats | Dobles y SRCDS | 2026-11-15; Linux x86; F2; stats enteros/float y claves inexistentes (R3/R4), usuario autorizado | Solicitud aceptada no significa lectura disponible |
+| Identidad: capacidad/NUL y preautorización | steamid-string; harness identity/consumer | Dobles y SRCDS | 2026-11-15/16; Linux x86; F4; buffers (T15), consumidores (T25) y preautorización (T29) | No inferir grupo/perfil desde identidad |
 | Auth 014, ticket y agregación | auth-binding/auth-forward | SourceHook/VM reales offline y SRCDS | 2026-11-15; Linux x86; F1/F2; adaptador y autenticación | Proveedor offline no emite ticket real |
-| Init/teardown con SourceTVSupport | detours/init-coexistence/resource-lifecycle | Dobles/x86 y SRCDS | 2026-11-15; Linux x86; F3; T08 en mismo proceso | No toda la pila de consumidores |
+| Init/teardown con SourceTVSupport | detours/init-coexistence/resource-lifecycle | Dobles/x86 y SRCDS | 2026-11-15; Linux x86; F3; cierre y reinicialización (T08) en mismo proceso | No toda la pila de consumidores |
 | Streaming: dos celdas y payload | http-stream-context | Wire independiente y SRCDS | 2026-11-15; Linux x86; F2; cuatro tandas, una tras mapa | No todo endpoint remoto |
 | HTTP estricto y GC snapshot | typed-boundary/resource-lifecycle, negativos mínimos | SDK simulado y SRCDS | 2026-11-16; Linux x86; F5; HTTP real, GC vacío/proveedor local | GC remoto positivo pendiente |
-| Cero/uno/varios forwards | auth-forward; harness forward | VM real y SRCDS | 2026-11-15; Linux x86; F4; T23 | ET_Event no propaga -1 individual como agregado |
-| Capacidades e interfaces | binary-evidence/typed-boundary; harness capability | Metadata/registro y SRCDS | 2026-11-15; Linux x86; F4; T11, GC opcional | Exports no son aceptación Windows |
-| Propietario HTTP pendiente y carga tardía | resource-lifecycle; harness pending/lifecycle | Dobles y SRCDS | 2026-11-15; Linux x86; F4; T20 y T16 | Descarga forzada con dependientes no soportada |
-| Instalación y reversión real | review_artifacts; harness rollback | Filesystem y SRCDS | 2026-11-16; Linux x86; F5; T26/T35 R19 en árbol detenido | Runtime mínimo, no conjunto completo |
+| Cero/uno/varios forwards | auth-forward; harness forward | VM real y SRCDS | 2026-11-15; Linux x86; F4; agregación de forwards (T23) | ET_Event no propaga -1 individual como agregado |
+| Capacidades e interfaces | binary-evidence/typed-boundary; harness capability | Metadata/registro y SRCDS | 2026-11-15; Linux x86; F4; matriz de interfaces/capacidades (T11), GC opcional | Exports no son aceptación Windows |
+| Propietario HTTP pendiente y carga tardía | resource-lifecycle; harness pending/lifecycle | Dobles y SRCDS | 2026-11-15; Linux x86; F4; descarga del propietario HTTP (T20) y carga/recarga de extensión (T16) | Descarga forzada con dependientes no soportada |
+| Instalación y reversión real | review_artifacts; harness rollback | Filesystem y SRCDS | 2026-11-16; Linux x86; F5; instalación (T26) y reversión (T35), revisión R19, en árbol detenido | Runtime mínimo, no conjunto completo |
 | Destrucción VM | sourcepawn-environment | VM real ASan offline | No se instala en servidor | No acredita VM distribuida |
 | Paquete limpio y rutas documentales | Python/documentación y staging/CI | Offline | No requiere SRCDS | Windows runtime pendiente |
 
 ## Atribución histórica
+
+Las etiquetas entre paréntesis son referencias al plan interno de pruebas, no
+versiones publicadas ni resultados por sí mismas. `T` identifica un escenario
+(la matriz indica su comportamiento); `R` identifica una revisión de la entrega
+de integración. Por ejemplo, R3/R4 agrupan los ensayos históricos de stats, R19
+el ensayo de instalación/reversión citado y R20 la validación posterior offline.
+Su aceptación se limita a las fechas, hashes, observaciones y consumidores
+indicados aquí. Un número mayor no transfiere aceptación a otro ZIP o binario.
 
 Los identificadores F1–F5 distinguen los payloads de ensayos históricos; no son
 nombres de entornos ni niveles de soporte. Los hashes, fechas y límites de esta
@@ -45,7 +53,7 @@ GC remoto positivo y runtime Windows permanecen pendientes.
 
 ## Migración a SDK 1.55
 
-El payload SDK 1.55 conserva API P0 y tiene SHA256
+El payload SDK 1.55 conserva la API del inventario original y tiene SHA256
 `abb4d03a47f88315950ba8a63c2a1696d8daa80cf52039c808e95569f6adad52`;
 el include público conserva el SHA256 indicado arriba. La aceptación siguiente
 es una observación propia del 2026-11-16 en Linux SRCDS x86, independiente de F1–F5.
@@ -69,7 +77,7 @@ el SIGSEGV histórico de otros consumidores. La selección exacta del SDK, bindi
 marshalling y negativos se cubren además offline. GC remoto positivo y runtime
 Windows permanecen pendientes.
 
-## Baseline de reversión con T08
+## Baseline de reversión con finalizador de la sesión cliente Steam
 
 Observación del 2026-11-16 en Linux SRCDS x86, con fuentes de SDK 1.55 y API intacta:
 
@@ -87,7 +95,7 @@ Observación del 2026-11-16 en Linux SRCDS x86, con fuentes de SDK 1.55 y API in
 | ZIP rollback histórico preservado | `55153d557f3af7f71f1016c8c394dc74fe29e0cdc9511044c21de29e8bc6dffc` |
 
 El baseline nuevo usa el mismo snapshot auditado que el candidato y conserva
-el finalizador cliente T08; no reconstruye el baseline viejo ni revierte a
+el finalizador de la sesión cliente Steam; no reconstruye el baseline viejo ni revierte a
 funcionalidad anterior. Se cualificó por arranque/Steam/HTTP/quit, se instaló el
 candidato y se restauró el ZIP nuevo en el mismo árbol aislado. Contexto, cuerpo,
 callback, cierre HTTP, archivos/ausencias propios y configuración/plugin ajenos
@@ -95,7 +103,7 @@ pasan. Los tres procesos salieron limpiamente y no registraron coredumps asociad
 
 El SIGSEGV del baseline histórico tiene diagnóstico propio de acceso a interfaz
 de crashhandler tras descargar el módulo, seguido de fallo del manejador de señal.
-No se suprimieron comprobaciones ni se alteró ese archivo para aceptar T35.
+No se suprimieron comprobaciones ni se alteró ese archivo para aceptar la reversión.
 En el primer ensayo no se midió la rama condicional del pipe cliente. En los
 ensayos posteriores identificados en la tabla, los tres desmontajes de cada
 ensayo registraron

@@ -4,7 +4,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 ARTIFACT_DIR="${EXTS_ARTIFACT_DIR:-$ROOT_DIR/dist/sourcemod/artifact}"
-PACKAGE_MAP_PATH="$ROOT_DIR/plugin-package-map.json"
+PACKAGE_MAP_PATH="$ROOT_DIR/scripts/package/package-map.json"
 PLATFORM="${EXTS_PLATFORM:-linux}"
 
 if [[ ! -d "$ARTIFACT_DIR" ]]; then
@@ -96,7 +96,7 @@ artifact_root = os.path.join(artifact_dir, "addons", "sourcemod", "scripting")
 artifact_manifest = package_map.get("artifact", {}).get("addons", {}).get("sourcemod", {}).get("scripting", {})
 validate_manifest_tree(source_root, artifact_root, artifact_manifest)
 
-for rel_path in ("README.md", "CHANGELOG.md", "LICENSE", "plugin-package-map.json"):
+for rel_path in ("README.md", "CHANGELOG.md", "LICENSE"):
     artifact_path = os.path.join(artifact_dir, rel_path)
     if not os.path.exists(artifact_path):
         raise SystemExit(f"Missing packaged project asset: {artifact_path}")

@@ -2,7 +2,7 @@
 from pathlib import Path, PurePosixPath
 import re
 
-ROOT_FILES = ("README.md", "CHANGELOG.md", "LICENSE", "plugin-package-map.json")
+ROOT_FILES = ("README.md", "CHANGELOG.md", "LICENSE")
 FEATURES = {"installation", "build", "architecture", "runtime", "authentication",
             "identity", "server", "stats", "http", "game-coordinator", "diagnostics", "maintenance"}
 RUNTIME = {"addons/sourcemod/extensions/steamworks.ext.2.l4d2.so",

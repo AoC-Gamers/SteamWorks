@@ -85,6 +85,8 @@ class DocumentationTests(unittest.TestCase):
                 self.assertFalse(list(artifact.rglob('AGENTS.md')))
                 for bad in ('docs/http/results.json','docs/http/run-report.md','docs/runtime-compatibility/p5/log.md',
                             'tests/fixtures/input.json','addons/sourcemod/extensions/diagnostic.so',
+                            'plugin-package-map.json','steamworks-sdk.lock.json',
+                            'scripts/package/package-map.json','scripts/build/steamworks-sdk.lock.json',
                             f'addons/sourcemod/extensions/steamworks.ext.{suffix}',
                             'sdk/public/steam.h','addons/sourcemod/gamedata/profile.json'):
                     path=artifact/bad;path.parent.mkdir(parents=True,exist_ok=True);path.write_text('forbidden fixture')
@@ -100,6 +102,7 @@ class DocumentationTests(unittest.TestCase):
                 self.assertEqual(release.returncode,0,release.stderr)
                 with zipfile.ZipFile(temp/platform/'dist/release/fixture.zip') as archive:
                     self.assertIn('docs/http/README.md',archive.namelist())
+                    self.assertFalse(any(name.endswith('.json') for name in archive.namelist()))
                     self.assertIn(f'addons/sourcemod/extensions/steamworks.ext.2.l4d2.{suffix}', archive.namelist())
                     self.assertNotIn(f'addons/sourcemod/extensions/steamworks.ext.{suffix}', archive.namelist())
                     self.assertFalse(any('/fixtures/' in name or name.endswith('AGENTS.md') for name in archive.namelist()))

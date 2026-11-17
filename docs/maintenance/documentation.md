@@ -38,6 +38,18 @@ ni trasladar todo a una carpeta archive dentro de tests. La cobertura debe separ
 probado con dobles, VM/SourceHook y observado en SRCDS; GC remoto permanece pendiente.
 Las rutas privadas, PIDs y diarios de checkpoints no son documentación de producto.
 
+## Etiquetas internas y referencias de pruebas
+
+En changelog y contratos públicos describe el comportamiento y su efecto sin
+exigir conocer códigos del plan de trabajo. Las fases, revisiones, tareas y
+hallazgos internos no son versiones publicadas ni niveles de soporte.
+En cobertura o procedencia puede conservarse una etiqueta histórica si ayuda a
+localizar el ensayo: acompáñala de su significado, escenario y límites, junto
+con fecha y hash cuando estén disponibles. Conserva los identificadores y bytes
+de fixtures originales; explica sus nombres en el catálogo, sin regenerarlos
+para reflejar la implementación actual. No conviertas el catálogo en un diario
+ni atribuyas una ejecución nueva a una corrección editorial.
+
 Los diagramas permanecen editables como bloques Mermaid en Markdown, con objetivo,
 fuente y resumen textual. Revisa su representación en GitHub cuando cambien.
 El verificador local comprueba enlaces, anclas, referencias al código y límites

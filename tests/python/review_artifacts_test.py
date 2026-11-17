@@ -23,7 +23,7 @@ class ReviewArtifactsTest(unittest.TestCase):
         self.elf = bytearray(52)
         self.elf[:7] = b"\x7fELF\x01\x01\x01"
         self.elf[16:20] = b"\x03\x00\x03\x00"
-        for name in ("LICENSE", "README.md", "CHANGELOG.md", "plugin-package-map.json"):
+        for name in ("LICENSE", "README.md", "CHANGELOG.md"):
             self.write(self.candidate / name, b"public fixture")
         for base, prefix in ((self.candidate, "addons/sourcemod/"), (self.baseline, "")):
             self.write(base / (prefix + review.OWNED[0]), self.elf)
@@ -73,6 +73,16 @@ class ReviewArtifactsTest(unittest.TestCase):
         self.write(self.candidate / ("addons/sourcemod/" + review.LEGACY_BINARY), self.elf)
         with self.assertRaisesRegex(ValueError, "Unexpected candidate payload"):
             self.prepare()
+
+    def test_review_rejects_build_json_in_installable_candidate(self):
+        for name in ('plugin-package-map.json', 'steamworks-sdk.lock.json',
+                     'scripts/package/package-map.json', 'scripts/build/steamworks-sdk.lock.json'):
+            with self.subTest(name=name):
+                path = self.candidate / name
+                self.write(path, b'{}')
+                with self.assertRaisesRegex(ValueError, 'Unexpected candidate payload'):
+                    self.prepare()
+                path.unlink()
 
     def test_unexpected_candidate_refused(self):
         self.write(self.candidate / ".env", b"not public")

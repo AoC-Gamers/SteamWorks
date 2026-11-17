@@ -20,3 +20,8 @@ revisión desconocida en ese caso, sin atribuir el Git de un directorio padre.
 Las herramientas de este directorio no operan servidores. Descargas de
 dependencias y build son operaciones diferentes de ejecutar las suites con
 dependencias ya preparadas.
+
+La configuración de herramientas vive junto a sus consumidores:
+`scripts/build/steamworks-sdk.lock.json` fija los hashes del SDK y
+`scripts/package/package-map.json` describe el contenido del paquete. Ambos son
+entradas de fuentes/CI; ninguno se distribuye en el ZIP instalable.

@@ -30,7 +30,7 @@ Los ensayos históricos mínimos con SourceTVSupport conservaron su atribución.
 Un ensayo posterior reprodujo el SIGSEGV de salida del baseline archivado:
 un hilo Steam accedió a la interfaz de crashhandler después de descargar su
 módulo y el manejador de señal también quedó inválido. Ese baseline carece
-del finalizador cliente T08. Un baseline nuevo SDK 1.55 con ese finalizador
+del finalizador de la sesión cliente Steam. Un baseline nuevo SDK 1.55 con ese finalizador
 pasó cualificación y reversión con cierre limpio en el perfil mínimo. No se
 declara resuelto universalmente: la pila completa exige su propia aceptación.
 No trasladar resultados entre hashes distintos por compartir nombre de candidato.

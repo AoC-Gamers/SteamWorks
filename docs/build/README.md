@@ -40,7 +40,9 @@ El binario distribuido se llama `steamworks.ext.2.l4d2.so` en Linux y
 identidad lógica. Usa una salida de build nueva al migrar desde el nombre genérico.
 Los harnesses de diagnóstico viven en `tests/runtime/` y no se empaquetan.
 
-El staging admite solo extensión/include, activos raíz y Markdown estable de
+El mapa `scripts/package/package-map.json` es una entrada de validación del
+empaquetado y permanece solo en las fuentes. El staging admite únicamente
+extensión/include, README, CHANGELOG, LICENSE y Markdown estable de
 `docs/`, excluyendo instrucciones AGENTS. El validador rechaza SDK, tests,
 fixtures, gamedata inventado, binarios de diagnóstico y logs. Los resultados de
 validación se guardan en `.build/` y los paquetes en `dist/`, fuera de Git.
@@ -48,7 +50,7 @@ Compilar Windows no equivale a aceptar su ejecución en SRCDS.
 
 ## Selección única del SDK
 
-`steamworks-sdk.lock.json`, en las fuentes, fija 45 headers y dos bibliotecas x86
+`scripts/build/steamworks-sdk.lock.json`, en las fuentes, fija 45 headers y dos bibliotecas x86
 (Linux y Windows). `scripts/build/validate-steamworks-sdk.py` comprueba el conjunto
 de headers y cada SHA256. Los headers normalizan únicamente CRLF a LF para
 comparar Linux/Windows y Git; las bibliotecas conservan comprobación byte por byte. AMBuild invoca esa comprobación antes de configurar el

@@ -14,7 +14,7 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
   autenticación 014, identidad, stats enteros y float, HTTP/streaming,
   reinicialización en el mismo proceso y cierre limpio en perfil mínimo.
   GC remoto positivo y runtime Windows permanecen pendientes.
-- Reversión Linux x86 aceptada con baseline nuevo SDK 1.55 y finalizador T08:
+- Reversión Linux x86 aceptada con baseline nuevo SDK 1.55 y finalizador de la sesión cliente Steam:
   instalación desde ZIP, Steam/HTTP y salida limpia del candidato y del baseline
   restaurado, incluido el cierre efectivo del contexto cliente activo.
   El fallo del baseline histórico conserva su propia atribución;
@@ -33,6 +33,10 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
   no tiene un job de CI ni bloquea los builds Linux/Windows.
 
 ### Estructura de instalación
+
+- JSON de herramientas junto a sus consumidores: `scripts/build/steamworks-sdk.lock.json`
+  y `scripts/package/package-map.json`, sin cambiar su contenido. El mapa deja de
+  incluirse en el ZIP instalable; ambos archivos permanecen en las fuentes.
 
 - Binarios distribuidos con sufijo de motor: `steamworks.ext.2.l4d2.so` y
   `steamworks.ext.2.l4d2.dll`. La identidad lógica `steamworks.ext` y la API
@@ -79,12 +83,12 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
   antes de reservar/leer; CDetour valida la capacidad de su respaldo fijo antes
   de copiar. El build completo con --enable-optimize y -Werror pasa, con 88 checks
   de hooks y 318 de respaldo x86, sin suprimir comprobaciones. API pública intacta.
-- T08 observa el init desde el `CALL` acreditado del motor y conserva el detour
+- El observador de inicialización intercepta el init desde el `CALL` acreditado del motor y conserva el detour
   compartido de SourceTVSupport. Preserva sus ajustes y el resultado original,
   con regresión ejecutable x86, selector estricto y sanitizadores sin supresiones.
   La aceptación posterior cubre el ELF optimizado `839ff075…` y conserva cada
   ensayo anterior atribuido a su propio binario.
-- T08 cierra la sesión cliente Steam restante durante la descarga de la extensión,
+- El finalizador cierra la sesión cliente Steam restante durante la descarga de la extensión,
   solo tras observar el shutdown original del gameserver y confirmar su pipe en
   cero. Evita el worker del SDK sobre memoria desmapeada al salir de SRCDS x86;
   tres ciclos aislados LinuxGSM y un cambio de mapa pasan. API pública conservada,
@@ -102,7 +106,7 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
   `PushStringEx`, con copia alineada, padding cero, longitud en bytes, AccountID
   completo y sin copyback. La API pública no cambia. Pruebas con CForward real y
   VM SourcePawn aislada pasan en x86_64/x86; no se usan tickets reales ni SRCDS.
-- P4 identifica en una instancia aislada la entrada real `SteamInternal_GameServer_Init`
+- El análisis binario identifica en una instancia aislada la entrada real `SteamInternal_GameServer_Init`
   y conserva su ABI legacy de seis argumentos. Un perfil Linux x86 comprueba
   build-id del engine/proveedor, exports/RVA, región ejecutable y prefijos antes
   de instalar el par de detours; no se aceptan firmas arbitrarias de gamedata.
@@ -148,15 +152,16 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 
 ### Agregado
 
-- P5-R2 reúne T36 y el parche de la VM en una nueva validación de diez suites
-  por arquitectura. Regenera candidato, fuentes, diagnóstico aislado y reversión
-  con manifiestos y checksums, conservando las entregas anteriores sin desplegar.
-- P5 integra las suites locales y el control automático del inventario público.
+- Se integraron las correcciones del forward de autenticación y de la VM
+  SourcePawn en una validación histórica de diez suites por arquitectura. Se
+  prepararon candidato, fuentes, diagnóstico aislado y reversión con manifiestos
+  y checksums, conservando las entregas anteriores.
+- La integración reúne las suites locales y el control automático del inventario público.
   Se preparan candidato Linux x86 y reversión con hashes, restauración de archivos
   comprobada y documentación por capacidad; no implica aceptación remota ni despliegue.
 - El empaquetado incorpora `LICENSE` y su validación. El snapshot de revisión
   excluye SDK, módulos del juego y configuración privada.
-- Se agregó el inventario P0 de API, consumidores, SDK y pruebas, junto con un
+- Se agregó el inventario inicial de API, consumidores, SDK y pruebas, junto con un
   extractor de contratos y referencias. Su baseline se conserva en
   `tests/fixtures/api/api-inventory-p0.json`; los límites actuales de runtime se
   describen en `docs/runtime/compatibility.md`.

@@ -12,7 +12,7 @@ resultados no ejecutados siguen pendientes y SRCDS requiere un ensayo separado.
 
 ```mermaid
 flowchart TD
- A[Checkout o fuentes extraidas] --> C[Comparar API con fixture P0]
+ A[Checkout o fuentes extraidas] --> C[Comparar API con inventario original]
  C --> D[Suites offline requeridas]
  D --> E[Compilar segun toolchain Linux o Windows]
  E --> F[Empaquetar y rechazar material de pruebas]
@@ -38,5 +38,7 @@ Compilar Windows o pasar fixtures locales no acredita ejecución en Windows.
 
 El checkout del SDK está fijado al commit del lock y usa únicamente `sdk_155`.
 El job Linux ejecuta los negativos de selección; ambos builds comprueban los
-hashes antes de generar producto. El lock distingue finales de línea de texto
-de bytes binarios y entra en las claves de caché de dependencias.
+hashes antes de generar producto. El mapa `scripts/package/package-map.json` se
+lee desde las fuentes, no desde el ZIP generado, y también forma parte de las
+claves de caché. El lock distingue finales de línea de texto de bytes binarios
+y entra en las claves de caché de dependencias.

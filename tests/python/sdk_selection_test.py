@@ -54,10 +54,31 @@ class SDKSelectionTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'header set'):
                 guard.validate(copy)
 
+    def test_cli_uses_relocated_lock_from_sources_without_git(self):
+        with tempfile.TemporaryDirectory(prefix='sdk sources with spaces ') as temp:
+            root = Path(temp)
+            tool = root / 'scripts/build/validate-steamworks-sdk.py'
+            tool.parent.mkdir(parents=True)
+            shutil.copy2(ROOT / 'scripts/build/validate-steamworks-sdk.py', tool)
+            lock = root / 'scripts/build/steamworks-sdk.lock.json'
+            shutil.copy2(ROOT / 'scripts/build/steamworks-sdk.lock.json', lock)
+            original = lock.read_bytes()
+            legacy = root / 'steamworks-sdk.lock.json'
+            legacy.write_text('{"sdk_version":"1.55a"}')
+            command = [sys.executable, str(tool), str(SDK.resolve())]
+            accepted = subprocess.run(command, cwd=temp, capture_output=True, text=True)
+            self.assertEqual(accepted.returncode, 0, accepted.stderr)
+            self.assertIn('47 pinned files', accepted.stdout)
+            lock.unlink()
+            legacy.write_bytes(original)
+            rejected = subprocess.run(command, cwd=temp, capture_output=True, text=True)
+            self.assertEqual(rejected.returncode, 2)
+            self.assertIn('steamworks-sdk.lock.json', rejected.stderr)
+
     def test_unknown_lock_version_and_missing_sdk_fail_cli(self):
         with tempfile.TemporaryDirectory() as temp:
             path = Path(temp) / 'lock.json'
-            lock = json.loads((ROOT / 'steamworks-sdk.lock.json').read_text())
+            lock = json.loads((ROOT / 'scripts/build/steamworks-sdk.lock.json').read_text())
             lock['sdk_version'] = '1.55a'
             path.write_text(json.dumps(lock))
             with self.assertRaisesRegex(ValueError, 'only Steamworks 1.55'):

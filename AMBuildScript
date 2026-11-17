@@ -153,7 +153,7 @@ class SteamWorksConfig(object):
     self.steamworks_root = Normalize(self.steamworks_root)
     import importlib.util
     validator_path = os.path.join(builder.sourcePath, 'scripts', 'build', 'validate-steamworks-sdk.py')
-    lock_path = os.path.join(builder.sourcePath, 'steamworks-sdk.lock.json')
+    lock_path = os.path.join(builder.sourcePath, 'scripts', 'build', 'steamworks-sdk.lock.json')
     builder.AddConfigureFile(validator_path)
     builder.AddConfigureFile(lock_path)
     spec = importlib.util.spec_from_file_location('steamworks_sdk_lock', validator_path)

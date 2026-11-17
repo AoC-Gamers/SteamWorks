@@ -13,7 +13,9 @@ La identidad lógica solicitada por los plugins sigue siendo `steamworks.ext`;
 SourceMod resuelve el sufijo de L4D2.
 La distribución actual no instala gamedata de SteamWorks: los perfiles JSON de
 pruebas no son configuración. Conserva README, licencia y documentación como referencia.
-No copies SDK, bibliotecas Steam de compilación, fixtures, SMX de pruebas o VM instrumentada.
+Los JSON de build y empaquetado no forman parte del ZIP instalable ni son
+configuración de SourceMod. No copies SDK, bibliotecas Steam de compilación,
+fixtures, SMX de pruebas o VM instrumentada.
 
 ## Actualización
 

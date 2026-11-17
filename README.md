@@ -10,6 +10,11 @@ es **L4D2 dedicado Linux x86**; compilar Windows no acredita su runtime y los
 sondeos x64 históricos no son soporte para el motor x86 de L4D2. Steamworks SDK 1.55 es la única
 dependencia Steam de compilación, no un runtime que deba copiarse al servidor.
 
+Para compilar, obtén **Steamworks SDK 1.55 (`sdk_155`)** desde el
+[portal oficial de Steamworks](https://partner.steamgames.com/doc/sdk). Consulta
+[obtención y validación del SDK](docs/build/dependencies.md#obtener-steamworks-sdk-155):
+el enlace a la última versión no garantiza que descargue la 1.55.
+
 Las fuentes instalables siguen el árbol `addons/sourcemod/`; el código C++
 permanece en `extension/` y los diagnósticos en `tests/`.
 
