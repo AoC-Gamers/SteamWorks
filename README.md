@@ -28,5 +28,7 @@ la VM diagnóstica. Sigue la [guía de instalación](docs/installation/README.md
 - [Compatibilidad y límites](docs/runtime/compatibility.md)
 - [Pruebas y cobertura](https://github.com/AoC-Gamers/SteamWorks/tree/develop/tests)
 
-La recepción positiva desde el GC remoto sigue pendiente; un proveedor local o
-una cola vacía no la demuestran.
+GC remoto queda **excluido de la aceptación global de L4D2 dedicado**. Se conserva
+la API por compatibilidad, sin recepción remota acreditada; un proveedor local
+o una cola vacía no la demuestran. Consulta los
+[límites de GC](docs/game-coordinator/README.md#aplicabilidad-a-l4d2-dedicado-x86).

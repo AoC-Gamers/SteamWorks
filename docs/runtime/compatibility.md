@@ -21,8 +21,13 @@ históricos no acreditan el motor x86. Un perfil JSON documental no habilita ABI
 
 ## Límites de aceptación
 
-**GC remoto positivo sigue pendiente.** Una cola vacía o un proveedor local
-permiten validar buffers/forwards, no el protocolo remoto ni mensajes del backend.
+**GC remoto está excluido de la aceptación global de L4D2 dedicado** por decisión
+de alcance del 2026-11-17. La API y sus pruebas locales se conservan por
+compatibilidad; la recepción remota no está acreditada y no bloquea ese cierre.
+La investigación no identificó un escenario compatible reproducible; consulta
+los [límites de GC en L4D2](../game-coordinator/README.md#aplicabilidad-a-l4d2-dedicado-x86).
+Una cola vacía o un proveedor local permiten validar buffers/forwards, no el
+protocolo remoto ni mensajes del backend. Runtime Windows continúa pendiente.
 `ISteamFriends` no está expuesta; su resultado nulo observado pertenece al
 contexto dedicado ensayado, no a todos los procesos Steam.
 

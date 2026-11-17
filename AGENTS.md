@@ -14,7 +14,9 @@ Antes de editar, consulta `docs/README.md`, `docs/build/README.md` y `tests/READ
 - Conserva bytes, procedencia y hashes transitivos de fixtures. El saneamiento
   público de metadatos no cambia medidas binarias ni flags de aceptación.
 - Compilación, dobles, SourceHook/VM y SRCDS son niveles distintos de evidencia.
-  Lo no ejecutado sigue pendiente; GC remoto positivo requiere su propia evidencia.
+  Lo no ejecutado no cuenta como aprobado. GC remoto está excluido de la aceptación
+  global de L4D2 dedicado; conservar API y pruebas locales por compatibilidad, sin
+  atribuir recepción remota positiva ni retirar comprobaciones.
 
 ## Mapa de rutas
 

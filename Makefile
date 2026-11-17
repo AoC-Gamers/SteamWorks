@@ -52,6 +52,13 @@ test-review-artifacts:
 test-make-interface:
 	$(PYTHON) "$(ROOT_DIR)/tests/python/make_interface_test.py"
 
+# Explicit diagnostic build only; never installs or starts SRCDS.
+.PHONY: build-gc-observer
+build-gc-observer:
+	@test -n "$(SPCOMP)" -a -n "$(TEST_OUTPUT)" || { echo 'Set SPCOMP and TEST_OUTPUT' >&2; exit 2; }
+	mkdir -p "$(TEST_OUTPUT)"
+	"$(SPCOMP)" "$(ROOT_DIR)/tests/runtime/steamworks_gc_observer.sp" -i"$(ROOT_DIR)/addons/sourcemod/scripting/include" -i"$(SOURCEMOD_DIR)/plugins/include" -o"$(TEST_OUTPUT)/steamworks_gc_observer.smx"
+
 test-release-notes:
 	$(PYTHON) "$(ROOT_DIR)/tests/python/release_notes_test.py"
 
@@ -89,6 +96,7 @@ help:
 		'  make validate-sdk        Validate the pinned SDK' \
 		'  make check-docs          Check local documentation' \
 		'  make check-ci            Lint the workflow (actionlint required)' \
+		'  make build-gc-observer SPCOMP=<compiler> TEST_OUTPUT=<dir>  Compile passive GC harness' \
 		'  make test-release-notes  Check channel publication with offline doubles' \
 		'  make test-documentation  Test documentation and packaging boundaries' \
 		'  make validate-artifact-linux|validate-artifact-windows  Validate staged payload' \
