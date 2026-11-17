@@ -15,9 +15,13 @@ fi
 # Optional flags allow the same fixture to run with -m32 inside a multilib
 # environment. This suite deliberately does not link against a Steam runtime.
 read -r -a extra_flags <<< "${TEST_CXXFLAGS:-}"
-for suite in stats_natives_test stats_requests_test; do
+for suite in stats_natives_test stats_requests_test client_index_test; do
+  suite_flags=()
+  if [[ "$suite" == client_index_test ]]; then
+    suite_flags+=(-DSTEAMWORKS_TEST_STATS_CLIENTS)
+  fi
   "$CXX" -std=c++14 -Wall -Wextra -Werror -pedantic -O1 -g \
-    -fsanitize=undefined -fno-sanitize-recover=all "${extra_flags[@]}" \
+    -fsanitize=undefined -fno-sanitize-recover=all "${extra_flags[@]}" "${suite_flags[@]}" \
     -I"$ROOT_DIR/tests/support" -I"$ROOT_DIR/extension/sdk" -isystem "$SDK_DIR/public/steam" \
     "$ROOT_DIR/tests/native/$suite.cpp" -o "$OUTPUT_DIR/$suite"
   "$OUTPUT_DIR/$suite"

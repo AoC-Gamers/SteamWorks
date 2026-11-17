@@ -3,22 +3,32 @@
 Esta matriz describe comportamientos y procedencia. No es una colección de logs
 ni una ejecución nueva; los resultados actuales se guardan fuera de Git.
 
-Por decisión de alcance del 2026-11-17, **GC remoto está excluido de la aceptación
-global de L4D2 dedicado** y no bloquea su cierre. La recepción remota no está
-acreditada; no se convierte en un aprobado. Se conservan la API por compatibilidad
-y las suites locales de GC, incluidos sus negativos. Véanse los
-[límites y fundamento](../docs/game-coordinator/README.md#aplicabilidad-a-l4d2-dedicado-x86).
-Runtime Windows continúa pendiente; los demás límites de cada ensayo se conservan.
+Las pruebas locales de GC cubren ABI, buffers, forwards y ciclo de vida con
+proveedores controlados. La API se conserva por compatibilidad; su funcionamiento
+depende del soporte del juego y del contexto Steam. Consulta las
+[dependencias funcionales](../docs/game-coordinator/README.md#aplicabilidad-a-l4d2-dedicado-x86).
+
+La recepción real de `SteamWorks_OnUserStatsUnloaded` queda **excluida de la
+aceptación global de L4D2 dedicado x86**: no se ha identificado un disparador
+reproducible y Valve no garantiza una descarga al desconectar ni un plazo de
+emisión. No se considera aprobada por esta exclusión. Se conservan la API y las
+pruebas deterministas de entrega, aislamiento cliente/GameServer y teardown,
+incluidos sanitizadores y controles negativos. Consulta el
+[límite funcional](../docs/stats/README.md#descarga-de-caché-en-l4d2-dedicado-x86).
 
 | Contrato | Suite/escenario | Nivel | Evidencia runtime histórica | Límite |
 |---|---|---|---|---|
-| API y firmas/opcionalidad | Inventario original de API + integración | Inventario local | No necesaria para comparar firmas | No prueba ABI/runtime |
+| Carga propietaria por DSO | extension-entrypoint; negativo sin guarda del factory | Wrappers de producción y cargador/host controlados, ASan/UBSan x86 | 2026-11-17; Linux x86; ambos órdenes rechazaron el duplicado preservando HTTP pendiente, consumidor fallido recuperado, recarga en el mismo proceso y cierre limpio | Payload `a7764ee0181e530fee83040d82ac9087e2863c751df6a21c0c8b1599493d2398`; no acredita stats ni runtime Windows |
+| API y firmas/opcionalidad | Inventario original de API + adiciones explícitas + integración | Inventario local | No necesaria para comparar firmas | No prueba ABI/runtime |
+| Índice de cliente independiente de entidad | client_index_test en stats-natives y steamid-string | Natives de producción y dobles locales x86 | No necesaria para la regresión local | Rango/conexión e identidad existente; no acredita una conexión real |
+| Stats: notificaciones asíncronas y descarga de caché | stats-callbacks; contrato de adiciones API | SDK real + proveedor y despacho por contexto controlados, ASan/UBSan x86; negativo cliente/GameServer | 2026-11-17; Linux x86; Received con identidad/AppID correctos, lecturas y recarga soportada en el mismo proceso | Payload `d3814a2d69ab69108246b05701d5fee14d38ad8220274b1c448b59ffcaf4744c`; recepción real de Unloaded no acreditada y excluida del alcance global; silencio de callbacks limitado a la ventana observada |
+| Observador de caché y entrega de stats | steamworks_stats_callbacks; estados watching/matched_unloaded | Harness SourcePawn y SRCDS | 2026-11-17; Linux x86; dos Received correctos y lecturas válidas; objetivo retenido tras finalizar/desconectar durante cinco minutos sin nuevas solicitudes | Payload `a7764ee0181e530fee83040d82ac9087e2863c751df6a21c0c8b1599493d2398`; cero Unloaded, recepción real no acreditada y excluida del alcance global, sin garantía de plazo |
 | Stats: fallo conserva salida, identidad y AppID | stats-natives; harness stats | Dobles y SRCDS | 2026-11-15; Linux x86; F2; stats enteros/float y claves inexistentes (R3/R4), usuario autorizado | Solicitud aceptada no significa lectura disponible |
 | Identidad: capacidad/NUL y preautorización | steamid-string; harness identity/consumer | Dobles y SRCDS | 2026-11-15/16; Linux x86; F4; buffers (T15), consumidores (T25) y preautorización (T29) | No inferir grupo/perfil desde identidad |
 | Auth 014, ticket y agregación | auth-binding/auth-forward | SourceHook/VM reales offline y SRCDS | 2026-11-15; Linux x86; F1/F2; adaptador y autenticación | Proveedor offline no emite ticket real |
 | Init/teardown con SourceTVSupport | detours/init-coexistence/resource-lifecycle | Dobles/x86 y SRCDS | 2026-11-15; Linux x86; F3; cierre y reinicialización (T08) en mismo proceso | No toda la pila de consumidores |
 | Streaming: dos celdas y payload | http-stream-context | Wire independiente y SRCDS | 2026-11-15; Linux x86; F2; cuatro tandas, una tras mapa | No todo endpoint remoto |
-| HTTP estricto y GC snapshot | typed-boundary/resource-lifecycle, negativos mínimos | SDK simulado y SRCDS | 2026-11-16; Linux x86; F5; HTTP real, GC vacío/proveedor local | GC remoto excluido del alcance global; recepción no acreditada |
+| HTTP estricto y GC snapshot | typed-boundary/resource-lifecycle, negativos mínimos | Proveedores controlados locales | No necesaria para las regresiones locales | Contratos de buffers y forwards; no valida el protocolo del backend |
 | Cero/uno/varios forwards | auth-forward; harness forward | VM real y SRCDS | 2026-11-15; Linux x86; F4; agregación de forwards (T23) | ET_Event no propaga -1 individual como agregado |
 | Capacidades e interfaces | binary-evidence/typed-boundary; harness capability | Metadata/registro y SRCDS | 2026-11-15; Linux x86; F4; matriz de interfaces/capacidades (T11), GC opcional | Exports no son aceptación Windows |
 | Propietario HTTP pendiente y carga tardía | resource-lifecycle; harness pending/lifecycle | Dobles y SRCDS | 2026-11-15; Linux x86; F4; descarga del propietario HTTP (T20) y carga/recarga de extensión (T16) | Descarga forzada con dependientes no soportada |
@@ -56,7 +66,7 @@ el include, `969541624a2ba2f14aa07e040f96e6a50db40503baa21cba6206e0b1bd25aad8`.
 Ensayos anteriores sobre `839ff075…` mantienen su propia atribución en esta matriz.
 Las 15 suites y build de R20 no equivalen a reinstalar su ZIP nuevo. El quit
 limpio del perfil mínimo no declara resuelto el SIGSEGV histórico del baseline.
-Esos ensayos no acreditan recepción GC remota. Runtime Windows permanece pendiente.
+Runtime Windows permanece pendiente.
 
 ## Migración a SDK 1.55
 
@@ -81,7 +91,7 @@ casos y sin errores inesperados; las comprobaciones y logs permanecieron activos
 SourceTVSupport estaba cargado, pero su VSP no cargó tanto en candidato como en
 baseline: no se acepta emisión/VSP. El cierre limpio mínimo no declara resuelto
 el SIGSEGV histórico de otros consumidores. La selección exacta del SDK, binding,
-marshalling y negativos se cubren además offline. Esos ensayos no acreditan recepción GC remota. Runtime Windows permanece pendiente.
+marshalling y negativos se cubren además offline. Runtime Windows permanece pendiente.
 
 ## Baseline de reversión con finalizador de la sesión cliente Steam
 
@@ -120,4 +130,4 @@ originales. La observación nueva no cambia los límites del ensayo anterior;
 las guardas conservan cobertura offline. La evidencia del fallo histórico
 permanece válida y separada. Un ZIP documental regenerado requiere su propia
 instalación/reversión en sitio; los bytes de runtime idénticos mantienen solo
-su atribución binaria. Esos ensayos no acreditan recepción GC remota. Runtime Windows sigue pendiente.
+su atribución binaria. Runtime Windows sigue pendiente.

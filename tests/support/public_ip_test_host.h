@@ -51,6 +51,8 @@ struct ISteamGameServer
 {
 	SteamIPAddress_t address = {};
 	int queries = 0;
+	int licenseQueries = 0;
+	int groupQueries = 0;
 	SteamIPAddress_t GetPublicIP() { ++queries; return address; }
 	bool BSecure() { return true; }
 	bool BLoggedOn() { return true; }
@@ -59,18 +61,34 @@ struct ISteamGameServer
 	void SetMapName(const char*) {}
 	void SetKeyValue(const char*, const char*) {}
 	void ClearAllKeyValues() {}
-	EUserHasLicenseForAppResult UserHasLicenseForApp(CSteamID, int) { return k_EUserHasLicenseResultNoAuth; }
-	bool RequestUserGroupStatus(CSteamID, CSteamID) { return true; }
+	EUserHasLicenseForAppResult UserHasLicenseForApp(CSteamID, int) { ++licenseQueries; return k_EUserHasLicenseResultNoAuth; }
+	bool RequestUserGroupStatus(CSteamID, CSteamID) { ++groupQueries; return true; }
 };
 struct IGamePlayer { bool connected = true; bool IsConnected() { return connected; } };
 struct PlayerHelpers
 {
 	IGamePlayer player;
 	bool exists = true;
-	IGamePlayer* GetGamePlayer(int) { return exists ? &player : nullptr; }
+	int lookups = 0;
+	int lastIndex = 0;
+	int GetMaxClients() { return 32; }
+	IGamePlayer* GetGamePlayer(int index)
+	{
+		++lookups;
+		lastIndex = index;
+		return exists && index >= 1 && index <= GetMaxClients() ? &player : nullptr;
+	}
 } playerHelpers;
 auto* playerhelpers = &playerHelpers;
-struct GameHelpers { int ReferenceToIndex(cell_t index) { return index; } } gameHelpers;
+struct GameHelpers
+{
+	bool entityPresent = true;
+	int ReferenceToIndex(cell_t index)
+	{
+		if (!entityPresent) { return -1; }
+		return index == static_cast<cell_t>(0x80010001u) ? 1 : index;
+	}
+} gameHelpers;
 auto* gamehelpers = &gameHelpers;
 
 struct GameServer

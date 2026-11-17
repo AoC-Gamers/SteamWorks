@@ -47,6 +47,12 @@ bool SteamWorks::SDK_OnLoad(char* error, size_t maxlength, bool late)
 	pSWForward = new SteamWorksForwards;
 	pGSNatives = new SteamWorksGSNatives;
 	pGSHooks = new SteamWorksGSHooks;
+	pSWStats = new SteamWorksStats;
+	if (!pSWStats->IsReady()) {
+		std::snprintf(error, maxlength, "Could not create SteamWorks stats forwards");
+		SDK_OnUnload();
+		return false;
+	}
 	pSSNatives = new SteamWorksSSNatives;
 	pGCHooks = new SteamWorksGCHooks;
 	pGCNatives = new SteamWorksGCNatives;
@@ -63,6 +69,7 @@ void SteamWorks::SDK_OnUnload()
 	DeleteAndNull(pGCNatives);
 	DeleteAndNull(pGCHooks);
 	DeleteAndNull(pSSNatives);
+	DeleteAndNull(pSWStats);
 	DeleteAndNull(pGSDetours);
 	DeleteAndNull(pGSHooks);
 	DeleteAndNull(pGSNatives);
@@ -83,6 +90,7 @@ void SteamWorks::RuntimeStopped()
  if (pGSHooks != nullptr) { pGSHooks->Stop(); }
  if (pGCHooks != nullptr) { pGCHooks->Stop(); }
  if (pSWForward != nullptr) { pSWForward->Stop(); }
+ if (pSWStats != nullptr) { pSWStats->Stop(); }
  if (pSWHTTP != nullptr) { pSWHTTP->StopRuntime(); }
  if (pSWGameServer != nullptr) { pSWGameServer->Reset(); }
 }
@@ -94,6 +102,7 @@ void SteamWorks::RuntimeStarted()
  steamworks::debug::Log(steamworks::debug::Lifecycle, "runtime_start");
  m_runtimeAvailable = true;
  if (pSWHTTP != nullptr) { pSWHTTP->StartRuntime(); }
+ if (pSWStats != nullptr) { pSWStats->Start(); }
  if (pSWForward != nullptr) { pSWForward->Start(); }
  if (pGSHooks != nullptr) { pGSHooks->Start(); }
  if (pGCHooks != nullptr) { pGCHooks->Start(); }

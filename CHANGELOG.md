@@ -4,6 +4,44 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 
 ## [Unreleased]
 
+### Análisis estático opcional
+
+- Targets `make sonar` y `make sonar-cppcheck`, con ejecución mediante scripts,
+  base de compilación x86 generada por AMBuild e integración con sonar-cxx.
+  Configuración de ejemplo sin datos de infraestructura; token en `env.secret`
+  ignorado por Git y pasado al scanner solo por entorno. Pruebas offline del
+  tooling en Make e integración/CI, sin activar análisis remotos automáticos.
+
+### Protección de carga de la extensión
+
+- Rechazo temprano de una segunda carga del mismo módulo por otro nombre, antes
+  de reemplazar la identidad o los recursos del propietario activo. Evita el
+  listener HTTP obsoleto de la ruta de doble inicialización; permite reintentar
+  tras un fallo y cargar de nuevo después del desmontaje completo. Regresión
+  x86 con ASan/UBSan y control negativo. Se realizaron pruebas locales SRCDS
+  Linux x86 de ambos órdenes de carga, rechazo sin perder HTTP pendiente,
+  recuperación del consumidor fallido, recarga y cierre limpio.
+
+### Notificaciones asíncronas de stats
+
+- Observador de descarga de caché independiente del ensayo activo: conserva el
+  objetivo tras finalizar, desconectar o cambiar de mapa y permite borrarlo
+  explícitamente, sin registrar identidades. Pruebas deterministas x86 separan
+  cliente y GameServer para el ID compartido `1108`, con control negativo.
+  Se realizaron pruebas locales SRCDS Linux x86: objetivo retenido después de
+  finalizar y desconectar, sin descargas observadas durante cinco minutos.
+  La recepción real de `OnUserStatsUnloaded` no está acreditada en L4D2 dedicado
+  x86: Steam no ofrece un disparador documentado para forzarla. Se conserva la
+  API por compatibilidad y la cobertura determinista; los consumidores no deben
+  depender del evento para liberar sus recursos.
+- Nuevos forwards `SteamWorks_OnUserStatsReceived(authid, result, appid)` y
+  `SteamWorks_OnUserStatsUnloaded(authid)`, sin cambiar las firmas existentes.
+  Resultados por solicitud con identidad/AppID capturados, agrupación de
+  duplicados pendientes y cancelación al detener el contexto. Pruebas locales
+  x86 con ASan/UBSan. Recepción de resultados, lecturas y recarga soportada
+  comprobadas en una prueba local SRCDS Linux x86; descarga de caché aún sin
+  recepción real observada.
+
 ### SDK 1.55
 
 - SDK único con lock de headers y bibliotecas x86, guardas de selección en build,
@@ -13,8 +51,7 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 - API SourcePawn conservada. Aceptación Linux SRCDS x86 del payload SDK 1.55:
   autenticación 014, identidad, stats enteros y float, HTTP/streaming,
   reinicialización en el mismo proceso y cierre limpio en perfil mínimo.
-  GC remoto queda excluido de la aceptación global de L4D2 dedicado, sin
-  recepción remota acreditada; runtime Windows permanece pendiente.
+  Runtime Windows permanece pendiente.
 - Reversión Linux x86 aceptada con baseline nuevo SDK 1.55 y finalizador de la sesión cliente Steam:
   instalación desde ZIP, Steam/HTTP y salida limpia del candidato y del baseline
   restaurado, incluido el cierre efectivo del contexto cliente activo.
@@ -27,8 +64,8 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
   enlace al intento de CI después de subir los paquetes. Se conservan tags y
   enlaces estables. CI recrea cada release como borrador y la publica tras cargar
   ambos ZIP, renovando su fecha de publicación; cambia los IDs internos y reinicia
-  los contadores de los assets anteriores. Las notas explicitan la exclusión de
-  GC remoto, la API conservada por compatibilidad y la ausencia de aceptación remota.
+  los contadores de los assets anteriores. Las notas se limitan al canal, fecha,
+  commit y ejecución de CI.
 
 - Entornos, rutas y paquetes de prueba descritos con nombres genéricos; metadatos
   de fixtures saneados con trazabilidad y sin ampliar aceptación runtime.
@@ -71,12 +108,9 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
   capacidad, resultados históricos, supercesión y guarda de generación.
 - El helper HTTP textual lee el cuerpo completo en memoria temporal antes de
   truncar; rechaza tamaños no representables y conserva salidas ante fallos.
-- Regresiones previas reproducidas, proveedor HTTP estricto, matrices GC/HTTP,
-  integración x86 y sanitizadores sin supresiones. Aceptación posterior SRCDS x86:
-  372 checks sin fallos, HTTP real, GC real vacío y proveedor GC local tipado;
-  sin mensaje GC remoto positivo acreditado. GC remoto queda excluido del alcance
-  global de L4D2 dedicado; API y pruebas locales conservadas. Salida limpia observada en el perfil
-  mínimo; no amplía la aceptación a otros consumidores o plataformas.
+- Regresiones previas reproducidas con proveedores controlados, matrices GC/HTTP,
+  integración local x86 y sanitizadores sin supresiones. La API GC y sus pruebas
+  locales se conservan por compatibilidad.
 
 ### Validación
 
@@ -86,13 +120,18 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
   al hash del payload y al conjunto de consumidores ensayado.
 - Build optimizado reproducible y paquetes/fuentes comprobados por separado.
   Compilación Windows no implica aceptación de runtime Windows.
-- GC remoto excluido de la aceptación global de L4D2 dedicado, conservando API
-  y comprobaciones por compatibilidad. La exclusión no acredita recepción del
-  backend; una cola vacía o un proveedor local tampoco. El SIGSEGV histórico del baseline no se cierra
-  por una salida limpia de un perfil mínimo.
+- La API GC se conserva por compatibilidad; su funcionamiento depende del soporte
+  del juego y del contexto Steam. Las pruebas locales cubren sus contratos de ABI,
+  buffers y forwards. El SIGSEGV histórico del baseline no se cierra por una salida
+  limpia de un perfil mínimo.
 
 ### Corregido
 
+- Los natives de stats, identidad, licencias y grupos resuelven los índices de
+  cliente directamente, con rango y conexión comprobados antes de operar. Se
+  elimina la dependencia de una entidad del motor durante la conexión, conservando
+  firmas y autorización. Pruebas locales x86 cubren slots sin entidad, límites,
+  clientes ausentes/desconectados y rechazo de referencias de entidad.
 - El snapshot de BeginAuthSession valida la reserva acolchada contra PTRDIFF_MAX
   antes de reservar/leer; CDetour valida la capacidad de su respaldo fijo antes
   de copiar. El build completo con --enable-optimize y -Werror pasa, con 88 checks

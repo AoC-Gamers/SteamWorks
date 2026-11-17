@@ -38,16 +38,20 @@ Los targets `make test-<suite>` delegan en `tests/runners/test-<suite>.sh`.
 incluida SourceHook y las pruebas offline de notas de canales, sin reincorporar
 la prueba documental a CI.
 `make test-documentation` y `make check-docs` son comprobaciones locales.
+`make sonar-tooling-test` prueba la orquestación de Cppcheck/SonarScanner con dobles,
+sin red ni tokens reales; forma parte de CI y de la integración.
 La integración también ejecuta `make_interface_test.py`, que verifica rutas con
 espacios, opciones, plataforma y propagación de errores de los backends.
 
 | Suite | Propósito | Dependencia real/simulada | No demuestra |
 |---|---|---|---|
-| stats-natives | Salidas intactas al fallo, AppID separado de identidad | natives + host Steam simulado | Disponibilidad real de stats |
+| extension-entrypoint | Un propietario por DSO, doble nombre, reentrada, fallos y recarga | Factory/wrappers de producción + cargador controlado, ASan/UBSan x86 y negativo | Nueva aceptación SRCDS |
+| stats-callbacks | CallResults por solicitud, caché, aislamiento cliente/GameServer, errores y teardown reentrante | SDK real + entrega simulada por contexto, ASan/UBSan x86 y negativo sin filtro de contexto | Recepción Steam real |
+| stats-natives | Salidas intactas al fallo, AppID separado de identidad e índices independientes de entidad | natives + host Steam simulado | Disponibilidad real de stats |
 | detours | Creación/habilitación y rollback, backup optimizado | CDetour + host simulado | Módulos reales del motor |
 | init-coexistence | Observador init y cadena de hooks ajenos | Bytes y callsites x86 + dobles | Convivencia de toda la pila de plugins |
 | public-ip | IPv4 y char signed/unsigned | Proveedor simulado | Dirección pública real |
-| steamid-string | Capacidades, truncamiento y NUL legacy | Conversión SourcePawn simulada | Autorización real |
+| steamid-string | Capacidades, truncamiento, NUL legacy e índices en identidad/licencias/grupos | Conversión SourcePawn simulada | Autorización real |
 | typed-boundary | Registro, tipos, buffers HTTP/GC y negativos de compilación | SDK real + proveedores simulados | ABI completa del runtime |
 | resource-lifecycle | Callbacks, hooks, requests y teardown; negativo GC | Producción + hosts simulados, optimización auth | Parada real SRCDS |
 | restart-forward-semantics | Resultados de reinicio y reentrada | Forward simulado | Agregación completa de VM |
@@ -57,6 +61,12 @@ espacios, opciones, plataforma y propagación de errores de los backends.
 | auth-forward | Marshalling y agregación real de forwards | VM SourcePawn real + Steam simulado; opcional | Ticket auténtico |
 | auth-binding | Objetivo motor 014, otro objeto SDK 014 y doble 015 rechazado | SourceHook real + dos proveedores simulados; opcional | Login Steam real |
 | sourcepawn-environment | Destrucción VM y ciclos de propiedad | VM instrumentada real, ASan; opcional | VM de producción ni estabilidad SRCDS |
+
+`client_index_test.cpp` se compila en las suites de stats y SteamID para probar
+los seis natives de producción que reciben un índice de cliente. Los dobles
+mantienen independientes el slot conectado y la entidad; cubren ambos extremos
+del rango, ausencia de entidad, referencias de entidad e índices inválidos,
+clientes ausentes/desconectados y ausencia de trabajo o escrituras tras el rechazo.
 
 Además, `tests/python/sdk_selection_test.py` verifica el release, los 47 hashes
 y los rechazos de headers/bibliotecas cambiados o ausentes; la integración realiza
@@ -97,10 +107,9 @@ original de API (`fixtures/api/api-inventory-p0.json`) no se regenera a partir d
 - [Probes diagnósticos](diagnostics/README.md)
 - [Pipeline y separación de publicación](../docs/build/ci.md)
 
-Los tests no prueban por sí solos una instalación, un login real o GC remoto.
-GC remoto está excluido de la aceptación global de L4D2 dedicado, sin recepción
-remota acreditada. Se conservan API y suites locales de GC por compatibilidad;
-la exclusión no omite controles ni los convierte en pruebas remotas.
+Los tests locales validan los contratos bajo proveedores controlados. En GC
+se comprueban ABI, buffers, forwards y ciclo de vida; la API se conserva por
+compatibilidad y su utilidad depende del soporte del juego y del contexto Steam.
 No se acepta una revisión nueva por compartir nombre con un binario anterior.
 
 `make test-sdk-incremental TEST_OUTPUT=<nueva-carpeta>` delega en
@@ -115,3 +124,8 @@ tras el build de producto; no inicia servidores ni modifica el SDK original.
 Latest/Develop como borradores, sus notas UTC/commit/run y los fallos de
 preparación, eliminación y carga con CLI GitHub
 simulado. No publica ni modifica releases; también forma parte de la integración.
+
+`make test-public-api` conserva íntegro el inventario original y exige las dos
+adiciones de stats declaradas manualmente en `helpers/api_contract.py`. Las
+pruebas negativas rechazan adiciones extra, duplicadas o con otra firma/registro,
+y cualquier alteración del contrato original; no se regenera el baseline.

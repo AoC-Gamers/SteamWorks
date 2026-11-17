@@ -25,8 +25,8 @@ int main(int argc, char** argv)
 		if (std::strstr(entry->name, "RequestStats") == nullptr) { continue; }
 		if (argc > 1 && std::strcmp(entry->name, argv[1]) != 0) { continue; }
 		const bool byClient = std::strcmp(entry->name, "SteamWorks_RequestStats") == 0;
-		expectedScenarios += byClient ? 22 : 12;
-		for (int scenario = 0; scenario < 22; ++scenario) {
+		expectedScenarios += byClient ? 24 : 14;
+		for (int scenario = 0; scenario < 24; ++scenario) {
 			if (!byClient && scenario >= 10 && scenario <= 19) { continue; }
 			IPluginContext context;
 			ISteamGameServerStats stats;
@@ -36,6 +36,8 @@ int main(int argc, char** argv)
 			server.utils = &utils;
 			g_SteamWorks.pSWGameServer = &server;
 			g_SteamWorks.legacyIdentityCalls = 0;
+			statsOwner = StatsOwner{};
+			g_SteamWorks.pSWStats = &statsOwner;
 			playerHelpers.exists = true;
 			playerHelpers.player = IGamePlayer{};
 			auto& player = playerHelpers.player;
@@ -78,10 +80,14 @@ int main(int argc, char** argv)
 				case 19: label = "invalid individual instance rejected"; player.steamId = CSteamID(123, 2, k_EUniversePublic, k_EAccountTypeIndividual).ConvertToUint64(); break;
 				case 20: label = "AppID bit pattern compared as uint32"; utils.appid = 0x80000001u; params[2] = CellBits(utils.appid); queryExpected = true; break;
 				case 21: label = "legacy universe argument is not AppID"; params[2] = 1; break;
+				case 22: label = "callback owner unavailable"; g_SteamWorks.pSWStats = nullptr; break;
+				case 23: label = "callback owner stopped"; statsOwner.accepting = false; break;
 			}
 			const cell_t result = entry->function(&context, params);
 			Check(result == (queryExpected && scenario != 7 ? 1 : 0), entry->name, label);
 			Check(stats.requests == (queryExpected ? 1 : 0), entry->name, label);
+			Check(statsOwner.calls == (queryExpected || scenario == 23 ? 1 : 0), entry->name, "guarded async owner acquisition");
+			if (queryExpected) { Check(statsOwner.capturedApp == utils.appid, entry->name, "AppID captured independently of identity"); }
 			if (queryExpected) {
 				Check(stats.requestedIdentity.ConvertToUint64() == expectedIdentity.ConvertToUint64(), entry->name, "exact identity delivered to Steam");
 			}

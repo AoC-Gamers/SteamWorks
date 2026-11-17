@@ -51,9 +51,8 @@ cambiar solo un selector no acredita restauración. Restaura el laboratorio y
 verifica configuraciones ajenas antes/después. Un payload idéntico puede citarse
 por hash; no extender aceptación a paquetes o consumidores diferentes.
 
-GC remoto está excluido de la aceptación global de L4D2 dedicado; la recepción
-remota no está acreditada. La cola vacía y el proveedor local solo validan
-contratos locales. La API y sus controles se conservan por compatibilidad. La salida limpia
+La cola vacía y el proveedor GC local validan contratos de buffers y forwards.
+La API y sus controles se conservan por compatibilidad. La salida limpia
 de un perfil mínimo no cierra el SIGSEGV histórico del baseline completo.
 Consulta [cobertura](../COVERAGE.md) para observaciones y pendientes.
 
@@ -108,3 +107,61 @@ reutilizar direcciones entre procesos ni revisiones. El sondeo llama al getter y
 si devuelve una interfaz, a `IsMessageAvailable(uint32*)` en el slot 1 auditado de
 SteamGameCoordinator001 del SDK 1.55. Informa disponibilidad/tamaño sin recuperar
 ni enviar mensajes. Los handles SDKCall se cierran inmediatamente.
+
+## Compilar consumidores con el include actual
+
+```bash
+make build-runtime-harnesses SPCOMP=/ruta/a/spcomp \
+  RUNTIME_EXTRA_INCLUDE=/ruta/a/family-share/include \
+  TEST_OUTPUT=.build/runtime-consumers
+```
+
+El target compila todos los harnesses con warnings tratados como errores y genera
+el include de claves desde el schema protegido. No instala ni carga plugins.
+`steamworks_stats_callbacks.sp` observa los dos forwards nuevos;
+`sw_stats_callbacks_status` muestra solo contadores de recepción, fallos y descarga
+de caché. `sw_stats_callbacks_test`, ejecutado explícitamente desde la consola,
+requiere exactamente un humano autorizado. Solicita stats por cliente y AccountID
+con un duplicado pendiente; comprueba un único resultado, la correspondencia de
+identidad/AppID y lecturas enteras coincidentes después de `k_EResultOK`. Luego
+repite la solicitud para comprobar una nueva notificación. Un timeout, una
+identidad distinta, una lectura fallida o notificaciones extra impiden el PASS.
+Los cambios de mapa y la desconexión abortan el ensayo activo, pero conservan
+el AccountID observado para poder reconocer una descarga posterior de caché.
+Ese objetivo se sustituye al aceptar un nuevo ensayo o se borra con
+`sw_stats_callbacks_reset`. El estado muestra `watching` y `matched_unloaded`;
+no registra identidades ni valores personales de stats. La descarga de caché solo
+se observa si Steam la emite; no se simula para atribuir recepción runtime.
+La recepción real de `OnUserStatsUnloaded` está excluida de la aceptación global
+de L4D2 dedicado x86 y no bloquea el PASS del ensayo de resultados. El observador
+permanece disponible para investigación; la exclusión no acredita el evento.
+Se mantienen las pruebas deterministas y sus controles negativos. Consulta el
+[límite funcional](../../docs/stats/README.md#descarga-de-caché-en-l4d2-dedicado-x86).
+Su compilación no equivale a aceptación en SRCDS.
+
+Para una recarga manual, retira primero los plugins dependientes y utiliza la
+identidad lógica `sm exts load steamworks`. El nombre físico del artefacto no
+sustituye esa identidad. No fuerces la descarga con dependientes ni cuentes una
+carga con otro nombre como una recarga soportada.
+
+## Propiedad de carga y doble nombre
+
+`steamworks_load_probe.sp` declara solo los natives necesarios y omite
+intencionadamente el descriptor `SharedExtension`: permite probar al propietario
+cargado por nombre físico sin solicitar otra carga lógica. Es un harness, no un
+patrón de dependencia recomendado para plugins de producto. El consumidor
+`steamworks_rollback_acceptance.sp`, con el include normal, comprueba por separado
+la resolución de la dependencia lógica y su recuperación tras un intento fallido.
+
+`sw_load_probe hold` envía una petición con contexto a `/delay`; `sw_load_probe`
+comprueba conexión, identidad de la ConVar y contadores. La finalización valida
+el cuerpo y el contexto sin registrar datos de usuarios. Para el endpoint:
+
+```bash
+make serve-runtime-http-fixture TEST_OUTPUT=.build/http-counts.json
+```
+
+El target ocupa solo loopback en 27880; revisa que esté libre. Ctrl+C lo detiene
+y guarda los conteos. El backend conserva su modo HTTP+TLS cuando se proporcionan
+certificado y clave; `--http-only` es el modo utilizado por este target. Ninguna
+prueba local arranca SRCDS ni instala el harness como efecto secundario.

@@ -10,6 +10,7 @@ project.sources += [
   'core/swidentity.cpp',
   'core/swgamedata.cpp',
   'core/swforwards.cpp',
+  'core/swstats.cpp',
   'natives/gsnatives.cpp',
   'hooks/swgshooks.cpp',
   'hooks/swgsdetours.cpp',

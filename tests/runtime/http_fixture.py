@@ -42,15 +42,20 @@ class Handler(BaseHTTPRequestHandler):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--cert", required=True)
-    parser.add_argument("--key", required=True)
+    parser.add_argument("--cert")
+    parser.add_argument("--key")
+    parser.add_argument("--http-only", action="store_true")
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
-    servers = [ThreadingHTTPServer(("127.0.0.1", 27880), Handler),
-               ThreadingHTTPServer(("127.0.0.1", 27881), Handler)]
-    context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-    context.load_cert_chain(args.cert, args.key)
-    servers[1].socket = context.wrap_socket(servers[1].socket, server_side=True)
+    if not args.http_only and (not args.cert or not args.key):
+        parser.error("--cert and --key are required unless --http-only is selected")
+    servers = [ThreadingHTTPServer(("127.0.0.1", 27880), Handler)]
+    if not args.http_only:
+        context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        context.load_cert_chain(args.cert, args.key)
+        tls = ThreadingHTTPServer(("127.0.0.1", 27881), Handler)
+        tls.socket = context.wrap_socket(tls.socket, server_side=True)
+        servers.append(tls)
     stop = threading.Event()
     for sig in [signal.SIGTERM, signal.SIGINT]:
         signal.signal(sig, lambda *_: stop.set())

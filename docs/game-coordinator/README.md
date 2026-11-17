@@ -1,21 +1,10 @@
 # Game Coordinator
 
 La interfaz opcional permite enviar mensajes, consultar disponibilidad y recuperar
-bytes. Su presencia no implica que el backend remoto de L4D2 emita mensajes.
-**GC remoto está excluido de la aceptación global de L4D2 dedicado**. La API
-se conserva por compatibilidad, sin recepción remota acreditada. El proveedor
-local y la cola vacía validan contratos locales, no el protocolo remoto; las
-pruebas de ABI, marshalling, buffers y ciclo de vida siguen vigentes.
+bytes. La API de Game Coordinator se conserva por compatibilidad. Su funcionamiento
+depende del soporte del juego y del contexto Steam.
 
 ## Aplicabilidad a L4D2 dedicado x86
-
-La investigación del 2026-11-17 no identificó un escenario reproducible de
-recepción GC remota en el SRCDS Linux x86 examinado. Esto no demuestra que todo
-backend GC de L4D2 sea inexistente: distingue transporte, contexto Steam y
-rutas activas del motor. Por decisión de alcance del 2026-11-17, GC remoto
-no es requisito para cerrar la aceptación global de L4D2 dedicado. Se clasifica
-como excluido, sin un escenario compatible identificado ni una recepción positiva
-aprobada. Reabrir su aceptación requeriría un escenario y evidencia propios.
 
 [Valve describe ISteamGameCoordinator](https://partner.steamgames.com/doc/api/ISteamGameCoordinator)
 como una interfaz mayormente obsoleta, conservada para unos pocos juegos. Su
@@ -23,25 +12,14 @@ como una interfaz mayormente obsoleta, conservada para unos pocos juegos. Su
 resuelve una interfaz asociada a un usuario/pipe; obtenerla no acredita un
 protocolo ni una respuesta del backend para ese contexto.
 
-En el binario dedicado `matchmaking_ds_srv.so` examinado, SHA256
-`19d589338d9435582ceaf7268b66bd4ba92f5751aac01fa3fc8cec67494f0b0c`,
-`SteamApiContext_Init()` es un stub y `GGCClient()` devuelve nulo. Las rutas
-`CDatacenter::RequestStart`, `RequestUpdate` y `Update` comprueban ese resultado
-antes de usar el cliente GC. En la variante `matchmaking_srv.so`, SHA256
-`7f7c15dc95cc745440baa96dd06f36dea78d0dbf16b90604a5de426e45b2013c`,
-`GGCClient()` devuelve un objeto y la inicialización resuelve GC con
-`SteamAPI_GetHSteamUser`/`SteamAPI_GetHSteamPipe`. Esa variante no es el módulo
-mapeado por el dedicado observado. La evidencia se limita a esos binarios;
-no afirmar que todas las versiones/plataformas carezcan de otra ruta.
+SteamWorks obtiene la interfaz con handles **GameServer**. Conectar un jugador
+al servidor no transfiere a la extensión la sesión GC de su cliente Steam.
+La disponibilidad de la interfaz debe distinguirse del soporte del protocolo
+del juego y de los componentes que producen y leen mensajes.
 
-SteamWorks usa los handles **GameServer**, no los del cliente del jugador.
-Conectar una cuenta al servidor no transfiere su sesión GC a la extensión.
-El ensayo con interfaz disponible, entrada de una cuenta y cambio de mapa en
-el mismo proceso mantuvo la cola vacía y cero mensajes GC observados.
-
-| Superficie pública | Qué implementa | Límite en el dedicado examinado |
+| Superficie pública | Qué implementa | Dependencia funcional |
 |---|---|---|
-| `SteamWorks_SendMessageToGC` | Envía bytes mediante la interfaz GC del GameServer | No define protocolo L4D2, handshake ni una respuesta; no hay intercambio remoto acreditado |
+| `SteamWorks_SendMessageToGC` | Envía bytes mediante la interfaz GC del GameServer | Requiere el protocolo y esquema de mensajes del juego |
 | `SteamWorks_GCSendMessage` | Intercepta llamadas a `SendMessage` | Sin emisor no se dispara espontáneamente |
 | `SteamWorks_GCMsgAvailable` | Intercepta `IsMessageAvailable` cuando devuelve true | No es una suscripción directa a `GCMessageAvailable_t` ni sondea la cola automáticamente |
 | `SteamWorks_GCRetrieveMessage` | Intercepta llamadas a `RetrieveMessage` | Necesita un lector; la API pública no expone un native de recepción y el frame hook solo reintenta instalar hooks |
@@ -52,12 +30,9 @@ completo para L4D2 dedicado. La validez de auth, HTTP, identidad o stats mediant
 sus interfaces propias no demuestra GC. En particular,
 [RequestUserStats pertenece a ISteamGameServerStats](https://partner.steamgames.com/doc/api/ISteamGameServerStats#RequestUserStats).
 
-Antes de una nueva prueba positiva se necesita un mensaje y esquema de L4D2
-compatibles con el contexto GameServer, un escenario que autorice su respuesta
-y un lector de esa misma cola. Un ensayo con cliente/listen-server sería otra
-aceptación y requeriría comprobar también que usa la misma instancia que la
-extensión. No trasladar IDs/handshakes de TF2, CS o Dota, ni contar proveedores
-locales como Steam remoto. Se conserva la API pública y sus comprobaciones.
+Un consumidor necesita mensajes y esquemas compatibles con el juego, el contexto
+Steam adecuado y un lector de la misma cola. Los IDs y handshakes de otros juegos
+no definen el protocolo de L4D2.
 
 ## Forward binario de recepción
 

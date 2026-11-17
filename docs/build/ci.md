@@ -13,7 +13,7 @@ resultados no ejecutados siguen pendientes y SRCDS requiere un ensayo separado.
 
 ```mermaid
 flowchart TD
- A[Checkout o fuentes extraidas] --> C[Comparar API con inventario original]
+ A[Checkout o fuentes extraidas] --> C[Comparar API original y adiciones explicitas]
  C --> D[Suites offline requeridas]
  D --> E[Compilar segun toolchain Linux o Windows]
  E --> F[Empaquetar y rechazar material de pruebas]
@@ -62,9 +62,18 @@ reintentar la ejecución. Las ejecuciones del mismo ref no se cancelan entre sí
 para evitar interrupciones durante la sustitución.
 
 La publicación continúa sujeta al éxito de los builds y paquetes Linux/Windows.
-Las notas indican que GC remoto está excluido de la aceptación global de L4D2
-dedicado, con API conservada por compatibilidad y sin recepción remota acreditada.
-La exclusión no es una prueba positiva aprobada.
+Las notas públicas se limitan al canal, la fecha UTC, el commit y el enlace a la
+ejecución. Los detalles del proceso interno de aceptación quedan fuera de ellas.
 Los releases versionados por tags `v*` mantienen su procedimiento actual.
 `make test-release-notes` ejecuta el bloque real del workflow con `gh` y reloj
 simulados: no publica, modifica tags ni contacta GitHub.
+
+La validación de API separa el inventario original inmutable de las adiciones
+explícitas de stats (`make test-public-api`). Linux también ejecuta
+`make test-stats-callbacks`, con CallResults y callback de caché del SDK real,
+entrega simulada y sanitizadores ASan/UBSan x86. No acredita recepción runtime.
+
+`make test-extension-entrypoint` comprueba con ASan/UBSan x86 que los nombres
+lógico y físico no generan dos propietarios del mismo DSO. Incluye fallos de
+interfaces, reentrada, desmontaje y un control negativo que retira solo la guarda
+del factory; se ejecuta en CI Linux y en la integración local.

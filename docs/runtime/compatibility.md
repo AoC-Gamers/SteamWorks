@@ -21,13 +21,10 @@ históricos no acreditan el motor x86. Un perfil JSON documental no habilita ABI
 
 ## Límites de aceptación
 
-**GC remoto está excluido de la aceptación global de L4D2 dedicado** por decisión
-de alcance del 2026-11-17. La API y sus pruebas locales se conservan por
-compatibilidad; la recepción remota no está acreditada y no bloquea ese cierre.
-La investigación no identificó un escenario compatible reproducible; consulta
-los [límites de GC en L4D2](../game-coordinator/README.md#aplicabilidad-a-l4d2-dedicado-x86).
-Una cola vacía o un proveedor local permiten validar buffers/forwards, no el
-protocolo remoto ni mensajes del backend. Runtime Windows continúa pendiente.
+La API GC se conserva por compatibilidad y depende del soporte del juego y del
+contexto Steam. Consulta las [dependencias funcionales de GC](../game-coordinator/README.md#aplicabilidad-a-l4d2-dedicado-x86).
+Las suites locales comprueban ABI, buffers, forwards y ciclo de vida mediante
+proveedores controlados. Runtime Windows continúa pendiente.
 `ISteamFriends` no está expuesta; su resultado nulo observado pertenece al
 contexto dedicado ensayado, no a todos los procesos Steam.
 
@@ -54,7 +51,7 @@ fue observado en SRCDS Linux x86 el 2026-11-16: autenticación 014 con cuenta
 autorizada, identidad, stats enteros y float, HTTP/streaming y reinicialización
 en el mismo proceso con petición pendiente, seguido de cierre limpio.
 El ensayo mínimo incluyó la extensión SourceTVSupport; no acredita su VSP
-ni emisión, toda la pila de plugins, GC remoto positivo o runtime Windows.
+ni emisión, toda la pila de plugins o runtime Windows.
 La atribución completa se conserva en el catálogo de cobertura de las fuentes.
 
 El baseline nuevo de reversión tiene SHA256

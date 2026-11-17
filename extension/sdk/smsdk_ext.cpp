@@ -102,9 +102,31 @@ ITranslator *translator = NULL;
 IRootConsole *rootconsole = NULL;
 #endif
 
+namespace {
+enum class ExtensionLoadState { Available, Loading, Loaded, Unloading };
+ExtensionLoadState extensionLoadState = ExtensionLoadState::Available;
+
+// Also covers early SM_GET_IFACE returns, before SDK_OnLoad can roll back.
+struct ExtensionLoadAttempt
+{
+	bool committed = false;
+	ExtensionLoadAttempt() { extensionLoadState = ExtensionLoadState::Loading; }
+	~ExtensionLoadAttempt()
+	{
+		if (!committed) {
+			myself = NULL;
+			extensionLoadState = ExtensionLoadState::Available;
+		}
+	}
+};
+} // namespace
+
 /** Exports the main interface */
 PLATFORM_EXTERN_C IExtensionInterface *GetSMExtAPI()
 {
+	// SourceMod can resolve two logical names to this same DSO. Reject the
+	// second entry before its loader attaches/unloads the existing Metamod ID.
+	if (extensionLoadState != ExtensionLoadState::Available) { return NULL; }
 	return g_pExtensionIface;
 }
 
@@ -119,6 +141,13 @@ SDKExtension::SDKExtension()
 
 bool SDKExtension::OnExtensionLoad(IExtension *me, IShareSys *sys, char *error, size_t maxlength, bool late)
 {
+	if (extensionLoadState != ExtensionLoadState::Available) {
+		if (error && maxlength) {
+			ke::SafeStrcpy(error, maxlength, "SteamWorks already has a load owner; unload it before loading another name");
+		}
+		return false;
+	}
+	ExtensionLoadAttempt attempt;
 	g_pShareSys = sharesys = sys;
 	myself = me;
 
@@ -195,6 +224,8 @@ bool SDKExtension::OnExtensionLoad(IExtension *me, IShareSys *sys, char *error, 
 
 	if (SDK_OnLoad(error, maxlength, late))
 	{
+		attempt.committed = true;
+		extensionLoadState = ExtensionLoadState::Loaded;
 #if defined SMEXT_CONF_METAMOD
 		m_WeAreUnloaded = true;
 #endif
@@ -228,6 +259,8 @@ void SDKExtension::OnExtensionsAllLoaded()
 
 void SDKExtension::OnExtensionUnload()
 {
+	if (extensionLoadState != ExtensionLoadState::Loaded) { return; }
+	extensionLoadState = ExtensionLoadState::Unloading;
 #if defined SMEXT_CONF_METAMOD
 	m_WeAreUnloaded = true;
 #endif
@@ -237,6 +270,11 @@ void SDKExtension::OnExtensionUnload()
 void SDKExtension::OnDependenciesDropped()
 {
 	SDK_OnDependenciesDropped();
+	// Keep reentrant loads blocked until SourceMod has dropped every binding.
+	if (extensionLoadState == ExtensionLoadState::Unloading) {
+		myself = NULL;
+		extensionLoadState = ExtensionLoadState::Available;
+	}
 }
 
 const char *SDKExtension::GetExtensionAuthor()

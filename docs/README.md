@@ -6,7 +6,7 @@ locales y observaciones de runtime; no extiende aceptación a otros binarios.
 | Área | Entrada |
 |---|---|
 | Instalación y reversión | [Instalación](installation/README.md) |
-| Compilación | [Build](build/README.md), [dependencias](build/dependencies.md), [CI](build/ci.md) |
+| Compilación | [Build](build/README.md), [dependencias](build/dependencies.md), [CI](build/ci.md), [SonarQube](build/sonar.md) |
 | Arquitectura | [Responsabilidades](architecture/README.md), [frontera tipada](architecture/typed-boundary.md) |
 | Runtime | [Interfaces](runtime/interfaces.md), [ciclo de vida](runtime/lifecycle.md), [compatibilidad](runtime/compatibility.md) |
 | Autenticación | [Contrato](authentication/README.md), [adaptador 014](authentication/gameserver-014.md) |
