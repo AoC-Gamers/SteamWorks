@@ -54,7 +54,8 @@ def main():
     results = {"public_api": "passed", "test_flags": test_flags,
                "runtime_validation": False, "suites": []}
     failed = False
-    commands = [("test-make-interface", [sys.executable, str(ROOT / "tests/python/make_interface_test.py")]),
+    commands = [("test-release-notes", [sys.executable, str(ROOT / "tests/python/release_notes_test.py")]),
+                ("test-make-interface", [sys.executable, str(ROOT / "tests/python/make_interface_test.py")]),
                 ("test-sdk-selection", [sys.executable, str(ROOT / "tests/python/sdk_selection_test.py")]),
                 ("test-documentation", [sys.executable, str(ROOT / "tests/python/documentation_test.py")]),
                 ("test-review-artifacts", [sys.executable, str(ROOT / "tests/python/review_artifacts_test.py")])]

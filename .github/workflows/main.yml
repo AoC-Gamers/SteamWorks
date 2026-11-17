@@ -135,6 +135,9 @@ jobs:
       - name: Test Make interface and execution paths
         run: make test-make-interface
 
+      - name: Test channel release notes offline
+        run: make test-release-notes
+
       - name: Test stats natives (x86, UBSan)
         shell: bash
         env:
@@ -519,6 +522,18 @@ jobs:
             fi
           fi
           gh release upload "$tag" "$linux_asset" "$windows_asset" --clobber
+          notes_file="$(mktemp)"
+          trap 'rm -f "$notes_file"' EXIT
+          updated_at="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          attempt="${GITHUB_RUN_ATTEMPT:-1}"
+          {
+            printf 'Actualización del canal **%s**.\n\n' "$title"
+            printf -- '- Fecha de actualización (UTC): %s\n' "$updated_at"
+            printf -- '- Commit: [%s](%s/%s/commit/%s)\n' "$GITHUB_SHA" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_SHA"
+            printf -- '- Ejecución de CI: [#%s, intento %s](%s/%s/actions/runs/%s/attempts/%s)\n' "$GITHUB_RUN_ID" "$attempt" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID" "$attempt"
+            printf '\nGC remoto positivo pendiente. Esta publicación no implica despliegue en servidores.\n'
+          } > "$notes_file"
+          gh release edit "$tag" --notes-file "$notes_file"
 
       - name: Publish tagged release
         if: github.ref_type == 'tag' && startsWith(github.ref_name, 'v')

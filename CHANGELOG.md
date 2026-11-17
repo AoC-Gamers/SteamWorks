@@ -22,6 +22,10 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 
 ### Documentación pública
 
+- Las notas de Latest y Develop muestran fecha UTC de actualización, commit y
+  enlace al intento de CI después de subir los paquetes. Se conservan tags y
+  enlaces estables; no se cambia la fecha original de publicación del release.
+
 - Entornos, rutas y paquetes de prueba descritos con nombres genéricos; metadatos
   de fixtures saneados con trazabilidad y sin ampliar aceptación runtime.
 - Documentación por funcionalidad y fixtures protegidos; rutas y empaquetado

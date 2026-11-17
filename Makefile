@@ -31,14 +31,14 @@ export STEAMWORKS_SDK_DIR TEST_CXXFLAGS
 
 CORE_SUITES := stats-natives detours init-coexistence public-ip steamid-string typed-boundary resource-lifecycle restart-forward-semantics binary-evidence debug-log http-stream-context
 NATIVE_TEST_TARGETS := $(addprefix test-,$(CORE_SUITES) auth-binding auth-forward sourcepawn-environment sourcepawn-vm-asan)
-.PHONY: test test-ci check-ci check-docs validate-sdk test-documentation test-sdk-selection test-review-artifacts test-make-interface test-sdk-incremental validate-artifact-linux validate-artifact-windows $(NATIVE_TEST_TARGETS)
+.PHONY: test-release-notes test test-ci check-ci check-docs validate-sdk test-documentation test-sdk-selection test-review-artifacts test-make-interface test-sdk-incremental validate-artifact-linux validate-artifact-windows $(NATIVE_TEST_TARGETS)
 
 test:
 	@test -n "$(TEST_OUTPUT)" || { echo 'Set TEST_OUTPUT to a new results directory' >&2; exit 2; }
 	SOURCEMOD_DIR="$(SOURCEMOD_DIR)" MMSOURCE_DIR="$(MMSOURCE_DIR)" AMTL_DIR="$(AMTL_DIR)" $(PYTHON) "$(ROOT_DIR)/tests/runners/test-integration.py" --output "$(TEST_OUTPUT)" $(TEST_OPTIONS)
 
 # This preserves CI coverage without adding the local documentation suite to CI.
-test-ci: test-sdk-selection test-review-artifacts test-make-interface $(addprefix test-,$(CORE_SUITES)) test-auth-binding
+test-ci: test-sdk-selection test-review-artifacts test-make-interface test-release-notes $(addprefix test-,$(CORE_SUITES)) test-auth-binding
 
 $(NATIVE_TEST_TARGETS):
 	SOURCEMOD_DIR="$(SOURCEMOD_DIR)" MMSOURCE_DIR="$(MMSOURCE_DIR)" AMTL_DIR="$(AMTL_DIR)" bash "$(ROOT_DIR)/tests/runners/$@.sh"
@@ -51,6 +51,9 @@ test-review-artifacts:
 
 test-make-interface:
 	$(PYTHON) "$(ROOT_DIR)/tests/python/make_interface_test.py"
+
+test-release-notes:
+	$(PYTHON) "$(ROOT_DIR)/tests/python/release_notes_test.py"
 
 test-documentation:
 	$(PYTHON) "$(ROOT_DIR)/tests/python/documentation_test.py"
@@ -86,6 +89,7 @@ help:
 		'  make validate-sdk        Validate the pinned SDK' \
 		'  make check-docs          Check local documentation' \
 		'  make check-ci            Lint the workflow (actionlint required)' \
+		'  make test-release-notes  Check channel publication with offline doubles' \
 		'  make test-documentation  Test documentation and packaging boundaries' \
 		'  make validate-artifact-linux|validate-artifact-windows  Validate staged payload' \
 		'  make help                 Show this help message' \

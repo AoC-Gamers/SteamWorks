@@ -43,3 +43,19 @@ hashes antes de generar producto. El mapa `scripts/package/package-map.json` se
 lee desde las fuentes, no desde el ZIP generado, y también forma parte de las
 claves de caché. El lock distingue finales de línea de texto de bytes binarios
 y entra en las claves de caché de dependencias.
+
+## Notas de canales móviles
+
+`channel/latest` y `channel/develop` conservan sus tags, URLs de release y nombres
+estables de ZIP. Tras subir ambos paquetes, CI regenera las notas del canal con
+fecha de actualización UTC (ISO 8601), SHA completo y enlace al commit, y enlace
+a la ejecución y su intento. Son notas administradas por CI; se reemplazan en
+cada actualización completada. La fecha original de publicación de GitHub no
+se modifica ni se recrea el release para cambiarla.
+
+Si la carga de archivos falla, no se actualizan las notas con la nueva ejecución.
+La publicación continúa sujeta al éxito de los builds y paquetes Linux/Windows.
+Las notas conservan GC remoto positivo pendiente y no implican despliegue.
+Los releases versionados por tags `v*` mantienen su procedimiento actual.
+`make test-release-notes` ejecuta el bloque real del workflow con `gh` y reloj
+simulados: no publica, modifica tags ni contacta GitHub.
