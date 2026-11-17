@@ -1,7 +1,8 @@
 # CI y validación
 
 El workflow conserva builds Linux/Windows, checks de paquete y suites x86.
-Las claves de caché incluyen las rutas nuevas de dependencias/build/empaquetado.
+Todos los pasos de pruebas, build, empaquetado y validación de producto invocan
+targets del Makefile raíz; no se mantienen comandos alternativos en CI. Las claves de caché incluyen las rutas nuevas de dependencias/build/empaquetado.
 La validación documental se ejecuta localmente con Python, sin un job de CI
 ni una dependencia adicional para los builds. Consulta la
 [política documental](../maintenance/documentation.md) para ejecutarla.

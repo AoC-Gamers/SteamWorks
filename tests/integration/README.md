@@ -8,8 +8,8 @@ agregación reales. `sourcepawn_environment_test.cpp` repite creación/destrucci
 de entornos sobre una VM instrumentada de arquitectura coincidente.
 
 ```bash
-python3 tests/runners/test-integration.py --with-auth-binding --with-auth-forward \
-  --with-sourcepawn-environment --output .build/test-results/con-vm
+make test TEST_OUTPUT=.build/test-results/con-vm \
+  TEST_OPTIONS="--with-auth-binding --with-auth-forward --with-sourcepawn-environment"
 ```
 
 Configura `MMSOURCE_DIR`, `SOURCEMOD_DIR`, `SPCOMP` y `SOURCEPAWN_VM`. Con x86 usa
@@ -17,9 +17,9 @@ un compilador/runtime ASan de 32 bits compatible con la VM. `VM_TEST_CXX` y
 `VM_TEST_FLAGS` permiten seleccionar ese toolchain sin cambiar las suites nativas.
 ASan/LSan/UBSan deben permanecer activos: no usar supresiones para aceptar un fallo.
 
-`tests/helpers/build-test-sourcepawn.sh` construye una VM diagnóstica
-aplicando los parches versionados; `test-sourcepawn-vm-asan.sh` reproduce su
-comprobación. El Dockerfile de este directorio describe un toolchain local cuya
+`make test-sourcepawn-vm-asan` construye y comprueba una VM diagnóstica
+aplicando los parches versionados mediante los backends
+`tests/helpers/build-test-sourcepawn.sh` y `test-sourcepawn-vm-asan.sh`. El Dockerfile de este directorio describe un toolchain local cuya
 imagen y revisión deben registrarse en cada ejecución. Indica una imagen de
 toolchain preparada mediante `--build-arg BASE_IMAGE=<imagen>` al construirlo;
 el Dockerfile no presupone una etiqueta local de la instalación del mantenedor. El objeto derivado debe

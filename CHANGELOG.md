@@ -49,6 +49,10 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 
 ### Organización de pruebas
 
+- Instrucciones agénticas consolidadas en un único `AGENTS.md` raíz, con mapa de
+  rutas, niveles de evidencia y comandos Make obligatorios. Pruebas y validación
+  de artefactos usan los mismos targets en local y CI; los scripts son backends.
+
 - Fuentes, ejecutores y ayudantes reunidos en `tests/`; documentación y CI usan
   las nuevas rutas, conservando opciones, variables y controles existentes.
 

@@ -4,13 +4,16 @@ La integración compara la API con un baseline independiente y ejecuta suites
 offline sin administrar servidores. Elige una carpeta **nueva** de salida:
 
 ```bash
-TEST_CXXFLAGS=-m32 bash tests/runners/test-typed-boundary.sh
-TEST_CXXFLAGS=-m32 bash tests/runners/test-resource-lifecycle.sh
-python3 tests/runners/test-integration.py --output .build/test-results/mi-ejecucion
+make test-typed-boundary
+make test-resource-lifecycle
+make test TEST_OUTPUT=.build/test-results/mi-ejecucion
 ```
 
-Los comandos se muestran desde la raíz. Para otro cwd invoca la ruta absoluta
-del script; también se admiten rutas con espacios y fuentes sin `.git`.
+Makefile es la interfaz obligatoria para ejecutar pruebas tanto localmente como
+en CI; los scripts de `runners/` son backends internos. `make test-<suite>` usa
+los mismos ejecutores que la integración. Para otro cwd usa
+`make -f "/ruta/con espacios/SteamWorks/Makefile" <target>`; se admiten fuentes
+sin `.git`. Las salidas relativas explícitas se interpretan desde el cwd del usuario.
 Se requiere Python 3, C++14, multilib x86/UBSan y SDK 1.55. La suite binaria
 requiere utilidades ELF/PE; no carga un juego. Con flags sin `-m32` su ejecución
 de instrucciones x86 se omite explícitamente; la integración predeterminada usa
@@ -30,7 +33,12 @@ de instrucciones x86 se omite explícitamente; la integración predeterminada us
 
 ## Catálogo
 
-Los ejecutores siguientes están en `tests/runners/test-<suite>.sh`.
+Los targets `make test-<suite>` delegan en `tests/runners/test-<suite>.sh`.
+`make test-ci` ejecuta selección SDK, paquetes, interfaz Make y suites nativas,
+incluida SourceHook, sin reincorporar la prueba documental a CI.
+`make test-documentation` y `make check-docs` son comprobaciones locales.
+La integración también ejecuta `make_interface_test.py`, que verifica rutas con
+espacios, opciones, plataforma y propagación de errores de los backends.
 
 | Suite | Propósito | Dependencia real/simulada | No demuestra |
 |---|---|---|---|
@@ -62,13 +70,16 @@ esperado. Un error de compilación o de sanitizer no cuenta como detección vál
 
 | Variable | Uso |
 |---|---|
+| `TEST_OUTPUT`, `TEST_OPTIONS` | Carpeta nueva y selección de suites de `make test` |
+| `LINUX_DEPS_DIR`, `AMBUILD_PYTHON`, `HL2SDK_ROOT` | Dependencias y Python de AMBuild para los targets Make |
 | `STEAMWORKS_SDK_DIR` | Headers y biblioteca de referencia del SDK |
 | `CXX`, `TEST_CXXFLAGS`, `TEST_BUILD_DIR` | Compilador, flags y salida de cada suite nativa |
 | `AMTL_DIR`, `SOURCEMOD_DIR`, `MMSOURCE_DIR` | Headers AMTL, VM y SourceHook reales |
 | `SPCOMP`, `SOURCEPAWN_VM` | Compilador Pawn y biblioteca VM de arquitectura coincidente |
 | `VM_TEST_CXX`, `VM_TEST_FLAGS`, `VM_TEST_BUILD_DIR` | Toolchain y salida de VM, separados de los tests nativos |
 
-`--with-auth-forward`, `--with-auth-binding` y `--with-sourcepawn-environment`
+`TEST_OPTIONS="--with-auth-forward --with-auth-binding --with-sourcepawn-environment"`
+selecciona las suites opcionales en `make test`. Esos flags
 exigen sus dependencias al seleccionarse; no convierten una ausencia en éxito.
 La última requiere VM y runtime ASan compatibles sin supresiones. Consulta
 [integración offline](integration/README.md).
@@ -88,7 +99,8 @@ original de API (`fixtures/api/api-inventory-p0.json`) no se regenera a partir d
 Los tests no prueban por sí solos una instalación, un login real o GC remoto.
 No se acepta una revisión nueva por compartir nombre con un binario anterior.
 
-La regresión `runners/test-sdk-incremental.py` requiere además AMBuild y los
+`make test-sdk-incremental TEST_OUTPUT=<nueva-carpeta>` delega en
+`runners/test-sdk-incremental.py` y requiere además AMBuild y los
 árboles reales SourceMod/Metamod/HL2SDK. Configura y compila el producto x86,
 cambia solo copias privadas de un header, biblioteca no usada por Linux,
 header ausente y header adicional, y exige rechazo antes de reescribir el ELF.

@@ -17,11 +17,14 @@ En Windows usa los targets `deps-exts-windows`, `build-exts-windows`,
 `package-exts-windows` y `release-windows`, con PowerShell y el toolchain x86
 configurado. Los targets `release-*` generan ZIP locales; la publicación pertenece
 a un flujo separado. `make help` describe todos los targets existentes.
-Los scripts también resuelven su raíz desde su ubicación, sin depender del cwd.
+Makefile es la interfaz de ejecución obligatoria, local y en CI; los scripts y
+AMBuild son backends internos. Desde otro cwd usa
+`make -f "/ruta/con espacios/SteamWorks/Makefile" <target>`.
 
 Los scripts de build seleccionan `--sdks l4d2 --target x86`. Para una
-compilación optimizada añade `--enable-optimize` al configurar directamente con
-`configure.py` y ejecuta AMBuild desde ese directorio de build.
+comprobar la compilación optimizada usa
+`make test-sdk-incremental TEST_OUTPUT=.build/test-results/incremental-nuevo`: el
+backend configura internamente con `--enable-optimize` y ejecuta AMBuild.
 El build optimizado mantiene comprobaciones y `-Werror`; los tests del backup
 CDetour y de la asignación de autenticación también se compilan con optimización
 para detectar las regresiones que aparecieron con `--enable-optimize`.
@@ -54,7 +57,7 @@ Compilar Windows no equivale a aceptar su ejecución en SRCDS.
 (Linux y Windows). `scripts/build/validate-steamworks-sdk.py` comprueba el conjunto
 de headers y cada SHA256. Los headers normalizan únicamente CRLF a LF para
 comparar Linux/Windows y Git; las bibliotecas conservan comprobación byte por byte. AMBuild invoca esa comprobación antes de configurar el
-producto, tanto desde scripts como con `configure.py` directo. Los ejecutores
+producto en sus backends, incluso al regenerar la configuración incremental. Los ejecutores
 que consumen SDK y la integración también la exigen.
 
 Una ruta alternativa mediante `STEAMWORKS_SDK_DIR` debe contener exactamente el
