@@ -2,8 +2,9 @@
 
 El workflow conserva builds Linux/Windows, checks de paquete y suites x86.
 Las claves de caché incluyen las rutas nuevas de dependencias/build/empaquetado.
-La documentación se comprueba con Python y se representa con Mermaid CLI fijado;
-no se usa `latest`. Un fallo de enlaces, sintaxis o contenido inesperado es error.
+La validación documental y el renderizado Mermaid se ejecutan localmente;
+no tienen un job en CI ni bloquean los builds. Consulta la
+[política documental](../maintenance/documentation.md) para ejecutarlos.
 
 El pipeline siguiente describe responsabilidades, no un despliegue automático.
 Fuente: Makefile, `.github/workflows/main.yml` y orquestador de pruebas. Los
@@ -11,8 +12,7 @@ resultados no ejecutados siguen pendientes y SRCDS requiere un ensayo separado.
 
 ```mermaid
 flowchart TD
- A[Checkout o fuentes extraidas] --> B[Verificar estructura enlaces y diagramas]
- B --> C[Comparar API con fixture P0]
+ A[Checkout o fuentes extraidas] --> C[Comparar API con fixture P0]
  C --> D[Suites offline requeridas]
  D --> E[Compilar segun toolchain Linux o Windows]
  E --> F[Empaquetar y rechazar material de pruebas]
@@ -22,7 +22,8 @@ flowchart TD
  H --> J[Ensayo SRCDS separado y autorizado]
 ```
 
-El orquestador exige una carpeta nueva, conserva flags opcionales para
+El orquestador local incluye las pruebas documentales, exige una carpeta nueva
+y conserva flags opcionales para
 SourceHook/VM y devuelve fallo si una suite requerida falla. Las dependencias
 obligatorias no se convierten en skips. El verificador documental no descarga
 baselines, opera servidores ni publica; el renderizador necesita su toolchain

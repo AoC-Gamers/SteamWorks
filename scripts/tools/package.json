@@ -4,9 +4,9 @@
   "version": "1.0.0",
   "description": "Pinned local and CI Markdown diagram renderer; no runtime dependency",
   "devDependencies": {
-    "@mermaid-js/mermaid-cli": "11.12.0"
+    "@mermaid-js/mermaid-cli": "12.2.0"
   },
   "overrides": {
-    "mermaid": "11.12.0"
+    "mermaid": "12.3.0"
   }
 }

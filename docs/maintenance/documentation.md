@@ -41,7 +41,8 @@ Las rutas privadas, PIDs y diarios de checkpoints no son documentación de produ
 Los diagramas permanecen editables en Markdown, con objetivo, fuente y resumen
 textual. El verificador de enlaces y estructura es
 `scripts/tools/check-documentation.py`; Mermaid CLI tiene versión y lock fijados
-en `scripts/tools/package.json`. Instala con `npm ci --prefix scripts/tools` y
+en `scripts/tools/package.json`. Se requiere Node.js 22.13 o posterior.
+Instala con `npm ci --prefix scripts/tools` y
 renderiza con `python3 scripts/tools/check-documentation.py --render .build/diagrams`.
 Revisa también la representación en GitHub antes de aprobar cambios de diagramas;
 una validación sintáctica local no reemplaza esa observación.

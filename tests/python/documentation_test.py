@@ -129,6 +129,13 @@ class DocumentationTests(unittest.TestCase):
             self.assertNotEqual(result.returncode,0)
             self.assertIn('Unexpected documentation payload',result.stderr)
 
+    def test_mermaid_embedded_font_is_not_a_coordinate(self):
+        svg = '<svg><style>@font-face{src:url(data:font/woff2;base64,NaNA)}</style>'
+        self.assertFalse(docs.invalid_svg_layout(svg + '<path d="M0,0L1,1"/></svg>'))
+        for geometry in ('<path d="MNaN,0"/>', '<svg width="undefined"/>'):
+            with self.subTest(geometry=geometry):
+                self.assertTrue(docs.invalid_svg_layout(svg + geometry + '</svg>'))
+
     def test_mermaid_version_is_pinned_and_lock_agrees(self):
         package=json.loads((ROOT/'scripts/tools/package.json').read_text())
         lock=json.loads((ROOT/'scripts/tools/package-lock.json').read_text())

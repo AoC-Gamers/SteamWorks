@@ -89,6 +89,13 @@ def check(root=ROOT):
     return errors, diagrams
 
 
+def invalid_svg_layout(svg):
+    # Mermaid embeds fonts as base64. Encoded bytes may contain "NaN" without
+    # representing an invalid SVG coordinate; keep checking all remaining markup.
+    markup = re.sub(r'data:[^;,\s]+;base64,[A-Za-z0-9+/=]+', '', svg)
+    return bool(re.search(r'NaN|undefined', markup))
+
+
 def render(diagrams, output):
     output = Path(output).resolve()
     if output.is_relative_to(ROOT / 'docs') or output.is_relative_to(ROOT / 'tests') or output.is_relative_to(ROOT / 'scripts'):
@@ -109,7 +116,7 @@ def render(diagrams, output):
                         '-p',str(ROOT/'scripts/tools/puppeteer-config.json')],check=True,
                         capture_output=True,text=True)
         svg=target.read_text()
-        if re.search(r'NaN|undefined',svg) or 'Error:' in result.stderr:
+        if invalid_svg_layout(svg) or 'Error:' in result.stderr:
             raise ValueError('Invalid Mermaid layout: '+stem+'; check renderer and local fonts')
         if re.search(r'<foreignObject[^>]*(?:width|height)="0"',svg):
             # Zero-size labels with text can indicate broken host font selection.

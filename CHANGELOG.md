@@ -7,17 +7,16 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 ### SDK 1.55
 
 - SDK único con lock de headers y bibliotecas x86, guardas de selección en build,
-  pruebas y CI. Registro de servidor adaptado a 014, con prefijo de autenticación
-  independiente y controles negativos de versión/objeto equivocados.
+  pruebas y CI, incluidas reconstrucciones incrementales. Registro de servidor
+  adaptado a 014, con prefijo de autenticación independiente y controles
+  negativos de versión/objeto equivocados.
 - API SourcePawn conservada. Aceptación Linux SRCDS x86 del payload SDK 1.55:
   autenticación 014, identidad, stats enteros y float, HTTP/streaming,
   reinicialización en el mismo proceso y cierre limpio en perfil mínimo.
   GC remoto positivo y runtime Windows permanecen pendientes.
 - Reversión Linux x86 aceptada con baseline nuevo SDK 1.55 y finalizador T08:
   instalación desde ZIP, Steam/HTTP y salida limpia del candidato y del baseline
-  restaurado. Las repeticiones con sus ZIP documentales actualizados observaron
-  además el cierre efectivo del contexto cliente activo en los tres desmontajes
-  de cada ensayo.
+  restaurado, incluido el cierre efectivo del contexto cliente activo.
   El fallo del baseline histórico conserva su propia atribución;
   no se transfiere aceptación de instalación a nuevos ZIP documentales.
 
@@ -25,6 +24,11 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 
 - Entornos, rutas y paquetes de prueba descritos con nombres genéricos; metadatos
   de fixtures saneados con trazabilidad y sin ampliar aceptación runtime.
+- Documentación por funcionalidad y fixtures protegidos; rutas y empaquetado
+  actualizados sin cambios de API ni lógica nativa.
+- Renderizador actualizado a Mermaid CLI 12.2.0 y Mermaid 12.3.0, con lock
+  renovado y Node.js 22.13 o posterior. La validación documental se mantiene
+  local; se retira su job de CI y la dependencia de los builds Linux/Windows.
 
 ### Estructura de instalación
 
@@ -37,11 +41,8 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 - Fuentes, ejecutores y ayudantes reunidos en `tests/`; documentación y CI usan
   las nuevas rutas, conservando opciones, variables y controles existentes.
 
-### Reorganización documental y de pruebas
-
-Documentación por funcionalidad, fixtures protegidos, suites y scripts clasificados; rutas y empaquetado actualizados sin cambios de API ni lógica nativa.
-
 ### Buffers HTTP y GC
+
 - GC entrega al forward un snapshot de capacidad inicializada, copiando solo
   el mensaje válido; no lee salidas no garantizadas en errores. Mantiene
   capacidad, resultados históricos, supercesión y guarda de generación.
@@ -50,8 +51,8 @@ Documentación por funcionalidad, fixtures protegidos, suites y scripts clasific
 - Regresiones previas reproducidas, proveedor HTTP estricto, matrices GC/HTTP,
   integración x86 y sanitizadores sin supresiones. Aceptación posterior SRCDS x86:
   372 checks sin fallos, HTTP real, GC real vacío y proveedor GC local tipado;
-  mensaje GC remoto positivo pendiente. Salida limpia observada en el perfil mínimo; no amplía la aceptación a otros
-  consumidores o plataformas.
+  mensaje GC remoto positivo pendiente. Salida limpia observada en el perfil
+  mínimo; no amplía la aceptación a otros consumidores o plataformas.
 
 ### Validación
 
@@ -66,6 +67,7 @@ Documentación por funcionalidad, fixtures protegidos, suites y scripts clasific
   por una salida limpia de un perfil mínimo.
 
 ### Corregido
+
 - El snapshot de BeginAuthSession valida la reserva acolchada contra PTRDIFF_MAX
   antes de reservar/leer; CDetour valida la capacidad de su respaldo fijo antes
   de copiar. El build completo con --enable-optimize y -Werror pasa, con 88 checks
@@ -115,7 +117,7 @@ Documentación por funcionalidad, fixtures protegidos, suites y scripts clasific
   variante de una celda conserva los 32 bits aunque su valor firmado sea negativo.
 - Se validó la dirección base de salida IPv4 y se añadieron 30 casos deterministas
   ejecutados con char firmado/sin signo en x86_64 y x86 con UBSan, también en el
-  flujo de CI Linux (ejecución remota pendiente).
+  flujo de CI Linux.
 - Los detours de inicio/shutdown verifican sus precondiciones y ambas creaciones
   antes de habilitarse. Un fallo limpia los recursos preparados, deja el par
   desactivado y registra el motivo. El cierre es repetible y limpia trampolines.
@@ -135,9 +137,10 @@ Documentación por funcionalidad, fixtures protegidos, suites y scripts clasific
   temporales y se validan las direcciones de nombre/salida antes de consultar.
 - Se agregaron 32 casos deterministas sobre los lectores reales con dobles de
   Steam/SourceMod, verificados en x86_64 y x86 con UBSan y añadidos a CI Linux;
-  ejecución remota de CI y runtime pendientes.
+  sin sustituir la aceptación de runtime descrita arriba.
 
 ### Agregado
+
 - P5-R2 reúne T36 y el parche de la VM en una nueva validación de diez suites
   por arquitectura. Regenera candidato, fuentes, diagnóstico aislado y reversión
   con manifiestos y checksums, conservando las entregas anteriores sin desplegar.
@@ -146,11 +149,12 @@ Documentación por funcionalidad, fixtures protegidos, suites y scripts clasific
   comprobada y documentación por capacidad; no implica aceptación remota ni despliegue.
 - El empaquetado incorpora `LICENSE` y su validación. El snapshot de revisión
   excluye SDK, módulos del juego y configuración privada.
-- Se agregó el inventario P0 de API, consumidores, SDK y pruebas bajo
-  `docs/runtime-compatibility/`, junto con un extractor de contratos y referencias.
-  Registra un harness compilado, un baseline nativo fallido y validación runtime
-  pendiente; no implica cambios de API ni aceptación operativa.
-- Se agregó `scripting/steamwork_test.sp` como plugin local de pruebas para validación agrupada de SteamWorks.
+- Se agregó el inventario P0 de API, consumidores, SDK y pruebas, junto con un
+  extractor de contratos y referencias. Su baseline se conserva en
+  `tests/fixtures/api/api-inventory-p0.json`; los límites actuales de runtime se
+  describen en `docs/runtime/compatibility.md`.
+- Se agregó el plugin local de validación agrupada, actualmente en
+  `tests/runtime/steamwork_test.sp`.
 - Se agregaron pruebas agrupadas en `steamwork_test.sp` para:
   - estado y conectividad
   - identidad
@@ -160,24 +164,18 @@ Documentación por funcionalidad, fixtures protegidos, suites y scripts clasific
   - requests HTTP
   - requests de stats y lectura de stats
 - Se agregaron scripts auxiliares de compilación Linux y un `Makefile` en la raíz.
-- Se agregó soporte para seleccionar directorios de Steamworks SDK como `sdk_158a`.
-- Se agregó documentación técnica bajo `docs/`, incluyendo:
-  - `docs/README.md`
-  - `docs/ISteamFriends.md`
-  - `docs/ISteamHTTP.md`
-  - `docs/ISteamUserStats.md`
-  - `docs/GetSchemaForGame_550.md`
-  - `docs/TestCoverage.md`
-- Se agregó el archivo local de referencia del schema:
-  - `docs/GetSchemaForGame_550.json`
+- Se agregó documentación técnica por funcionalidad bajo `docs/`, incluidos
+  HTTP, stats y el schema de L4D2 en `docs/stats/schema.md`. El fixture del
+  schema se conserva en `tests/fixtures/stats/GetSchemaForGame_550.json`.
 - Se agregó `SteamWorks_GetHTTPResponseBodyString(...)` como helper HTTP orientado a texto, que:
   - agrega terminador nulo
   - reporta `written`
   - reporta `truncated`
 
 ### Cambiado
+
 - Se actualizaron las referencias de documentación a la estructura actual:
-  enlaces relativos, plugin de pruebas en `scripting/`, rutas por plataforma,
+  enlaces relativos, plugin de pruebas en `tests/runtime/`, rutas por plataforma,
   flujo de CI y gamedata opcional no incluido en el repositorio ni los paquetes.
 - Se rehízo el workflow de GitHub Actions para compilar desde `AoC-Gamers/Steamworks-SDK`.
 - Se reorganizó CI en jobs separados para:
@@ -194,7 +192,7 @@ Documentación por funcionalidad, fixtures protegidos, suites y scripts clasific
   - `addons/sourcemod/scripting/include/steamworks.inc`
 - Se actualizó la integración base de bootstrap/build de la extensión para compatibilidad con SourceMod 1.12 y Metamod:Source 1.12.
 - Se actualizó el repositorio para enfocarlo en Linux 32-bit para L4D2 como plataforma principal.
-- Se cambió el flujo del proyecto para usar Steamworks SDK `1.58a` mediante `sdk_158a`.
+- El flujo del proyecto usa exclusivamente Steamworks SDK 1.55 (`sdk_155`).
 - Se normalizaron a minúsculas los nombres visibles de release:
   - `steamworks.ext.so`
   - `steamworks.ext.dll`
@@ -235,6 +233,7 @@ Documentación por funcionalidad, fixtures protegidos, suites y scripts clasific
 - Se tradujeron y normalizaron los comentarios y nombres de parámetros en `steamworks.inc`.
 
 ### Eliminado
+
 - Se eliminó el workflow antiguo de Travis CI.
 - Se eliminaron plugins de ejemplo heredados que ya no forman parte del paquete final:
   - `scripts/swag.sp`
