@@ -74,7 +74,7 @@ expected_suffix = ".dll" if platform == "windows" else ".so"
 
 for bucket, extensions in package_map.get("build", {}).get("extensions", {}).items():
     for extension in extensions:
-        filename = f"{extension}.ext{expected_suffix}"
+        filename = f"{extension}.ext.2.l4d2{expected_suffix}"
         extension_path = (
             os.path.join(extensions_dir, filename)
             if bucket == "root"

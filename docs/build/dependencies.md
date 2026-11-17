@@ -8,7 +8,6 @@
 | SourceMod 1.12, Metamod:Source 1.12, HL2SDK L4D2 y AMTL | Headers y soporte del host |
 | Steamworks SDK 1.55 | Declaraciones y enlace, no runtime de servidor |
 | spcomp y SourcePawn VM diagnóstica | Suites opcionales offline, fuera del producto |
-| Node y Mermaid CLI fijado | Validación y representación documental |
 
 Los scripts `scripts/deps/fetch-linux-deps.sh` y `fetch-windows-deps.ps1` resuelven
 las dependencias de build según sus variables y URLs explícitas. Antes de cambiar

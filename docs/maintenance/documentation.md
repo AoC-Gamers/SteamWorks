@@ -38,14 +38,16 @@ ni trasladar todo a una carpeta archive dentro de tests. La cobertura debe separ
 probado con dobles, VM/SourceHook y observado en SRCDS; GC remoto permanece pendiente.
 Las rutas privadas, PIDs y diarios de checkpoints no son documentación de producto.
 
-Los diagramas permanecen editables en Markdown, con objetivo, fuente y resumen
-textual. El verificador de enlaces y estructura es
-`scripts/tools/check-documentation.py`; Mermaid CLI tiene versión y lock fijados
-en `scripts/tools/package.json`. Se requiere Node.js 22.13 o posterior.
-Instala con `npm ci --prefix scripts/tools` y
-renderiza con `python3 scripts/tools/check-documentation.py --render .build/diagrams`.
-Revisa también la representación en GitHub antes de aprobar cambios de diagramas;
-una validación sintáctica local no reemplaza esa observación.
+Los diagramas permanecen editables como bloques Mermaid en Markdown, con objetivo,
+fuente y resumen textual. Revisa su representación en GitHub cuando cambien.
+El verificador local comprueba enlaces, anclas, referencias al código y límites
+del contenido distribuible usando solo la biblioteca estándar de Python:
+
+```bash
+python3 scripts/tools/check-documentation.py
+```
+
+Este comando no valida la sintaxis ni el renderizado Mermaid.
 
 ## Contenido apto para publicación
 

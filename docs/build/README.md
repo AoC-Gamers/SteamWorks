@@ -35,6 +35,9 @@ no es la fecha de ejecución de las pruebas.
 Las fuentes instalables siguen `addons/sourcemod/`: el include público vive en
 `addons/sourcemod/scripting/include/steamworks.inc`. El código C++ permanece en
 `extension/` y AMBuild genera el binario en `package/addons/sourcemod/extensions/`.
+El binario distribuido se llama `steamworks.ext.2.l4d2.so` en Linux y
+`steamworks.ext.2.l4d2.dll` en Windows; el include conserva `steamworks.ext` como
+identidad lógica. Usa una salida de build nueva al migrar desde el nombre genérico.
 Los harnesses de diagnóstico viven en `tests/runtime/` y no se empaquetan.
 
 El staging admite solo extensión/include, activos raíz y Markdown estable de

@@ -5,8 +5,8 @@ import re
 ROOT_FILES = ("README.md", "CHANGELOG.md", "LICENSE", "plugin-package-map.json")
 FEATURES = {"installation", "build", "architecture", "runtime", "authentication",
             "identity", "server", "stats", "http", "game-coordinator", "diagnostics", "maintenance"}
-RUNTIME = {"addons/sourcemod/extensions/steamworks.ext.so",
-           "addons/sourcemod/extensions/steamworks.ext.dll",
+RUNTIME = {"addons/sourcemod/extensions/steamworks.ext.2.l4d2.so",
+           "addons/sourcemod/extensions/steamworks.ext.2.l4d2.dll",
            "addons/sourcemod/scripting/include/steamworks.inc"}
 
 

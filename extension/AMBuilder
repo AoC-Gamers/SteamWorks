@@ -26,7 +26,7 @@ project.sources += [
 for sdk_name in SteamWorks.sdks:
   sdk = SteamWorks.sdks[sdk_name]
 
-  binary = SteamWorks.HL2Config(project, builder.cxx, 'steamworks.ext', sdk)
+  binary = SteamWorks.HL2Config(project, builder.cxx, 'steamworks.ext.' + sdk.ext, sdk)
 
   binary.compiler.defines += ['META_NO_HL2SDK', 'SOURCEMOD_BUILD', 'VERSION_SAFE_STEAM_API_INTERFACES']
   binary.compiler.cxxincludes += [

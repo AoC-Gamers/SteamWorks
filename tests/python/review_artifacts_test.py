@@ -39,7 +39,7 @@ class ReviewArtifactsTest(unittest.TestCase):
     def test_roundtrip_absence_and_no_private_config(self):
         self.write(self.baseline / "configs/private.cfg", b"must not be bundled")
         result = self.prepare()
-        self.assertEqual(result["rollback_absent_paths"], [review.OWNED[2]])
+        self.assertEqual(result["rollback_absent_paths"], [review.OWNED[2], review.LEGACY_BINARY])
         self.assertFalse(result["release_approved"])
         with zipfile.ZipFile(self.output / "steamworks-p5-rollback.zip") as saved:
             self.assertEqual(len(saved.namelist()), 2)
@@ -48,8 +48,31 @@ class ReviewArtifactsTest(unittest.TestCase):
     def test_existing_gamedata_preserved(self):
         self.write(self.baseline / review.OWNED[2], b"old gamedata\x00")
         result = self.prepare()
-        self.assertEqual(result["rollback_absent_paths"], [])
+        self.assertEqual(result["rollback_absent_paths"], [review.LEGACY_BINARY])
         self.assertEqual(result["rollback_files"][review.OWNED[2]], review.sha(b"old gamedata\x00"))
+
+    def test_legacy_baseline_restores_original_name_and_removes_new_name(self):
+        (self.baseline / review.OWNED[0]).rename(self.baseline / review.LEGACY_BINARY)
+        result = self.prepare()
+        self.assertEqual(result["rollback_absent_paths"], [review.OWNED[0], review.OWNED[2]])
+        self.assertIn(review.LEGACY_BINARY, result["rollback_files"])
+        with zipfile.ZipFile(self.output / "steamworks-p5-rollback.zip") as saved:
+            self.assertEqual(saved.read("addons/sourcemod/" + review.LEGACY_BINARY), self.elf)
+            self.assertNotIn("addons/sourcemod/" + review.OWNED[0], saved.namelist())
+
+    def test_baseline_with_both_names_preserves_each_file(self):
+        legacy = self.elf + b"legacy bytes"
+        self.write(self.baseline / review.LEGACY_BINARY, legacy)
+        result = self.prepare()
+        self.assertEqual(result["rollback_files"][review.LEGACY_BINARY], review.sha(legacy))
+        with zipfile.ZipFile(self.output / "steamworks-p5-rollback.zip") as saved:
+            self.assertEqual(saved.read("addons/sourcemod/" + review.LEGACY_BINARY), legacy)
+            self.assertEqual(saved.read("addons/sourcemod/" + review.OWNED[0]), self.elf)
+
+    def test_candidate_legacy_name_is_rejected_even_beside_new_name(self):
+        self.write(self.candidate / ("addons/sourcemod/" + review.LEGACY_BINARY), self.elf)
+        with self.assertRaisesRegex(ValueError, "Unexpected candidate payload"):
+            self.prepare()
 
     def test_unexpected_candidate_refused(self):
         self.write(self.candidate / ".env", b"not public")

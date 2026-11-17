@@ -58,7 +58,7 @@ def main():
                      '--mms-path', str(args.mms_path.resolve()), '--hl2sdk-root', str(args.hl2sdk_root.resolve()),
                      '--sdks', 'l4d2', '--target', 'x86', '--enable-optimize'])
     run('initial-build', AMBUILD)
-    extension = build / 'package/addons/sourcemod/extensions/steamworks.ext.so'
+    extension = build / 'package/addons/sourcemod/extensions/steamworks.ext.2.l4d2.so'
     if extension.read_bytes()[:7] != b'\x7fELF\x01\x01\x01':
         raise RuntimeError('Expected an actual x86 build')
 

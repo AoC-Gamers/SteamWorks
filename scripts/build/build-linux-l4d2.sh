@@ -135,7 +135,7 @@ fi
 popd > /dev/null
 
 PACKAGE_DIR="$BUILD_DIR/package/addons/sourcemod/extensions"
-EXT_BIN="$PACKAGE_DIR/steamworks.ext.so"
+EXT_BIN="$PACKAGE_DIR/steamworks.ext.2.l4d2.so"
 
 if [[ ! -f "$EXT_BIN" ]]; then
   echo "Build completed but $EXT_BIN was not found." >&2

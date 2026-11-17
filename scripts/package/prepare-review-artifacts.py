@@ -18,8 +18,9 @@ _contract_spec = importlib.util.spec_from_file_location("artifact_contract", Pat
 _contract = importlib.util.module_from_spec(_contract_spec)
 _contract_spec.loader.exec_module(_contract)
 
-OWNED = ("extensions/steamworks.ext.so", "scripting/include/steamworks.inc",
-         "gamedata/steamworks.txt")
+LEGACY_BINARY = "extensions/steamworks.ext.so"
+OWNED = ("extensions/steamworks.ext.2.l4d2.so", "scripting/include/steamworks.inc",
+         "gamedata/steamworks.txt", LEGACY_BINARY)
 
 
 def sha(data):
@@ -59,7 +60,7 @@ def prepare(candidate, baseline, output, label="p5"):
             raise ValueError("Symlink in candidate: " + str(path))
         if path.is_file():
             name = path.relative_to(candidate).as_posix()
-            allowed = _contract.allowed(name) and name != "addons/sourcemod/extensions/steamworks.ext.dll"
+            allowed = _contract.allowed(name) and name != "addons/sourcemod/extensions/steamworks.ext.2.l4d2.dll"
             if not allowed:
                 raise ValueError("Unexpected candidate payload: " + name)
             files[name] = path.read_bytes()
@@ -80,7 +81,8 @@ def prepare(candidate, baseline, output, label="p5"):
             raise ValueError("Baseline entry is not a file: " + name)
         else:
             absent.append(name)
-    if OWNED[0] not in previous or not linux_x86(previous[OWNED[0]]):
+    binaries = [name for name in (OWNED[0], LEGACY_BINARY) if name in previous]
+    if not binaries or any(not linux_x86(previous[name]) for name in binaries):
         raise ValueError("Baseline needs an actual Linux x86 extension")
     if OWNED[1] not in previous:
         raise ValueError("Baseline include missing")

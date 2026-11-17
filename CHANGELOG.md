@@ -26,11 +26,18 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
   de fixtures saneados con trazabilidad y sin ampliar aceptación runtime.
 - Documentación por funcionalidad y fixtures protegidos; rutas y empaquetado
   actualizados sin cambios de API ni lógica nativa.
-- Renderizador actualizado a Mermaid CLI 12.2.0 y Mermaid 12.3.0, con lock
-  renovado y Node.js 22.13 o posterior. La validación documental se mantiene
-  local; se retira su job de CI y la dependencia de los builds Linux/Windows.
+- Se retira el renderizador local y sus dependencias npm/Puppeteer. Los diagramas
+  Mermaid permanecen en Markdown; la validación local de enlaces, referencias y
+  límites de paquetes usa solo Python. Se eliminan las reglas ligadas a snapshots
+  locales de migración y al número mínimo de diagramas. La validación documental
+  no tiene un job de CI ni bloquea los builds Linux/Windows.
 
 ### Estructura de instalación
+
+- Binarios distribuidos con sufijo de motor: `steamworks.ext.2.l4d2.so` y
+  `steamworks.ext.2.l4d2.dll`. La identidad lógica `steamworks.ext` y la API
+  SourcePawn se conservan. La reversión captura también el nombre genérico
+  anterior y registra las ausencias para restaurar exactamente el baseline.
 
 - Include público ubicado en `addons/sourcemod/scripting/include/`; build,
   inventario y validación de paquetes actualizados. El diagnóstico general pasa
@@ -185,17 +192,17 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
   - `publish`: publicación de releases con ambos ZIP
 - Se actualizaron las versiones de GitHub Actions usadas por CI.
 - Se limitaron los archivos de extensión e include del release Linux a:
-  - `addons/sourcemod/extensions/steamworks.ext.so`
+  - `addons/sourcemod/extensions/steamworks.ext.2.l4d2.so`
   - `addons/sourcemod/scripting/include/steamworks.inc`
 - Se agregó un artefacto separado para Windows con:
-  - `addons/sourcemod/extensions/steamworks.ext.dll`
+  - `addons/sourcemod/extensions/steamworks.ext.2.l4d2.dll`
   - `addons/sourcemod/scripting/include/steamworks.inc`
 - Se actualizó la integración base de bootstrap/build de la extensión para compatibilidad con SourceMod 1.12 y Metamod:Source 1.12.
 - Se actualizó el repositorio para enfocarlo en Linux 32-bit para L4D2 como plataforma principal.
 - El flujo del proyecto usa exclusivamente Steamworks SDK 1.55 (`sdk_155`).
 - Se normalizaron a minúsculas los nombres visibles de release:
-  - `steamworks.ext.so`
-  - `steamworks.ext.dll`
+  - `steamworks.ext.2.l4d2.so`
+  - `steamworks.ext.2.l4d2.dll`
   - `steamworks.inc`
 - Se actualizó la documentación de HTTP y sus ejemplos para distinguir entre:
   - lectura cruda del body

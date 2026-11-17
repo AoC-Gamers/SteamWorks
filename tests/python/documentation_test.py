@@ -20,9 +20,8 @@ spec.loader.exec_module(docs)
 
 class DocumentationTests(unittest.TestCase):
     def test_current_links_structure_and_code_references(self):
-        errors,diagrams=docs.check(ROOT)
+        errors=docs.check(ROOT)
         self.assertEqual(errors,[])
-        self.assertGreaterEqual(len(diagrams),6)
 
     def test_negative_links_anchors_and_generated_result(self):
         with tempfile.TemporaryDirectory(prefix='steamworks documentation ') as temp:
@@ -32,12 +31,12 @@ class DocumentationTests(unittest.TestCase):
                 shutil.copytree(ROOT/area,root/area,ignore=shutil.ignore_patterns('node_modules','__pycache__'))
             for name in ('README.md','AGENTS.md','LICENSE'):
                 shutil.copy2(ROOT/name,root/name)
-            self.assertEqual(docs.check(root)[0],[])
+            self.assertEqual(docs.check(root),[])
             page=root/'docs/http/README.md'
             page.write_text(page.read_text()+'\n[bad](missing.md)\n[bad](#nonexistent-anchor)\n`extension/missing.cpp`\n`addons/sourcemod/scripting/include/missing.inc`\n')
             (root/'docs/http/results.json').write_text('{}')
             (root/'docs/http/run-report.md').write_text('# P5-R100: execution diary')
-            errors,_=docs.check(root)
+            errors=docs.check(root)
             for expected in ('missing.md','broken anchor','missing code reference','Unexpected docs payload','Execution diary','addons/sourcemod/scripting/include/missing.inc'):
                 self.assertTrue(any(expected in error for error in errors),expected)
 
@@ -71,7 +70,7 @@ class DocumentationTests(unittest.TestCase):
             temp=Path(temp)
             for platform,suffix in (('linux','so'),('windows','dll')):
                 build=temp/platform/'build';artifact=temp/platform/'artifact'
-                extension=build/f'addons/sourcemod/extensions/steamworks.ext.{suffix}'
+                extension=build/f'addons/sourcemod/extensions/steamworks.ext.2.l4d2.{suffix}'
                 extension.parent.mkdir(parents=True)
                 elf=bytearray(52);elf[:7]=b'\x7fELF\x01\x01\x01';elf[16:20]=b'\x03\x00\x03\x00'
                 extension.write_bytes(elf if platform=='linux' else b'layout fixture, not a compiled DLL')
@@ -86,6 +85,7 @@ class DocumentationTests(unittest.TestCase):
                 self.assertFalse(list(artifact.rglob('AGENTS.md')))
                 for bad in ('docs/http/results.json','docs/http/run-report.md','docs/runtime-compatibility/p5/log.md',
                             'tests/fixtures/input.json','addons/sourcemod/extensions/diagnostic.so',
+                            f'addons/sourcemod/extensions/steamworks.ext.{suffix}',
                             'sdk/public/steam.h','addons/sourcemod/gamedata/profile.json'):
                     path=artifact/bad;path.parent.mkdir(parents=True,exist_ok=True);path.write_text('forbidden fixture')
                     result=subprocess.run(command,env=env,capture_output=True,text=True,cwd=temp)
@@ -100,6 +100,8 @@ class DocumentationTests(unittest.TestCase):
                 self.assertEqual(release.returncode,0,release.stderr)
                 with zipfile.ZipFile(temp/platform/'dist/release/fixture.zip') as archive:
                     self.assertIn('docs/http/README.md',archive.namelist())
+                    self.assertIn(f'addons/sourcemod/extensions/steamworks.ext.2.l4d2.{suffix}', archive.namelist())
+                    self.assertNotIn(f'addons/sourcemod/extensions/steamworks.ext.{suffix}', archive.namelist())
                     self.assertFalse(any('/fixtures/' in name or name.endswith('AGENTS.md') for name in archive.namelist()))
                 # Stage must reject a diagnostic object even before CI inspects its output.
                 (extension.parent/'diagnostic.so').write_bytes(b'not product')
@@ -129,19 +131,6 @@ class DocumentationTests(unittest.TestCase):
             self.assertNotEqual(result.returncode,0)
             self.assertIn('Unexpected documentation payload',result.stderr)
 
-    def test_mermaid_embedded_font_is_not_a_coordinate(self):
-        svg = '<svg><style>@font-face{src:url(data:font/woff2;base64,NaNA)}</style>'
-        self.assertFalse(docs.invalid_svg_layout(svg + '<path d="M0,0L1,1"/></svg>'))
-        for geometry in ('<path d="MNaN,0"/>', '<svg width="undefined"/>'):
-            with self.subTest(geometry=geometry):
-                self.assertTrue(docs.invalid_svg_layout(svg + geometry + '</svg>'))
-
-    def test_mermaid_version_is_pinned_and_lock_agrees(self):
-        package=json.loads((ROOT/'scripts/tools/package.json').read_text())
-        lock=json.loads((ROOT/'scripts/tools/package-lock.json').read_text())
-        expected=package['devDependencies']['@mermaid-js/mermaid-cli']
-        self.assertRegex(expected,r'^\d+\.\d+\.\d+$')
-        self.assertEqual(lock['packages']['node_modules/@mermaid-js/mermaid-cli']['version'],expected)
 
 
 if __name__=='__main__':

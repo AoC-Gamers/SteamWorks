@@ -2,9 +2,9 @@
 
 El workflow conserva builds Linux/Windows, checks de paquete y suites x86.
 Las claves de caché incluyen las rutas nuevas de dependencias/build/empaquetado.
-La validación documental y el renderizado Mermaid se ejecutan localmente;
-no tienen un job en CI ni bloquean los builds. Consulta la
-[política documental](../maintenance/documentation.md) para ejecutarlos.
+La validación documental se ejecuta localmente con Python, sin un job de CI
+ni una dependencia adicional para los builds. Consulta la
+[política documental](../maintenance/documentation.md) para ejecutarla.
 
 El pipeline siguiente describe responsabilidades, no un despliegue automático.
 Fuente: Makefile, `.github/workflows/main.yml` y orquestador de pruebas. Los
@@ -26,8 +26,8 @@ El orquestador local incluye las pruebas documentales, exige una carpeta nueva
 y conserva flags opcionales para
 SourceHook/VM y devuelve fallo si una suite requerida falla. Las dependencias
 obligatorias no se convierten en skips. El verificador documental no descarga
-baselines, opera servidores ni publica; el renderizador necesita su toolchain
-preinstalado por npm. Publicación de artefactos en Actions y publicación de
+baselines, opera servidores ni publica; usa solo la biblioteca estándar de Python.
+Publicación de artefactos en Actions y publicación de
 releases siguen las condiciones existentes del workflow, sin ampliar permisos.
 
 Los paquetes Linux/Windows tienen lista permitida de producto y documentación.

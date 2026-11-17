@@ -162,15 +162,9 @@ finally {
 }
 
 $packageDir = Join-Path $buildDir "package\addons\sourcemod\extensions"
-$extBin = Get-ChildItem $packageDir -Filter "steamworks.ext*.dll" | Select-Object -First 1 -ExpandProperty FullName
-if (-not $extBin) {
-  throw "Build completed but no SteamWorks extension binary was found in $packageDir."
-}
-
-$canonicalExtBin = Join-Path $packageDir "steamworks.ext.dll"
-if ($extBin -ne $canonicalExtBin) {
-  Copy-Item $extBin $canonicalExtBin -Force
-  $extBin = $canonicalExtBin
+$extBin = Join-Path $packageDir "steamworks.ext.2.l4d2.dll"
+if (-not (Test-Path -LiteralPath $extBin -PathType Leaf)) {
+  throw "Build completed but $extBin was not found."
 }
 
 Write-Host "Build complete."
