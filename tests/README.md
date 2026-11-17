@@ -35,7 +35,8 @@ de instrucciones x86 se omite explícitamente; la integración predeterminada us
 
 Los targets `make test-<suite>` delegan en `tests/runners/test-<suite>.sh`.
 `make test-ci` ejecuta selección SDK, paquetes, interfaz Make y suites nativas,
-incluida SourceHook, sin reincorporar la prueba documental a CI.
+incluida SourceHook y las pruebas offline de notas de canales, sin reincorporar
+la prueba documental a CI.
 `make test-documentation` y `make check-docs` son comprobaciones locales.
 La integración también ejecuta `make_interface_test.py`, que verifica rutas con
 espacios, opciones, plataforma y propagación de errores de los backends.
@@ -106,3 +107,7 @@ cambia solo copias privadas de un header, biblioteca no usada por Linux,
 header ausente y header adicional, y exige rechazo antes de reescribir el ELF.
 Restaura cada entrada y comprueba recuperación del build. CI Linux la ejecuta
 tras el build de producto; no inicia servidores ni modifica el SDK original.
+
+`make test-release-notes` comprueba creación y actualización de los canales
+Latest/Develop, sus notas UTC/commit/run y el fallo de carga con CLI GitHub
+simulado. No publica ni modifica releases; también forma parte de la integración.
