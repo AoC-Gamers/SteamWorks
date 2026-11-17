@@ -521,7 +521,7 @@ jobs:
             printf -- '- Fecha de actualización (UTC): %s\n' "$updated_at"
             printf -- '- Commit: [%s](%s/%s/commit/%s)\n' "$GITHUB_SHA" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_SHA"
             printf -- '- Ejecución de CI: [#%s, intento %s](%s/%s/actions/runs/%s/attempts/%s)\n' "$GITHUB_RUN_ID" "$attempt" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID" "$attempt"
-            printf '\nGC remoto excluido de la aceptación global de L4D2 dedicado; API conservada por compatibilidad, sin recepción remota acreditada. Esta publicación no implica despliegue en servidores.\n'
+            printf '\nGC remoto excluido de la aceptación global de L4D2 dedicado; API conservada por compatibilidad, sin recepción remota acreditada.\n'
           } > "$notes_file"
           if grep -Fxq -- "$tag" <<< "$existing_tags"; then
             # Keep the Git tag: release and asset URLs use this stable tag/name.

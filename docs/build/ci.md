@@ -64,7 +64,7 @@ para evitar interrupciones durante la sustitución.
 La publicación continúa sujeta al éxito de los builds y paquetes Linux/Windows.
 Las notas indican que GC remoto está excluido de la aceptación global de L4D2
 dedicado, con API conservada por compatibilidad y sin recepción remota acreditada.
-La exclusión no es una prueba positiva aprobada ni implica despliegue.
+La exclusión no es una prueba positiva aprobada.
 Los releases versionados por tags `v*` mantienen su procedimiento actual.
 `make test-release-notes` ejecuta el bloque real del workflow con `gh` y reloj
 simulados: no publica, modifica tags ni contacta GitHub.

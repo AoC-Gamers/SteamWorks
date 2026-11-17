@@ -101,7 +101,7 @@ if '--notes-file' in args:
                     self.assertIn('https://github.com/example/project/actions/runs/12345/attempts/2', notes)
                     self.assertIn('GC remoto excluido de la aceptación global de L4D2 dedicado; API conservada por compatibilidad, sin recepción remota acreditada.', notes)
                     self.assertNotIn('GC remoto positivo pendiente', notes)
-                    self.assertIn('Esta publicación no implica despliegue en servidores.', notes)
+                    self.assertNotIn('Esta publicación no implica despliegue en servidores.', notes)
                     self.assertEqual(sum(call[1] == 'delete' for call in calls), int(exists))
                     if exists:
                         delete = next(i for i, call in enumerate(calls) if call[1] == 'delete')
