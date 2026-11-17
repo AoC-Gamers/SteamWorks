@@ -30,6 +30,11 @@ public:
 	SteamWorksForwards();
 	~SteamWorksForwards();
 
+	void Start();
+	void Stop();
+	SteamWorksForwards(const SteamWorksForwards&) = delete;
+	SteamWorksForwards& operator=(const SteamWorksForwards&) = delete;
+
 	void NotifyPawnValidateClient(Account_t parent, Account_t child);
 
 private:
@@ -43,6 +48,8 @@ private:
 	STEAM_GAMESERVER_CALLBACK(SteamWorksForwards, OnSteamServersDisconnected, SteamServersDisconnected_t, m_CallbackSteamDisconnected);
 	STEAM_GAMESERVER_CALLBACK(SteamWorksForwards, OnGroupStatusResult, GSClientGroupStatus_t, m_CallbackGroupStatus);
 
+	bool m_running = true;
+	uint64 m_generation = 0;
 	IForward* pValidateClientForward = nullptr;
 	IForward* pLegacyValidateClientForward = nullptr;
 	IForward* pSteamServersConnectedForward = nullptr;

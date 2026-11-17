@@ -1,17 +1,19 @@
-
-# Compiled Object files
+# Compiled objects and libraries
 *.slo
 *.lo
 *.o
-
-# Compiled Dynamic libraries
+*.obj
 *.so
 *.dylib
-
-# Compiled Static libraries
+*.dll
 *.lai
 *.la
 *.a
+*.lib
+
+# Executables and compiled SourcePawn plugins
+*.exe
+*.smx
 
 # visual studio
 *.sdf
@@ -26,13 +28,19 @@
 [Rr]elease - */
 [Dd]ebug/
 [Rr]elease/
-.deps/
-.build/
-.output/
-dist/
+# Repository-local dependencies and generated output; do not hide nested fixtures.
+/.deps/
+/.build/
+/.output/
+/dist/
+/sdk/
+/sdk_*/
+
+# Tool caches may occur anywhere in the source tree.
 __pycache__/
 *.pyc
+node_modules/
+
+# Generated archives and local configuration
 *.zip
 .env
-sdk/
-sdk_*/

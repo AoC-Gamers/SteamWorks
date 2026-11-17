@@ -45,3 +45,10 @@ Dockerfile text eol=lf
 *.vmt text eol=lf
 *.res text eol=lf
 *.kv text eol=lf
+
+# Regression fixtures and generated patches are audited by their exact bytes.
+# Preserve their recorded hashes across Git add/checkout on every platform.
+tests/fixtures/** -text
+patches/** -text
+extension/sdk/smsdk_ext.cpp -text
+extension/sdk/smsdk_ext.h -text

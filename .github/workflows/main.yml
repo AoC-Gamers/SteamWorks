@@ -10,9 +10,12 @@ on:
   workflow_dispatch:
     inputs:
       sdk_name:
-        description: "Steamworks-SDK directory name to use"
+        description: "Pinned Steamworks SDK 1.55"
+        type: choice
+        options:
+          - sdk_155
         required: true
-        default: "sdk_158a"
+        default: "sdk_155"
 
 concurrency:
   group: steamworks-${{ github.ref }}
@@ -42,7 +45,7 @@ jobs:
         id: cache-key
         shell: bash
         run: |
-          echo "key=exts-linux-deps-${{ runner.os }}-${{ hashFiles('scripts/fetch-linux-deps.sh', 'scripts/build-linux-l4d2.sh', 'scripts/stage-artifact.py', 'scripts/package-release.py', 'plugin-package-map.json', 'Makefile', 'configure.py', 'AMBuildScript', 'PackageScript') }}" >> "$GITHUB_OUTPUT"
+          echo "key=exts-linux-deps-${{ runner.os }}-${{ hashFiles('scripts/deps/fetch-linux-deps.sh', 'scripts/build/build-linux-l4d2.sh', 'scripts/package/stage-artifact.py', 'scripts/package/artifact_contract.py', 'scripts/package/package-release.py', 'scripts/package/package-map.json', 'Makefile', 'configure.py', 'AMBuildScript', 'PackageScript', 'scripts/build/steamworks-sdk.lock.json', 'scripts/build/validate-steamworks-sdk.py') }}" >> "$GITHUB_OUTPUT"
 
       - name: Restore dependency cache
         id: deps-cache-restore
@@ -82,7 +85,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: AoC-Gamers/Steamworks-SDK
-          ref: main
+          ref: a7aaa2754d9cda244d0cd9d7523c1144a1c472d2
           path: steamworks-sdk
           token: ${{ secrets.GHCR_DEPLOY_TOKEN }}
 
@@ -103,10 +106,13 @@ jobs:
       - name: Resolve SDK name
         id: sdk
         shell: bash
+        env:
+          SDK_NAME: ${{ github.event.inputs.sdk_name }}
         run: |
-          SDK_NAME="${{ github.event.inputs.sdk_name }}"
-          if [[ -z "$SDK_NAME" ]]; then
-            SDK_NAME="sdk_158a"
+          SDK_NAME="${SDK_NAME:-sdk_155}"
+          if [[ "$SDK_NAME" != "sdk_155" ]]; then
+            echo "Only sdk_155 is supported" >&2
+            exit 1
           fi
           echo "dir=$GITHUB_WORKSPACE/steamworks-sdk/$SDK_NAME" >> "$GITHUB_OUTPUT"
 
@@ -118,39 +124,131 @@ jobs:
             exit 1
           fi
 
+      - name: Test pinned SDK selection and negative controls
+        env:
+          STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
+        run: python3 tests/python/sdk_selection_test.py
+
+      - name: Test local review packaging and rollback contract
+        run: python3 tests/python/review_artifacts_test.py
+
+      - name: Test stats natives (x86, UBSan)
+        shell: bash
+        env:
+          STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
+        run: TEST_CXXFLAGS=-m32 bash ./tests/runners/test-stats-natives.sh
+
+      - name: Test detour owner and wrappers (x86, UBSan)
+        shell: bash
+        env:
+          STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
+        run: TEST_CXXFLAGS=-m32 bash ./tests/runners/test-detours.sh
+
+      - name: Test init observer coexistence (x86, UBSan)
+        shell: bash
+        env:
+          STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
+        run: TEST_CXXFLAGS=-m32 bash ./tests/runners/test-init-coexistence.sh
+
+      - name: Test public IPv4 natives (x86, signed/unsigned char, UBSan)
+        shell: bash
+        env:
+          STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
+        run: TEST_CXXFLAGS=-m32 bash ./tests/runners/test-public-ip.sh
+
+      - name: Test SteamID string contract (x86, UBSan)
+        shell: bash
+        env:
+          STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
+          AMTL_DIR: ${{ github.workspace }}/.deps/exts-linux/sourcemod-1.12/public/amtl
+        run: TEST_CXXFLAGS=-m32 bash ./tests/runners/test-steamid-string.sh
+
+      - name: Test typed boundary and interface registry (x86, UBSan)
+        shell: bash
+        env:
+          STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
+        run: TEST_CXXFLAGS=-m32 bash ./tests/runners/test-typed-boundary.sh
+
+      - name: Test restart forward semantics (x86, UBSan)
+        shell: bash
+        env:
+          STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
+        run: TEST_CXXFLAGS=-m32 bash ./tests/runners/test-restart-forward-semantics.sh
+
+      - name: Test resource lifecycle (x86, UBSan)
+        shell: bash
+        env:
+          STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
+        run: TEST_CXXFLAGS=-m32 bash ./tests/runners/test-resource-lifecycle.sh
+
+      - name: Test binary evidence and documentary profiles (x86)
+        shell: bash
+        env:
+          STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
+        run: TEST_CXXFLAGS=-m32 bash ./tests/runners/test-binary-evidence.sh
+
+      - name: Test opt-in diagnostic log (x86, UBSan)
+        shell: bash
+        run: TEST_CXXFLAGS=-m32 bash ./tests/runners/test-debug-log.sh
+
+      - name: Test typed auth binding with real SourceHook (x86, UBSan)
+        shell: bash
+        env:
+          STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
+          MMSOURCE_DIR: ${{ github.workspace }}/.deps/exts-linux/mmsource-1.12
+        run: TEST_CXXFLAGS=-m32 bash ./tests/runners/test-auth-binding.sh
+
+      - name: Test streaming HTTP context (x86, UBSan)
+        shell: bash
+        env:
+          STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
+        run: TEST_CXXFLAGS=-m32 bash ./tests/runners/test-http-stream-context.sh
+
       - name: Build Linux extension
         shell: bash
         run: make build-exts-linux STEAMWORKS_SDK_DIR="${{ steps.sdk.outputs.dir }}"
+
+      - name: Test incremental SDK rejection (real x86 build)
+        shell: bash
+        run: |
+          .deps/exts-linux/.venv-linux/bin/python tests/runners/test-sdk-incremental.py \
+            --output .build/sdk-incremental-ci \
+            --sdk "${{ steps.sdk.outputs.dir }}" \
+            --sm-path .deps/exts-linux/sourcemod-1.12 \
+            --mms-path .deps/exts-linux/mmsource-1.12 \
+            --hl2sdk-root .deps/exts-linux
 
       - name: Resolve Linux artifact name
         id: artifact
         shell: bash
         run: |
-          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
-            version="${GITHUB_REF_NAME#v}"
-            echo "basename=steamworks-$version-linux" >> "$GITHUB_OUTPUT"
-            echo "release_tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
-            echo "release_name=SteamWorks $version" >> "$GITHUB_OUTPUT"
-            echo "prerelease=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          case "${GITHUB_REF_NAME}" in
-            main)
-              echo "basename=steamworks-latest-linux" >> "$GITHUB_OUTPUT"
-              echo "release_tag=channel/latest" >> "$GITHUB_OUTPUT"
-              echo "release_name=Latest" >> "$GITHUB_OUTPUT"
-              echo "prerelease=false" >> "$GITHUB_OUTPUT"
-              ;;
-            develop)
-              echo "basename=steamworks-develop-linux" >> "$GITHUB_OUTPUT"
-              echo "release_tag=channel/develop" >> "$GITHUB_OUTPUT"
-              echo "release_name=Develop" >> "$GITHUB_OUTPUT"
-              echo "prerelease=true" >> "$GITHUB_OUTPUT"
-              ;;
-            *)
-              echo "basename=steamworks-${GITHUB_SHA::7}-linux" >> "$GITHUB_OUTPUT"
-              ;;
-          esac
+          {
+            if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+              version="${GITHUB_REF_NAME#v}"
+              echo "basename=steamworks-$version-linux"
+              echo "release_tag=${GITHUB_REF_NAME}"
+              echo "release_name=SteamWorks $version"
+              echo "prerelease=false"
+              exit 0
+            fi
+            case "${GITHUB_REF_NAME}" in
+              main)
+                echo "basename=steamworks-latest-linux"
+                echo "release_tag=channel/latest"
+                echo "release_name=Latest"
+                echo "prerelease=false"
+                ;;
+              develop)
+                echo "basename=steamworks-develop-linux"
+                echo "release_tag=channel/develop"
+                echo "release_name=Develop"
+                echo "prerelease=true"
+                ;;
+              *)
+                echo "basename=steamworks-${GITHUB_SHA::7}-linux"
+                ;;
+            esac
+          } >> "$GITHUB_OUTPUT"
 
       - name: Upload Linux build tree
         uses: actions/upload-artifact@v7
@@ -190,7 +288,7 @@ jobs:
         env:
           EXTS_ARTIFACT_DIR: ${{ github.workspace }}/dist/linux/artifact
           EXTS_PLATFORM: linux
-        run: bash ./scripts/ci-validate-artifact.sh
+        run: bash ./scripts/ci/ci-validate-artifact.sh
 
       - name: Upload Linux release zip
         uses: actions/upload-artifact@v7
@@ -218,7 +316,7 @@ jobs:
         id: cache-key
         shell: bash
         run: |
-          echo "key=exts-windows-deps-${{ runner.os }}-${{ hashFiles('scripts/fetch-windows-deps.ps1', 'scripts/build-windows-l4d2.ps1', 'scripts/stage-artifact.py', 'scripts/package-release.py', 'plugin-package-map.json', 'Makefile', 'configure.py', 'AMBuildScript', 'PackageScript') }}" >> "$GITHUB_OUTPUT"
+          echo "key=exts-windows-deps-${{ runner.os }}-${{ hashFiles('scripts/deps/fetch-windows-deps.ps1', 'scripts/build/build-windows-l4d2.ps1', 'scripts/package/stage-artifact.py', 'scripts/package/artifact_contract.py', 'scripts/package/package-release.py', 'scripts/package/package-map.json', 'Makefile', 'configure.py', 'AMBuildScript', 'PackageScript', 'scripts/build/steamworks-sdk.lock.json', 'scripts/build/validate-steamworks-sdk.py') }}" >> "$GITHUB_OUTPUT"
 
       - name: Restore dependency cache
         id: deps-cache-restore
@@ -253,7 +351,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: AoC-Gamers/Steamworks-SDK
-          ref: main
+          ref: a7aaa2754d9cda244d0cd9d7523c1144a1c472d2
           path: steamworks-sdk
           token: ${{ secrets.GHCR_DEPLOY_TOKEN }}
 
@@ -272,10 +370,13 @@ jobs:
       - name: Resolve SDK name
         id: sdk
         shell: bash
+        env:
+          SDK_NAME: ${{ github.event.inputs.sdk_name }}
         run: |
-          SDK_NAME="${{ github.event.inputs.sdk_name }}"
-          if [[ -z "$SDK_NAME" ]]; then
-            SDK_NAME="sdk_158a"
+          SDK_NAME="${SDK_NAME:-sdk_155}"
+          if [[ "$SDK_NAME" != "sdk_155" ]]; then
+            echo "Only sdk_155 is supported" >&2
+            exit 1
           fi
           echo "dir=$GITHUB_WORKSPACE/steamworks-sdk/$SDK_NAME" >> "$GITHUB_OUTPUT"
 
@@ -352,7 +453,7 @@ jobs:
         env:
           EXTS_ARTIFACT_DIR: ${{ github.workspace }}/dist/windows/artifact
           EXTS_PLATFORM: windows
-        run: bash ./scripts/ci-validate-artifact.sh
+        run: bash ./scripts/ci/ci-validate-artifact.sh
 
       - name: Upload Windows release zip
         uses: actions/upload-artifact@v7

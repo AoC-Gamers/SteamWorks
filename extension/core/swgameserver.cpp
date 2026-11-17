@@ -17,25 +17,32 @@
 */
 
 #include "swgameserver.h"
+#include "swdebug.h"
 
-static void GetGameSpecificConfigInterface(const char *pName, const char *&pVersion)
+template <typename Interface>
+const char* SteamWorksGameServer::CompatibleVersion()
 {
-	if (g_SteamWorks.pSWGameData == nullptr)
-	{
-		return;
+	const auto record = steamworks::InterfaceContract<Interface>::Record();
+	const size_t index = static_cast<size_t>(record.id);
+	if (m_rejectedVersions[index]) {
+		return nullptr;
 	}
-
-	IGameConfig *pConfig = g_SteamWorks.pSWGameData->GetGameData();
-	if (pConfig == nullptr)
-	{
-		return;
+	const char* requested = record.version;
+	if (record.configKey != nullptr && g_SteamWorks.pSWGameData != nullptr) {
+		IGameConfig* config = g_SteamWorks.pSWGameData->GetGameData();
+		if (config != nullptr) {
+			const char* overrideVersion = config->GetKeyValue(record.configKey);
+			if (overrideVersion != nullptr) { requested = overrideVersion; }
+		}
 	}
-	
-	const char *pNewVersion = pConfig->GetKeyValue(pName);
-	if (pNewVersion != nullptr)
-	{
-		pVersion = pNewVersion;
+	if (!steamworks::AcceptsVersion<Interface>(requested)) {
+		steamworks::debug::Log(steamworks::debug::Interfaces, "version_rejected", "family=%s expected=%s", record.family, record.version);
+		m_rejectedVersions[index] = true;
+		g_pSM->LogError(myself, "Unsupported %s interface version '%s'; expected '%s'; capability disabled until reset",
+			record.family, requested, record.version);
+		return nullptr;
 	}
+	return record.version;
 }
 
 SteamWorksGameServer::SteamWorksGameServer()
@@ -51,69 +58,31 @@ void SteamWorksGameServer::Reset(void)
 {
 	m_pClient = nullptr;
 	m_pGameServer = nullptr;
+	m_pAuthServer014 = nullptr;
 	m_pUtils = nullptr;
 	m_pNetworking = nullptr;
 	m_pStats = nullptr;
 	m_pHTTP = nullptr;
 	m_pMatchmaking = nullptr;
 	m_pGC = nullptr;
+	for (bool& rejected : m_rejectedVersions) { rejected = false; }
 }
 
 ISteamClient *SteamWorksGameServer::GetSteamClient(void)
 {
+	if (!g_SteamWorks.IsRuntimeAvailable()) { return nullptr; }
 	if (g_pSteamClientGameServer != nullptr)
 	{
 		return g_pSteamClientGameServer;
 	}
 
-	/*
-		The following is assumed from an unreleased version of the SteamWorks SDK, first seen (and reversed) in CS:GO.
-		Thanks CS:GO team! @:|
-	*/
-
-	if (m_pClient == nullptr)
-	{
-		const char *pLibSteamPath = GetLibraryPath();
-
-		void *(*pGSInternalCreateAddress)(const char *) = nullptr;
-		void *(*pInternalCreateAddress)(const char *) = nullptr;
-		const char *pGSInternalFuncName = "SteamGameServerInternal_CreateInterface";
-		const char *pInternalFuncName = "SteamInternal_CreateInterface";
-
-		if (g_SteamWorks.pSWGameData)
-		{
-			IGameConfig *pConfig = g_SteamWorks.pSWGameData->GetGameData();
-			if (pConfig != nullptr)
-			{
-				pConfig->GetMemSig(pGSInternalFuncName, reinterpret_cast<void **>(&pGSInternalCreateAddress));
-				pConfig->GetMemSig(pInternalFuncName, reinterpret_cast<void **>(&pInternalCreateAddress));
-			}
-		}
-
-		ILibrary *pLibrary = libsys->OpenLibrary(pLibSteamPath, nullptr, 0);
-		if (pLibrary != nullptr)
-		{
-			if (pGSInternalCreateAddress == nullptr)
-			{
-				pGSInternalCreateAddress = reinterpret_cast<void *(*)(const char *)>(pLibrary->GetSymbolAddress(pGSInternalFuncName));
-			}
-
-			if (pInternalCreateAddress == nullptr)
-			{
-				pInternalCreateAddress = reinterpret_cast<void *(*)(const char *)>(pLibrary->GetSymbolAddress(pInternalFuncName));
-			}
-
-			pLibrary->CloseLibrary();
-		}
-
-		if (pGSInternalCreateAddress != nullptr)
-		{
-			m_pClient = static_cast<ISteamClient *>((*pGSInternalCreateAddress)(STEAMCLIENT_INTERFACE_VERSION));
-		}
-		
-		if (m_pClient == nullptr && pInternalCreateAddress != nullptr)
-		{
-			m_pClient = static_cast<ISteamClient *>((*pInternalCreateAddress)(STEAMCLIENT_INTERFACE_VERSION));
+	if (m_pClient == nullptr) {
+		ILibrary* library = libsys->OpenLibrary(GetLibraryPath(), nullptr, 0);
+		if (library != nullptr) {
+			using Factory = void* (S_CALLTYPE *)(const char*);
+			Factory create = reinterpret_cast<Factory>(library->GetSymbolAddress("SteamInternal_CreateInterface"));
+			if (create != nullptr) { m_pClient = static_cast<ISteamClient*>(create(steamworks::InterfaceContract<ISteamClient>::Record().version)); }
+			library->CloseLibrary();
 		}
 	}
 
@@ -122,29 +91,53 @@ ISteamClient *SteamWorksGameServer::GetSteamClient(void)
 
 ISteamGameServer *SteamWorksGameServer::GetGameServer(void)
 {
-	if (m_pGameServer == nullptr && GetSteamClient() != nullptr)
+	if (!g_SteamWorks.IsRuntimeAvailable()) { return nullptr; }
+	if (m_pGameServer != nullptr) { return m_pGameServer; }
+	const char* pVersion = CompatibleVersion<ISteamGameServer>();
+	if (pVersion == nullptr) { return nullptr; }
+	ISteamClient* client = GetSteamClient();
+	if (client != nullptr)
 	{
 		HSteamUser hSteamUser;
 		HSteamPipe hSteamPipe;
 		GetUserAndPipe(hSteamUser, hSteamPipe);
 		
-		const char *pVersion = STEAMGAMESERVER_INTERFACE_VERSION;
-		GetGameSpecificConfigInterface("SteamGameServerInterfaceVersion", pVersion);
-		m_pGameServer = GetSteamClient()->GetISteamGameServer(hSteamUser, hSteamPipe, pVersion);
+		m_pGameServer = client->GetISteamGameServer(hSteamUser, hSteamPipe, pVersion);
+		if (m_pGameServer != nullptr) {
+			steamworks::debug::Log(steamworks::debug::Interfaces, "gameserver_resolved", "version=%s available=1", pVersion);
+		}
 	}
 	
 	return m_pGameServer;
 }
 
+steamworks::ISteamGameServer014* SteamWorksGameServer::GetGameServerAuth014()
+{
+	if (!g_SteamWorks.IsRuntimeAvailable()) { return nullptr; }
+	if (m_pAuthServer014 != nullptr) { return m_pAuthServer014; }
+	const char* version = CompatibleVersion<steamworks::ISteamGameServer014>();
+	if (version == nullptr) { return nullptr; }
+	// Same factory/user as the verified engine, without casting the SDK getter (also 014 under SDK 1.55).
+	m_pAuthServer014 = steamworks::ResolveGameServerAuth014(
+		&SteamInternal_FindOrCreateGameServerInterface, SteamGameServer_GetHSteamUser(), version);
+	if (m_pAuthServer014 != nullptr) {
+		steamworks::debug::Log(steamworks::debug::Interfaces, "auth_server_resolved", "version=%s available=1", version);
+	}
+	return m_pAuthServer014;
+}
+
 ISteamUtils *SteamWorksGameServer::GetUtils(void)
 {
-	if (m_pUtils == nullptr && GetSteamClient() != nullptr)
+	if (!g_SteamWorks.IsRuntimeAvailable()) { return nullptr; }
+	if (m_pUtils != nullptr) { return m_pUtils; }
+	const char* pVersion = CompatibleVersion<ISteamUtils>();
+	if (pVersion == nullptr) { return nullptr; }
+	ISteamClient* client = GetSteamClient();
+	if (client != nullptr)
 	{
 		HSteamPipe hSteamPipe = SteamGameServer_GetHSteamPipe();
 		
-		const char *pVersion = STEAMUTILS_INTERFACE_VERSION;
-		GetGameSpecificConfigInterface("SteamUtilsInterfaceVersion", pVersion);
-		m_pUtils = GetSteamClient()->GetISteamUtils(hSteamPipe, pVersion);
+		m_pUtils = client->GetISteamUtils(hSteamPipe, pVersion);
 	}
 	
 	return m_pUtils;
@@ -152,15 +145,18 @@ ISteamUtils *SteamWorksGameServer::GetUtils(void)
 
 ISteamNetworking *SteamWorksGameServer::GetNetworking(void)
 {
-	if (m_pNetworking == nullptr && GetSteamClient() != nullptr)
+	if (!g_SteamWorks.IsRuntimeAvailable()) { return nullptr; }
+	if (m_pNetworking != nullptr) { return m_pNetworking; }
+	const char* pVersion = CompatibleVersion<ISteamNetworking>();
+	if (pVersion == nullptr) { return nullptr; }
+	ISteamClient* client = GetSteamClient();
+	if (client != nullptr)
 	{
 		HSteamUser hSteamUser;
 		HSteamPipe hSteamPipe;
 		GetUserAndPipe(hSteamUser, hSteamPipe);
 		
-		const char *pVersion = STEAMNETWORKING_INTERFACE_VERSION;
-		GetGameSpecificConfigInterface("SteamNetworkingInterfaceVersion", pVersion);
-		m_pNetworking = GetSteamClient()->GetISteamNetworking(hSteamUser, hSteamPipe, pVersion);
+		m_pNetworking = client->GetISteamNetworking(hSteamUser, hSteamPipe, pVersion);
 	}
 	
 	return m_pNetworking;
@@ -168,15 +164,18 @@ ISteamNetworking *SteamWorksGameServer::GetNetworking(void)
 
 ISteamGameServerStats *SteamWorksGameServer::GetServerStats(void)
 {
-	if (m_pStats == nullptr && GetSteamClient() != nullptr)
+	if (!g_SteamWorks.IsRuntimeAvailable()) { return nullptr; }
+	if (m_pStats != nullptr) { return m_pStats; }
+	const char* pVersion = CompatibleVersion<ISteamGameServerStats>();
+	if (pVersion == nullptr) { return nullptr; }
+	ISteamClient* client = GetSteamClient();
+	if (client != nullptr)
 	{
 		HSteamUser hSteamUser;
 		HSteamPipe hSteamPipe;
 		GetUserAndPipe(hSteamUser, hSteamPipe);
 		
-		const char *pVersion = STEAMGAMESERVERSTATS_INTERFACE_VERSION;
-		GetGameSpecificConfigInterface("SteamGameServerStatsInterfaceVersion", pVersion);
-		m_pStats = GetSteamClient()->GetISteamGameServerStats(hSteamUser, hSteamPipe, pVersion);
+		m_pStats = client->GetISteamGameServerStats(hSteamUser, hSteamPipe, pVersion);
 	}
 	
 	return m_pStats;
@@ -184,15 +183,18 @@ ISteamGameServerStats *SteamWorksGameServer::GetServerStats(void)
 
 ISteamHTTP *SteamWorksGameServer::GetHTTP(void)
 {
-	if (m_pHTTP == nullptr && GetSteamClient() != nullptr)
+	if (!g_SteamWorks.IsRuntimeAvailable()) { return nullptr; }
+	if (m_pHTTP != nullptr) { return m_pHTTP; }
+	const char* pVersion = CompatibleVersion<ISteamHTTP>();
+	if (pVersion == nullptr) { return nullptr; }
+	ISteamClient* client = GetSteamClient();
+	if (client != nullptr)
 	{
 		HSteamUser hSteamUser;
 		HSteamPipe hSteamPipe;
 		GetUserAndPipe(hSteamUser, hSteamPipe);
 		
-		const char *pVersion = STEAMHTTP_INTERFACE_VERSION;
-		GetGameSpecificConfigInterface("SteamHTTPInterfaceVersion", pVersion);
-		m_pHTTP = GetSteamClient()->GetISteamHTTP(hSteamUser, hSteamPipe, pVersion);
+		m_pHTTP = client->GetISteamHTTP(hSteamUser, hSteamPipe, pVersion);
 	}
 	
 	return m_pHTTP;
@@ -200,15 +202,18 @@ ISteamHTTP *SteamWorksGameServer::GetHTTP(void)
 
 ISteamMatchmaking *SteamWorksGameServer::GetMatchmaking(void)
 {
-	if (m_pMatchmaking == nullptr && GetSteamClient() != nullptr)
+	if (!g_SteamWorks.IsRuntimeAvailable()) { return nullptr; }
+	if (m_pMatchmaking != nullptr) { return m_pMatchmaking; }
+	const char* pVersion = CompatibleVersion<ISteamMatchmaking>();
+	if (pVersion == nullptr) { return nullptr; }
+	ISteamClient* client = GetSteamClient();
+	if (client != nullptr)
 	{
 		HSteamUser hSteamUser;
 		HSteamPipe hSteamPipe;
 		GetUserAndPipe(hSteamUser, hSteamPipe);
 		
-		const char *pVersion = STEAMMATCHMAKING_INTERFACE_VERSION;
-		GetGameSpecificConfigInterface("SteamMatchmakingVersion", pVersion);
-		m_pMatchmaking = GetSteamClient()->GetISteamMatchmaking(hSteamUser, hSteamPipe, pVersion);
+		m_pMatchmaking = client->GetISteamMatchmaking(hSteamUser, hSteamPipe, pVersion);
 	}
 	
 	return m_pMatchmaking;
@@ -216,15 +221,18 @@ ISteamMatchmaking *SteamWorksGameServer::GetMatchmaking(void)
 
 ISteamGameCoordinator *SteamWorksGameServer::GetGameCoordinator(void)
 {
-	if (m_pGC == nullptr && GetSteamClient() != nullptr)
+	if (!g_SteamWorks.IsRuntimeAvailable()) { return nullptr; }
+	if (m_pGC != nullptr) { return m_pGC; }
+	const char* pVersion = CompatibleVersion<ISteamGameCoordinator>();
+	if (pVersion == nullptr) { return nullptr; }
+	ISteamClient* client = GetSteamClient();
+	if (client != nullptr)
 	{
 		HSteamUser hSteamUser;
 		HSteamPipe hSteamPipe;
 		GetUserAndPipe(hSteamUser, hSteamPipe);
 
-		const char *pVersion = STEAMGAMECOORDINATOR_INTERFACE_VERSION;
-		GetGameSpecificConfigInterface("SteamGameCoordinatorVersion", pVersion);
-		m_pGC = static_cast<ISteamGameCoordinator *>(GetSteamClient()->GetISteamGenericInterface(hSteamUser, hSteamPipe, pVersion));
+		m_pGC = static_cast<ISteamGameCoordinator *>(client->GetISteamGenericInterface(hSteamUser, hSteamPipe, pVersion));
 	}
 
 	return m_pGC;

@@ -1,5 +1,7 @@
 #include "extension.h"
+#include "core/swdebug.h"
 #include <cstdlib>
+#include <cstdio>
 
 namespace {
 
@@ -18,17 +20,33 @@ SMEXT_LINK(&g_SteamWorks);
  
 bool SteamWorks::SDK_OnLoad(char* error, size_t maxlength, bool late)
 {
+	steamworks::debug::Initialize();
+	steamworks::debug::Log(steamworks::debug::Lifecycle, "extension_load", "late=%d", late ? 1 : 0);
+	m_unloading = false;
+	m_runtimeAvailable = true;
 	sharesys->RegisterLibrary(myself, "SteamWorks");
 
 	pSWGameData = new SteamWorksGameData;
 	pSWGameServer = new SteamWorksGameServer;
 	pSWHTTP = new SteamWorksHTTP;
+	if (pSWHTTP->GetHTTPHandle() == 0) {
+		std::snprintf(error, maxlength, "Could not create SteamWorks HTTP handle type");
+		SDK_OnUnload();
+		return false;
+	}
 	
+	pGSDetours = new SteamWorksGSDetours;
+	if (!pGSDetours->IsInstalled()) {
+		std::snprintf(error, maxlength, "Steam runtime lifecycle detours unavailable; see error log");
+		SDK_OnUnload();
+		return false;
+	}
+	pClientLifecycle = new SteamWorksClientLifecycle;
+
 	pSWHTTPNatives = new SteamWorksHTTPNatives;
 	pSWForward = new SteamWorksForwards;
 	pGSNatives = new SteamWorksGSNatives;
 	pGSHooks = new SteamWorksGSHooks;
-	pGSDetours = new SteamWorksGSDetours;
 	pSSNatives = new SteamWorksSSNatives;
 	pGCHooks = new SteamWorksGCHooks;
 	pGCNatives = new SteamWorksGCNatives;
@@ -37,6 +55,11 @@ bool SteamWorks::SDK_OnLoad(char* error, size_t maxlength, bool late)
 
 void SteamWorks::SDK_OnUnload()
 {
+	m_unloading = true;
+	steamworks::debug::Log(steamworks::debug::Lifecycle, "extension_unload");
+	RuntimeStopped();
+	if (pClientLifecycle != nullptr) { pClientLifecycle->FinalizeStoppedHost(); }
+	DeleteAndNull(pClientLifecycle);
 	DeleteAndNull(pGCNatives);
 	DeleteAndNull(pGCHooks);
 	DeleteAndNull(pSSNatives);
@@ -49,49 +72,29 @@ void SteamWorks::SDK_OnUnload()
 	DeleteAndNull(pSWHTTP);
 	DeleteAndNull(pSWGameServer);
 	DeleteAndNull(pSWGameData);
+	steamworks::debug::Shutdown();
 }
 
-CSteamID SteamWorks::CreateCommonCSteamID(IGamePlayer* pPlayer, const cell_t* params, unsigned char universeplace, unsigned char typeplace)
+void SteamWorks::RuntimeStopped()
 {
-	EUniverse universe = k_EUniversePublic;
-	EAccountType type = k_EAccountTypeIndividual;
-	
-	const char* pAuth = pPlayer->GetAuthString(false);
-	if (pAuth == nullptr || pAuth[0] == '\0' || strlen(pAuth) < 7 || pAuth[6] == 'I')
-	{
-		return CreateCommonCSteamID(pPlayer->GetSteamAccountID(false), params, universeplace, typeplace);
-	}
-
-	if (pAuth[0] == '[')
-	{
-		universe = static_cast<EUniverse>(atoi(&pAuth[3]));
-	}
-	else
-	{
-		universe = static_cast<EUniverse>(atoi(&pAuth[6]));
-	}
-
-	if (universe == k_EUniverseInvalid)
-	{
-		universe = k_EUniversePublic;
-	}
-
-	return CSteamID(pPlayer->GetSteamAccountID(false), universe, type);
+ if (!m_runtimeAvailable) { return; }
+ steamworks::debug::Log(steamworks::debug::Lifecycle, "runtime_stop");
+ m_runtimeAvailable = false; // Block new acquisitions before touching borrowed objects.
+ if (pGSHooks != nullptr) { pGSHooks->Stop(); }
+ if (pGCHooks != nullptr) { pGCHooks->Stop(); }
+ if (pSWForward != nullptr) { pSWForward->Stop(); }
+ if (pSWHTTP != nullptr) { pSWHTTP->StopRuntime(); }
+ if (pSWGameServer != nullptr) { pSWGameServer->Reset(); }
 }
 
-CSteamID SteamWorks::CreateCommonCSteamID(uint32_t authid, const cell_t* params, unsigned char universeplace, unsigned char typeplace)
+void SteamWorks::RuntimeStarted()
 {
-	EUniverse universe = k_EUniversePublic;
-	EAccountType type = k_EAccountTypeIndividual;
-	if (params[0] >= universeplace)
-	{
-		universe = static_cast<EUniverse>(params[universeplace]);
-	}
-
-	if (params[0] >= typeplace)
-	{
-		type = static_cast<EAccountType>(params[typeplace]);
-	}
-
-	return CSteamID(authid, universe, type);
+ if (m_unloading) { return; }
+ if (pClientLifecycle != nullptr) { pClientLifecycle->GameServerStarted(); }
+ steamworks::debug::Log(steamworks::debug::Lifecycle, "runtime_start");
+ m_runtimeAvailable = true;
+ if (pSWHTTP != nullptr) { pSWHTTP->StartRuntime(); }
+ if (pSWForward != nullptr) { pSWForward->Start(); }
+ if (pGSHooks != nullptr) { pGSHooks->Start(); }
+ if (pGCHooks != nullptr) { pGCHooks->Start(); }
 }

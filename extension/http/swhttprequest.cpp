@@ -17,8 +17,11 @@
 */
 
 #include "swhttprequest.h"
+#include "../core/swpawn.h"
 #include <cerrno>
 #include <cstdio>
+#include <memory>
+#include <new>
 
 namespace {
 
@@ -34,18 +37,19 @@ void ReleaseForward(IChangeableForward*& forward)
 
 uint64_t PackContextValue(cell_t high, cell_t low)
 {
-	return (static_cast<uint64_t>(high) << 32) | static_cast<uint32_t>(low);
+	return steamworks::PackContext(steamworks::pawn::Bits(high), steamworks::pawn::Bits(low));
 }
 
 void PushContextValue(IChangeableForward* forward, uint64_t contextValue)
 {
-	forward->PushCell(contextValue >> 32);
-	forward->PushCell(contextValue & 0x00000000FFFFFFFF);
+	forward->PushCell(steamworks::pawn::Cell(static_cast<uint32>(contextValue >> 32)));
+	forward->PushCell(steamworks::pawn::Cell(static_cast<uint32>(contextValue)));
 }
 
 ISteamHTTP *GetHTTPPointer(void)
 {
-	return g_SteamWorks.pSWGameServer->GetHTTP();
+	return g_SteamWorks.pSWHTTP != nullptr && g_SteamWorks.pSWHTTP->IsAccepting()
+		&& g_SteamWorks.pSWGameServer != nullptr ? g_SteamWorks.pSWGameServer->GetHTTP() : nullptr;
 }
 
 static HandleType_t GetSteamHTTPHandle(void)
@@ -72,36 +76,109 @@ static SteamWorksHTTPRequest *GetRequestPointer(ISteamHTTP *&pHTTP, IPluginConte
 		return nullptr;
 	}
 
+	if (!pRequest->IsUsable()) {
+		pContext->ThrowNativeError("HTTP request belongs to a stopped runtime or closing owner");
+		return nullptr;
+	}
 	return pRequest;
 }
 
 }  // namespace
 
-SteamWorksHTTPRequest::SteamWorksHTTPRequest()
+SteamWorksHTTPRequest::SteamWorksHTTPRequest(ISteamHTTP* owner, IdentityToken_t* pluginOwner)
 	: request(INVALID_HTTPREQUEST_HANDLE),
 	  handle(BAD_HANDLE),
 	  pCompletedForward(nullptr),
 	  pHeadersReceivedForward(nullptr),
 	  pDataReceivedForward(nullptr)
 {
+ m_manager = g_SteamWorks.pSWHTTP;
+ m_owner = owner != nullptr ? owner : GetHTTPPointer();
+ m_pluginOwner = pluginOwner;
+ if (m_manager != nullptr) { m_generation = m_manager->Generation(); m_manager->Track(this); }
 }
 
 SteamWorksHTTPRequest::~SteamWorksHTTPRequest()
 {
-	ISteamHTTP *pHTTP = GetHTTPPointer();
-	if (pHTTP != nullptr)
-	{
-		pHTTP->ReleaseHTTPRequest(request);
-		request = INVALID_HTTPREQUEST_HANDLE;
-	}
+ Invalidate();
+ ReleaseForwards();
+ if (m_manager != nullptr) { m_manager->Untrack(this); }
+}
 
-	ReleaseForward(pCompletedForward);
-	ReleaseForward(pHeadersReceivedForward);
-	ReleaseForward(pDataReceivedForward);
+bool SteamWorksHTTPRequest::IsUsable() const
+{
+ return m_active && m_manager != nullptr && m_manager->IsAccepting()
+     && m_generation == m_manager->Generation();
+}
+
+bool SteamWorksHTTPRequest::SetContextValue(uint64 context)
+{
+ if (!IsUsable() || m_owner == nullptr || !m_owner->SetHTTPRequestContextValue(request, context)) {
+  return false;
+ }
+ m_contextValue = context;
+ return true;
+}
+
+void SteamWorksHTTPRequest::ReleaseForwards()
+{
+ ReleaseForward(pCompletedForward);
+ ReleaseForward(pHeadersReceivedForward);
+ ReleaseForward(pDataReceivedForward);
+}
+
+void SteamWorksHTTPRequest::Invalidate()
+{
+ if (!m_active) { return; }
+ m_active = false;
+ CompletedCallResult.Cancel();
+ HeadersCallback.Unregister();
+ DataCallback.Unregister();
+ if (m_owner != nullptr && request != INVALID_HTTPREQUEST_HANDLE) {
+  m_owner->ReleaseHTTPRequest(request);
+ }
+ request = INVALID_HTTPREQUEST_HANDLE;
+ m_owner = nullptr;
+ if (m_dispatchDepth == 0) { ReleaseForwards(); }
+}
+
+void SteamWorksHTTPRequest::Close()
+{
+ m_deleteRequested = true;
+ Invalidate();
+ if (m_dispatchDepth == 0) { delete this; }
+}
+
+void SteamWorksHTTPRequest::FinishDispatch()
+{
+ --m_dispatchDepth;
+ if (m_dispatchDepth != 0) { return; }
+ if (!m_active) { ReleaseForwards(); }
+ if (m_deleteRequested) { delete this; }
+}
+
+void SteamWorksHTTPRequest::PluginUnloading(IPlugin* plugin)
+{
+ if (m_pluginOwner == plugin->GetIdentity()) { Invalidate(); }
+ if (pCompletedForward != nullptr) { pCompletedForward->RemoveFunctionsOfPlugin(plugin); }
+ if (pHeadersReceivedForward != nullptr) { pHeadersReceivedForward->RemoveFunctionsOfPlugin(plugin); }
+ if (pDataReceivedForward != nullptr) { pDataReceivedForward->RemoveFunctionsOfPlugin(plugin); }
+}
+
+void SteamWorksHTTPRequest::OnHTTPHeadersCallback(HTTPRequestHeadersReceived_t* response)
+{
+ OnHTTPHeadersReceived(response, false);
+}
+
+void SteamWorksHTTPRequest::OnHTTPDataCallback(HTTPRequestDataReceived_t* response)
+{
+ OnHTTPDataReceived(response, false);
 }
 
 void SteamWorksHTTPRequest::OnHTTPRequestCompleted(HTTPRequestCompleted_t *pRequest, bool bFailed)
 {
+	if (!IsUsable() || pRequest == nullptr || pRequest->m_hRequest != request) { return; }
+	DispatchScope dispatch(this);
 	if (pCompletedForward == nullptr || pCompletedForward->GetFunctionCount() == 0)
 	{
 		return;
@@ -117,6 +194,8 @@ void SteamWorksHTTPRequest::OnHTTPRequestCompleted(HTTPRequestCompleted_t *pRequ
 
 void SteamWorksHTTPRequest::OnHTTPHeadersReceived(HTTPRequestHeadersReceived_t *pRequest, bool bFailed)
 {
+	if (!IsUsable() || pRequest == nullptr || pRequest->m_hRequest != request) { return; }
+	DispatchScope dispatch(this);
 	if (pHeadersReceivedForward == nullptr || pHeadersReceivedForward->GetFunctionCount() == 0)
 	{
 		return;
@@ -124,12 +203,14 @@ void SteamWorksHTTPRequest::OnHTTPHeadersReceived(HTTPRequestHeadersReceived_t *
 
 	pHeadersReceivedForward->PushCell(handle);
 	pHeadersReceivedForward->PushCell(bFailed);
-	PushContextValue(pHeadersReceivedForward, pRequest->m_ulContextValue);
+	PushContextValue(pHeadersReceivedForward, m_contextValue);
 	pHeadersReceivedForward->Execute(nullptr);
 }
 
 void SteamWorksHTTPRequest::OnHTTPDataReceived(HTTPRequestDataReceived_t *pRequest, bool bFailed)
 {
+	if (!IsUsable() || pRequest == nullptr || pRequest->m_hRequest != request) { return; }
+	DispatchScope dispatch(this);
 	if (pDataReceivedForward == nullptr || pDataReceivedForward->GetFunctionCount() == 0)
 	{
 		return;
@@ -139,7 +220,7 @@ void SteamWorksHTTPRequest::OnHTTPDataReceived(HTTPRequestDataReceived_t *pReque
 	pDataReceivedForward->PushCell(bFailed);
 	pDataReceivedForward->PushCell(pRequest->m_cOffset);
 	pDataReceivedForward->PushCell(pRequest->m_cBytesReceived);
-	PushContextValue(pDataReceivedForward, pRequest->m_ulContextValue);
+	PushContextValue(pDataReceivedForward, m_contextValue);
 	pDataReceivedForward->Execute(nullptr);
 }
 
@@ -151,8 +232,12 @@ static cell_t sm_CreateHTTPRequest(IPluginContext *pContext, const cell_t *param
 		return BAD_HANDLE;
 	}
 
+	if (params[1] <= k_EHTTPMethodInvalid || params[1] > k_EHTTPMethodPATCH) {
+		return pContext->ThrowNativeError("Unsupported HTTP method");
+	}
+
 	char *pURL;
-	pContext->LocalToString(params[2], &pURL);
+	if (!steamworks::pawn::String(pContext, params[2], pURL)) { return 0; }
 
 	HTTPRequestHandle request = pHTTP->CreateHTTPRequest(static_cast<EHTTPMethod>(params[1]), pURL);
 	if (request == INVALID_HTTPREQUEST_HANDLE)
@@ -160,11 +245,11 @@ static cell_t sm_CreateHTTPRequest(IPluginContext *pContext, const cell_t *param
 		return BAD_HANDLE;
 	}
 
-	SteamWorksHTTPRequest *pRequest = new SteamWorksHTTPRequest;
+	SteamWorksHTTPRequest *pRequest = new SteamWorksHTTPRequest(pHTTP, pContext->GetIdentity());
+	pRequest->request = request;
 	Handle_t handle = handlesys->CreateHandle(GetSteamHTTPHandle(), pRequest, pContext->GetIdentity(), myself->GetIdentity(), NULL);
 	if (handle == BAD_HANDLE)
 	{
-		pHTTP->ReleaseHTTPRequest(request);
 		delete pRequest;
 		return BAD_HANDLE;
 	}
@@ -184,7 +269,7 @@ static cell_t sm_SetHTTPRequestContextValue(IPluginContext *pContext, const cell
 		return 0;
 	}
 
-	return pHTTP->SetHTTPRequestContextValue(pRequest->request, PackContextValue(params[2], params[3])) ? 1 : 0;
+	return pRequest->SetContextValue(PackContextValue(params[2], params[3])) ? 1 : 0;
 }
 
 static cell_t sm_SetHTTPRequestNetworkActivityTimeout(IPluginContext *pContext, const cell_t *params)
@@ -196,7 +281,10 @@ static cell_t sm_SetHTTPRequestNetworkActivityTimeout(IPluginContext *pContext, 
 		return 0;
 	}
 
-	return pHTTP->SetHTTPRequestNetworkActivityTimeout(pRequest->request, params[2]) ? 1 : 0;
+	uint32 size;
+	if (!steamworks::pawn::SteamSize(pContext, params[2], size)) { return 0; }
+
+	return pHTTP->SetHTTPRequestNetworkActivityTimeout(pRequest->request, size) ? 1 : 0;
 }
 
 static cell_t sm_SetHTTPRequestHeaderValue(IPluginContext *pContext, const cell_t *params)
@@ -209,8 +297,8 @@ static cell_t sm_SetHTTPRequestHeaderValue(IPluginContext *pContext, const cell_
 	}
 
 	char *pName, *pValue;
-	pContext->LocalToString(params[2], &pName);
-	pContext->LocalToString(params[3], &pValue);
+	if (!steamworks::pawn::String(pContext, params[2], pName)) { return 0; }
+	if (!steamworks::pawn::String(pContext, params[3], pValue)) { return 0; }
 	return pHTTP->SetHTTPRequestHeaderValue(pRequest->request, pName, pValue) ? 1 : 0;
 }
 
@@ -224,8 +312,8 @@ static cell_t sm_SetHTTPRequestGetOrPostParameter(IPluginContext *pContext, cons
 	}
 
 	char *pName, *pValue;
-	pContext->LocalToString(params[2], &pName);
-	pContext->LocalToString(params[3], &pValue);
+	if (!steamworks::pawn::String(pContext, params[2], pName)) { return 0; }
+	if (!steamworks::pawn::String(pContext, params[3], pValue)) { return 0; }
 	return pHTTP->SetHTTPRequestGetOrPostParameter(pRequest->request, pName, pValue) ? 1 : 0;
 }
 
@@ -252,56 +340,33 @@ static cell_t sm_SetCallbacks(IPluginContext *pContext, const cell_t *params)
 		}
 	}
 
-	if (params[2] > 0)
-	{
-		if (pRequest->pCompletedForward == NULL)
-		{
-			pRequest->pCompletedForward = forwards->CreateForwardEx(NULL, ET_Ignore, 6, NULL, Param_Cell, Param_Cell, Param_Cell, Param_Cell, Param_Cell, Param_Cell);
-		}
-
-		IPluginFunction *pFunction = pPlugin->GetBaseContext()->GetFunctionById(params[2]);
-
-		if (!pFunction)
-		{
-			return pContext->ThrowNativeError("Invalid function id (%X)", params[2]);
-		}
-
-		pRequest->pCompletedForward->AddFunction(pFunction);
-	}
-	
-	if (params[3] > 0)
-	{
-		if (pRequest->pHeadersReceivedForward == NULL)
-		{
-			pRequest->pHeadersReceivedForward = forwards->CreateForwardEx(NULL, ET_Ignore, 4, NULL, Param_Cell, Param_Cell, Param_Cell, Param_Cell);
-		}
-
-		IPluginFunction *pFunction = pPlugin->GetBaseContext()->GetFunctionById(params[3]);
-
-		if (!pFunction)
-		{
-			return pContext->ThrowNativeError("Invalid function id (%X)", params[3]);
-		}
-
-		pRequest->pHeadersReceivedForward->AddFunction(pFunction);
-	}
-
-	if (params[4] > 0)
-	{
-		if (pRequest->pDataReceivedForward == NULL)
-		{
-			pRequest->pDataReceivedForward = forwards->CreateForwardEx(NULL, ET_Ignore, 6, NULL, Param_Cell, Param_Cell, Param_Cell, Param_Cell, Param_Cell, Param_Cell);
-		}
-
-		IPluginFunction *pFunction = pPlugin->GetBaseContext()->GetFunctionById(params[4]);
-
-		if (!pFunction)
-		{
-			return pContext->ThrowNativeError("Invalid function id (%X)", params[4]);
-		}
-
-		pRequest->pDataReceivedForward->AddFunction(pFunction);
-	}
+ if (pPlugin == nullptr) { return pContext->ThrowNativeError("HTTP callback plugin unavailable"); }
+ IPluginFunction* functions[3] = {};
+ IChangeableForward* created[3] = {};
+ IChangeableForward** slots[3] = {&pRequest->pCompletedForward, &pRequest->pHeadersReceivedForward, &pRequest->pDataReceivedForward};
+ // Validate the complete request before allocating or changing existing bindings.
+ for (size_t i = 0; i < 3; ++i) {
+  if (params[i + 2] > 0) {
+   functions[i] = pPlugin->GetBaseContext()->GetFunctionById(params[i + 2]);
+   if (functions[i] == nullptr) { return pContext->ThrowNativeError("Invalid function id (%X)", params[i + 2]); }
+  }
+ }
+ for (size_t i = 0; i < 3; ++i) {
+  if (functions[i] == nullptr || *slots[i] != nullptr) { continue; }
+  if (i == 1) {
+   created[i] = forwards->CreateForwardEx(nullptr, ET_Ignore, 4, nullptr, Param_Cell, Param_Cell, Param_Cell, Param_Cell);
+  } else {
+   created[i] = forwards->CreateForwardEx(nullptr, ET_Ignore, 6, nullptr, Param_Cell, Param_Cell, Param_Cell, Param_Cell, Param_Cell, Param_Cell);
+  }
+  if (created[i] == nullptr) {
+   for (auto*& forward : created) { ReleaseForward(forward); }
+   return pContext->ThrowNativeError("Could not allocate HTTP callback forward");
+  }
+ }
+ for (size_t i = 0; i < 3; ++i) {
+  if (created[i] != nullptr) { *slots[i] = created[i]; }
+  if (functions[i] != nullptr) { (*slots[i])->AddFunction(functions[i]); }
+ }
 
 	return 1;
 }
@@ -316,14 +381,12 @@ static void SetCallbacks(SteamAPICall_t &hCall, SteamWorksHTTPRequest *pRequest)
 
 	if (pRequest->pHeadersReceivedForward != NULL)
 	{
-		pRequest->HeadersCallResult.SetGameserverFlag();
-		pRequest->HeadersCallResult.Set(hCall, pRequest, &SteamWorksHTTPRequest::OnHTTPHeadersReceived);
+		pRequest->HeadersCallback.Register(pRequest, &SteamWorksHTTPRequest::OnHTTPHeadersCallback);
 	}
 
 	if (pRequest->pDataReceivedForward != NULL)
 	{
-		pRequest->DataCallResult.SetGameserverFlag();
-		pRequest->DataCallResult.Set(hCall, pRequest, &SteamWorksHTTPRequest::OnHTTPDataReceived);
+		pRequest->DataCallback.Register(pRequest, &SteamWorksHTTPRequest::OnHTTPDataCallback);
 	}
 }
 
@@ -336,7 +399,7 @@ static cell_t sm_SendHTTPRequestAndStreamResponse(IPluginContext *pContext, cons
 		return 0;
 	}
 
-	SteamAPICall_t hCall;
+	SteamAPICall_t hCall = k_uAPICallInvalid;
 	cell_t result = pHTTP->SendHTTPRequestAndStreamResponse(pRequest->request, &hCall) ? 1 : 0;
 
 	if (result)
@@ -356,7 +419,7 @@ static cell_t sm_SendHTTPRequest(IPluginContext *pContext, const cell_t *params)
 		return 0;
 	}
 
-	SteamAPICall_t hCall;
+	SteamAPICall_t hCall = k_uAPICallInvalid;
 	cell_t result = pHTTP->SendHTTPRequest(pRequest->request, &hCall) ? 1 : 0;
 
 	if (result)
@@ -401,11 +464,13 @@ static cell_t sm_GetHTTPResponseHeaderSize(IPluginContext *pContext, const cell_
 	}
 
 	char *pName;
-	pContext->LocalToString(params[2], &pName);
+	if (!steamworks::pawn::String(pContext, params[2], pName)) { return 0; }
 	
 	cell_t *pSize;
-	pContext->LocalToPhysAddr(params[3], &pSize);
-	return pHTTP->GetHTTPResponseHeaderSize(pRequest->request, pName, reinterpret_cast<uint32_t *>(pSize)) ? 1 : 0;
+	if (!steamworks::pawn::Output(pContext, params[3], pSize)) { return 0; }
+	uint32 size = 0;
+	if (!pHTTP->GetHTTPResponseHeaderSize(pRequest->request, pName, &size)) { return 0; }
+	return steamworks::pawn::StoreSize(pContext, pSize, size) ? 1 : 0;
 }
 
 static cell_t sm_GetHTTPResponseHeaderValue(IPluginContext *pContext, const cell_t *params)
@@ -418,11 +483,14 @@ static cell_t sm_GetHTTPResponseHeaderValue(IPluginContext *pContext, const cell
 	}
 
 	char *pName;
-	pContext->LocalToString(params[2], &pName);
+	if (!steamworks::pawn::String(pContext, params[2], pName)) { return 0; }
 	
 	char *pBuffer;
-	pContext->LocalToString(params[3], &pBuffer);
-	return pHTTP->GetHTTPResponseHeaderValue(pRequest->request, pName, reinterpret_cast<uint8_t *>(pBuffer), params[4]) ? 1 : 0; /* uint8? wtf? */
+	if (!steamworks::pawn::String(pContext, params[3], pBuffer)) { return 0; }
+	uint32 size;
+	if (!steamworks::pawn::SteamSize(pContext, params[4], size)) { return 0; }
+
+	return pHTTP->GetHTTPResponseHeaderValue(pRequest->request, pName, reinterpret_cast<uint8_t *>(pBuffer), size) ? 1 : 0; /* uint8? wtf? */
 }
 
 static cell_t sm_GetHTTPResponseBodySize(IPluginContext *pContext, const cell_t *params)
@@ -435,8 +503,10 @@ static cell_t sm_GetHTTPResponseBodySize(IPluginContext *pContext, const cell_t 
 	}
 
 	cell_t *pSize;
-	pContext->LocalToPhysAddr(params[2], &pSize);
-	return pHTTP->GetHTTPResponseBodySize(pRequest->request, reinterpret_cast<uint32_t *>(pSize)) ? 1 : 0;
+	if (!steamworks::pawn::Output(pContext, params[2], pSize)) { return 0; }
+	uint32 size = 0;
+	if (!pHTTP->GetHTTPResponseBodySize(pRequest->request, &size)) { return 0; }
+	return steamworks::pawn::StoreSize(pContext, pSize, size) ? 1 : 0;
 }
 
 static cell_t sm_GetHTTPResponseBodyData(IPluginContext *pContext, const cell_t *params)
@@ -449,8 +519,11 @@ static cell_t sm_GetHTTPResponseBodyData(IPluginContext *pContext, const cell_t 
 	}
 
 	char *pBuffer;
-	pContext->LocalToString(params[2], &pBuffer);
-	return pHTTP->GetHTTPResponseBodyData(pRequest->request, reinterpret_cast<uint8_t *>(pBuffer), params[3]) ? 1 : 0;
+	if (!steamworks::pawn::String(pContext, params[2], pBuffer)) { return 0; }
+	uint32 size;
+	if (!steamworks::pawn::SteamSize(pContext, params[3], size)) { return 0; }
+
+	return pHTTP->GetHTTPResponseBodyData(pRequest->request, reinterpret_cast<uint8_t *>(pBuffer), size) ? 1 : 0;
 }
 
 static cell_t sm_GetHTTPResponseBodyString(IPluginContext *pContext, const cell_t *params)
@@ -462,10 +535,23 @@ static cell_t sm_GetHTTPResponseBodyString(IPluginContext *pContext, const cell_
 		return 0;
 	}
 
+	if (params[0] < 5) {
+		return pContext->ThrowNativeError("GetHTTPResponseBodyString requires written and truncated output arguments");
+	}
+
 	if (params[3] <= 0)
 	{
 		return pContext->ThrowNativeError("Buffer length must be greater than 0");
 	}
+
+	cell_t *pWritten;
+	if (!steamworks::pawn::Output(pContext, params[4], pWritten)) { return 0; }
+
+	cell_t *pTruncated;
+	if (!steamworks::pawn::Output(pContext, params[5], pTruncated)) { return 0; }
+
+	char *pBuffer;
+	if (!steamworks::pawn::String(pContext, params[2], pBuffer)) { return 0; }
 
 	uint32_t size;
 	if (!pHTTP->GetHTTPResponseBodySize(pRequest->request, &size))
@@ -473,27 +559,22 @@ static cell_t sm_GetHTTPResponseBodyString(IPluginContext *pContext, const cell_
 		return 0;
 	}
 
-	cell_t *pWritten;
-	pContext->LocalToPhysAddr(params[4], &pWritten);
-
-	cell_t *pTruncated;
-	pContext->LocalToPhysAddr(params[5], &pTruncated);
-
-	char *pBuffer;
-	pContext->LocalToString(params[2], &pBuffer);
-
-	bool truncated = false;
-	uint32_t readLength = size;
-	if (readLength >= static_cast<uint32_t>(params[3]))
-	{
-		readLength = static_cast<uint32_t>(params[3] - 1);
-		truncated = true;
+	// The public size/count domain is one signed Pawn cell. This also bounds
+	// a byte-array object on the supported x86 target, without an arbitrary cap.
+	if (size > static_cast<uint32>((std::numeric_limits<cell_t>::max)())) {
+		return pContext->ThrowNativeError("HTTP text body exceeds SourcePawn buffer size range");
+	}
+	std::unique_ptr<uint8[]> body;
+	if (size != 0) {
+		body.reset(new (std::nothrow) uint8[size]);
+		if (!body || !pHTTP->GetHTTPResponseBodyData(pRequest->request, body.get(), size)) { return 0; }
 	}
 
-	if (readLength > 0 && !pHTTP->GetHTTPResponseBodyData(pRequest->request, reinterpret_cast<uint8_t *>(pBuffer), readLength))
-	{
-		return 0;
-	}
+	const bool truncated = size >= static_cast<uint32>(params[3]);
+	const uint32 readLength = truncated ? static_cast<uint32>(params[3] - 1) : size;
+	// Steam requires a complete GetHTTPResponseBodyData read. Publish only after
+	// that succeeds; no partial body or output cells escape on allocation/I/O failure.
+	if (readLength != 0) { std::memcpy(pBuffer, body.get(), readLength); }
 
 	pBuffer[readLength] = '\0';
 	*pWritten = static_cast<cell_t>(readLength);
@@ -503,20 +584,15 @@ static cell_t sm_GetHTTPResponseBodyString(IPluginContext *pContext, const cell_
 
 static cell_t sm_GetHTTPDownloadProgressPct(IPluginContext *pContext, const cell_t *params)
 {
-	ISteamHTTP *pHTTP;
-	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
-	if (pRequest == NULL)
-	{
-		return 0;
-	}
-
-	float percent;
-	cell_t result = pHTTP->GetHTTPDownloadProgressPct(pRequest->request, &percent) ? 1 : 0;
-	
-	cell_t *pData;
-	pContext->LocalToPhysAddr(params[2], &pData);
-	*pData = sp_ftoc(percent);
-	return result;
+	ISteamHTTP* pHTTP;
+	SteamWorksHTTPRequest* request = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (request == nullptr) { return 0; }
+	cell_t* output;
+	if (!steamworks::pawn::Output(pContext, params[2], output)) { return 0; }
+	float percent = 0.0f;
+	if (!pHTTP->GetHTTPDownloadProgressPct(request->request, &percent)) { return 0; }
+	steamworks::pawn::StoreFloat(output, percent);
+	return 1;
 }
 
 static cell_t sm_SetHTTPRequestRawPostBody(IPluginContext *pContext, const cell_t *params)
@@ -529,10 +605,13 @@ static cell_t sm_SetHTTPRequestRawPostBody(IPluginContext *pContext, const cell_
 	}
 
 	char *pName, *pBuffer;
-	pContext->LocalToString(params[2], &pName);
-	pContext->LocalToString(params[3], &pBuffer);
+	if (!steamworks::pawn::String(pContext, params[2], pName)) { return 0; }
+	if (!steamworks::pawn::String(pContext, params[3], pBuffer)) { return 0; }
 
-	return pHTTP->SetHTTPRequestRawPostBody(pRequest->request, pName, reinterpret_cast<uint8_t *>(pBuffer), params[4]) ? 1 : 0;
+	uint32 size;
+	if (!steamworks::pawn::SteamSize(pContext, params[4], size)) { return 0; }
+
+	return pHTTP->SetHTTPRequestRawPostBody(pRequest->request, pName, reinterpret_cast<uint8_t *>(pBuffer), size) ? 1 : 0;
 }
 
 static cell_t sm_SetHTTPRequestRawPostBodyFromFile(IPluginContext *pContext, const cell_t *params)
@@ -545,8 +624,8 @@ static cell_t sm_SetHTTPRequestRawPostBodyFromFile(IPluginContext *pContext, con
 	}
 
 	char *pContentType, *pFilePath;
-	pContext->LocalToString(params[2], &pContentType);
-	pContext->LocalToString(params[3], &pFilePath);
+	if (!steamworks::pawn::String(pContext, params[2], pContentType)) { return 0; }
+	if (!steamworks::pawn::String(pContext, params[3], pFilePath)) { return 0; }
 
 	char szFinalPath[PLATFORM_MAX_PATH];
 	smutils->BuildPath(Path_Game, szFinalPath, sizeof(szFinalPath), "%s", pFilePath);
@@ -557,18 +636,18 @@ static cell_t sm_SetHTTPRequestRawPostBodyFromFile(IPluginContext *pContext, con
 		return pContext->ThrowNativeError("Unable to open %s for reading. errno: %d", szFinalPath, errno);
 	}
 
-	fseek(pInputFile, 0, SEEK_END);
-	uint32_t size = ftell(pInputFile);
-	fseek(pInputFile, 0, SEEK_SET);
-
-	if (size <= 0)
+	long fileSize = -1;
+	if (fseek(pInputFile, 0, SEEK_END) == 0) { fileSize = ftell(pInputFile); }
+	uint32 size = 0;
+	if (fileSize <= 0 || fseek(pInputFile, 0, SEEK_SET) != 0
+		|| !steamworks::ToSteamSize(steamworks::ByteCount(static_cast<size_t>(fileSize)), size))
 	{
 		fclose(pInputFile);
 		return 0;
 	}
 
-	char *pBuffer = new char[size + 1];
-	uint32_t itemsRead = fread(pBuffer, sizeof(char), size, pInputFile);
+	char *pBuffer = new char[size];
+	size_t itemsRead = fread(pBuffer, sizeof(char), size, pInputFile);
 	fclose(pInputFile);
 
 	if (itemsRead != size)
@@ -591,6 +670,8 @@ static cell_t sm_GetHTTPResponseBodyCallback(IPluginContext *pContext, const cel
 	{
 		return 0;
 	}
+
+	SteamWorksHTTPRequest::DispatchScope dispatch(pRequest);
 
 	IPlugin *pPlugin;
 	if (params[4] == BAD_HANDLE)
@@ -618,7 +699,12 @@ static cell_t sm_GetHTTPResponseBodyCallback(IPluginContext *pContext, const cel
 		return 0;
 	}
 
-	char *pBuffer = new char[size+1];
+	// The callback exposes length as one Pawn cell, including a terminator.
+	if (size >= static_cast<uint32>((std::numeric_limits<cell_t>::max)())) {
+		return pContext->ThrowNativeError("HTTP callback body exceeds SourcePawn length range");
+	}
+	const size_t capacity = static_cast<size_t>(size) + 1;
+	char *pBuffer = new char[capacity];
 
 	if (pHTTP->GetHTTPResponseBodyData(pRequest->request, reinterpret_cast<uint8_t *>(pBuffer), size) == false)
 	{
@@ -627,7 +713,7 @@ static cell_t sm_GetHTTPResponseBodyCallback(IPluginContext *pContext, const cel
 	}
 
 	pBuffer[size] = '\0'; /* Incase users do something bad; we want to protect userspace; kind of. */
-	pFunction->PushStringEx(pBuffer, size + 1, SM_PARAM_STRING_BINARY | SM_PARAM_STRING_COPY, 0);
+	pFunction->PushStringEx(pBuffer, capacity, SM_PARAM_STRING_BINARY | SM_PARAM_STRING_COPY, 0);
 	pFunction->PushCell(params[3]);
 	pFunction->PushCell(size);
 	pFunction->Execute(NULL);
@@ -645,6 +731,9 @@ static cell_t sm_WriteHTTPResponseBodyToFile(IPluginContext *pContext, const cel
 		return 0;
 	}
 
+	char *pFilePath;
+	if (!steamworks::pawn::String(pContext, params[2], pFilePath)) { return 0; }
+
 	uint32_t size;
 	if (pHTTP->GetHTTPResponseBodySize(pRequest->request, &size) == false)
 	{
@@ -658,9 +747,6 @@ static cell_t sm_WriteHTTPResponseBodyToFile(IPluginContext *pContext, const cel
 		delete [] pBuffer;
 		return 0;
 	}
-
-	char *pFilePath;
-	pContext->LocalToString(params[2], &pFilePath);
 
 	char szFinalPath[PLATFORM_MAX_PATH];
 	g_pSM->BuildPath(Path_Game, szFinalPath, sizeof(szFinalPath), "%s", pFilePath);
@@ -690,9 +776,13 @@ static cell_t sm_GetHTTPStreamingResponseBodyData(IPluginContext *pContext, cons
 		return 0;
 	}
 
+	uint32 offset, size;
+	if (!steamworks::pawn::SteamSize(pContext, params[2], offset)
+		|| !steamworks::pawn::SteamSize(pContext, params[4], size)) { return 0; }
+
 	char *pBuffer;
-	pContext->LocalToString(params[3], &pBuffer);
-	return pHTTP->GetHTTPStreamingResponseBodyData(pRequest->request, params[2], reinterpret_cast<uint8_t *>(pBuffer), params[4]) ? 1 : 0;
+	if (!steamworks::pawn::String(pContext, params[3], pBuffer)) { return 0; }
+	return pHTTP->GetHTTPStreamingResponseBodyData(pRequest->request, offset, reinterpret_cast<uint8_t *>(pBuffer), size) ? 1 : 0;
 }
 
 static cell_t sm_SetHTTPRequestUserAgentInfo(IPluginContext *pContext, const cell_t *params)
@@ -705,7 +795,7 @@ static cell_t sm_SetHTTPRequestUserAgentInfo(IPluginContext *pContext, const cel
 	}
 
 	char *pName;
-	pContext->LocalToString(params[2], &pName);
+	if (!steamworks::pawn::String(pContext, params[2], pName)) { return 0; }
 
 	return pHTTP->SetHTTPRequestUserAgentInfo(pRequest->request, pName) ? 1 : 0;
 }
@@ -731,7 +821,10 @@ static cell_t sm_SetHTTPRequestAbsoluteTimeoutMS(IPluginContext *pContext, const
 		return 0;
 	}
 
-	return pHTTP->SetHTTPRequestAbsoluteTimeoutMS(pRequest->request, params[2]) ? 1 : 0;
+	uint32 size;
+	if (!steamworks::pawn::SteamSize(pContext, params[2], size)) { return 0; }
+
+	return pHTTP->SetHTTPRequestAbsoluteTimeoutMS(pRequest->request, size) ? 1 : 0;
 }
 
 static cell_t sm_GetHTTPRequestWasTimedOut(IPluginContext *pContext, const cell_t *params)
@@ -744,9 +837,12 @@ static cell_t sm_GetHTTPRequestWasTimedOut(IPluginContext *pContext, const cell_
 	}
 
 	cell_t *pData;
-	pContext->LocalToPhysAddr(params[2], &pData);
+	if (!steamworks::pawn::Output(pContext, params[2], pData)) { return 0; }
 
-	return pHTTP->GetHTTPRequestWasTimedOut(pRequest->request, reinterpret_cast<bool *>(pData)) ? 1 : 0;
+	bool timedOut = false;
+	if (!pHTTP->GetHTTPRequestWasTimedOut(pRequest->request, &timedOut)) { return 0; }
+	*pData = timedOut ? 1 : 0;
+	return 1;
 }
 
 static sp_nativeinfo_t httpnatives[] = {

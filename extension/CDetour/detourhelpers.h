@@ -52,9 +52,24 @@ struct patch_t
 	size_t bytes;
 };
 
+inline bool SaveRestorePatch(const unsigned char *address, size_t bytes, patch_t &restore)
+{
+	if (bytes == 0 || bytes > sizeof(restore.patch))
+	{
+		return false;
+	}
+	for (size_t i = 0; i < bytes; ++i)
+	{
+		restore.patch[i] = address[i];
+	}
+	restore.bytes = bytes;
+	return true;
+}
+
 inline void ProtectMemory(void *addr, int length, int prot)
 {
 #if defined PLATFORM_POSIX
+	(void)length; // POSIX changes protection for the containing page below.
 	void *addr2 = (void *)ALIGN(addr);
 	mprotect(addr2, sysconf(_SC_PAGESIZE), prot);
 #elif defined PLATFORM_WINDOWS

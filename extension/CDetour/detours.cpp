@@ -148,12 +148,13 @@ bool CDetour::CreateDetour()
 		return false;
 	}
 
-	detour_restore.bytes = copy_bytes((unsigned char *)detour_address, NULL, OP_JMP_SIZE+1);
-
-	/* First, save restore bits */
-	for (size_t i=0; i<detour_restore.bytes; i++)
+	const int restore_bytes = copy_bytes((unsigned char *)detour_address, NULL, OP_JMP_SIZE+1);
+	/* Reject failed/oversized decoding before copying into the fixed backup. */
+	if (restore_bytes <= 0 || !SaveRestorePatch((unsigned char *)detour_address,
+		static_cast<size_t>(restore_bytes), detour_restore))
 	{
-		detour_restore.patch[i] = ((unsigned char *)detour_address)[i];
+		g_pSM->LogError(myself, "Detour restore bytes exceed backup capacity or decoding failed - Disabling detour");
+		return false;
 	}
 
 	JitWriter wr;

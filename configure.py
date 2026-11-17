@@ -26,7 +26,7 @@ parser.options.add_argument('--mms-path', type=str, dest='mms_path', default=Non
 parser.options.add_argument('--sm-path', type=str, dest='sm_path', default=None,
                        help='Path to Sourcemod')
 parser.options.add_argument('--steamworks-path', type=str, dest='steamworks_path', default=None,
-                       help='Path to SteamWorks')
+                       help='Path to the pinned Steamworks SDK 1.55')
 parser.options.add_argument('--enable-debug', action='store_const', const='1', dest='debug',
                        help='Enable debugging symbols')
 parser.options.add_argument('--enable-optimize', action='store_const', const='1', dest='opt',

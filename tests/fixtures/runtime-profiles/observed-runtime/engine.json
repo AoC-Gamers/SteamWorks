@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "documentation_only": true,
+  "enabled": false,
+  "file_name": "engine_srv.so",
+  "origin": "Read-only copy of a module observed in an isolated SRCDS x86 instance",
+  "role": "engine",
+  "format": "ELF",
+  "architecture": "x86",
+  "size_bytes": 4055404,
+  "sha256": "8f8093a18bba14cb73fc11589687bfb8156b00328b7413d697f1a76ed4b7621a",
+  "build_id": "b152439170af081a0d31fc357364a4cd4caa56ac",
+  "pid_observed": null,
+  "loaded_module_confirmed": true,
+  "exports": {
+    "SteamGameServer_InitSafe": [],
+    "SteamInternal_GameServer_Init": [],
+    "SteamInternal_GameServer_Init_V2": [],
+    "SteamGameServer_Shutdown": [],
+    "SteamInternal_CreateInterface": [],
+    "SteamGameServerInternal_CreateInterface": [],
+    "SteamGameServer_GetHSteamUser": [],
+    "SteamGameServer_GetHSteamPipe": [],
+    "g_pSteamClientGameServer": []
+  },
+  "imports_of_interest": [
+    "SteamGameServer_GetHSteamUser",
+    "SteamGameServer_Shutdown",
+    "SteamInternal_CreateInterface",
+    "SteamInternal_GameServer_Init"
+  ],
+  "relocations_of_interest": [
+    {
+      "offset": 1489422,
+      "type": "R_386_PC32",
+      "symbol": "SteamInternal_CreateInterface"
+    },
+    {
+      "offset": 2100682,
+      "type": "R_386_PC32",
+      "symbol": "SteamGameServer_Shutdown"
+    },
+    {
+      "offset": 2103532,
+      "type": "R_386_PC32",
+      "symbol": "SteamInternal_GameServer_Init"
+    },
+    {
+      "offset": 2106487,
+      "type": "R_386_PC32",
+      "symbol": "SteamGameServer_GetHSteamUser"
+    },
+    {
+      "offset": 2106583,
+      "type": "R_386_PC32",
+      "symbol": "SteamGameServer_GetHSteamUser"
+    },
+    {
+      "offset": 2106631,
+      "type": "R_386_PC32",
+      "symbol": "SteamGameServer_GetHSteamUser"
+    },
+    {
+      "offset": 2106679,
+      "type": "R_386_PC32",
+      "symbol": "SteamGameServer_GetHSteamUser"
+    },
+    {
+      "offset": 2106727,
+      "type": "R_386_PC32",
+      "symbol": "SteamGameServer_GetHSteamUser"
+    },
+    {
+      "offset": 2106775,
+      "type": "R_386_PC32",
+      "symbol": "SteamGameServer_GetHSteamUser"
+    }
+  ],
+  "abi_verified": false,
+  "initialization_route_verified": false,
+  "notes": [
+    "SDK files are reference/link dependencies unless a selected process maps this exact device/inode.",
+    "Export/import/relocation presence is not proof of an executed call path or ABI.",
+    "Loaded status verifies process maps device/inode; it is not a hash of mapped memory."
+  ],
+  "path": null,
+  "device_major": null,
+  "device_minor": null,
+  "inode": null,
+  "pid_namespace": null,
+  "copy_hash_matches_mapped_file": true,
+  "observation_date": "2026-11-14",
+  "observation_context": "Mapped in the first isolated SRCDS process before cleanup; process has since been stopped.",
+  "public_copy": {
+    "redacted_fields": [
+      "pid_observed",
+      "path",
+      "device_major",
+      "device_minor",
+      "inode",
+      "pid_namespace"
+    ],
+    "measured_binary_fields_unchanged": true
+  }
+}

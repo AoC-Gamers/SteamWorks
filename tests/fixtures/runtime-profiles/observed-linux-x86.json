@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "documentation_only": true,
+  "not_consumed_by_current_extension": true,
+  "profile_id": "l4d2-23990100-linux-x86",
+  "enabled": false,
+  "verification_status": "validated_local",
+  "created_on": "2026-11-14",
+  "environment": {
+    "game": "left4dead2",
+    "platform": "linux",
+    "architecture": "x86",
+    "container": null,
+    "app_build_id": "23990100",
+    "game_patch": "2.2.4.3",
+    "exe_build": "10097 (Jun 30 2026)",
+    "sourcemod_version": "1.12.0.7230",
+    "metamod_version": "1.12.0-dev+1194"
+  },
+  "operational_selector": {
+    "source": "extension/core/swlifecycleprofile.h",
+    "enabled_in_product": true,
+    "identity_conditions": [
+      "Linux x86 process",
+      "exactly one engine_srv.so and one libsteam_api.so",
+      "both GNU build-ids equal profile",
+      "export address equals recorded provider base + RVA",
+      "entrypoint lies in executable PT_LOAD segment",
+      "exact original entry prefix; reject already patched entry"
+    ],
+    "file_sha256_recomputed_by_selector": false,
+    "file_sha256_role": "Captured file identity/provenance; runtime matching uses GNU build-id, uniqueness, RVA, executable range and prefix."
+  },
+  "modules": [
+    {
+      "module_id": "engine",
+      "file_name": "engine_srv.so",
+      "sha256": "8f8093a18bba14cb73fc11589687bfb8156b00328b7413d697f1a76ed4b7621a",
+      "build_id": "b152439170af081a0d31fc357364a4cd4caa56ac",
+      "format": "ELF",
+      "architecture": "x86",
+      "size_bytes": 4055404,
+      "loaded_module_confirmed": true,
+      "evidence_file": "observed-runtime/engine.json",
+      "evidence_sha256": "5d9b9788ca4a8b571e65a873d8bf02eebe0cd1bf101f6ad0e0078c4036a39238"
+    },
+    {
+      "module_id": "steam-runtime",
+      "file_name": "libsteam_api.so",
+      "sha256": "43fc556d8255dd17f15d7ce266c7c7bee3075499fdec350af5ed32b9b7cda0ed",
+      "build_id": "0d18f257d51538a7b34c594a31e042b04001fb1c",
+      "format": "ELF",
+      "architecture": "x86",
+      "size_bytes": 420954,
+      "loaded_module_confirmed": true,
+      "evidence_file": "observed-runtime/steam-runtime.json",
+      "evidence_sha256": "0b7ad1f31f52786d9e529a5960b40575fd5bce09688c3ddfd3ec619a657dfc54"
+    }
+  ],
+  "entrypoints": [
+    {
+      "name": "SteamInternal_GameServer_Init",
+      "provider_module_id": "steam-runtime",
+      "resolution_method": "export",
+      "rva": 111664,
+      "original_prefix": "55 57 56 53 e8 42 aa ff ff",
+      "minimum_relocated_bytes": 9,
+      "engine_relocation_offset": 2103532,
+      "engine_relocation_type": "R_386_PC32",
+      "verified_prototype": {
+        "return": "bool in AL",
+        "arguments": [
+          "uint32 IP",
+          "uint16 legacy Steam port",
+          "uint16 game port",
+          "uint16 query port",
+          "EServerMode (32-bit)",
+          "const char* version"
+        ],
+        "convention": "Linux i386 cdecl, free function, six stack argument slots"
+      },
+      "pattern_bytes": null,
+      "pattern_mask": null,
+      "vtable_offset": null,
+      "trampoline_validation_evidence": "observed-runtime/lifecycle-trace.json"
+    },
+    {
+      "name": "SteamGameServer_Shutdown",
+      "provider_module_id": "steam-runtime",
+      "resolution_method": "export",
+      "rva": 112272,
+      "original_prefix": "57 56 53 e8 e3 a7 ff ff",
+      "minimum_relocated_bytes": 8,
+      "engine_relocation_offset": 2100682,
+      "engine_relocation_type": "R_386_PC32",
+      "verified_prototype": {
+        "return": "void",
+        "arguments": [],
+        "convention": "Linux i386 cdecl, free function"
+      },
+      "pattern_bytes": null,
+      "pattern_mask": null,
+      "vtable_offset": null,
+      "trampoline_validation_evidence": "observed-runtime/lifecycle-trace.json"
+    }
+  ],
+  "tests_executed": [
+    "T12 actual init/shutdown/reinit in same PID",
+    "CDetour original call and bool result observed",
+    "extension and harness unload/reload",
+    "two cold starts; second with complete default laboratory configs",
+    "unknown/ambiguous/other-platform negative unit tests",
+    "runtime and SDK PIC-prefix execution fixtures"
+  ],
+  "trace_file": "observed-runtime/lifecycle-trace.json",
+  "trace_sha256": "6da38b9187e3d97fa0f213807bfaa74dd62a1b6d08ebfc033aa584a7db14ab41",
+  "sdk_target_unchanged": "1.58a",
+  "approved_by": null,
+  "approved_at": null,
+  "scope": "Local binary/ABI lifecycle validation, not production deployment or all Steam API acceptance. Documentary enabled=false does not toggle compiled selector.",
+  "public_copy": {
+    "environment_labels_redacted": true,
+    "operational_identity_unchanged": true
+  }
+}

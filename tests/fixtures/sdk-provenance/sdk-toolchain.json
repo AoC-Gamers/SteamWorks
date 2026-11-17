@@ -1,0 +1,306 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "extension_commit": "46e3ee05fc29ad090a1d6f7b1cb5e3dca9855350",
+  "sdk": {
+    "repository": "AoC-Gamers/Steamworks-SDK",
+    "commit": "a7aaa2754d9cda244d0cd9d7523c1144a1c472d2",
+    "checkout_clean": true,
+    "local_directory": "sdk_158a",
+    "header_count": 53,
+    "header_manifest_sha256": "ad77655c5f461b677ff229d3fe0993d3ea3c23e8020fe1f632030cc060a22fae",
+    "all_headers_match_checkout": true,
+    "headers": [
+      {
+        "path": "public/steam/isteamapplist.h",
+        "sha256": "f59caf8be6fece564e41af520c00391d959746aa75c830c1adbdf9f534930ae4"
+      },
+      {
+        "path": "public/steam/isteamapps.h",
+        "sha256": "cead193295de321f515c23190ccaee86518d89c9ec2793c331a645f215a21547"
+      },
+      {
+        "path": "public/steam/isteamappticket.h",
+        "sha256": "ce3f2e3a09114c93a5740aa08956ff5414a8777f3417e1ca1bfba2afe5afe9df"
+      },
+      {
+        "path": "public/steam/isteamclient.h",
+        "sha256": "a911b4a0fe4a9baa8eea890723eb57c473b4fabb4fb6d7af818a201be695ad01"
+      },
+      {
+        "path": "public/steam/isteamcontroller.h",
+        "sha256": "01f3ca795b8e5d4ca0114b96afbb5843c465e7e952529bd433f4d6fbfcb13ec1"
+      },
+      {
+        "path": "public/steam/isteamdualsense.h",
+        "sha256": "f7e0ae87fab3126a4e1e9a69adaa7ddc83fccdca080d65ce80f9622bab9ea9f3"
+      },
+      {
+        "path": "public/steam/isteamfriends.h",
+        "sha256": "efbedcae8ccde7ac41b43db52d1e8b4672de7376631031042b0fc542f8bf1ffe"
+      },
+      {
+        "path": "public/steam/isteamgamecoordinator.h",
+        "sha256": "54cdfd91755af4cec9ae4c20e1a895d68619aebbac35a4bc38456fba7277ae0e"
+      },
+      {
+        "path": "public/steam/isteamgameserver.h",
+        "sha256": "27424b04906b8ae7e8f74cecab3431183dd5285a50e2f0fdc08488de9960031a"
+      },
+      {
+        "path": "public/steam/isteamgameserverstats.h",
+        "sha256": "feed52d38d4107604bc3b20bda50f1e22f5dc5d52eeeab0c11fea2202c6fee15"
+      },
+      {
+        "path": "public/steam/isteamhtmlsurface.h",
+        "sha256": "054c1b963dc48cd86045c99d74b87827f9910df1150920de3928ec9eeecca223"
+      },
+      {
+        "path": "public/steam/isteamhttp.h",
+        "sha256": "20e6e41d3fdf59a5c61d5a28df76df5d8473487ad4df19999ba4a084c6b2e312"
+      },
+      {
+        "path": "public/steam/isteaminput.h",
+        "sha256": "2363b7f698e6050e798675026b61659e3350aca2c4ed77d7b9db4da76cd4d4ac"
+      },
+      {
+        "path": "public/steam/isteaminventory.h",
+        "sha256": "17e3b5a7ea299a9dacb976719400d1d52292fe1c49c6f6fd42b4be6b3cfef2e9"
+      },
+      {
+        "path": "public/steam/isteammatchmaking.h",
+        "sha256": "558519ec59a12a246e532d563eba56710c06f684846074c628a8c113ca2bae0e"
+      },
+      {
+        "path": "public/steam/isteammusic.h",
+        "sha256": "fe1ec934fee3c83658ed7ce65f52994454582b8b373ad35bc085657861c8bac9"
+      },
+      {
+        "path": "public/steam/isteammusicremote.h",
+        "sha256": "03de4304f025f19e8ee7f2c7132628584b7403c2eb18963f52e5994c1cb3e08f"
+      },
+      {
+        "path": "public/steam/isteamnetworking.h",
+        "sha256": "a770bd908cbf435d7642e721d3943fc70a9792a3afd3ee2c7b1dc42385a06590"
+      },
+      {
+        "path": "public/steam/isteamnetworkingmessages.h",
+        "sha256": "2cd1813e640cff24ddf43df01e241055e2cf8871da9d4e0db35c66dd2dd88e5e"
+      },
+      {
+        "path": "public/steam/isteamnetworkingsockets.h",
+        "sha256": "e7bfd869e230bc6fca28360579c51911dd56bf5be8fd1cabd0111559bf9f726c"
+      },
+      {
+        "path": "public/steam/isteamnetworkingutils.h",
+        "sha256": "510fd579dacfb64b5d5342817e1b4f83159b9c56b5fdffe9a814fe77a11461b2"
+      },
+      {
+        "path": "public/steam/isteamparentalsettings.h",
+        "sha256": "26e7a76c2ef2950bc62df64d35b5d89b93a9294463e4d958c39fc97e12eabde7"
+      },
+      {
+        "path": "public/steam/isteamps3overlayrenderer.h",
+        "sha256": "1dc18b70af957ce0ce1525e01e9bcecf16714c648ec7e95c1c33e2242499a935"
+      },
+      {
+        "path": "public/steam/isteamremoteplay.h",
+        "sha256": "7f2f1c37999a251a44f42aea9a00399faa30dba1984cdd593a076be98dbbced6"
+      },
+      {
+        "path": "public/steam/isteamremotestorage.h",
+        "sha256": "2bd42692cd398d6550fd85d21879d5bbd94f02d332277865895682814f06c8ad"
+      },
+      {
+        "path": "public/steam/isteamscreenshots.h",
+        "sha256": "010c01baefccdcd44fd9b14d537728d55a3f409187dfbee25c6df9ab804a936a"
+      },
+      {
+        "path": "public/steam/isteamugc.h",
+        "sha256": "749cacd99eea39a096023c282fefdaa07193305b31841195956260dc15c5eb72"
+      },
+      {
+        "path": "public/steam/isteamuser.h",
+        "sha256": "a6848980bfbc92a83f460ab8141422f0aaaf52539b7a8ac9b5ed3d77edf1f992"
+      },
+      {
+        "path": "public/steam/isteamuserstats.h",
+        "sha256": "48510f3b399cde89bc4262f2a733921602d00030cb1e0897cec0a8a9c4b2527a"
+      },
+      {
+        "path": "public/steam/isteamutils.h",
+        "sha256": "f9ebde5026d8b4d62e90bbc09e596aeb1d52ea475ddc8fa6f264ac2cc0f7b94a"
+      },
+      {
+        "path": "public/steam/isteamvideo.h",
+        "sha256": "59f27b1594d81b86fc4150b7f0414e2af9510957b4c39c81524e032070506449"
+      },
+      {
+        "path": "public/steam/lib/linux32/libsdkencryptedappticket.so",
+        "sha256": "ed28b775ab8add539671e6d991805ccd35cb338db3413c8a8cf4a7162d009420"
+      },
+      {
+        "path": "public/steam/lib/linux64/libsdkencryptedappticket.so",
+        "sha256": "dc54ef24f82d143217f2c2e8c52f80f2db7ba23979b66ac8f4b81c0ea60ea7f4"
+      },
+      {
+        "path": "public/steam/lib/osx/libsdkencryptedappticket.dylib",
+        "sha256": "aad155a123999c642691a198090f35643a187d16ba6434a81baf092037ef770c"
+      },
+      {
+        "path": "public/steam/lib/win32/sdkencryptedappticket.dll",
+        "sha256": "482c6b6ded7c5c1eca1b09202910473c1217cb781f5aa9ac3c80bdde15773eae"
+      },
+      {
+        "path": "public/steam/lib/win32/sdkencryptedappticket.lib",
+        "sha256": "a03a4784f701f7aef9db0bf3c592e4e7d48da81c3baf19edca7849dddc30c073"
+      },
+      {
+        "path": "public/steam/lib/win64/sdkencryptedappticket64.dll",
+        "sha256": "ce0b16371e843364b3725c244d7f296c60d1fad27027a701c8041a0efaa11904"
+      },
+      {
+        "path": "public/steam/lib/win64/sdkencryptedappticket64.lib",
+        "sha256": "1464f8b346dd52c3d413c883c40cf2b76697c17650978acf3205b97f69539791"
+      },
+      {
+        "path": "public/steam/matchmakingtypes.h",
+        "sha256": "f375298bca49bdb709e9e54ed9f52ff62612dfc10cc80e29d0a41134078fe7ee"
+      },
+      {
+        "path": "public/steam/steam_api.h",
+        "sha256": "852e5641272b0d7f8a74776309f86debe61973b682da45b990334f5916a1b586"
+      },
+      {
+        "path": "public/steam/steam_api.json",
+        "sha256": "277646a8408a18889231abb6832f48364d705af114c3432d1fdd2f828f8d4510"
+      },
+      {
+        "path": "public/steam/steam_api_common.h",
+        "sha256": "e19a2bbf1f348934e5f98c21397fc6f4f9f756a026a7af38885230aa6c187dc5"
+      },
+      {
+        "path": "public/steam/steam_api_flat.h",
+        "sha256": "5939a2481317804004d0fe67ada6b5e2b856276546cc10dd419865225e5080db"
+      },
+      {
+        "path": "public/steam/steam_api_internal.h",
+        "sha256": "d0ae73f558492c6bcf7acaa30e054909488d3165dd600d18a67b3803a42509bd"
+      },
+      {
+        "path": "public/steam/steam_gameserver.h",
+        "sha256": "1eb47b89d651027de9bf659be095acf0357298d57f9f46028f33a23eb7c3027b"
+      },
+      {
+        "path": "public/steam/steamclientpublic.h",
+        "sha256": "9655cdb208570dfcfcbf07e5e06037bc05d0c5a74c0cb3a8faff546280055958"
+      },
+      {
+        "path": "public/steam/steamencryptedappticket.h",
+        "sha256": "61f60ce892cc607ac394cb0ba6f70792acb9520a8caa33decb0aef92395100a9"
+      },
+      {
+        "path": "public/steam/steamhttpenums.h",
+        "sha256": "550f9fceff5872312ff59762755128a29ea1f40fd3782d247f3cdd319eae8469"
+      },
+      {
+        "path": "public/steam/steamnetworkingfakeip.h",
+        "sha256": "36d0826ade3e17484b59e9415e939d301113ba61377d98aa9a58bd2409949f27"
+      },
+      {
+        "path": "public/steam/steamnetworkingtypes.h",
+        "sha256": "4704f62e0d974923e610265b2d4e4ac49dc889a0d49687a0b964033cf65276e4"
+      },
+      {
+        "path": "public/steam/steamps3params.h",
+        "sha256": "26734abf0f621b7ec5ac7ad8690878ffbb537bc39cc6991d413677d970bb90fc"
+      },
+      {
+        "path": "public/steam/steamtypes.h",
+        "sha256": "879939e0e1379fbf936548030f8cacc717c55e7ca85a81408d4a61374b0528d1"
+      },
+      {
+        "path": "public/steam/steamuniverse.h",
+        "sha256": "91b43f660be112f6496eb26480732b28a9981fc7a48c78a41c90966e802b05a3"
+      }
+    ],
+    "link_dependencies": [
+      {
+        "path": "redistributable_bin/linux32/libsteam_api.so",
+        "sha256": "2cc33d34854148f4bef515e534b06707704185e364f729cc424a259fceb29cb1",
+        "size_bytes": 379848,
+        "matches_sdk_checkout": true,
+        "role": "SDK link dependency, not an observed game runtime module"
+      },
+      {
+        "path": "redistributable_bin/steam_api.lib",
+        "sha256": "232202836d1fc65af97c5fea5f6b4f8b3b683724c587ade5d7dde56f60d4e915",
+        "size_bytes": 376444,
+        "matches_sdk_checkout": true,
+        "role": "SDK link dependency, not an observed game runtime module"
+      }
+    ],
+    "interface_selectors_from_headers": {
+      "STEAMCLIENT_INTERFACE_VERSION": "SteamClient020",
+      "STEAMGAMECOORDINATOR_INTERFACE_VERSION": "SteamGameCoordinator001",
+      "STEAMGAMESERVER_INTERFACE_VERSION": "SteamGameServer015",
+      "STEAMGAMESERVERSTATS_INTERFACE_VERSION": "SteamGameServerStats001",
+      "STEAMHTTP_INTERFACE_VERSION": "STEAMHTTP_INTERFACE_VERSION003",
+      "STEAMMATCHMAKING_INTERFACE_VERSION": "SteamMatchMaking009",
+      "STEAMNETWORKING_INTERFACE_VERSION": "SteamNetworking006",
+      "STEAMUTILS_INTERFACE_VERSION": "SteamUtils010"
+    },
+    "default_sdk_headers_identical_to_sdk_158a": true
+  },
+  "build_environment": {
+    "isolation": "Docker, no network, repository read-only except .build",
+    "image": null,
+    "image_id": "sha256:8b88d2213cf0eaa488c64f73bd11d7827dfc9b10f9aefc0de714463c6fa2db3b",
+    "os": "Debian GNU/Linux 12 (bookworm)",
+    "compiler": "g++ 12.2.0-14+deb12u1",
+    "python": "3.11.2",
+    "ambuild_api": "2.2.4",
+    "ambuild_package_metadata_version": "2.0",
+    "dependency_commits": {
+      "hl2sdk-l4d2": "c2badaa4f7e763a92427ac11202c349385810cc2",
+      "sourcemod-1.12": "2e229b111534b1be007dc3bd9acfcf2fc472e893",
+      "mmsource-1.12": "75dd7b26fe92e535a11f0318ead73c3e05130d0b",
+      "ambuild": "01212cb57c96561f664b6dfb2ee10e66de6f81e4"
+    },
+    "working_tree_note": "No tracked modifications; untracked AMBuild.egg-info/ present. Submodule revisions are recorded in the local build-environment.log.",
+    "dependency_submodules": {
+      "sourcemod-1.12": {
+        "hl2sdk-manifests": "20b3a014264b38908c4a5d4eb263ba2c488f3dc1",
+        "public/amtl": "2d3b1a3378a3728637f26660c9ffc2df3189cf62",
+        "public/amtl/third_party/googletest": "a651a4d44e65b749467fa3dddf93819a22f0cc4a",
+        "public/safetyhook": "8c6692c85a6c41f5d89f744da57b5ba43515b4ec",
+        "sourcepawn": "11b22edb634b9764d19fd28699e03289cfd18520",
+        "sourcepawn/third_party/amtl": "2d3b1a3378a3728637f26660c9ffc2df3189cf62",
+        "sourcepawn/third_party/amtl/third_party/googletest": "a651a4d44e65b749467fa3dddf93819a22f0cc4a"
+      },
+      "mmsource-1.12": {
+        "hl2sdk-manifests": "4304a88cf5cb750d5f694884ad132f82a644542e",
+        "third_party/amtl": "285b4f853c0003023838140113e3ec066bd800c6",
+        "third_party/amtl/third_party/googletest": "a651a4d44e65b749467fa3dddf93819a22f0cc4a"
+      }
+    }
+  },
+  "runtime": {
+    "srcds_process_observed": false,
+    "gameserver_container_observed": false,
+    "game_build": null,
+    "loaded_modules": [],
+    "interfaces_observed": [],
+    "limitation": "No selected running L4D2/SourceMod test server. SDK libraries and Docker image names do not identify loaded game modules."
+  },
+  "harness_compiler": {
+    "version": "1.12.0.7259",
+    "local_tool_source": "SourcePawn compiler distribution; installation path omitted",
+    "sha256": "3119c9cecf4f3d7324786ee6499f13265de80d778540feb44363a013122e86fd",
+    "smx_sha256": "2d4b0086a8a264ddebef7828778d7b05181105b00b097fc7868d3b9c2d16cf97"
+  },
+  "public_copy": {
+    "environment_labels_and_local_paths_redacted": true,
+    "toolchain_versions_and_hashes_unchanged": true
+  }
+}

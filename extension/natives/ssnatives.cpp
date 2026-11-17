@@ -17,6 +17,7 @@
 */
 
 #include "ssnatives.h"
+#include "../core/swpawn.h"
 
 namespace {
 
@@ -25,14 +26,58 @@ ISteamGameServerStats *GetServerStatsPointer(void)
 	return g_SteamWorks.pSWGameServer->GetServerStats();
 }
 
-CSteamID CreateCommonCSteamID(IGamePlayer *pPlayer, const cell_t *params, unsigned char universeplace = 2, unsigned char typeplace = 3)
+template <typename Identity>
+bool ReadIdentity(IPluginContext* context, Identity identity, const cell_t* params,
+	unsigned char universePosition, unsigned char typePosition, CSteamID& output)
 {
-	return g_SteamWorks.CreateCommonCSteamID(pPlayer, params, universeplace, typeplace);
+	EUniverse universe;
+	EAccountType type;
+	if (!steamworks::pawn::IdentityOptions(context, params, universePosition, typePosition, universe, type)) { return false; }
+	output = g_SteamWorks.CreateCommonCSteamID(identity, universe, type);
+	return true;
 }
 
-CSteamID CreateCommonCSteamID(uint32_t authid, const cell_t *params, unsigned char universeplace = 2, unsigned char typeplace = 3)
+ISteamGameServerStats* GetServerStatsForApp(steamworks::AppId appid)
 {
-	return g_SteamWorks.CreateCommonCSteamID(authid, params, universeplace, typeplace);
+	ISteamGameServerStats* stats = GetServerStatsPointer();
+	if (stats == nullptr || appid.value == k_uAppIdInvalid) {
+		return nullptr;
+	}
+
+	ISteamUtils* utils = g_SteamWorks.pSWGameServer->GetUtils();
+	if (utils == nullptr || utils->GetAppID() != appid.value) {
+		return nullptr;
+	}
+
+	return stats;
+}
+
+CSteamID CreateStatsAccountIdentity(steamworks::AccountId account)
+{
+	return steamworks::IndividualIdentity(account);
+}
+
+bool GetStatsClientIdentity(IGamePlayer* player, CSteamID& identity)
+{
+	if (player->IsFakeClient() || !player->IsAuthorized()) {
+		return false;
+	}
+
+	AccountID_t account = player->GetSteamAccountID(true);
+	if (account == 0) {
+		return false;
+	}
+
+	uint64 steamId = player->GetSteamId64(true);
+	if (steamId != 0) {
+		identity = CSteamID(steamId);
+		return identity.IsValid() && identity.GetEAccountType() == k_EAccountTypeIndividual
+			&& identity.GetAccountID() == account;
+	}
+
+	// Only a validated AccountID may supply the public-universe fallback.
+	identity = CreateStatsAccountIdentity(steamworks::AccountId(account));
+	return identity.IsValid();
 }
 
 IGamePlayer* GetConnectedPlayerOrError(IPluginContext* pContext, cell_t clientRef)
@@ -47,23 +92,32 @@ IGamePlayer* GetConnectedPlayerOrError(IPluginContext* pContext, cell_t clientRe
 	return pPlayer;
 }
 
+bool GetStatArguments(IPluginContext* pContext, const cell_t* params, char*& name, cell_t*& value)
+{
+	return steamworks::pawn::String(pContext, params[2], name)
+		&& steamworks::pawn::Output(pContext, params[3], value);
+}
+
 static cell_t sm_RequestStatsAuthID(IPluginContext *pContext, const cell_t *params)
 {
 	(void)pContext;
-	ISteamGameServerStats *pStats = GetServerStatsPointer();
+	ISteamGameServerStats *pStats = GetServerStatsForApp(steamworks::pawn::App(params[2]));
 	
 	if (pStats == nullptr)
 	{
 		return 0;
 	}
 
-	CSteamID checkid = CreateCommonCSteamID(params[1], params);
+	CSteamID checkid = CreateStatsAccountIdentity(steamworks::pawn::Account(params[1]));
+	if (!checkid.IsValid()) {
+		return 0;
+	}
 	return pStats->RequestUserStats(checkid) != k_uAPICallInvalid ? 1 : 0;
 }
 
 static cell_t sm_RequestUserStats(IPluginContext *pContext, const cell_t *params)
 {
-	ISteamGameServerStats *pStats = GetServerStatsPointer();
+	ISteamGameServerStats *pStats = GetServerStatsForApp(steamworks::pawn::App(params[2]));
 
 	if (pStats == nullptr)
 	{
@@ -75,7 +129,10 @@ static cell_t sm_RequestUserStats(IPluginContext *pContext, const cell_t *params
 		return 0;
 	}
 
-	CSteamID checkid = CreateCommonCSteamID(pPlayer, params);
+	CSteamID checkid;
+	if (!GetStatsClientIdentity(pPlayer, checkid)) {
+		return 0;
+	}
 	return pStats->RequestUserStats(checkid) != k_uAPICallInvalid ? 1 : 0;
 }
 
@@ -93,13 +150,20 @@ static cell_t sm_GetStatCell(IPluginContext *pContext, const cell_t *params)
 		return 0;
 	}
 	
-	char *pName;
-	pContext->LocalToString(params[2], &pName);
+	char* pName;
+	cell_t* pValue;
+	if (!GetStatArguments(pContext, params, pName, pValue)) {
+		return 0;
+	}
+	CSteamID checkid;
+	if (!ReadIdentity(pContext, pPlayer, params, 4, 5, checkid)) { return 0; }
+	int32 value = 0;
+	if (!pStats->GetUserStat(checkid, pName, &value)) {
+		return 0;
+	}
 
-	cell_t *pValue;
-	pContext->LocalToPhysAddr(params[3], &pValue);
-	CSteamID checkid = CreateCommonCSteamID(pPlayer, params, 4, 5);
-	return pStats->GetUserStat(checkid, pName, pValue) ? 1 : 0;
+	*pValue = value;
+	return 1;
 }
 
 static cell_t sm_GetStatAuthIDCell(IPluginContext *pContext, const cell_t *params)
@@ -111,13 +175,20 @@ static cell_t sm_GetStatAuthIDCell(IPluginContext *pContext, const cell_t *param
 		return 0;
 	}
 
-	char *pName;
-	pContext->LocalToString(params[2], &pName);
+	char* pName;
+	cell_t* pValue;
+	if (!GetStatArguments(pContext, params, pName, pValue)) {
+		return 0;
+	}
+	CSteamID checkid;
+	if (!ReadIdentity(pContext, steamworks::pawn::Account(params[1]), params, 4, 5, checkid)) { return 0; }
+	int32 value = 0;
+	if (!pStats->GetUserStat(checkid, pName, &value)) {
+		return 0;
+	}
 
-	cell_t *pValue;
-	pContext->LocalToPhysAddr(params[3], &pValue);
-	CSteamID checkid = CreateCommonCSteamID(params[1], params, 4, 5);
-	return pStats->GetUserStat(checkid, pName, pValue) ? 1 : 0;
+	*pValue = value;
+	return 1;
 }
 
 static cell_t sm_GetStatFloat(IPluginContext *pContext, const cell_t *params)
@@ -134,19 +205,20 @@ static cell_t sm_GetStatFloat(IPluginContext *pContext, const cell_t *params)
 		return 0;
 	}
 	
-	char *pName;
-	pContext->LocalToString(params[2], &pName);
+	char* pName;
+	cell_t* pValue;
+	if (!GetStatArguments(pContext, params, pName, pValue)) {
+		return 0;
+	}
+	CSteamID checkid;
+	if (!ReadIdentity(pContext, pPlayer, params, 4, 5, checkid)) { return 0; }
+	float value = 0.0f;
+	if (!pStats->GetUserStat(checkid, pName, &value)) {
+		return 0;
+	}
 
-	cell_t *pValue;
-	pContext->LocalToPhysAddr(params[3], &pValue);
-	CSteamID checkid = CreateCommonCSteamID(pPlayer, params, 4, 5);
-	
-	float fValue;
-	bool bResult = pStats->GetUserStat(checkid, pName, &fValue);
-	
-	*pValue = sp_ftoc(fValue);
-	
-	return bResult ? 1 : 0;
+	*pValue = sp_ftoc(value);
+	return 1;
 }
 
 static cell_t sm_GetStatAuthIDFloat(IPluginContext *pContext, const cell_t *params)
@@ -158,19 +230,20 @@ static cell_t sm_GetStatAuthIDFloat(IPluginContext *pContext, const cell_t *para
 		return 0;
 	}
 
-	char *pName;
-	pContext->LocalToString(params[2], &pName);
+	char* pName;
+	cell_t* pValue;
+	if (!GetStatArguments(pContext, params, pName, pValue)) {
+		return 0;
+	}
+	CSteamID checkid;
+	if (!ReadIdentity(pContext, steamworks::pawn::Account(params[1]), params, 4, 5, checkid)) { return 0; }
+	float value = 0.0f;
+	if (!pStats->GetUserStat(checkid, pName, &value)) {
+		return 0;
+	}
 
-	cell_t *pValue;
-	pContext->LocalToPhysAddr(params[3], &pValue);
-	CSteamID checkid = CreateCommonCSteamID(params[1], params, 4, 5);
-
-	float fValue;
-	bool bResult = pStats->GetUserStat(checkid, pName, &fValue);
-
-	*pValue = sp_ftoc(fValue);
-
-	return bResult ? 1 : 0;
+	*pValue = sp_ftoc(value);
+	return 1;
 }
 
 static sp_nativeinfo_t ssnatives[] = {

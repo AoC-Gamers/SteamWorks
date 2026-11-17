@@ -17,6 +17,7 @@
 */
 
 #include "gcnatives.h"
+#include "../core/swpawn.h"
 
 namespace {
 
@@ -33,10 +34,12 @@ cell_t sm_GCSendMessage(IPluginContext *pContext, const cell_t *params)
 		return static_cast<cell_t>(k_EGCResultNotLoggedOn);
 	}
 
+	uint32 size;
+	if (!steamworks::pawn::SteamSize(pContext, params[3], size)) { return 0; }
 	char *pData;
-	pContext->LocalToString(params[2], &pData);
+	if (!steamworks::pawn::String(pContext, params[2], pData)) { return 0; }
 
-	return static_cast<cell_t>(pGC->SendMessage(params[1], pData, params[3]));
+	return static_cast<cell_t>(pGC->SendMessage(steamworks::pawn::Bits(params[1]), pData, size));
 }
 
 static sp_nativeinfo_t gcnatives[] = {

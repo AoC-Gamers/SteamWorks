@@ -1,6 +1,6 @@
 SHELL := /usr/bin/env bash
 
-ROOT_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
+ROOT_DIR := $(shell cd "$$(dirname "$(MAKEFILE_LIST)")" && pwd)
 ifeq ($(OS),Windows_NT)
 PYTHON ?= python
 else
@@ -14,7 +14,7 @@ LINUX_PACKAGE_DIR ?= $(ROOT_DIR)/.build/package-exts-linux
 WINDOWS_PACKAGE_DIR ?= $(ROOT_DIR)/.build/package-exts-windows
 LINUX_ARTIFACT_DIR ?= $(ROOT_DIR)/dist/linux/artifact
 WINDOWS_ARTIFACT_DIR ?= $(ROOT_DIR)/dist/windows/artifact
-STEAMWORKS_SDK_NAME ?= sdk
+STEAMWORKS_SDK_NAME ?= sdk_155
 LINUX_RELEASE_BASENAME ?= steamworks-local-linux
 WINDOWS_RELEASE_BASENAME ?= steamworks-local-windows
 
@@ -37,30 +37,30 @@ help:
 		'  make clean-all            Remove all build outputs and dependencies'
 
 deps-exts-linux:
-	DEPS_DIR="$(LINUX_DEPS_DIR)" bash ./scripts/fetch-linux-deps.sh
+	DEPS_DIR="$(LINUX_DEPS_DIR)" bash "$(ROOT_DIR)/scripts/deps/fetch-linux-deps.sh"
 
 deps-exts-windows:
-	DEPS_DIR="$(WINDOWS_DEPS_DIR)" pwsh -File ./scripts/fetch-windows-deps.ps1
+	DEPS_DIR="$(WINDOWS_DEPS_DIR)" pwsh -File "$(ROOT_DIR)/scripts/deps/fetch-windows-deps.ps1"
 
 build-exts-linux:
-	DEPS_DIR="$(LINUX_DEPS_DIR)" BUILD_DIR="$(LINUX_BUILD_DIR)" STEAMWORKS_SDK_NAME="$(STEAMWORKS_SDK_NAME)" STEAMWORKS_SDK_DIR="$(STEAMWORKS_SDK_DIR)" bash ./scripts/build-linux-l4d2.sh
+	DEPS_DIR="$(LINUX_DEPS_DIR)" BUILD_DIR="$(LINUX_BUILD_DIR)" STEAMWORKS_SDK_NAME="$(STEAMWORKS_SDK_NAME)" STEAMWORKS_SDK_DIR="$(STEAMWORKS_SDK_DIR)" bash "$(ROOT_DIR)/scripts/build/build-linux-l4d2.sh"
 
 build-exts-windows:
-	DEPS_DIR="$(WINDOWS_DEPS_DIR)" BUILD_DIR="$(WINDOWS_BUILD_DIR)" STEAMWORKS_SDK_NAME="$(STEAMWORKS_SDK_NAME)" STEAMWORKS_SDK_DIR="$(STEAMWORKS_SDK_DIR)" pwsh -File ./scripts/build-windows-l4d2.ps1
+	DEPS_DIR="$(WINDOWS_DEPS_DIR)" BUILD_DIR="$(WINDOWS_BUILD_DIR)" STEAMWORKS_SDK_NAME="$(STEAMWORKS_SDK_NAME)" STEAMWORKS_SDK_DIR="$(STEAMWORKS_SDK_DIR)" pwsh -File "$(ROOT_DIR)/scripts/build/build-windows-l4d2.ps1"
 
 package-exts-linux:
-	$(PYTHON) ./scripts/stage-artifact.py . "$(LINUX_BUILD_DIR)/package" "$(LINUX_PACKAGE_DIR)"
+	$(PYTHON) "$(ROOT_DIR)/scripts/package/stage-artifact.py" "$(ROOT_DIR)" "$(LINUX_BUILD_DIR)/package" "$(LINUX_PACKAGE_DIR)"
 
 package-exts-windows:
-	$(PYTHON) ./scripts/stage-artifact.py . "$(WINDOWS_BUILD_DIR)/package" "$(WINDOWS_PACKAGE_DIR)"
+	$(PYTHON) "$(ROOT_DIR)/scripts/package/stage-artifact.py" "$(ROOT_DIR)" "$(WINDOWS_BUILD_DIR)/package" "$(WINDOWS_PACKAGE_DIR)"
 
 release-linux:
-	$(PYTHON) ./scripts/stage-artifact.py . "$(LINUX_PACKAGE_DIR)" "$(LINUX_ARTIFACT_DIR)"
-	$(PYTHON) ./scripts/package-release.py --root . --artifact-dir "$(LINUX_ARTIFACT_DIR)" --basename "$(or $(RELEASE_BASENAME),$(LINUX_RELEASE_BASENAME))"
+	$(PYTHON) "$(ROOT_DIR)/scripts/package/stage-artifact.py" "$(ROOT_DIR)" "$(LINUX_PACKAGE_DIR)" "$(LINUX_ARTIFACT_DIR)"
+	$(PYTHON) "$(ROOT_DIR)/scripts/package/package-release.py" --root "$(ROOT_DIR)" --artifact-dir "$(LINUX_ARTIFACT_DIR)" --basename "$(or $(RELEASE_BASENAME),$(LINUX_RELEASE_BASENAME))"
 
 release-windows:
-	$(PYTHON) ./scripts/stage-artifact.py . "$(WINDOWS_PACKAGE_DIR)" "$(WINDOWS_ARTIFACT_DIR)"
-	$(PYTHON) ./scripts/package-release.py --root . --artifact-dir "$(WINDOWS_ARTIFACT_DIR)" --basename "$(or $(RELEASE_BASENAME),$(WINDOWS_RELEASE_BASENAME))"
+	$(PYTHON) "$(ROOT_DIR)/scripts/package/stage-artifact.py" "$(ROOT_DIR)" "$(WINDOWS_PACKAGE_DIR)" "$(WINDOWS_ARTIFACT_DIR)"
+	$(PYTHON) "$(ROOT_DIR)/scripts/package/package-release.py" --root "$(ROOT_DIR)" --artifact-dir "$(WINDOWS_ARTIFACT_DIR)" --basename "$(or $(RELEASE_BASENAME),$(WINDOWS_RELEASE_BASENAME))"
 
 clean-linux:
 	rm -rf "$(LINUX_BUILD_DIR)" "$(LINUX_PACKAGE_DIR)" "$(ROOT_DIR)/dist/linux"

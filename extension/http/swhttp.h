@@ -17,26 +17,40 @@
 */
 
 #pragma once
+#include <unordered_set>
 #include "isteamgameserver.h"
 #include "steam_gameserver.h"
 #include "smsdk_ext.h"
 
 class SteamWorksHTTP :
-	public IHandleTypeDispatch
+	public IHandleTypeDispatch, public IPluginsListener
 {
 	public:
 		SteamWorksHTTP();
 		~SteamWorksHTTP();
 
 	public:
-		void OnHandleDestroy(HandleType_t type, void *object);
-		bool GetHandleApproxSize(HandleType_t type, void *object, unsigned int *pSize);
+		void OnHandleDestroy(HandleType_t type, void *object) override;
+		bool GetHandleApproxSize(HandleType_t type, void *object, unsigned int *pSize) override;
 		
 	public:
 		HandleType_t GetHTTPHandle() const;
+        void Track(class SteamWorksHTTPRequest* request);
+        void Untrack(class SteamWorksHTTPRequest* request);
+        void StopRuntime();
+        void StartRuntime();
+        bool IsAccepting() const { return m_accepting && !m_destroying && typeHTTP != 0; }
+        uint64 Generation() const { return m_generation; }
+        void OnPluginWillUnload(IPlugin* plugin) override;
+        SteamWorksHTTP(const SteamWorksHTTP&) = delete;
+        SteamWorksHTTP& operator=(const SteamWorksHTTP&) = delete;
 
 	private:
 		HandleType_t typeHTTP = 0;
+        bool m_accepting = true;
+        bool m_destroying = false;
+        uint64 m_generation = 1;
+        std::unordered_set<class SteamWorksHTTPRequest*> m_requests;
 };
 
 #include "swhttprequest.h"

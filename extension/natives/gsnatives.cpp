@@ -17,6 +17,8 @@
 */
 
 #include "gsnatives.h"
+#include "../core/swpawn.h"
+#include <cstring>
 
 namespace {
 
@@ -30,14 +32,15 @@ ISteamGameServer *GetGSPointer(void)
 	return g_SteamWorks.pSWGameServer->GetGameServer();
 }
 
-CSteamID CreateCommonCSteamID(IGamePlayer *pPlayer, const cell_t *params, unsigned char universeplace = 2, unsigned char typeplace = 3)
+template <typename Identity>
+bool ReadIdentity(IPluginContext* context, Identity identity, const cell_t* params,
+	unsigned char universePosition, unsigned char typePosition, CSteamID& output)
 {
-	return g_SteamWorks.CreateCommonCSteamID(pPlayer, params, universeplace, typeplace);
-}
-
-CSteamID CreateCommonCSteamID(uint32_t authid, const cell_t *params, unsigned char universeplace = 2, unsigned char typeplace = 3)
-{
-	return g_SteamWorks.CreateCommonCSteamID(authid, params, universeplace, typeplace);
+	EUniverse universe;
+	EAccountType type;
+	if (!steamworks::pawn::IdentityOptions(context, params, universePosition, typePosition, universe, type)) { return false; }
+	output = g_SteamWorks.CreateCommonCSteamID(identity, universe, type);
+	return true;
 }
 
 IGamePlayer* GetConnectedPlayerOrError(IPluginContext* pContext, cell_t clientRef)
@@ -76,18 +79,21 @@ static cell_t sm_GetPublicIP(IPluginContext *pContext, const cell_t *params)
 	}
 
 	SteamIPAddress_t sAddr = pServer->GetPublicIP();
-	if (!sAddr.IsSet())
+	if (sAddr.m_eType != k_ESteamIPTypeIPv4 || !sAddr.IsSet())
 	{
 		return 0;
 	}
 
 	uint32_t ipaddr = sAddr.m_unIPv4;
 	
-	cell_t *addr;
-	pContext->LocalToPhysAddr(params[1], &addr);
-	for (char iter = 3; iter > -1; --iter)
+	cell_t* addr;
+	int error = pContext->LocalToPhysAddr(params[1], &addr);
+	if (error != SP_ERROR_NONE) {
+		return pContext->ThrowNativeErrorEx(error, "Invalid IPv4 output address");
+	}
+	for (int octet = 0; octet < 4; ++octet)
 	{
-		addr[(~iter) & 0x03] = (static_cast<unsigned char>(ipaddr >> (iter * 8)) & 0xFF);
+		addr[octet] = static_cast<cell_t>((ipaddr >> (24 - octet * 8)) & 0xFFu);
 	}
 	
 	return 1;
@@ -105,12 +111,15 @@ static cell_t sm_GetPublicIPCell(IPluginContext *pContext, const cell_t *params)
 	}
 
 	SteamIPAddress_t sAddr = pServer->GetPublicIP();
-	if (!sAddr.IsSet())
+	if (sAddr.m_eType != k_ESteamIPTypeIPv4 || !sAddr.IsSet())
 	{
 		return 0;
 	}
 
-	return sAddr.m_unIPv4;
+	cell_t ip;
+	static_assert(sizeof(ip) == sizeof(sAddr.m_unIPv4), "IPv4 must fit a SourcePawn cell");
+	std::memcpy(&ip, &sAddr.m_unIPv4, sizeof(ip));
+	return ip;
 }
 
 static cell_t sm_IsLoaded(IPluginContext *pContext, const cell_t *params)
@@ -128,7 +137,7 @@ static cell_t sm_SetGameData(IPluginContext *pContext, const cell_t *params)
 	}
 	
 	char *pData;
-	pContext->LocalToString(params[1], &pData);
+	if (!steamworks::pawn::String(pContext, params[1], pData)) { return 0; }
 	
 	pServer->SetGameData(pData);
 	return 1;
@@ -144,7 +153,7 @@ static cell_t sm_SetGameDescription(IPluginContext *pContext, const cell_t *para
 	}
 	
 	char *pDesc;
-	pContext->LocalToString(params[1], &pDesc);
+	if (!steamworks::pawn::String(pContext, params[1], pDesc)) { return 0; }
 	
 	pServer->SetGameDescription(pDesc);
 	return 1;
@@ -160,7 +169,7 @@ static cell_t sm_SetMapName(IPluginContext *pContext, const cell_t *params)
 	}
 	
 	char *pMapName;
-	pContext->LocalToString(params[1], &pMapName);
+	if (!steamworks::pawn::String(pContext, params[1], pMapName)) { return 0; }
 	
 	pServer->SetMapName(pMapName);
 	return 1;
@@ -190,8 +199,8 @@ static cell_t sm_SetRule(IPluginContext *pContext, const cell_t *params)
 	}
 
 	char *pKey, *pValue;
-	pContext->LocalToString(params[1], &pKey);
-	pContext->LocalToString(params[2], &pValue);
+	if (!steamworks::pawn::String(pContext, params[1], pKey)) { return 0; }
+	if (!steamworks::pawn::String(pContext, params[2], pValue)) { return 0; }
 
 	pServer->SetKeyValue(pKey, pValue);
 	return 1;
@@ -226,8 +235,9 @@ static cell_t sm_UserHasLicenseForApp(IPluginContext *pContext, const cell_t *pa
 		return 0;
 	}
 	
-	CSteamID checkid = CreateCommonCSteamID(pPlayer, params, 3, 4);
-	return pServer->UserHasLicenseForApp(checkid, params[2]);
+	CSteamID checkid;
+	if (!ReadIdentity(pContext, pPlayer, params, 3, 4, checkid)) { return 0; }
+	return pServer->UserHasLicenseForApp(checkid, steamworks::pawn::App(params[2]).value);
 }
 
 static cell_t sm_UserHasLicenseForAppId(IPluginContext *pContext, const cell_t *params)
@@ -240,8 +250,9 @@ static cell_t sm_UserHasLicenseForAppId(IPluginContext *pContext, const cell_t *
 		return k_EUserHasLicenseResultNoAuth;
 	}
 
-	CSteamID checkid = CreateCommonCSteamID(params[1], params, 3, 4);
-	return pServer->UserHasLicenseForApp(checkid, params[2]);
+	CSteamID checkid;
+	if (!ReadIdentity(pContext, steamworks::pawn::Account(params[1]), params, 3, 4, checkid)) { return 0; }
+	return pServer->UserHasLicenseForApp(checkid, steamworks::pawn::App(params[2]).value);
 }
 
 static cell_t sm_GetClientSteamID(IPluginContext *pContext, const cell_t *params)
@@ -251,15 +262,24 @@ static cell_t sm_GetClientSteamID(IPluginContext *pContext, const cell_t *params
 		return 0;
 	}
 
-	CSteamID steamId = CreateCommonCSteamID(pPlayer, params, 4, 5);
+	if (params[3] < 0) {
+		return pContext->ThrowNativeError("SteamID buffer length cannot be negative");
+	}
+	if (params[3] == 0) {
+		return 0;
+	}
 
-	char *steamIdBuffer;
-	pContext->LocalToString(params[2], &steamIdBuffer);
+	char* steamIdBuffer;
+	int error = pContext->LocalToString(params[2], &steamIdBuffer);
+	if (error != SP_ERROR_NONE) {
+		return pContext->ThrowNativeErrorEx(error, "Invalid SteamID output address");
+	}
 
-	int numBytes = g_pSM->Format(steamIdBuffer, params[3], "%llu", steamId.ConvertToUint64());
-	numBytes++; // account for null terminator
-	
-	return numBytes;
+	CSteamID steamId;
+	if (!ReadIdentity(pContext, pPlayer, params, 4, 5, steamId)) { return 0; }
+	size_t written = g_pSM->Format(steamIdBuffer, static_cast<size_t>(params[3]), "%llu", steamId.ConvertToUint64());
+	// Preserve the legacy count including NUL; Format counts only text bytes.
+	return static_cast<cell_t>(written + 1);
 }
 
 static cell_t sm_GetUserGroupStatus(IPluginContext *pContext, const cell_t *params)
@@ -276,8 +296,9 @@ static cell_t sm_GetUserGroupStatus(IPluginContext *pContext, const cell_t *para
 		return 0;
 	}
 
-	CSteamID checkid = CreateCommonCSteamID(pPlayer, params, 3, 4);
-	return pServer->RequestUserGroupStatus(checkid, CSteamID(params[2], k_EUniversePublic, k_EAccountTypeClan));
+	CSteamID checkid;
+	if (!ReadIdentity(pContext, pPlayer, params, 3, 4, checkid)) { return 0; }
+	return pServer->RequestUserGroupStatus(checkid, CSteamID(steamworks::pawn::Account(params[2]).value, k_EUniversePublic, k_EAccountTypeClan));
 }
 
 static cell_t sm_GetUserGroupStatusAuthID(IPluginContext *pContext, const cell_t *params)
@@ -290,8 +311,9 @@ static cell_t sm_GetUserGroupStatusAuthID(IPluginContext *pContext, const cell_t
 		return false;
 	}
 
-	CSteamID checkid = CreateCommonCSteamID(params[1], params, 3, 4);
-	return pServer->RequestUserGroupStatus(checkid, CSteamID(params[2], k_EUniversePublic, k_EAccountTypeClan));
+	CSteamID checkid;
+	if (!ReadIdentity(pContext, steamworks::pawn::Account(params[1]), params, 3, 4, checkid)) { return 0; }
+	return pServer->RequestUserGroupStatus(checkid, CSteamID(steamworks::pawn::Account(params[2]).value, k_EUniversePublic, k_EAccountTypeClan));
 }
 
 static sp_nativeinfo_t gsnatives[] = {

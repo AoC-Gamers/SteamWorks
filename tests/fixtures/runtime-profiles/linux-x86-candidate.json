@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "documentation_only": true,
+  "not_consumed_by_current_extension": true,
+  "profile_id": "l4d2-linux-x86-awaiting-runtime",
+  "enabled": false,
+  "verification_status": "blocked_missing_runtime",
+  "created_on": "2026-11-14",
+  "environment": {
+    "game": "left4dead2",
+    "intended_platform": "linux",
+    "intended_architecture": "x86",
+    "observed_game_build": null,
+    "sourcemod_version": null,
+    "metamod_version": null,
+    "loaded_process": null
+  },
+  "sdk": {
+    "target": "1.58a",
+    "commit": "a7aaa2754d9cda244d0cd9d7523c1144a1c472d2",
+    "evidence": "../sdk-provenance/sdk-toolchain.json",
+    "upgrade_performed": false
+  },
+  "modules": [
+    {
+      "module_id": "engine",
+      "file_name": "engine_srv.so",
+      "sha256": null,
+      "loaded_module_confirmed": false,
+      "evidence_file": null
+    },
+    {
+      "module_id": "steam-runtime",
+      "file_name": "libsteam_api.so",
+      "sha256": null,
+      "loaded_module_confirmed": false,
+      "evidence_file": null
+    },
+    {
+      "module_id": "sdk-reference",
+      "file_name": "libsteam_api.so",
+      "sha256": "2cc33d34854148f4bef515e534b06707704185e364f729cc424a259fceb29cb1",
+      "architecture": "x86",
+      "format": "ELF",
+      "size_bytes": 379848,
+      "build_id": "bfaa364d102b8428364dd394b9d59006295727ed",
+      "loaded_module_confirmed": false,
+      "evidence_file": "modules/sdk_158a-linux32.json",
+      "evidence_sha256": "1a2f7738c268c68c6bdfd7ce07e0b066000e5e5bbe89172da16f488c5e4ad135"
+    }
+  ],
+  "entrypoints": [
+    {
+      "name": "SteamInternal_GameServer_Init",
+      "enabled": false,
+      "resolution_method_candidate": "export",
+      "provider_module_id": null,
+      "verified_prototype": null,
+      "calling_convention": null,
+      "trampoline_validation_evidence": null,
+      "pattern_bytes": null,
+      "pattern_mask": null,
+      "vtable_offset": null,
+      "observed_in_public_decompilation": "https://binaries.l4d2node.org/b/engine_srv.so/f/0x00211680",
+      "public_decompilation_matches_selected_binary": false
+    },
+    {
+      "name": "SteamGameServer_Shutdown",
+      "enabled": false,
+      "resolution_method_candidate": "export",
+      "provider_module_id": null,
+      "verified_prototype": null,
+      "calling_convention": null,
+      "trampoline_validation_evidence": null,
+      "pattern_bytes": null,
+      "pattern_mask": null,
+      "vtable_offset": null,
+      "observed_in_public_decompilation": "https://binaries.l4d2node.org/b/engine_srv.so/f/0x00210d10",
+      "public_decompilation_matches_selected_binary": false
+    }
+  ],
+  "public_interface_registry": "../p2/interface-registry.json",
+  "approved_by": null,
+  "approved_at": null,
+  "blocking_dependencies": [
+    "Selected L4D2 Linux x86 process or installation with engine and actually loaded Steam module bytes/identities",
+    "Call-site/relocation evidence linking that engine build to init and shutdown provider",
+    "Separate ABI and CDetour trampoline tests for the identified entrypoints",
+    "Controlled observed start/shutdown/restart with this extension"
+  ],
+  "notes": [
+    "Documentary candidate, not gamedata. SDK reference identity is not runtime identity.",
+    "No Windows runtime profile has been prepared by analogy.",
+    "The existing InitSafe wrapper is retained in source but cannot be enabled without validated lifecycle evidence."
+  ]
+}

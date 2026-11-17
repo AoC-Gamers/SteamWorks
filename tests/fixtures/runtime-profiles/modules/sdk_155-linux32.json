@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "documentation_only": true,
+  "enabled": false,
+  "file_name": "libsteam_api.so",
+  "origin": "Local sdk_155; pinned SDK checkout inventoried in P0",
+  "role": "sdk-reference",
+  "format": "ELF",
+  "architecture": "x86",
+  "size_bytes": 425478,
+  "sha256": "68461bab0cdda3dd9f4f14d12143497d6264aaa37c4fc8bcd7e19ff82940a916",
+  "build_id": "009a13e25ed709050b73bd809486a1962adf7fac",
+  "pid_observed": null,
+  "loaded_module_confirmed": false,
+  "exports": {
+    "SteamGameServer_InitSafe": [
+      {
+        "rva": 112656,
+        "size_bytes": 108,
+        "kind": "FUNC"
+      }
+    ],
+    "SteamInternal_GameServer_Init": [
+      {
+        "rva": 112160,
+        "size_bytes": 484,
+        "kind": "FUNC"
+      }
+    ],
+    "SteamInternal_GameServer_Init_V2": [],
+    "SteamGameServer_Shutdown": [
+      {
+        "rva": 112768,
+        "size_bytes": 280,
+        "kind": "FUNC"
+      }
+    ],
+    "SteamInternal_CreateInterface": [
+      {
+        "rva": 111680,
+        "size_bytes": 89,
+        "kind": "FUNC"
+      }
+    ],
+    "SteamGameServerInternal_CreateInterface": [],
+    "SteamGameServer_GetHSteamUser": [
+      {
+        "rva": 112128,
+        "size_bytes": 18,
+        "kind": "FUNC"
+      }
+    ],
+    "SteamGameServer_GetHSteamPipe": [
+      {
+        "rva": 112096,
+        "size_bytes": 18,
+        "kind": "FUNC"
+      }
+    ],
+    "g_pSteamClientGameServer": [
+      {
+        "rva": 361728,
+        "size_bytes": 4,
+        "kind": "OBJECT"
+      }
+    ]
+  },
+  "imports_of_interest": [],
+  "relocations_of_interest": [
+    {
+      "offset": 355684,
+      "type": "R_386_GLOB_DAT",
+      "symbol": "g_pSteamClientGameServer"
+    },
+    {
+      "offset": 356032,
+      "type": "R_386_JUMP_SLOT",
+      "symbol": "SteamInternal_GameServer_Init"
+    },
+    {
+      "offset": 356044,
+      "type": "R_386_JUMP_SLOT",
+      "symbol": "SteamGameServer_GetHSteamUser"
+    }
+  ],
+  "abi_verified": false,
+  "initialization_route_verified": false,
+  "notes": [
+    "SDK files are reference/link dependencies unless a selected process maps this exact device/inode.",
+    "Export/import/relocation presence is not proof of an executed call path or ABI.",
+    "Loaded status verifies process maps device/inode; it is not a hash of mapped memory."
+  ],
+  "source_relative_path": "sdk_155/redistributable_bin/linux32/libsteam_api.so",
+  "static_direct_call_labels": {
+    "SteamGameServer_InitSafe": [
+      "SteamInternal_GameServer_Init@plt",
+      "__stack_chk_fail@plt+0x22b"
+    ],
+    "SteamInternal_GameServer_Init": [
+      "SteamAPI_GetSteamInstallPath+0x510",
+      "SteamAPI_RestartAppIfNecessary+0x5b0",
+      "SteamAPI_SetBreakpadAppID@plt",
+      "SteamAPI_SetTryCatchCallbacks+0x1500",
+      "__cxa_current_exception_type+0x4650",
+      "__stack_chk_fail@plt+0x22b"
+    ],
+    "SteamGameServer_Shutdown": [
+      "GetHSteamUser+0x3a0",
+      "__stack_chk_fail@plt+0x22b"
+    ],
+    "SteamInternal_CreateInterface": [
+      "__stack_chk_fail@plt+0x22b",
+      "dlsym@plt"
+    ],
+    "SteamGameServer_GetHSteamUser": [
+      "SteamAPI_SetTryCatchCallbacks+0x18fd"
+    ],
+    "SteamGameServer_GetHSteamPipe": [
+      "SteamAPI_SetTryCatchCallbacks+0x18fd"
+    ]
+  }
+}

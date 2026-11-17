@@ -1,20 +1,22 @@
-# Documentación técnica
+# Documentación
 
-Este directorio reúne notas técnicas sobre comportamientos específicos del runtime,
-limitaciones observadas en servidores dedicados y detalles prácticos de uso de la
-extensión.
+Los capítulos describen contratos implementados. La cobertura distingue pruebas
+locales y observaciones de runtime; no extiende aceptación a otros binarios.
 
-Documentos actuales:
+| Área | Entrada |
+|---|---|
+| Instalación y reversión | [Instalación](installation/README.md) |
+| Compilación | [Build](build/README.md), [dependencias](build/dependencies.md), [CI](build/ci.md) |
+| Arquitectura | [Responsabilidades](architecture/README.md), [frontera tipada](architecture/typed-boundary.md) |
+| Runtime | [Interfaces](runtime/interfaces.md), [ciclo de vida](runtime/lifecycle.md), [compatibilidad](runtime/compatibility.md) |
+| Autenticación | [Contrato](authentication/README.md), [adaptador 014](authentication/gameserver-014.md) |
+| Identidad | [AccountID y SteamID](identity/README.md) |
+| Servidor | [Estado, metadata e IPv4](server/README.md) |
+| Stats | [Solicitudes y lectores](stats/README.md), [schema](stats/schema.md) |
+| HTTP | [Buffers](http/README.md), [callbacks](http/callbacks.md), [streaming](http/streaming.md) |
+| Game Coordinator | [Mensajes y forward binario](game-coordinator/README.md) |
+| Diagnóstico | [Debug](diagnostics/README.md), [problemas conocidos](diagnostics/troubleshooting.md) |
+| Mantenimiento | [Contribuir](maintenance/contributing.md), [documentar](maintenance/documentation.md) |
 
-- [BUILD_SYSTEM](C:\GitHub\SteamWorks\docs\BUILD_SYSTEM.md)
-- [GetSchemaForGame_550](C:\GitHub\SteamWorks\docs\GetSchemaForGame_550.md)
-- [ISteamHTTP](C:\GitHub\SteamWorks\docs\ISteamHTTP.md)
-- [ISteamFriends](C:\GitHub\SteamWorks\docs\ISteamFriends.md)
-- [ISteamUserStats](C:\GitHub\SteamWorks\docs\ISteamUserStats.md)
-- [TestCoverage](C:\GitHub\SteamWorks\docs\TestCoverage.md)
-
-Objetivo de estos documentos:
-
-- dejar evidencia de pruebas reales contra el runtime de L4D2
-- documentar diferencias entre lo que el SDK expone y lo que el gameserver permite usar
-- evitar reintroducir implementaciones que ya fueron probadas y descartadas
+El [catálogo de pruebas](https://github.com/AoC-Gamers/SteamWorks/tree/develop/tests)
+se mantiene en las fuentes y no se distribuye con el paquete de instalación.
