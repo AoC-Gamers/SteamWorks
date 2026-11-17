@@ -98,6 +98,9 @@ original de API (`fixtures/api/api-inventory-p0.json`) no se regenera a partir d
 - [Pipeline y separación de publicación](../docs/build/ci.md)
 
 Los tests no prueban por sí solos una instalación, un login real o GC remoto.
+GC remoto está excluido de la aceptación global de L4D2 dedicado, sin recepción
+remota acreditada. Se conservan API y suites locales de GC por compatibilidad;
+la exclusión no omite controles ni los convierte en pruebas remotas.
 No se acepta una revisión nueva por compartir nombre con un binario anterior.
 
 `make test-sdk-incremental TEST_OUTPUT=<nueva-carpeta>` delega en
@@ -109,5 +112,6 @@ Restaura cada entrada y comprueba recuperación del build. CI Linux la ejecuta
 tras el build de producto; no inicia servidores ni modifica el SDK original.
 
 `make test-release-notes` comprueba creación y actualización de los canales
-Latest/Develop, sus notas UTC/commit/run y el fallo de carga con CLI GitHub
+Latest/Develop como borradores, sus notas UTC/commit/run y los fallos de
+preparación, eliminación y carga con CLI GitHub
 simulado. No publica ni modifica releases; también forma parte de la integración.

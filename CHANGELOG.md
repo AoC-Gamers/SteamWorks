@@ -13,7 +13,8 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 - API SourcePawn conservada. Aceptación Linux SRCDS x86 del payload SDK 1.55:
   autenticación 014, identidad, stats enteros y float, HTTP/streaming,
   reinicialización en el mismo proceso y cierre limpio en perfil mínimo.
-  GC remoto positivo y runtime Windows permanecen pendientes.
+  GC remoto queda excluido de la aceptación global de L4D2 dedicado, sin
+  recepción remota acreditada; runtime Windows permanece pendiente.
 - Reversión Linux x86 aceptada con baseline nuevo SDK 1.55 y finalizador de la sesión cliente Steam:
   instalación desde ZIP, Steam/HTTP y salida limpia del candidato y del baseline
   restaurado, incluido el cierre efectivo del contexto cliente activo.
@@ -24,7 +25,10 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 
 - Las notas de Latest y Develop muestran fecha UTC de actualización, commit y
   enlace al intento de CI después de subir los paquetes. Se conservan tags y
-  enlaces estables; no se cambia la fecha original de publicación del release.
+  enlaces estables. CI recrea cada release como borrador y la publica tras cargar
+  ambos ZIP, renovando su fecha de publicación; cambia los IDs internos y reinicia
+  los contadores de los assets anteriores. Las notas explicitan la exclusión de
+  GC remoto, la API conservada por compatibilidad y la ausencia de aceptación remota.
 
 - Entornos, rutas y paquetes de prueba descritos con nombres genéricos; metadatos
   de fixtures saneados con trazabilidad y sin ampliar aceptación runtime.
@@ -70,7 +74,8 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 - Regresiones previas reproducidas, proveedor HTTP estricto, matrices GC/HTTP,
   integración x86 y sanitizadores sin supresiones. Aceptación posterior SRCDS x86:
   372 checks sin fallos, HTTP real, GC real vacío y proveedor GC local tipado;
-  mensaje GC remoto positivo pendiente. Salida limpia observada en el perfil
+  sin mensaje GC remoto positivo acreditado. GC remoto queda excluido del alcance
+  global de L4D2 dedicado; API y pruebas locales conservadas. Salida limpia observada en el perfil
   mínimo; no amplía la aceptación a otros consumidores o plataformas.
 
 ### Validación
@@ -81,8 +86,9 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
   al hash del payload y al conjunto de consumidores ensayado.
 - Build optimizado reproducible y paquetes/fuentes comprobados por separado.
   Compilación Windows no implica aceptación de runtime Windows.
-- GC remoto positivo sigue pendiente. Una cola vacía o un proveedor local no
-  acreditan recepción del backend; el SIGSEGV histórico del baseline no se cierra
+- GC remoto excluido de la aceptación global de L4D2 dedicado, conservando API
+  y comprobaciones por compatibilidad. La exclusión no acredita recepción del
+  backend; una cola vacía o un proveedor local tampoco. El SIGSEGV histórico del baseline no se cierra
   por una salida limpia de un perfil mínimo.
 
 ### Corregido

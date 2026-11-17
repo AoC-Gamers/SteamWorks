@@ -3,6 +3,13 @@
 Esta matriz describe comportamientos y procedencia. No es una colección de logs
 ni una ejecución nueva; los resultados actuales se guardan fuera de Git.
 
+Por decisión de alcance del 2026-11-17, **GC remoto está excluido de la aceptación
+global de L4D2 dedicado** y no bloquea su cierre. La recepción remota no está
+acreditada; no se convierte en un aprobado. Se conservan la API por compatibilidad
+y las suites locales de GC, incluidos sus negativos. Véanse los
+[límites y fundamento](../docs/game-coordinator/README.md#aplicabilidad-a-l4d2-dedicado-x86).
+Runtime Windows continúa pendiente; los demás límites de cada ensayo se conservan.
+
 | Contrato | Suite/escenario | Nivel | Evidencia runtime histórica | Límite |
 |---|---|---|---|---|
 | API y firmas/opcionalidad | Inventario original de API + integración | Inventario local | No necesaria para comparar firmas | No prueba ABI/runtime |
@@ -11,7 +18,7 @@ ni una ejecución nueva; los resultados actuales se guardan fuera de Git.
 | Auth 014, ticket y agregación | auth-binding/auth-forward | SourceHook/VM reales offline y SRCDS | 2026-11-15; Linux x86; F1/F2; adaptador y autenticación | Proveedor offline no emite ticket real |
 | Init/teardown con SourceTVSupport | detours/init-coexistence/resource-lifecycle | Dobles/x86 y SRCDS | 2026-11-15; Linux x86; F3; cierre y reinicialización (T08) en mismo proceso | No toda la pila de consumidores |
 | Streaming: dos celdas y payload | http-stream-context | Wire independiente y SRCDS | 2026-11-15; Linux x86; F2; cuatro tandas, una tras mapa | No todo endpoint remoto |
-| HTTP estricto y GC snapshot | typed-boundary/resource-lifecycle, negativos mínimos | SDK simulado y SRCDS | 2026-11-16; Linux x86; F5; HTTP real, GC vacío/proveedor local | GC remoto positivo pendiente |
+| HTTP estricto y GC snapshot | typed-boundary/resource-lifecycle, negativos mínimos | SDK simulado y SRCDS | 2026-11-16; Linux x86; F5; HTTP real, GC vacío/proveedor local | GC remoto excluido del alcance global; recepción no acreditada |
 | Cero/uno/varios forwards | auth-forward; harness forward | VM real y SRCDS | 2026-11-15; Linux x86; F4; agregación de forwards (T23) | ET_Event no propaga -1 individual como agregado |
 | Capacidades e interfaces | binary-evidence/typed-boundary; harness capability | Metadata/registro y SRCDS | 2026-11-15; Linux x86; F4; matriz de interfaces/capacidades (T11), GC opcional | Exports no son aceptación Windows |
 | Propietario HTTP pendiente y carga tardía | resource-lifecycle; harness pending/lifecycle | Dobles y SRCDS | 2026-11-15; Linux x86; F4; descarga del propietario HTTP (T20) y carga/recarga de extensión (T16) | Descarga forzada con dependientes no soportada |
@@ -49,7 +56,7 @@ el include, `969541624a2ba2f14aa07e040f96e6a50db40503baa21cba6206e0b1bd25aad8`.
 Ensayos anteriores sobre `839ff075…` mantienen su propia atribución en esta matriz.
 Las 15 suites y build de R20 no equivalen a reinstalar su ZIP nuevo. El quit
 limpio del perfil mínimo no declara resuelto el SIGSEGV histórico del baseline.
-GC remoto positivo y runtime Windows permanecen pendientes.
+Esos ensayos no acreditan recepción GC remota. Runtime Windows permanece pendiente.
 
 ## Migración a SDK 1.55
 
@@ -74,8 +81,7 @@ casos y sin errores inesperados; las comprobaciones y logs permanecieron activos
 SourceTVSupport estaba cargado, pero su VSP no cargó tanto en candidato como en
 baseline: no se acepta emisión/VSP. El cierre limpio mínimo no declara resuelto
 el SIGSEGV histórico de otros consumidores. La selección exacta del SDK, binding,
-marshalling y negativos se cubren además offline. GC remoto positivo y runtime
-Windows permanecen pendientes.
+marshalling y negativos se cubren además offline. Esos ensayos no acreditan recepción GC remota. Runtime Windows permanece pendiente.
 
 ## Baseline de reversión con finalizador de la sesión cliente Steam
 
@@ -114,4 +120,4 @@ originales. La observación nueva no cambia los límites del ensayo anterior;
 las guardas conservan cobertura offline. La evidencia del fallo histórico
 permanece válida y separada. Un ZIP documental regenerado requiere su propia
 instalación/reversión en sitio; los bytes de runtime idénticos mantienen solo
-su atribución binaria. GC remoto positivo y runtime Windows siguen pendientes.
+su atribución binaria. Esos ensayos no acreditan recepción GC remota. Runtime Windows sigue pendiente.

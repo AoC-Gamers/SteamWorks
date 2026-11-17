@@ -47,15 +47,24 @@ y entra en las claves de caché de dependencias.
 ## Notas de canales móviles
 
 `channel/latest` y `channel/develop` conservan sus tags, URLs de release y nombres
-estables de ZIP. Tras subir ambos paquetes, CI regenera las notas del canal con
-fecha de actualización UTC (ISO 8601), SHA completo y enlace al commit, y enlace
-a la ejecución y su intento. Son notas administradas por CI; se reemplazan en
-cada actualización completada. La fecha original de publicación de GitHub no
-se modifica ni se recrea el release para cambiarla.
+estables de ZIP. CI comprueba los dos archivos y el acceso al listado de releases
+antes de eliminar la publicación anterior, conservando el tag Git. Recrea la
+release como borrador con notas administradas por CI: fecha UTC (ISO 8601), SHA
+completo y enlace al commit, y enlace a la ejecución y su intento. Tras cargar
+ambos ZIP publica el borrador como Latest o como prerelease Develop. Así la
+fecha de publicación de GitHub corresponde a la nueva publicación.
 
-Si la carga de archivos falla, no se actualizan las notas con la nueva ejecución.
+Durante la recreación los enlaces pueden quedar temporalmente indisponibles.
+Cambian los IDs internos y se pierden reacciones y contadores de los assets
+anteriores; GitHub puede emitir nuevas notificaciones. Si falla una carga, el
+borrador no se publica: la release anterior ya ha sido retirada y se requiere
+reintentar la ejecución. Las ejecuciones del mismo ref no se cancelan entre sí
+para evitar interrupciones durante la sustitución.
+
 La publicación continúa sujeta al éxito de los builds y paquetes Linux/Windows.
-Las notas conservan GC remoto positivo pendiente y no implican despliegue.
+Las notas indican que GC remoto está excluido de la aceptación global de L4D2
+dedicado, con API conservada por compatibilidad y sin recepción remota acreditada.
+La exclusión no es una prueba positiva aprobada ni implica despliegue.
 Los releases versionados por tags `v*` mantienen su procedimiento actual.
 `make test-release-notes` ejecuta el bloque real del workflow con `gh` y reloj
 simulados: no publica, modifica tags ni contacta GitHub.
