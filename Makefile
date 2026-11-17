@@ -27,21 +27,55 @@ MMSOURCE_DIR ?= $(LINUX_DEPS_DIR)/mmsource-1.12
 AMTL_DIR ?= $(SOURCEMOD_DIR)/public/amtl
 HL2SDK_ROOT ?= $(LINUX_DEPS_DIR)
 AMBUILD_PYTHON ?= $(LINUX_DEPS_DIR)/.venv-linux/bin/python
+COVERAGE_VENV_DIR ?= $(ROOT_DIR)/.deps/test-coverage
+COVERAGE_PYTHON ?= $(COVERAGE_VENV_DIR)/bin/python
 export STEAMWORKS_SDK_DIR TEST_CXXFLAGS
 
-CORE_SUITES := stats-natives detours init-coexistence public-ip steamid-string typed-boundary resource-lifecycle restart-forward-semantics binary-evidence debug-log http-stream-context
+CORE_SUITES := extension-entrypoint stats-callbacks ticket-ownership stats-natives detours init-coexistence public-ip steamid-string typed-boundary resource-lifecycle restart-forward-semantics binary-evidence debug-log http-stream-context
 NATIVE_TEST_TARGETS := $(addprefix test-,$(CORE_SUITES) auth-binding auth-forward sourcepawn-environment sourcepawn-vm-asan)
-.PHONY: test-release-notes test test-ci check-ci check-docs validate-sdk test-documentation test-sdk-selection test-review-artifacts test-make-interface test-sdk-incremental validate-artifact-linux validate-artifact-windows $(NATIVE_TEST_TARGETS)
+.PHONY: test-public-api test-release-notes test test-ci check-ci check-docs validate-sdk test-documentation test-sdk-selection test-review-artifacts test-make-interface test-sdk-incremental validate-artifact-linux validate-artifact-windows $(NATIVE_TEST_TARGETS)
 
 test:
 	@test -n "$(TEST_OUTPUT)" || { echo 'Set TEST_OUTPUT to a new results directory' >&2; exit 2; }
 	SOURCEMOD_DIR="$(SOURCEMOD_DIR)" MMSOURCE_DIR="$(MMSOURCE_DIR)" AMTL_DIR="$(AMTL_DIR)" $(PYTHON) "$(ROOT_DIR)/tests/runners/test-integration.py" --output "$(TEST_OUTPUT)" $(TEST_OPTIONS)
 
-# This preserves CI coverage without adding the local documentation suite to CI.
-test-ci: test-sdk-selection test-review-artifacts test-make-interface test-release-notes $(addprefix test-,$(CORE_SUITES)) test-auth-binding
+# CI runs product contracts/native regressions; Sonar/coverage tooling stays local.
+test-ci: test-public-api test-sdk-selection test-review-artifacts test-make-interface test-release-notes $(addprefix test-,$(CORE_SUITES)) test-auth-binding
 
 $(NATIVE_TEST_TARGETS):
 	SOURCEMOD_DIR="$(SOURCEMOD_DIR)" MMSOURCE_DIR="$(MMSOURCE_DIR)" AMTL_DIR="$(AMTL_DIR)" bash "$(ROOT_DIR)/tests/runners/$@.sh"
+
+test-public-api:
+	$(PYTHON) "$(ROOT_DIR)/tests/python/public_api_test.py"
+
+.PHONY: sonar sonar-cppcheck sonar-tooling-test
+.PHONY: test-coverage coverage-tooling-test
+.PHONY: deps-test-coverage test-python-coverage
+.PHONY: test-cxx-parser
+test-cxx-parser:
+	$(PYTHON) "$(ROOT_DIR)/tests/runners/test-cxx-parser.py"
+
+deps-test-coverage:
+	PYTHON="$(PYTHON)" COVERAGE_VENV_DIR="$(COVERAGE_VENV_DIR)" bash "$(ROOT_DIR)/scripts/deps/fetch-test-coverage.sh"
+
+test-python-coverage:
+	@test -n "$(TEST_OUTPUT)" || { echo 'Set TEST_OUTPUT to a new coverage directory' >&2; exit 2; }
+	STEAMWORKS_SDK_DIR="$(STEAMWORKS_SDK_DIR)" "$(COVERAGE_PYTHON)" "$(ROOT_DIR)/tests/runners/test-python-coverage.py" --output "$(TEST_OUTPUT)"
+
+test-coverage:
+	@test -n "$(TEST_OUTPUT)" || { echo 'Set TEST_OUTPUT to a new coverage directory' >&2; exit 2; }
+	SOURCEMOD_DIR="$(SOURCEMOD_DIR)" MMSOURCE_DIR="$(MMSOURCE_DIR)" AMTL_DIR="$(AMTL_DIR)" $(PYTHON) "$(ROOT_DIR)/tests/runners/test-coverage.py" --output "$(TEST_OUTPUT)" --compile-commands "$(LINUX_BUILD_DIR)/compile_commands.json"
+
+coverage-tooling-test:
+	$(PYTHON) -m unittest discover -s "$(ROOT_DIR)/tests/python" -p '*coverage_test.py' -v
+sonar:
+	@$(PYTHON) "$(ROOT_DIR)/scripts/tools/make_sonar.py" analyze --compile-commands "$(LINUX_BUILD_DIR)/compile_commands.json"
+
+sonar-cppcheck:
+	@$(PYTHON) "$(ROOT_DIR)/scripts/tools/make_sonar.py" cppcheck --compile-commands "$(LINUX_BUILD_DIR)/compile_commands.json"
+
+sonar-tooling-test:
+	$(PYTHON) "$(ROOT_DIR)/tests/python/sonar_tooling_test.py"
 
 test-sdk-selection:
 	$(PYTHON) "$(ROOT_DIR)/tests/python/sdk_selection_test.py"
@@ -58,6 +92,20 @@ build-gc-observer:
 	@test -n "$(SPCOMP)" -a -n "$(TEST_OUTPUT)" || { echo 'Set SPCOMP and TEST_OUTPUT' >&2; exit 2; }
 	mkdir -p "$(TEST_OUTPUT)"
 	"$(SPCOMP)" "$(ROOT_DIR)/tests/runtime/steamworks_gc_observer.sp" -i"$(ROOT_DIR)/addons/sourcemod/scripting/include" -i"$(SOURCEMOD_DIR)/plugins/include" -o"$(TEST_OUTPUT)/steamworks_gc_observer.smx"
+
+.PHONY: build-runtime-harnesses
+build-runtime-harnesses:
+	@test -n "$(SPCOMP)" -a -n "$(TEST_OUTPUT)" -a -n "$(RUNTIME_EXTRA_INCLUDE)" || { echo 'Set SPCOMP, TEST_OUTPUT and RUNTIME_EXTRA_INCLUDE (Family Share include directory)' >&2; exit 2; }
+	mkdir -p "$(TEST_OUTPUT)"
+	$(PYTHON) "$(ROOT_DIR)/tests/helpers/generate-stats-acceptance-schema.py" "$(TEST_OUTPUT)/stats_schema_keys.inc"
+	@set -e; for source in "$(ROOT_DIR)"/tests/runtime/*.sp; do \
+	  "$(SPCOMP)" "$$source" -E -i"$(ROOT_DIR)/addons/sourcemod/scripting/include" -i"$(SOURCEMOD_DIR)/plugins/include" -i"$(RUNTIME_EXTRA_INCLUDE)" -i"$(TEST_OUTPUT)" -o"$(TEST_OUTPUT)/$$(basename "$$source" .sp).smx"; \
+	done
+
+.PHONY: serve-runtime-http-fixture
+serve-runtime-http-fixture:
+	@test -n "$(TEST_OUTPUT)" || { echo 'Set TEST_OUTPUT to a counts JSON file' >&2; exit 2; }
+	$(PYTHON) "$(ROOT_DIR)/tests/runtime/http_fixture.py" --http-only --output "$(TEST_OUTPUT)"
 
 test-release-notes:
 	$(PYTHON) "$(ROOT_DIR)/tests/python/release_notes_test.py"
@@ -89,6 +137,14 @@ validate-artifact-windows:
 help:
 	@printf '%s\n' \
 		'Available targets:' \
+		'  make test-coverage TEST_OUTPUT=<new-dir>  Measure real GCC x86 test line coverage' \
+		'  make coverage-tooling-test  Test coverage provenance and counters offline' \
+		'  make deps-test-coverage  Install pinned coverage.py in an isolated venv' \
+		'  make test-python-coverage TEST_OUTPUT=<new-dir>  Measure real Python test line coverage' \
+		'  make test-cxx-parser  Strict installed CXX grammar and GCC x86 export ABI regression (CXX_PARSER_CLASSPATH)' \
+		'  make sonar               Run Cppcheck and SonarScanner (explicit remote analysis)' \
+		'  make sonar-cppcheck      Run only local Cppcheck with the x86 build database' \
+		'  make sonar-tooling-test  Test Sonar tooling offline' \
 		'  make test TEST_OUTPUT=<new-dir> [TEST_OPTIONS=...]  Run integrated x86 tests' \
 		'  make test-ci              Run CI contract/native suites (SourceHook required)' \
 		'  make test-<suite>         Run one named suite; see tests/README.md' \
@@ -97,6 +153,9 @@ help:
 		'  make check-docs          Check local documentation' \
 		'  make check-ci            Lint the workflow (actionlint required)' \
 		'  make build-gc-observer SPCOMP=<compiler> TEST_OUTPUT=<dir>  Compile passive GC harness' \
+		'  make test-public-api     Check original API and explicit additions' \
+		'  make build-runtime-harnesses  Compile runtime consumers; see tests/runtime/README.md' \
+		'  make serve-runtime-http-fixture TEST_OUTPUT=<counts.json>  Serve loopback HTTP' \
 		'  make test-release-notes  Check channel publication with offline doubles' \
 		'  make test-documentation  Test documentation and packaging boundaries' \
 		'  make validate-artifact-linux|validate-artifact-windows  Validate staged payload' \

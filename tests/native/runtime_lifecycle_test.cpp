@@ -6,7 +6,7 @@
 #include <functional>
 #include <algorithm>
 std::vector<std::string> events;
-bool failHTTPType=false,failDetours=false;
+bool failHTTPType=false,failDetours=false,failStats=false;
 struct SteamWorksClientLifecycle;
 std::function<bool()> available;
 int checks=0;
@@ -23,6 +23,7 @@ COMPONENT(SteamWorksGameData);
 COMPONENT(SteamWorksGSNatives);
 COMPONENT(SteamWorksHTTPNatives);
 COMPONENT(SteamWorksSSNatives);
+struct SteamWorksStats:Component { SteamWorksStats():Component("SteamWorksStats"){} bool IsReady() const { return !failStats; } };
 COMPONENT(SteamWorksGCNatives);
 struct SteamWorksGSDetours:Component { SteamWorksGSDetours():Component("SteamWorksGSDetours"){} bool IsInstalled() const { return !failDetours; } };
 struct SteamWorksClientLifecycle:Component { SteamWorksClientLifecycle():Component("SteamWorksClientLifecycle"){} void FinalizeStoppedHost(){events.push_back("finalize-stopped-host");} void GameServerStarted(){} };
@@ -49,6 +50,7 @@ public:
  bool IsRuntimeAvailable() const { return m_runtimeAvailable && !m_unloading; }
  SteamWorksGameData* pSWGameData=nullptr;SteamWorksGameServer* pSWGameServer=nullptr;
  SteamWorksGSNatives* pGSNatives=nullptr;SteamWorksGSHooks* pGSHooks=nullptr;
+ SteamWorksStats* pSWStats=nullptr;
  SteamWorksSSNatives* pSSNatives=nullptr;SteamWorksGSDetours* pGSDetours=nullptr;
  SteamWorksHTTP* pSWHTTP=nullptr;SteamWorksHTTPNatives* pSWHTTPNatives=nullptr;
  SteamWorksGCHooks* pGCHooks=nullptr;SteamWorksGCNatives* pGCNatives=nullptr;
@@ -61,12 +63,12 @@ int main() {
  available=[] {return g_SteamWorks.IsRuntimeAvailable();};char error[128]={};
  Check(g_SteamWorks.SDK_OnLoad(error,sizeof(error),true),"late extension load succeeds");events.clear();
  g_SteamWorks.RuntimeStopped();
- Check(events==std::vector<std::string>{"stop-SteamWorksGSHooks","stop-SteamWorksGCHooks","stop-SteamWorksForwards","stop-SteamWorksHTTP","reset"},"both hook groups, callbacks and HTTP stopped before cache reset");
+ Check(events==std::vector<std::string>{"stop-SteamWorksGSHooks","stop-SteamWorksGCHooks","stop-SteamWorksForwards","stop-SteamWorksStats","stop-SteamWorksHTTP","reset"},"both hook groups, callbacks and HTTP stopped before cache reset");
  auto stopped=events;g_SteamWorks.RuntimeStopped();Check(events==stopped,"duplicate runtime stop is inert");
  events.clear();g_SteamWorks.RuntimeStarted();
- Check(events==std::vector<std::string>{"start-SteamWorksHTTP","start-SteamWorksForwards","start-SteamWorksGSHooks","start-SteamWorksGCHooks"},"successful restart enables consumers in dependency order");
+ Check(events==std::vector<std::string>{"start-SteamWorksHTTP","start-SteamWorksStats","start-SteamWorksForwards","start-SteamWorksGSHooks","start-SteamWorksGCHooks"},"successful restart enables consumers in dependency order");
  events.clear();g_SteamWorks.SDK_OnUnload();
- Check(events.size()>=5 && std::vector<std::string>(events.begin(),events.begin()+5)==stopped,"unload stops resources before deleting components");
+ Check(events.size()>=6 && std::vector<std::string>(events.begin(),events.begin()+6)==stopped,"unload stops resources before deleting components");
  Check(std::find(events.begin(),events.end(),"finalize-stopped-host")<std::find(events.begin(),events.end(),"delete-SteamWorksGSDetours"),"host finalization runs before lifecycle library owner release");
  Check(events.back()=="delete-SteamWorksGameData" && events[events.size()-2]=="delete-SteamWorksGameServer","interfaces/gamedata outlive resources and detours");
  Check(!g_SteamWorks.IsRuntimeAvailable() && g_SteamWorks.pSWHTTP==nullptr && g_SteamWorks.pGSHooks==nullptr && g_SteamWorks.pGCHooks==nullptr,"unload leaves no live owners or capability");
@@ -78,7 +80,10 @@ int main() {
  Check(!g_SteamWorks.SDK_OnLoad(error,sizeof(error),false) && std::string(error).find("lifecycle detours")!=std::string::npos,"missing lifecycle observer prevents unsafe partial load");
  Check(g_SteamWorks.pGSHooks==nullptr && g_SteamWorks.pGCHooks==nullptr && g_SteamWorks.pSWForward==nullptr && g_SteamWorks.pGSDetours==nullptr,"observer failure leaves no hooks/subscriptions/resources");
  for(const auto& event:events)Check(event!="create-SteamWorksGSHooks" && event!="create-SteamWorksGCHooks" && event!="create-SteamWorksForwards","dependent consumers never created before observer succeeds");
- failDetours=false;
+ failDetours=false;failStats=true;
+ Check(!g_SteamWorks.SDK_OnLoad(error,sizeof(error),false) && std::string(error).find("stats forwards")!=std::string::npos,"stats forward creation failure rejects load");
+ Check(g_SteamWorks.pSSNatives==nullptr && g_SteamWorks.pSWStats==nullptr && g_SteamWorks.pSWForward==nullptr,"stats owner failure rolls back dependent resources");
+ failStats=false;
  Check(g_SteamWorks.SDK_OnLoad(error,sizeof(error),false),"fresh load after failed attempt works");g_SteamWorks.SDK_OnUnload();
  std::printf("PASS: %d runtime coordination checks (production load/stop/start/unload, simulated components)\n",checks);
 }

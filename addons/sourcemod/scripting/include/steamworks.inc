@@ -344,10 +344,11 @@ native int SteamWorks_GetClientSteamID(int client, char[] steamId, int length);
  *
  * @param authid     32-bit Steam AccountID (not a SteamID64; all 32 bits are preserved)
  * @param appid      Nonzero AppID matching the game server context (550 for L4D2), not a universe
- * @return           true if Steam accepted the asynchronous request; false if the context,
+ * @return           true if an asynchronous request is pending; false if the context,
  *                   AppID or identity is unavailable/invalid, or the request was rejected
  *
  * Requests cannot select a different game's stats. Success does not mean stats are ready.
+ * Await SteamWorks_OnUserStatsReceived. Identical pending requests share one result.
  */
 native bool SteamWorks_RequestStatsAuthID(int authid, int appid);
 
@@ -356,10 +357,11 @@ native bool SteamWorks_RequestStatsAuthID(int authid, int appid);
  *
  * @param client     Connected, authorized human client index
  * @param appid      Nonzero AppID matching the game server context, not a universe
- * @return           true if Steam accepted the asynchronous request; false if the context,
+ * @return           true if an asynchronous request is pending; false if the context,
  *                   AppID or validated identity is unavailable/invalid, or the request was rejected
  *
  * Uses SourceMod's validated Steam identity. Success does not mean stats are ready.
+ * Await SteamWorks_OnUserStatsReceived. Identical pending requests share one result.
  */
 native bool SteamWorks_RequestStats(int client, int appid);
 
@@ -890,6 +892,29 @@ forward void SteamWorks_TokenRequested(char[] token, int maxlen);
  * @param isOfficer  true if the client is an officer of the group
  */
 forward void SteamWorks_OnClientGroupStatus(int authid, int groupid, bool isMember, bool isOfficer);
+
+/**
+ * Result of a stats request accepted through this extension. Pending requests
+ * for the same Steam identity and AppID are coalesced into one result.
+ *
+ * @param authid  Requested 32-bit AccountID, never a client slot or SteamID64
+ * @param result  SDK EResult; I/O failures map to k_EResultIOFailure, invalid
+ *                or missing result payloads map to k_EResultFail
+ * @param appid   AppID captured when the request was accepted
+ *
+ * Cancelled requests during runtime stop or extension unload produce no event.
+ * Success means the result arrived; individual stat reads can still fail.
+ */
+forward void SteamWorks_OnUserStatsReceived(int authid, EResult result, int appid);
+
+/**
+ * Steam unloaded a user's cached game-server stats. Request them again before
+ * reading. This event describes cache state, independently of client slots.
+ *
+ * @param authid  32-bit Steam AccountID whose cached stats were unloaded
+ */
+forward void SteamWorks_OnUserStatsUnloaded(int authid);
+
 
 /**
  * Sends a binary message to the game's Game Coordinator.

@@ -80,12 +80,16 @@ bool GetStatsClientIdentity(IGamePlayer* player, CSteamID& identity)
 	return identity.IsValid();
 }
 
-IGamePlayer* GetConnectedPlayerOrError(IPluginContext* pContext, cell_t clientRef)
+IGamePlayer* GetConnectedPlayerOrError(IPluginContext* pContext, cell_t client)
 {
-	int client = gamehelpers->ReferenceToIndex(clientRef);
+	// Player slots can be connected before their entity is available.
+	if (client < 1 || client > playerhelpers->GetMaxClients()) {
+		pContext->ThrowNativeError("Client index %d is invalid", client);
+		return nullptr;
+	}
 	IGamePlayer* pPlayer = playerhelpers->GetGamePlayer(client);
 	if (pPlayer == nullptr || !pPlayer->IsConnected()) {
-		pContext->ThrowNativeError("Client index %d is invalid", clientRef);
+		pContext->ThrowNativeError("Client index %d is invalid", client);
 		return nullptr;
 	}
 
@@ -112,7 +116,8 @@ static cell_t sm_RequestStatsAuthID(IPluginContext *pContext, const cell_t *para
 	if (!checkid.IsValid()) {
 		return 0;
 	}
-	return pStats->RequestUserStats(checkid) != k_uAPICallInvalid ? 1 : 0;
+	return g_SteamWorks.pSWStats != nullptr
+		&& g_SteamWorks.pSWStats->Request(pStats, checkid, steamworks::pawn::App(params[2]).value) ? 1 : 0;
 }
 
 static cell_t sm_RequestUserStats(IPluginContext *pContext, const cell_t *params)
@@ -133,7 +138,8 @@ static cell_t sm_RequestUserStats(IPluginContext *pContext, const cell_t *params
 	if (!GetStatsClientIdentity(pPlayer, checkid)) {
 		return 0;
 	}
-	return pStats->RequestUserStats(checkid) != k_uAPICallInvalid ? 1 : 0;
+	return g_SteamWorks.pSWStats != nullptr
+		&& g_SteamWorks.pSWStats->Request(pStats, checkid, steamworks::pawn::App(params[2]).value) ? 1 : 0;
 }
 
 static cell_t sm_GetStatCell(IPluginContext *pContext, const cell_t *params)

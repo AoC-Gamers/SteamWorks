@@ -43,12 +43,16 @@ bool ReadIdentity(IPluginContext* context, Identity identity, const cell_t* para
 	return true;
 }
 
-IGamePlayer* GetConnectedPlayerOrError(IPluginContext* pContext, cell_t clientRef)
+IGamePlayer* GetConnectedPlayerOrError(IPluginContext* pContext, cell_t client)
 {
-	int client = gamehelpers->ReferenceToIndex(clientRef);
+	// Player slots can be connected before their entity is available.
+	if (client < 1 || client > playerhelpers->GetMaxClients()) {
+		pContext->ThrowNativeError("Client index %d is invalid", client);
+		return nullptr;
+	}
 	IGamePlayer* pPlayer = playerhelpers->GetGamePlayer(client);
 	if (pPlayer == nullptr || !pPlayer->IsConnected()) {
-		pContext->ThrowNativeError("Client index %d is invalid", clientRef);
+		pContext->ThrowNativeError("Client index %d is invalid", client);
 		return nullptr;
 	}
 

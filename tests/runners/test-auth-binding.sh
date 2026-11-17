@@ -17,6 +17,11 @@ CXX="${AUTH_BINDING_CXX:-${CXX:-g++}}"
 virtual_flags=()
 if ! "$CXX" --version | grep -qi clang; then virtual_flags=(-fno-devirtualize); fi
 read -r -a extra_flags <<< "${TEST_CXXFLAGS:--m32}"
+"$CXX" -std=c++14 -Wall -Wextra -Werror -Wno-unused-parameter -O1 -g \
+ -fsanitize=address,undefined -fno-sanitize-recover=all "${extra_flags[@]}" \
+ -isystem "$SH_DIR" "$ROOT_DIR/tests/integration/sourcehook_member_pointer_test.cpp" \
+ -o "$OUTPUT_DIR/sourcehook_member_pointer_test"
+"$OUTPUT_DIR/sourcehook_member_pointer_test"
 # Build the pinned third-party implementation separately using its default
 # warning policy; strict diagnostics below apply to our owner, adapter and test.
 objects=()

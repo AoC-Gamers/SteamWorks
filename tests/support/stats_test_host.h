@@ -146,9 +146,20 @@ struct GameServer
 	ISteamGameServerStats* GetServerStats() { return stats; }
 	ISteamUtils* GetUtils() { return utils; }
 };
+struct StatsOwner {
+    bool accepting = true;
+    int calls = 0;
+    AppId_t capturedApp = 0;
+    bool Request(ISteamGameServerStats* stats, CSteamID identity, AppId_t appid) {
+        ++calls;
+        capturedApp = appid;
+        return accepting && stats->RequestUserStats(identity) != k_uAPICallInvalid;
+    }
+} statsOwner;
 struct SteamWorks
 {
 	GameServer* pSWGameServer = nullptr;
+	StatsOwner* pSWStats = &statsOwner;
 	int legacyIdentityCalls = 0;
 	CSteamID CreateCommonCSteamID(IGamePlayer*, EUniverse, EAccountType)
 	{
@@ -164,7 +175,13 @@ struct SteamWorks
 
 struct GameHelpers
 {
-	int ReferenceToIndex(cell_t client) { return client; }
+	bool entityPresent = true;
+	int ReferenceToIndex(cell_t client)
+	{
+		if (!entityPresent) { return -1; }
+		// Controlled reference mapping, independent of player-slot availability.
+		return client == static_cast<cell_t>(0x80010001u) ? 1 : client;
+	}
 } gameHelpers;
 auto* gamehelpers = &gameHelpers;
 
@@ -172,7 +189,15 @@ struct PlayerHelpers
 {
 	IGamePlayer player;
 	bool exists = true;
-	IGamePlayer* GetGamePlayer(int) { return exists ? &player : nullptr; }
+	int lookups = 0;
+	int lastIndex = 0;
+	int GetMaxClients() { return 32; }
+	IGamePlayer* GetGamePlayer(int index)
+	{
+		++lookups;
+		lastIndex = index;
+		return exists && index >= 1 && index <= GetMaxClients() ? &player : nullptr;
+	}
 } playerHelpers;
 auto* playerhelpers = &playerHelpers;
 

@@ -19,6 +19,7 @@
 #pragma once
 
 #include "blob.h"
+#include <ctime>
 class GCTokenSection
 {
 public:
@@ -44,11 +45,11 @@ public:
 
 public:  /* No ideal packing, but it saves us from having to comment. */
 	static const uint32 expectedlen = 20; /* Magic number for GC? */
-	uint32 length;
-	uint64 token;
+	uint32 length = 0;
+	uint64 token = 0;
 	CSteamID steamid;
-	time_t generation;
-	bool bValid;
+	time_t generation = 0;
+	bool bValid = false;
 };
 
 class SessionSection
@@ -79,22 +80,24 @@ public:
 
 public:
 	static const uint32 expectedlen = 24; /* Magic number for Session? */
-	uint32 length;
-	uint32 unk1;
-	uint32 unk2;
-	uint32 externalip;
-	uint32 filler;
-	uint32 timestamp;
-	uint32 connectioncount;
-	bool bValid;
+	uint32 length = 0;
+	uint32 unk1 = 0;
+	uint32 unk2 = 0;
+	uint32 externalip = 0;
+	uint32 filler = 0;
+	uint32 timestamp = 0;
+	uint32 connectioncount = 0;
+	bool bValid = false;
 };
 
 class DLCInfo
 {
 public:
-	DLCInfo() : pSub(nullptr)
+	DLCInfo() : appid(0), subcount(0), pSub(nullptr)
 	{
 	};
+	DLCInfo(const DLCInfo&) = delete;
+	DLCInfo& operator=(const DLCInfo&) = delete;
 	
 	~DLCInfo()
 	{
@@ -128,6 +131,8 @@ public:
 class OwnershipSection
 {
 public:
+	OwnershipSection(const OwnershipSection&) = delete;
+	OwnershipSection& operator=(const OwnershipSection&) = delete;
 	OwnershipSection(CBlob &blob)
 	{
 		blob.Read(length);
@@ -194,27 +199,29 @@ public:
 	}
 
 public:
-	uint32 length;
-	uint32 version;
-	uint64 steamid;
-	uint32 appid;
-	uint32 externalIP;
-	uint32 internalIP;
-	uint32 ownershipFlags;
-	time_t ticketGeneration;
-	time_t ticketExpiration;
-	uint16 licenseCount;
-	uint32 *pLicense;
-	uint16 dlcCount;
-	DLCInfo *pDLC;
-	uint16 reserved;
-	unsigned char signature[128];
-	bool bValid;
+	uint32 length = 0;
+	uint32 version = 0;
+	uint64 steamid = 0;
+	uint32 appid = 0;
+	uint32 externalIP = 0;
+	uint32 internalIP = 0;
+	uint32 ownershipFlags = 0;
+	time_t ticketGeneration = 0;
+	time_t ticketExpiration = 0;
+	uint16 licenseCount = 0;
+	uint32 *pLicense = nullptr;
+	uint16 dlcCount = 0;
+	DLCInfo *pDLC = nullptr;
+	uint16 reserved = 0;
+	unsigned char signature[128] = {};
+	bool bValid = false;
 };
 
 class AuthBlob /* Concept and CBlob adapted from SteamTools; Ticket Information from OpenSteamWorks. */
 {
 public:
+	AuthBlob(const AuthBlob&) = delete;
+	AuthBlob& operator=(const AuthBlob&) = delete;
 	AuthBlob(const void *pAuthTicket, int cbAuthTicket)
 	{
 		CBlob blob(pAuthTicket, cbAuthTicket);

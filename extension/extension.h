@@ -11,6 +11,7 @@
 #include "core/swclientlifecycle.h"
 
 #include "core/swforwards.h"
+#include "core/swstats.h"
 #include "natives/gsnatives.h"
 #include "hooks/swgshooks.h"
 #include "hooks/swgchooks.h"
@@ -47,6 +48,7 @@ public:
 	SteamWorksGSNatives* pGSNatives = nullptr;
 	SteamWorksGSHooks* pGSHooks = nullptr;
 	SteamWorksSSNatives* pSSNatives = nullptr;
+	SteamWorksStats* pSWStats = nullptr;
 	SteamWorksGSDetours* pGSDetours = nullptr;
 	SteamWorksHTTP* pSWHTTP = nullptr;
 	SteamWorksHTTPNatives* pSWHTTPNatives = nullptr;

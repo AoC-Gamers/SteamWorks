@@ -35,9 +35,9 @@ flowchart TD
 
 Las referencias históricas necesarias deben fijar SHA. No crear `docs/archive`
 ni trasladar todo a una carpeta archive dentro de tests. La cobertura debe separar implementado,
-probado con dobles, VM/SourceHook y observado en SRCDS. GC remoto está excluido
-de la aceptación global de L4D2 dedicado, sin recepción remota acreditada;
-conservar esa distinción y la API por compatibilidad.
+probado con dobles, VM/SourceHook y observado en SRCDS. Describe las limitaciones
+funcionales y la cobertura local pertinente; no publiques decisiones internas de
+aceptación, detalles de operación propios ni su estado en las notas de releases.
 Las rutas privadas, PIDs y diarios de checkpoints no son documentación de producto.
 
 ## Etiquetas internas y referencias de pruebas

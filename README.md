@@ -28,7 +28,6 @@ la VM diagnóstica. Sigue la [guía de instalación](docs/installation/README.md
 - [Compatibilidad y límites](docs/runtime/compatibility.md)
 - [Pruebas y cobertura](https://github.com/AoC-Gamers/SteamWorks/tree/develop/tests)
 
-GC remoto queda **excluido de la aceptación global de L4D2 dedicado**. Se conserva
-la API por compatibilidad, sin recepción remota acreditada; un proveedor local
-o una cola vacía no la demuestran. Consulta los
+La API de Game Coordinator se conserva por compatibilidad. Su funcionamiento
+depende del soporte del juego y del contexto Steam. Consulta los
 [límites de GC](docs/game-coordinator/README.md#aplicabilidad-a-l4d2-dedicado-x86).

@@ -50,5 +50,6 @@ Dockerfile text eol=lf
 # Preserve their recorded hashes across Git add/checkout on every platform.
 tests/fixtures/** -text
 patches/** -text
-extension/sdk/smsdk_ext.cpp -text
+# Keep SDK CRLF while checking trailing spaces, blank EOF lines and indentation.
+extension/sdk/smsdk_ext.cpp -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 extension/sdk/smsdk_ext.h -text

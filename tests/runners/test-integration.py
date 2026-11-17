@@ -11,19 +11,11 @@ import time
 
 ROOT = Path(__file__).resolve().parents[2]
 SUITES = (
-    "test-stats-natives", "test-detours", "test-init-coexistence", "test-public-ip",
+    "test-extension-entrypoint", "test-stats-callbacks", "test-ticket-ownership", "test-stats-natives", "test-detours", "test-init-coexistence", "test-public-ip",
     "test-steamid-string", "test-typed-boundary", "test-resource-lifecycle",
     "test-restart-forward-semantics",
     "test-binary-evidence", "test-debug-log", "test-http-stream-context",
 )
-
-
-def without_lines(value):
-    if isinstance(value, dict):
-        return {k: without_lines(v) for k, v in value.items() if k != "line"}
-    if isinstance(value, list):
-        return [without_lines(v) for v in value]
-    return value
 
 
 def main():
@@ -43,9 +35,11 @@ def main():
     spec.loader.exec_module(inventory)
     current = inventory.api_inventory(ROOT)
     baseline = json.loads((ROOT / "tests/fixtures/api/api-inventory-p0.json").read_text())
-    # Compare every contract field; metadata and source hashes are deliberately excluded.
-    keys = set(baseline) - {"schema_version", "baseline_commit", "source_sha256"}
-    drift = [k for k in sorted(keys) if without_lines(current.get(k)) != without_lines(baseline[k])]
+    # Preserve every original field and require the separately authored additions.
+    spec = importlib.util.spec_from_file_location("api_contract", ROOT / "tests/helpers/api_contract.py")
+    api_contract = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(api_contract)
+    drift = api_contract.drift(current, baseline)
     if drift:
         raise SystemExit("Public API drift: " + ", ".join(drift))
     sdk = os.getenv("STEAMWORKS_SDK_DIR") or str(ROOT / "sdk_155")
@@ -54,7 +48,10 @@ def main():
     results = {"public_api": "passed", "test_flags": test_flags,
                "runtime_validation": False, "suites": []}
     failed = False
-    commands = [("test-release-notes", [sys.executable, str(ROOT / "tests/python/release_notes_test.py")]),
+    commands = [("test-public-api", [sys.executable, str(ROOT / "tests/python/public_api_test.py")]),
+                ("coverage-tooling-test", [sys.executable, "-m", "unittest", "discover", "-s", str(ROOT / "tests/python"), "-p", "*coverage_test.py", "-v"]),
+                ("sonar-tooling-test", [sys.executable, str(ROOT / "tests/python/sonar_tooling_test.py")]),
+                ("test-release-notes", [sys.executable, str(ROOT / "tests/python/release_notes_test.py")]),
                 ("test-make-interface", [sys.executable, str(ROOT / "tests/python/make_interface_test.py")]),
                 ("test-sdk-selection", [sys.executable, str(ROOT / "tests/python/sdk_selection_test.py")]),
                 ("test-documentation", [sys.executable, str(ROOT / "tests/python/documentation_test.py")]),

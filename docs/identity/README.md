@@ -1,10 +1,16 @@
 # Identidad de clientes
 
-No confundir índice/referencia de cliente, AccountID, AppID y SteamID64. El índice
+No confundir índice de cliente, referencia de entidad, AccountID, AppID y SteamID64. El índice
 selecciona un humano conectado y autorizado; bots, clientes fuera de rango o sin
 autorización se rechazan según el native. AccountID mantiene los 32 bits de su
 celda. SteamID64 tiene universo, tipo e instancia y debe ser individual y coherente
 con la identidad validada de SourceMod.
+
+Los argumentos `client` reciben índices entre 1 y `GetMaxClients()`, no referencias
+de entidad. La consulta del slot usa `GetGamePlayer()` y exige conexión; no depende
+de que exista una entidad del motor. Los índices inválidos se rechazan antes de
+consultar el slot. Se conservan las comprobaciones de identidad y autorización
+de cada native.
 
 En solicitudes de stats se usa SteamID64 validado. Si falta únicamente ese texto
 y existe AccountID validado, se construye identidad individual pública. El fallback

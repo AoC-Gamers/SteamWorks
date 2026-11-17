@@ -27,9 +27,15 @@ S_API void S_CALLTYPE SteamAPI_RegisterCallResult(CCallbackBase* callback,SteamA
 S_API void S_CALLTYPE SteamAPI_UnregisterCallResult(CCallbackBase* callback,SteamAPICall_t) {
  if(steamCallbacks.calls.erase(callback))++steamCallbacks.unregistrations;
 }
-template<class P> void DeliverCallback(P& payload) {
+enum class SteamCallbackContext { Client, GameServer };
+template<class P> void DeliverCallback(P& payload, SteamCallbackContext context = SteamCallbackContext::GameServer) {
  auto snapshot=steamCallbacks.callbacks;
- for(auto entry:snapshot) if(entry.second==P::k_iCallback && steamCallbacks.callbacks.count(entry.first)) entry.first->Run(&payload);
+ for(auto entry:snapshot) {
+  if(entry.second==P::k_iCallback && steamCallbacks.callbacks.count(entry.first)
+     && CCallbackMgr::GameServer(entry.first) == (context == SteamCallbackContext::GameServer)) {
+   entry.first->Run(&payload);
+  }
+ }
 }
 template<class P> void DeliverCall(P& payload,SteamAPICall_t call,bool failed=false) {
  auto snapshot=steamCallbacks.calls;

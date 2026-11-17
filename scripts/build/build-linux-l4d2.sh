@@ -120,6 +120,7 @@ pushd "$BUILD_DIR" > /dev/null
 "$VENV_PYTHON" "$CONFIGURE_SCRIPT" \
   --sdks "$TARGET_SDK" \
   --target x86 \
+  --generate-compile-commands \
   --hl2sdk-root "$DEPS_DIR" \
   --mms-path "$MMSOURCE_DIR" \
   --sm-path "$SOURCEMOD_DIR" \

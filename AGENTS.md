@@ -14,9 +14,9 @@ Antes de editar, consulta `docs/README.md`, `docs/build/README.md` y `tests/READ
 - Conserva bytes, procedencia y hashes transitivos de fixtures. El saneamiento
   público de metadatos no cambia medidas binarias ni flags de aceptación.
 - Compilación, dobles, SourceHook/VM y SRCDS son niveles distintos de evidencia.
-  Lo no ejecutado no cuenta como aprobado. GC remoto está excluido de la aceptación
-  global de L4D2 dedicado; conservar API y pruebas locales por compatibilidad, sin
-  atribuir recepción remota positiva ni retirar comprobaciones.
+  Lo no ejecutado no cuenta como aprobado. Conservar API GC y pruebas locales por
+  compatibilidad, sin atribuirles soporte del backend ni retirar comprobaciones.
+  Documentar límites funcionales sin publicar decisiones internas de aceptación.
 
 ## Mapa de rutas
 
@@ -52,7 +52,8 @@ make test-public-ip
 make check-docs
 ```
 
-- `make test` compara toda la API con el inventario original y ejecuta la
+- `make test` conserva el inventario original y contrasta las adiciones explícitas
+  de `tests/helpers/api_contract.py`; ejecuta la
   integración x86. `TEST_OUTPUT` debe ser una carpeta nueva; se rechaza reutilizarla.
 - `make test-<suite>` ejecuta una suite focalizada. Selecciona lo apropiado al cambio;
   no conviertas un ajuste documental en una obligación de ejecutar SRCDS.

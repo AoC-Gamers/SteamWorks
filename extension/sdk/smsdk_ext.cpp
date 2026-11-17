@@ -34,6 +34,12 @@
 #include "smsdk_ext.h"
 #include "am-string.h"
 
+#if defined _MSC_VER
+#define SMEXT_DLL_EXPORT				extern "C" __declspec(dllexport)
+#else
+#define SMEXT_DLL_EXPORT				extern "C" [[gnu::visibility("default")]]
+#endif
+
 /**
  * @file smsdk_ext.cpp
  * @brief Contains wrappers for making Extensions easier to write.
@@ -102,9 +108,31 @@ ITranslator *translator = NULL;
 IRootConsole *rootconsole = NULL;
 #endif
 
-/** Exports the main interface */
-PLATFORM_EXTERN_C IExtensionInterface *GetSMExtAPI()
+namespace {
+enum class ExtensionLoadState { Available, Loading, Loaded, Unloading };
+ExtensionLoadState extensionLoadState = ExtensionLoadState::Available;
+
+// Also covers early SM_GET_IFACE returns, before SDK_OnLoad can roll back.
+struct ExtensionLoadAttempt
 {
+	bool committed = false;
+	ExtensionLoadAttempt() { extensionLoadState = ExtensionLoadState::Loading; }
+	~ExtensionLoadAttempt()
+	{
+		if (!committed) {
+			myself = NULL;
+			extensionLoadState = ExtensionLoadState::Available;
+		}
+	}
+};
+} // namespace
+
+/** Exports the main interface */
+SMEXT_DLL_EXPORT IExtensionInterface *GetSMExtAPI()
+{
+	// SourceMod can resolve two logical names to this same DSO. Reject the
+	// second entry before its loader attaches/unloads the existing Metamod ID.
+	if (extensionLoadState != ExtensionLoadState::Available) { return NULL; }
 	return g_pExtensionIface;
 }
 
@@ -119,6 +147,13 @@ SDKExtension::SDKExtension()
 
 bool SDKExtension::OnExtensionLoad(IExtension *me, IShareSys *sys, char *error, size_t maxlength, bool late)
 {
+	if (extensionLoadState != ExtensionLoadState::Available) {
+		if (error && maxlength) {
+			ke::SafeStrcpy(error, maxlength, "SteamWorks already has a load owner; unload it before loading another name");
+		}
+		return false;
+	}
+	ExtensionLoadAttempt attempt;
 	g_pShareSys = sharesys = sys;
 	myself = me;
 
@@ -195,6 +230,8 @@ bool SDKExtension::OnExtensionLoad(IExtension *me, IShareSys *sys, char *error, 
 
 	if (SDK_OnLoad(error, maxlength, late))
 	{
+		attempt.committed = true;
+		extensionLoadState = ExtensionLoadState::Loaded;
 #if defined SMEXT_CONF_METAMOD
 		m_WeAreUnloaded = true;
 #endif
@@ -228,6 +265,8 @@ void SDKExtension::OnExtensionsAllLoaded()
 
 void SDKExtension::OnExtensionUnload()
 {
+	if (extensionLoadState != ExtensionLoadState::Loaded) { return; }
+	extensionLoadState = ExtensionLoadState::Unloading;
 #if defined SMEXT_CONF_METAMOD
 	m_WeAreUnloaded = true;
 #endif
@@ -237,6 +276,11 @@ void SDKExtension::OnExtensionUnload()
 void SDKExtension::OnDependenciesDropped()
 {
 	SDK_OnDependenciesDropped();
+	// Keep reentrant loads blocked until SourceMod has dropped every binding.
+	if (extensionLoadState == ExtensionLoadState::Unloading) {
+		myself = NULL;
+		extensionLoadState = ExtensionLoadState::Available;
+	}
 }
 
 const char *SDKExtension::GetExtensionAuthor()
@@ -297,11 +341,6 @@ void SDKExtension::SDK_OnDependenciesDropped()
 
 #if defined SMEXT_CONF_METAMOD
 
-#if defined _MSC_VER
-#define SMEXT_DLL_EXPORT				extern "C" __declspec(dllexport)
-#else
-#define SMEXT_DLL_EXPORT				extern "C" __attribute__((visibility("default")))
-#endif
 
 PluginId g_PLID = 0;						/**< Metamod plugin ID */
 ISmmPlugin *g_PLAPI = NULL;					/**< Metamod plugin API */

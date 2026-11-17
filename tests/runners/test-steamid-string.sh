@@ -14,8 +14,10 @@ if [[ ! -f "$SDK_DIR/public/steam/steamclientpublic.h" || ! -f "$AMTL_DIR/amtl/a
 fi
 
 read -r -a extra_flags <<< "${TEST_CXXFLAGS:-}"
-"$CXX" -std=c++14 -Wall -Wextra -Werror -Wno-unused-parameter -pedantic -O1 -g \
-  -fsanitize=undefined -fno-sanitize-recover=all "${extra_flags[@]}" \
-  -I"$ROOT_DIR/tests/support" -I"$ROOT_DIR/extension/sdk" -isystem "$SDK_DIR/public/steam" -isystem "$AMTL_DIR" \
-  "$ROOT_DIR/tests/native/steamid_string_test.cpp" -o "$OUTPUT_DIR/steamid_string_test"
-"$OUTPUT_DIR/steamid_string_test"
+for suite in steamid_string_test client_index_test; do
+  "$CXX" -std=c++14 -Wall -Wextra -Werror -Wno-unused-parameter -pedantic -O1 -g \
+    -fsanitize=undefined -fno-sanitize-recover=all "${extra_flags[@]}" \
+    -I"$ROOT_DIR/tests/support" -I"$ROOT_DIR/extension/sdk" -isystem "$SDK_DIR/public/steam" -isystem "$AMTL_DIR" \
+    "$ROOT_DIR/tests/native/$suite.cpp" -o "$OUTPUT_DIR/$suite"
+  "$OUTPUT_DIR/$suite"
+done

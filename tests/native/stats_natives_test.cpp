@@ -26,7 +26,7 @@ int main(int argc, char** argv)
 		expectedScenarios += byClient ? 9 : 7;
 		// Exercise the three public arguments. Identity is simulated; the
 		// legacy identity options and RequestStats AppID contract are not tested.
-		const cell_t params[] = {3, 123, 64, 128};
+		const cell_t params[] = {3, byClient ? 1 : 123, 64, 128};
 		for (int scenario = 0; scenario < 9; ++scenario) {
 			IPluginContext context;
 			ISteamGameServerStats stats;

@@ -3,6 +3,7 @@
 El build de producto usa AMBuild y C++ con las declaraciones auditadas del SDK
 Steamworks 1.55. No actualices el SDK como efecto de reorganizar documentación.
 Consulta las [dependencias](dependencies.md) y la separación de [CI](ci.md).
+El [análisis SonarQube](sonar.md) es una operación explícita mediante Make.
 
 Desde la raíz de las fuentes, también extraídas sin `.git`:
 
@@ -21,7 +22,7 @@ Makefile es la interfaz de ejecución obligatoria, local y en CI; los scripts y
 AMBuild son backends internos. Desde otro cwd usa
 `make -f "/ruta/con espacios/SteamWorks/Makefile" <target>`.
 
-Los scripts de build seleccionan `--sdks l4d2 --target x86`. Para una
+Los scripts de build seleccionan `--sdks l4d2 --target x86`. Para
 comprobar la compilación optimizada usa
 `make test-sdk-incremental TEST_OUTPUT=.build/test-results/incremental-nuevo`: el
 backend configura internamente con `--enable-optimize` y ejecuta AMBuild.
