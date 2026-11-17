@@ -1,5 +1,11 @@
 # Autenticación
 
+El lector heredado de `extension/steamtools/ticket.h` no se utiliza para procesar
+`BeginAuthSession`. Sus propietarios de memoria son no copiables y sus campos se
+inicializan antes de cualquier lectura; las pruebas locales usan solo tickets
+sintéticos y prefijos truncados. Esto no acredita el formato de tickets actuales
+ni añade una nueva ruta de autenticación o inspección de tickets reales.
+
 La extensión observa el `BeginAuthSession` del GameServer del motor y expone los
 forwards de autenticación declarados en `steamworks.inc`. El ticket es binario:
 no tratarlo como string NUL ni registrar su contenido. Los IDs y resultados se

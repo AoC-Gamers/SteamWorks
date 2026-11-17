@@ -39,7 +39,8 @@ incluida SourceHook y las pruebas offline de notas de canales, sin reincorporar
 la prueba documental a CI.
 `make test-documentation` y `make check-docs` son comprobaciones locales.
 `make sonar-tooling-test` prueba la orquestación de Cppcheck/SonarScanner con dobles,
-sin red ni tokens reales; forma parte de CI y de la integración.
+sin red ni tokens reales; forma parte de la integración local. Sus pruebas y las
+del tooling de cobertura quedan fuera del pipeline y de `make test-ci`.
 La integración también ejecuta `make_interface_test.py`, que verifica rutas con
 espacios, opciones, plataforma y propagación de errores de los backends.
 
@@ -47,6 +48,7 @@ espacios, opciones, plataforma y propagación de errores de los backends.
 |---|---|---|---|
 | extension-entrypoint | Un propietario por DSO, doble nombre, reentrada, fallos y recarga | Factory/wrappers de producción + cargador controlado, ASan/UBSan x86 y negativo | Nueva aceptación SRCDS |
 | stats-callbacks | CallResults por solicitud, caché, aislamiento cliente/GameServer, errores y teardown reentrante | SDK real + entrega simulada por contexto, ASan/UBSan x86 y negativo sin filtro de contexto | Recepción Steam real |
+| ticket-ownership | Inicialización y propiedad no copiable del lector heredado; ticket sintético y todos sus prefijos truncados | Headers de producción y ASan/UBSan x86; negativos de inicialización/copia | Formato de tickets Steam actuales ni uso en autenticación |
 | stats-natives | Salidas intactas al fallo, AppID separado de identidad e índices independientes de entidad | natives + host Steam simulado | Disponibilidad real de stats |
 | detours | Creación/habilitación y rollback, backup optimizado | CDetour + host simulado | Módulos reales del motor |
 | init-coexistence | Observador init y cadena de hooks ajenos | Bytes y callsites x86 + dobles | Convivencia de toda la pila de plugins |
@@ -61,6 +63,12 @@ espacios, opciones, plataforma y propagación de errores de los backends.
 | auth-forward | Marshalling y agregación real de forwards | VM SourcePawn real + Steam simulado; opcional | Ticket auténtico |
 | auth-binding | Objetivo motor 014, otro objeto SDK 014 y doble 015 rechazado | SourceHook real + dos proveedores simulados; opcional | Login Steam real |
 | sourcepawn-environment | Destrucción VM y ciclos de propiedad | VM instrumentada real, ASan; opcional | VM de producción ni estabilidad SRCDS |
+
+La suite `auth-binding` también ejecuta las macros reales de SourceHook que
+preparan punteros a miembro: fija su representación GNU x86 de dos palabras y
+comprueba límites/canarios con ASan/UBSan. Un acceso a la segunda palabra no es
+por sí solo un desbordamiento de un objeto de ocho bytes en esa ABI; no se
+transfiere este resultado a otro compilador o arquitectura.
 
 `client_index_test.cpp` se compila en las suites de stats y SteamID para probar
 los seis natives de producción que reciben un índice de cliente. Los dobles
@@ -100,6 +108,29 @@ API excluye números de línea y metadatos, no campos contractuales. El inventar
 original de API (`fixtures/api/api-inventory-p0.json`) no se regenera a partir del estado actual para hacer pasar una comparación.
 
 ## Alcance y operación
+
+`make test-coverage TEST_OUTPUT=<nueva-carpeta>` mide líneas del código nativo
+mediante GCC/gcov x86, manteniendo sanitizadores y controles negativos. Requiere
+la base de compilación del build actual en `LINUX_BUILD_DIR`. Solo los ejecutables
+positivos aportan hits; el producto compilado sin ejecutar aporta ceros. Genera
+un informe genérico para Sonar y un recibo ligado a las fuentes, sin atribuir
+cobertura de ramas ni aceptación real a los dobles locales. Consulta
+[configuración e importación](../docs/build/sonar.md#cobertura-real-x86).
+`make coverage-tooling-test` verifica la contabilidad y sus controles offline.
+
+`make test-cxx-parser CXX_PARSER_CLASSPATH=<bibliotecas-del-plugin-y-API>` es
+una regresión offline explícita con el parser CXX instalado en modo estricto,
+cuatro negativos y comparación ABI de los exports GNU x86. Requiere JDK 17 o
+posterior y multilib; no descarga herramientas. Su aislamiento de gramática no
+acredita el contexto completo de includes, que se valida con `make sonar`.
+
+`make deps-test-coverage` instala explícitamente coverage.py fijado en un venv
+aislado. `make test-python-coverage TEST_OUTPUT=<nueva-carpeta>` ejecuta todas
+las suites Python con medición del producto canónico y sus subprocesos. Mantiene
+líneas no ejecutadas, excluye copias temporales y genera XML y recibo para Sonar.
+Python usa la arquitectura del host, separada de la cobertura nativa x86.
+Los informes de ambos lenguajes deben corresponder a las mismas fuentes actuales;
+consulta [cobertura Python](../docs/build/sonar.md#cobertura-real-python).
 
 - [Cobertura y evidencia histórica](COVERAGE.md)
 - [Fixtures y procedencia](fixtures/README.md)

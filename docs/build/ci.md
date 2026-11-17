@@ -1,6 +1,9 @@
 # CI y validación
 
 El workflow conserva builds Linux/Windows, checks de paquete y suites x86.
+Las pruebas del tooling Sonar y de cobertura son locales: no se ejecutan en el
+pipeline ni en `make test-ci`. Sus targets Make siguen disponibles explícitamente
+y en la integración local.
 Todos los pasos de pruebas, build, empaquetado y validación de producto invocan
 targets del Makefile raíz; no se mantienen comandos alternativos en CI. Las claves de caché incluyen las rutas nuevas de dependencias/build/empaquetado.
 La validación documental se ejecuta localmente con Python, sin un job de CI

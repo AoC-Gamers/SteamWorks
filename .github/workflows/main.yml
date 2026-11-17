@@ -127,9 +127,6 @@ jobs:
       - name: Test public API compatibility and additive contracts
         run: make test-public-api
 
-      - name: Test Sonar tooling offline
-        run: make sonar-tooling-test
-
       - name: Test extension entrypoint ownership (x86, ASan/UBSan)
         run: make test-extension-entrypoint
 
@@ -137,6 +134,11 @@ jobs:
         env:
           STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
         run: make test-stats-callbacks
+
+      - name: Test legacy ticket ownership (x86, ASan/UBSan)
+        env:
+          STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
+        run: make test-ticket-ownership
 
       - name: Test pinned SDK selection and negative controls
         env:

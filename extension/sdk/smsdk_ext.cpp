@@ -34,6 +34,12 @@
 #include "smsdk_ext.h"
 #include "am-string.h"
 
+#if defined _MSC_VER
+#define SMEXT_DLL_EXPORT				extern "C" __declspec(dllexport)
+#else
+#define SMEXT_DLL_EXPORT				extern "C" [[gnu::visibility("default")]]
+#endif
+
 /**
  * @file smsdk_ext.cpp
  * @brief Contains wrappers for making Extensions easier to write.
@@ -122,7 +128,7 @@ struct ExtensionLoadAttempt
 } // namespace
 
 /** Exports the main interface */
-PLATFORM_EXTERN_C IExtensionInterface *GetSMExtAPI()
+SMEXT_DLL_EXPORT IExtensionInterface *GetSMExtAPI()
 {
 	// SourceMod can resolve two logical names to this same DSO. Reject the
 	// second entry before its loader attaches/unloads the existing Metamod ID.
@@ -335,11 +341,6 @@ void SDKExtension::SDK_OnDependenciesDropped()
 
 #if defined SMEXT_CONF_METAMOD
 
-#if defined _MSC_VER
-#define SMEXT_DLL_EXPORT				extern "C" __declspec(dllexport)
-#else
-#define SMEXT_DLL_EXPORT				extern "C" __attribute__((visibility("default")))
-#endif
 
 PluginId g_PLID = 0;						/**< Metamod plugin ID */
 ISmmPlugin *g_PLAPI = NULL;					/**< Metamod plugin API */

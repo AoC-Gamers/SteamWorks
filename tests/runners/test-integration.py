@@ -11,7 +11,7 @@ import time
 
 ROOT = Path(__file__).resolve().parents[2]
 SUITES = (
-    "test-extension-entrypoint", "test-stats-callbacks", "test-stats-natives", "test-detours", "test-init-coexistence", "test-public-ip",
+    "test-extension-entrypoint", "test-stats-callbacks", "test-ticket-ownership", "test-stats-natives", "test-detours", "test-init-coexistence", "test-public-ip",
     "test-steamid-string", "test-typed-boundary", "test-resource-lifecycle",
     "test-restart-forward-semantics",
     "test-binary-evidence", "test-debug-log", "test-http-stream-context",
@@ -49,6 +49,7 @@ def main():
                "runtime_validation": False, "suites": []}
     failed = False
     commands = [("test-public-api", [sys.executable, str(ROOT / "tests/python/public_api_test.py")]),
+                ("coverage-tooling-test", [sys.executable, "-m", "unittest", "discover", "-s", str(ROOT / "tests/python"), "-p", "*coverage_test.py", "-v"]),
                 ("sonar-tooling-test", [sys.executable, str(ROOT / "tests/python/sonar_tooling_test.py")]),
                 ("test-release-notes", [sys.executable, str(ROOT / "tests/python/release_notes_test.py")]),
                 ("test-make-interface", [sys.executable, str(ROOT / "tests/python/make_interface_test.py")]),

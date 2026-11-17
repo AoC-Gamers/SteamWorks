@@ -44,6 +44,15 @@ int main() {
  int formatted=0;Log(Auth,"disabled","%n",&formatted);Check(writes==0 && formatted==0,"backend disabled gate precedes formatting and write");
  enabled=true;Log(Auth,"enabled","receivers=%d",1);Check(writes==1,"enabled backend receives one event");
  GetBackend()={};Log(Auth,"inert","");Check(writes==1,"unconfigured backend is inert");
+ std::string defaultDir=std::string(root)+"/default",defaultFile=defaultDir+"/debug.log",defaultPrevious=defaultDir+"/debug.previous.log";
+ DebugLog defaultLog;defaultLog.Initialize(defaultDir.c_str(),Make,Error);defaultLog.SetMask(Auth);
+ std::string payload(800,'x');
+ for(int i=0;i<1500;++i)defaultLog.Write(Auth,"auth","default_limit",payload.c_str());
+ defaultLog.Shutdown();
+ size_t currentBytes=Read(defaultFile).size(),previousBytes=Read(defaultPrevious).size();
+ Check(currentBytes>0 && currentBytes<=1048576 && previousBytes>1048576-1024 && previousBytes<=1048576,
+       "default argument preserves the one MiB rotation boundary");
+ std::remove(defaultFile.c_str());std::remove(defaultPrevious.c_str());rmdir(defaultDir.c_str());
  log.Shutdown();std::remove(file.c_str());std::remove(previous.c_str());rmdir(dir.c_str());rmdir(root);
  std::printf("PASS: %d debug log checks\n",checks);
 }

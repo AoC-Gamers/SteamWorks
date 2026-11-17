@@ -15,7 +15,7 @@ public:
  DebugLog() = default;
  DebugLog(const DebugLog&) = delete;
  DebugLog& operator=(const DebugLog&) = delete;
- void Initialize(const char* directory, MakeDirectory mkdir, ReportError error, size_t limit = 1024 * 1024) {
+ void Initialize(const char* directory, MakeDirectory mkdir, ReportError error, size_t limit = (1024 * 1024)) {
   Close(); m_mask = 0; m_failed = false; m_mkdir = mkdir; m_error = error; m_limit = limit;
   std::snprintf(m_directory, sizeof(m_directory), "%s", directory);
   std::snprintf(m_path, sizeof(m_path), "%s/debug.log", directory);

@@ -27,9 +27,11 @@ MMSOURCE_DIR ?= $(LINUX_DEPS_DIR)/mmsource-1.12
 AMTL_DIR ?= $(SOURCEMOD_DIR)/public/amtl
 HL2SDK_ROOT ?= $(LINUX_DEPS_DIR)
 AMBUILD_PYTHON ?= $(LINUX_DEPS_DIR)/.venv-linux/bin/python
+COVERAGE_VENV_DIR ?= $(ROOT_DIR)/.deps/test-coverage
+COVERAGE_PYTHON ?= $(COVERAGE_VENV_DIR)/bin/python
 export STEAMWORKS_SDK_DIR TEST_CXXFLAGS
 
-CORE_SUITES := extension-entrypoint stats-callbacks stats-natives detours init-coexistence public-ip steamid-string typed-boundary resource-lifecycle restart-forward-semantics binary-evidence debug-log http-stream-context
+CORE_SUITES := extension-entrypoint stats-callbacks ticket-ownership stats-natives detours init-coexistence public-ip steamid-string typed-boundary resource-lifecycle restart-forward-semantics binary-evidence debug-log http-stream-context
 NATIVE_TEST_TARGETS := $(addprefix test-,$(CORE_SUITES) auth-binding auth-forward sourcepawn-environment sourcepawn-vm-asan)
 .PHONY: test-public-api test-release-notes test test-ci check-ci check-docs validate-sdk test-documentation test-sdk-selection test-review-artifacts test-make-interface test-sdk-incremental validate-artifact-linux validate-artifact-windows $(NATIVE_TEST_TARGETS)
 
@@ -37,8 +39,8 @@ test:
 	@test -n "$(TEST_OUTPUT)" || { echo 'Set TEST_OUTPUT to a new results directory' >&2; exit 2; }
 	SOURCEMOD_DIR="$(SOURCEMOD_DIR)" MMSOURCE_DIR="$(MMSOURCE_DIR)" AMTL_DIR="$(AMTL_DIR)" $(PYTHON) "$(ROOT_DIR)/tests/runners/test-integration.py" --output "$(TEST_OUTPUT)" $(TEST_OPTIONS)
 
-# This preserves CI coverage without adding the local documentation suite to CI.
-test-ci: test-public-api sonar-tooling-test test-sdk-selection test-review-artifacts test-make-interface test-release-notes $(addprefix test-,$(CORE_SUITES)) test-auth-binding
+# CI runs product contracts/native regressions; Sonar/coverage tooling stays local.
+test-ci: test-public-api test-sdk-selection test-review-artifacts test-make-interface test-release-notes $(addprefix test-,$(CORE_SUITES)) test-auth-binding
 
 $(NATIVE_TEST_TARGETS):
 	SOURCEMOD_DIR="$(SOURCEMOD_DIR)" MMSOURCE_DIR="$(MMSOURCE_DIR)" AMTL_DIR="$(AMTL_DIR)" bash "$(ROOT_DIR)/tests/runners/$@.sh"
@@ -47,6 +49,25 @@ test-public-api:
 	$(PYTHON) "$(ROOT_DIR)/tests/python/public_api_test.py"
 
 .PHONY: sonar sonar-cppcheck sonar-tooling-test
+.PHONY: test-coverage coverage-tooling-test
+.PHONY: deps-test-coverage test-python-coverage
+.PHONY: test-cxx-parser
+test-cxx-parser:
+	$(PYTHON) "$(ROOT_DIR)/tests/runners/test-cxx-parser.py"
+
+deps-test-coverage:
+	PYTHON="$(PYTHON)" COVERAGE_VENV_DIR="$(COVERAGE_VENV_DIR)" bash "$(ROOT_DIR)/scripts/deps/fetch-test-coverage.sh"
+
+test-python-coverage:
+	@test -n "$(TEST_OUTPUT)" || { echo 'Set TEST_OUTPUT to a new coverage directory' >&2; exit 2; }
+	STEAMWORKS_SDK_DIR="$(STEAMWORKS_SDK_DIR)" "$(COVERAGE_PYTHON)" "$(ROOT_DIR)/tests/runners/test-python-coverage.py" --output "$(TEST_OUTPUT)"
+
+test-coverage:
+	@test -n "$(TEST_OUTPUT)" || { echo 'Set TEST_OUTPUT to a new coverage directory' >&2; exit 2; }
+	SOURCEMOD_DIR="$(SOURCEMOD_DIR)" MMSOURCE_DIR="$(MMSOURCE_DIR)" AMTL_DIR="$(AMTL_DIR)" $(PYTHON) "$(ROOT_DIR)/tests/runners/test-coverage.py" --output "$(TEST_OUTPUT)" --compile-commands "$(LINUX_BUILD_DIR)/compile_commands.json"
+
+coverage-tooling-test:
+	$(PYTHON) -m unittest discover -s "$(ROOT_DIR)/tests/python" -p '*coverage_test.py' -v
 sonar:
 	@$(PYTHON) "$(ROOT_DIR)/scripts/tools/make_sonar.py" analyze --compile-commands "$(LINUX_BUILD_DIR)/compile_commands.json"
 
@@ -116,6 +137,11 @@ validate-artifact-windows:
 help:
 	@printf '%s\n' \
 		'Available targets:' \
+		'  make test-coverage TEST_OUTPUT=<new-dir>  Measure real GCC x86 test line coverage' \
+		'  make coverage-tooling-test  Test coverage provenance and counters offline' \
+		'  make deps-test-coverage  Install pinned coverage.py in an isolated venv' \
+		'  make test-python-coverage TEST_OUTPUT=<new-dir>  Measure real Python test line coverage' \
+		'  make test-cxx-parser  Strict installed CXX grammar and GCC x86 export ABI regression (CXX_PARSER_CLASSPATH)' \
 		'  make sonar               Run Cppcheck and SonarScanner (explicit remote analysis)' \
 		'  make sonar-cppcheck      Run only local Cppcheck with the x86 build database' \
 		'  make sonar-tooling-test  Test Sonar tooling offline' \

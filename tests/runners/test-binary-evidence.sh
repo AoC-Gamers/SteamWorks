@@ -8,10 +8,11 @@ mkdir -p "$OUTPUT_DIR"
 python3 "$ROOT_DIR/tests/python/runtime_evidence_test.py"
 python3 "$ROOT_DIR/scripts/tools/validate-runtime-evidence.py" "$ROOT_DIR/tests/fixtures/runtime-profiles/linux-x86-candidate.json"
 read -r -a extra_flags <<< "${TEST_CXXFLAGS:-}"
+read -r -a coverage_flags <<< "${TEST_COVERAGE_FLAGS:-}"
 if [[ " ${TEST_CXXFLAGS:-} " == *" -m32 "* ]]; then
  # Production x86 decoder uses unaligned integer accesses. This checks its real
  # machine-code relocation behavior with normal x86 compilation, not sanitizer acceptance.
- "${CC:-gcc}" -m32 -O1 -I"$ROOT_DIR/extension" -c "$ROOT_DIR/extension/asm/asm.c" -o "$OUTPUT_DIR/asm.o"
+ "${CC:-gcc}" -m32 -O1 "${coverage_flags[@]}" -I"$ROOT_DIR/extension" -c "$ROOT_DIR/extension/asm/asm.c" -o "$OUTPUT_DIR/asm.o"
  "${CXX:-g++}" -std=c++14 -Wall -Wextra -Werror -O1 "${extra_flags[@]}" \
   -I"$ROOT_DIR/extension" "$ROOT_DIR/tests/native/binary_trampoline_test.cpp" "$OUTPUT_DIR/asm.o" -ldl -o "$OUTPUT_DIR/binary_trampoline_test"
  "$OUTPUT_DIR/binary_trampoline_test" "$SDK_DIR/redistributable_bin/linux32/libsteam_api.so"

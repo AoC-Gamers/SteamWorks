@@ -3,6 +3,16 @@
 Esta matriz describe comportamientos y procedencia. No es una colección de logs
 ni una ejecución nueva; los resultados actuales se guardan fuera de Git.
 
+La cobertura cuantitativa de líneas se genera con `make test-coverage`, mediante
+contadores reales GCC x86 y un inventario explícito de ejecutables positivos.
+Los controles negativos siguen siendo obligatorios pero sus hits se excluyen.
+Las unidades del producto compiladas sin ejecutar conservan sus líneas sin cubrir.
+El informe nativo mide código de `extension/`, sin ramas. La medición separada
+`make test-python-coverage` usa coverage.py con subprocesos para las fuentes
+canónicas de `scripts/`, conserva ceros y no remapea copias temporales al producto.
+Ambos recibos quedan ligados a las fuentes; los informes no convierten los
+dobles locales en aceptación SRCDS. Véase [Sonar](../docs/build/sonar.md#cobertura-real-x86).
+
 Las pruebas locales de GC cubren ABI, buffers, forwards y ciclo de vida con
 proveedores controlados. La API se conserva por compatibilidad; su funcionamiento
 depende del soporte del juego y del contexto Steam. Consulta las
@@ -20,6 +30,8 @@ incluidos sanitizadores y controles negativos. Consulta el
 |---|---|---|---|---|
 | Carga propietaria por DSO | extension-entrypoint; negativo sin guarda del factory | Wrappers de producción y cargador/host controlados, ASan/UBSan x86 | 2026-11-17; Linux x86; ambos órdenes rechazaron el duplicado preservando HTTP pendiente, consumidor fallido recuperado, recarga en el mismo proceso y cierre limpio | Payload `a7764ee0181e530fee83040d82ac9087e2863c751df6a21c0c8b1599493d2398`; no acredita stats ni runtime Windows |
 | API y firmas/opcionalidad | Inventario original de API + adiciones explícitas + integración | Inventario local | No necesaria para comparar firmas | No prueba ABI/runtime |
+| Lector heredado: inicialización y propiedad | ticket-ownership; negativos de inicialización y copia | Headers de producción, bytes sintéticos y todos los prefijos truncados, ASan/UBSan x86 | No ejecutado en SRCDS | Lector fuera de la ruta de autenticación; no acredita formato actual ni robustez completa ante datos hostiles |
+| Punteros a miembro de SourceHook | auth-binding; macros reales con canarios y ajuste de herencia múltiple | SourceHook real, ABI GNU x86 de dos palabras, ASan/UBSan | No necesaria para comprobar la representación local | No acredita otra ABI ni elimina las advertencias del analizador |
 | Índice de cliente independiente de entidad | client_index_test en stats-natives y steamid-string | Natives de producción y dobles locales x86 | No necesaria para la regresión local | Rango/conexión e identidad existente; no acredita una conexión real |
 | Stats: notificaciones asíncronas y descarga de caché | stats-callbacks; contrato de adiciones API | SDK real + proveedor y despacho por contexto controlados, ASan/UBSan x86; negativo cliente/GameServer | 2026-11-17; Linux x86; Received con identidad/AppID correctos, lecturas y recarga soportada en el mismo proceso | Payload `d3814a2d69ab69108246b05701d5fee14d38ad8220274b1c448b59ffcaf4744c`; recepción real de Unloaded no acreditada y excluida del alcance global; silencio de callbacks limitado a la ventana observada |
 | Observador de caché y entrega de stats | steamworks_stats_callbacks; estados watching/matched_unloaded | Harness SourcePawn y SRCDS | 2026-11-17; Linux x86; dos Received correctos y lecturas válidas; objetivo retenido tras finalizar/desconectar durante cinco minutos sin nuevas solicitudes | Payload `a7764ee0181e530fee83040d82ac9087e2863c751df6a21c0c8b1599493d2398`; cero Unloaded, recepción real no acreditada y excluida del alcance global, sin garantía de plazo |

@@ -37,7 +37,8 @@ auto* forwards = &forwardSystem;
 struct StatsProvider final : ISteamGameServerStats {
     SteamAPICall_t next = 1;
     int requests = 0;
-    SteamAPICall_t RequestUserStats(CSteamID) override { ++requests; return next; }
+    std::function<void()> onRequest;
+    SteamAPICall_t RequestUserStats(CSteamID) override { ++requests; if (onRequest) onRequest(); return next; }
     bool GetUserStat(CSteamID,const char*,int32*) override { return false; }
     bool GetUserStat(CSteamID,const char*,float*) override { return false; }
     bool GetUserAchievement(CSteamID,const char*,bool*) override { return false; }
@@ -204,5 +205,17 @@ int main() {
         Check(forwards->owned.empty() && steamCallbacks.callbacks.empty(),"partial creation cleans up safely");
     }
     forwards->failName.clear();
+    {
+        static_assert(sizeof(CSteamID) == sizeof(uint64), "Steam identity is a small 8-byte value");
+        SteamWorksStats owner; StatsProvider provider;
+        CSteamID callerIdentity = User(0x80000001u);
+        provider.onRequest = [&] { callerIdentity.Clear(); };
+        Check(owner.Request(&provider, callerIdentity, 550), "request retains a value snapshot across provider reentry");
+        Check(!callerIdentity.IsValid(), "provider changed only the caller's identity");
+        auto result = Result(User(0x80000001u)); DeliverCall(result, 1);
+        auto* received = forwards->owned.at("SteamWorks_OnUserStatsReceived");
+        Check(received->events == std::vector<std::vector<cell_t>>{{CellBits(0x80000001u), k_EResultOK, 550}},
+              "async result owns the exact identity instead of borrowing caller storage");
+    }
     std::printf("PASS: %d stats callback checks (production owner, real SDK CallResult/callback classes)\n", checks);
 }

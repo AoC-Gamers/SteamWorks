@@ -1,5 +1,6 @@
 """Exercise Make/script orchestration without a Sonar server or real credentials."""
 import importlib.util
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -8,6 +9,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location("make_sonar", ROOT / "scripts/tools/make_sonar.py")
@@ -21,7 +23,7 @@ class SonarToolingTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name) / "sources with spaces"
         self.root.mkdir()
-        for relative in ("Makefile", "scripts/tools/make_sonar.py", "sonar-project.properties"):
+        for relative in ("Makefile", "scripts/tools/make_sonar.py", "sonar-project.properties", "tests/helpers/native_coverage.py"):
             dest = self.root / relative
             dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(ROOT / relative, dest)
@@ -38,6 +40,18 @@ class SonarToolingTests(unittest.TestCase):
         self.bin = self.root / "bin"
         self.bin.mkdir()
         self.trace = self.root / "calls.jsonl"
+        self.system_include = self.root / 'compiler system headers'
+        self.system_include.mkdir()
+        compiler = self.bin / "g++"
+        compiler.write_text(f'''#!{sys.executable}
+import os,sys
+if os.environ.get('SONAR_TOKEN') or os.environ.get('COMPILER_FAIL') or '-m32' not in sys.argv:
+ sys.exit(2)
+print('#define __GNUC__ 15\\n#define __GNUC_MINOR__ 7\\n#define __GNUC_PATCHLEVEL__ 2\\n#define __linux__ 1\\n#define __i386__ 1\\n#define __SIZEOF_POINTER__ 4')
+if '-DTEST=1' in sys.argv: print('#define TEST 1')
+print('#include <...> search starts here:\\n '+{str(self.system_include)!r}+'\\nEnd of search list.',file=sys.stderr)
+''')
+        compiler.chmod(0o755)
         for tool in ("cppcheck", "sonar-scanner"):
             script = self.bin / tool
             script.write_text(f'''#!{sys.executable}
@@ -46,7 +60,8 @@ tool={tool!r}
 with open(os.environ['TEST_TRACE'],'a') as f:
  f.write(json.dumps({{'tool':tool,'argv':sys.argv[1:],'cwd':os.getcwd(),'token':os.environ.get('SONAR_TOKEN')}})+'\\n')
 if tool=='cppcheck':
- print('bad xml' if os.environ.get('BAD_XML') else '<results version="2"><errors/></results>',file=sys.stderr)
+ xml='<results version="2"><errors><error id="preprocessorErrorDirective"/></errors></results>' if os.environ.get('PREPROCESSOR_ERROR') else '<results version="2"><errors/></results>'
+ print('bad xml' if os.environ.get('BAD_XML') else xml,file=sys.stderr)
  sys.exit(int(os.environ.get('CPPCHECK_CODE','0')))
 print('scanner saw '+os.environ.get('SONAR_TOKEN',''))
 sys.exit(int(os.environ.get('SCANNER_CODE','0')))
@@ -65,6 +80,121 @@ sys.exit(int(os.environ.get('SCANNER_CODE','0')))
     def calls(self):
         return [json.loads(line) for line in self.trace.read_text().splitlines()] if self.trace.exists() else []
 
+    def test_real_gcc_context_keeps_machine_and_feature_flags_without_build_outputs(self):
+        compiler = shutil.which('g++', path=os.defpath)
+        self.assertIsNotNone(compiler, 'The native test toolchain requires GCC')
+        obj, dependency = self.root / 'must-not-create.o', self.root / 'must-not-create.d'
+        entry = {**self.entry, 'arguments': [compiler, '-m32', '-std=c++14', '-msse',
+                 '-fno-exceptions', '-fno-rtti', '-fPIC', '-O2', '-DTEST=1',
+                 '-DFEATURE=1', '-UFEATURE', '-DFEATURE=2',
+                 '-MD', '-MF', str(dependency), '-MT', str(obj), '-c', str(self.source), '-o', str(obj)]}
+        entries, context = sonar.compiler_identity([entry], self.root, dict(os.environ))
+        self.assertNotIn('__EXCEPTIONS', context['defines'])
+        self.assertNotIn('__GXX_RTTI', context['defines'])
+        for name, value in (('__SSE__', '1'), ('__PIC__', '2'), ('__OPTIMIZE__', '1'),
+                            ('__SIZEOF_POINTER__', '4'), ('TEST', '1'), ('FEATURE', '2')):
+            self.assertEqual(context['defines'][name], value, name)
+        self.assertIn('-fno-exceptions', entries[0]['arguments'])
+        self.assertFalse(obj.exists())
+        self.assertFalse(dependency.exists())
+        baseline = {**self.entry, 'arguments': [compiler, '-m32', '-std=c++14', '-c', str(self.source)]}
+        _, defaults = sonar.compiler_identity([baseline], self.root, dict(os.environ))
+        self.assertEqual(defaults['defines']['__EXCEPTIONS'], '1')
+
+    def test_real_gcc_context_resolves_relative_flags_in_compilation_directory(self):
+        compiler = shutil.which('g++', path=os.defpath)
+        relative = self.root / 'relative'; relative.mkdir()
+        entry = {**self.entry, 'arguments': [compiler, '-m32', '-Irelative',
+                 '-DVALUE=2', '-c', 'extension/unit.cpp', '-o', 'unit.o']}
+        query = sonar.compiler_query(entry)
+        self.assertNotIn('extension/unit.cpp', query)
+        self.assertNotIn('unit.o', query)
+        entries, context = sonar.compiler_identity([entry], self.root, dict(os.environ))
+        self.assertIn(str(relative), context['includes'])
+        self.assertEqual(context['defines']['VALUE'], '2')
+        self.assertFalse((self.root / 'unit.o').exists())
+
+    def test_compiler_cache_keeps_distinct_working_directories(self):
+        compiler = shutil.which('g++', path=os.defpath)
+        entries = []
+        for name in ('one', 'two'):
+            folder = self.root / name; (folder / 'relative').mkdir(parents=True)
+            source = folder / 'unit.cpp'; source.write_text('int value;\n')
+            entries.append({'directory': str(folder), 'file': str(source),
+                            'arguments': [compiler, '-m32', '-Irelative', '-c', 'unit.cpp']})
+        _, context = sonar.compiler_identity(entries, self.root, dict(os.environ))
+        self.assertIn(str(self.root / 'one/relative'), context['includes'])
+        self.assertIn(str(self.root / 'two/relative'), context['includes'])
+
+    def canonical(self, action="analyze", **extra):
+        # Exercise the actual imported product, not its temporary CLI copy.
+        env = {k: v for k, v in os.environ.items() if not k.startswith("SONAR_")}
+        env.update(PATH=str(self.bin) + os.pathsep + os.defpath, TEST_TRACE=str(self.trace))
+        env.update(extra)
+        with patch.dict(os.environ, env, clear=True):
+            sonar.run(action, str(self.db), root=self.root)
+
+    def test_canonical_orchestrator_validates_tools_and_propagates_failures(self):
+        self.canonical()
+        self.assertEqual([c['tool'] for c in self.calls()], ['cppcheck', 'sonar-scanner'])
+        for extra in ({'CPPCHECK_CODE':'2'}, {'BAD_XML':'1'}, {'PREPROCESSOR_ERROR':'1'},
+                      {'SCANNER_CODE':'3'}, {'COMPILER_FAIL':'1'}, {'SONAR_TOKEN':''}):
+            with self.subTest(extra=extra), self.assertRaises(sonar.SonarError):
+                self.canonical(**extra)
+        self.canonical(action='cppcheck')
+
+    def test_canonical_orchestrator_imports_current_coverage_and_rejects_stale_sources(self):
+        receipt, report = self.coverage_receipt()
+        self.canonical(SONAR_COVERAGE_RECEIPT=str(receipt))
+        self.assertIn('-Dsonar.coverageReportPaths=' + str(report), self.calls()[-1]['argv'])
+        self.source.write_text('int changed;\n')
+        with self.assertRaises(ValueError):
+            self.canonical(SONAR_COVERAGE_RECEIPT=str(receipt))
+
+    def test_python_and_native_reports_are_imported_together_without_aliasing(self):
+        receipt, native_report = self.coverage_receipt()
+        payload = json.loads(receipt.read_text())
+        python_report = receipt.parent / 'python.xml'
+        python_report.write_text('<?xml version="1.0"?><coverage version="1"><file path="scripts/tools/make_sonar.py"><lineToCover lineNumber="1" covered="true"/></file></coverage>')
+        payload.update(kind='python', coverage_version='7.13.5', report=python_report.name,
+                       report_sha256=hashlib.sha256(python_report.read_bytes()).hexdigest())
+        python_receipt = receipt.parent / 'python-receipt.json'
+        python_receipt.write_text(json.dumps(payload))
+        self.canonical(SONAR_COVERAGE_RECEIPT=str(receipt), SONAR_PYTHON_COVERAGE_RECEIPT=str(python_receipt))
+        self.assertIn('-Dsonar.coverageReportPaths=' + str(native_report) + ',' + str(python_report), self.calls()[-1]['argv'])
+        with self.assertRaises(ValueError):
+            self.canonical(SONAR_PYTHON_COVERAGE_RECEIPT=str(receipt))
+
+    def coverage_receipt(self):
+        spec = importlib.util.spec_from_file_location('coverage_fixture', self.root / 'tests/helpers/native_coverage.py')
+        helper = importlib.util.module_from_spec(spec); spec.loader.exec_module(helper)
+        folder = self.root / 'coverage'; folder.mkdir()
+        report = folder / 'coverage.xml'
+        helper.write_report(report, {'extension/unit.cpp': {1: True}})
+        receipt = folder / 'receipt.json'
+        receipt.write_text(json.dumps({'schema': 1, 'source_state': helper.source_state(self.root),
+                                      'report': report.name, 'report_sha256': helper.digest(report),
+                                      'all_suites_passed': True,
+                                      'test_flags': '-m32 --coverage -fprofile-abs-path'}))
+        return receipt, report
+
+    def test_valid_coverage_is_forwarded_to_scanner(self):
+        receipt, report = self.coverage_receipt()
+        result = self.make(SONAR_COVERAGE_RECEIPT=str(receipt))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn('-Dsonar.coverageReportPaths=' + str(report), self.calls()[-1]['argv'])
+
+    def test_stale_or_tampered_coverage_stops_before_tools(self):
+        receipt, report = self.coverage_receipt()
+        report.write_text('tampered')
+        result = self.make(SONAR_COVERAGE_RECEIPT=str(receipt))
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(self.calls(), [])
+        self.source.write_text('int changed;\n')
+        result = self.make(SONAR_COVERAGE_RECEIPT=str(receipt))
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(self.calls(), [])
+
     def test_make_scans_in_source_root_and_keeps_token_out_of_argv_and_report(self):
         result = self.make()
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -79,7 +209,18 @@ sys.exit(int(os.environ.get('SCANNER_CODE','0')))
         self.assertIn('--platform=unix32', local['argv'])
         database = Path(next(a.split('=', 1)[1] for a in local['argv'] if a.startswith('--project=')))
         self.assertIn('-DTEST=1', json.loads(database.read_text())[0]['arguments'])
+        self.assertIn('-D__GNUC__=15', json.loads(database.read_text())[0]['arguments'])
+        self.assertIn('-D__GNUC_MINOR__=7', json.loads(database.read_text())[0]['arguments'])
+        self.assertIn('-D__linux__=1', json.loads(database.read_text())[0]['arguments'])
+        self.assertIn('-D__SIZEOF_POINTER__=4', json.loads(database.read_text())[0]['arguments'])
         self.assertNotIn('test-only-token', database.read_text())
+        cxx_path = Path(next(a.split('=',1)[1] for a in remote['argv'] if a.startswith('-Dsonar.cxx.jsonCompilationDatabase=')))
+        cxx = json.loads(cxx_path.read_text())
+        self.assertEqual(cxx[0]['file'], '__global__')
+        self.assertEqual(cxx[0]['defines']['TEST'], '1')
+        self.assertEqual(cxx[0]['defines']['__SIZEOF_POINTER__'], '4')
+        self.assertIn(str(self.system_include), cxx[0]['includes'])
+        self.assertFalse(any(e['file'] == '__global__' for e in json.loads(database.read_text())))
 
     def test_local_cppcheck_needs_no_server_or_token(self):
         (self.root / '.env').unlink()
@@ -129,7 +270,7 @@ sys.exit(int(os.environ.get('SCANNER_CODE','0')))
             self.assertEqual(self.calls(), [])
 
     def test_failed_cppcheck_or_invalid_xml_never_runs_scanner(self):
-        for override in ({'CPPCHECK_CODE': '2'}, {'BAD_XML': '1'}):
+        for override in ({'CPPCHECK_CODE': '2'}, {'BAD_XML': '1'}, {'PREPROCESSOR_ERROR':'1'}):
             if self.trace.exists():
                 self.trace.unlink()
             result = self.make(**override)
@@ -150,6 +291,16 @@ sys.exit(int(os.environ.get('SCANNER_CODE','0')))
         local = self.calls()[0]
         path = Path(next(a.split('=', 1)[1] for a in local['argv'] if a.startswith('--project=')))
         self.assertEqual(len(json.loads(path.read_text())), 1)
+
+    def test_compiler_query_failure_prevents_analysis(self):
+        result = self.make(COMPILER_FAIL='1')
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(self.calls(), [])
+
+    def test_tool_paths_are_resolved_from_sources_not_callers_cwd(self):
+        result = self.make(SONAR_CPPCHECK='bin/cppcheck', SONAR_SCANNER='bin/sonar-scanner')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual([c['tool'] for c in self.calls()], ['cppcheck','sonar-scanner'])
 
 
 if __name__ == '__main__':

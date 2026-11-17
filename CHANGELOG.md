@@ -4,13 +4,46 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 
 ## [Unreleased]
 
+### Análisis CXX estricto
+
+- Argumento predeterminado de logging agrupado y atributos GNU de exportación
+  con sintaxis C++11, conservando el límite de un MiB, el enlace C, la visibilidad
+  de ambos factories y los exports Windows. Regresiones con el parser CXX real,
+  controles negativos y ABI GCC x86.
+- El análisis CXX rechaza errores de sintaxis sin recuperación parcial;
+  no se ocultan atributos ni se excluyen fuentes para hacer pasar el scanner.
+
+### Inicialización y propiedad del lector heredado
+
+- Campos de DLC y secciones inicializados antes de leer; los propietarios de
+  licencias, DLC y secciones rechazan copias superficiales que duplicaban la
+  propiedad de memoria. Pruebas x86 con ASan/UBSan y controles negativos.
+  El lector sigue fuera de la ruta activa de autenticación.
+- Comprobaciones x86 de las macros reales de SourceHook sobre punteros a miembro
+  de dos palabras y del snapshot de identidad en solicitudes de stats, sin
+  alterar la API pública ni suprimir avisos del analizador.
+
 ### Análisis estático opcional
 
 - Targets `make sonar` y `make sonar-cppcheck`, con ejecución mediante scripts,
   base de compilación x86 generada por AMBuild e integración con sonar-cxx.
   Configuración de ejemplo sin datos de infraestructura; token en `env.secret`
   ignorado por Git y pasado al scanner solo por entorno. Pruebas offline del
-  tooling en Make e integración/CI, sin activar análisis remotos automáticos.
+  tooling en Make e integración local, fuera del pipeline y de `make test-ci`,
+  sin activar análisis remotos automáticos.
+- El análisis obtiene identidad, macros e includes implícitos del compilador
+  x86 con los flags y directorio reales y aporta un contexto común a los headers
+  de CXX, sin crear objetos ni dependencias durante la consulta. Los errores de
+  preprocesado/sintaxis de Cppcheck bloquean el envío de informes parciales;
+  los límites del parser CXX se documentan.
+- `make test-coverage` mide líneas reales de producción con GCC/gcov x86,
+  conserva sanitizadores y controles negativos y excluye los hits de mutantes.
+  Importación opcional en Sonar mediante un recibo ligado a las fuentes actuales,
+  sin alterar umbrales ni presentar dobles locales como aceptación real.
+- Cobertura Python real mediante `make test-python-coverage`, con coverage.py
+  fijado en un venv de instalación explícita, subprocesos y recibo ligado a las
+  fuentes. Importación conjunta con x86 en Sonar, sin remapear copias temporales
+  ni modificar el quality gate.
 
 ### Protección de carga de la extensión
 
