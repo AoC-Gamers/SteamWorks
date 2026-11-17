@@ -56,7 +56,7 @@ El verificador local comprueba enlaces, anclas, referencias al código y límite
 del contenido distribuible usando solo la biblioteca estándar de Python:
 
 ```bash
-python3 scripts/tools/check-documentation.py
+make check-docs
 ```
 
 Este comando no valida la sintaxis ni el renderizado Mermaid.

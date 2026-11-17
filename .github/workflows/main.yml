@@ -127,82 +127,85 @@ jobs:
       - name: Test pinned SDK selection and negative controls
         env:
           STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
-        run: python3 tests/python/sdk_selection_test.py
+        run: make test-sdk-selection
 
       - name: Test local review packaging and rollback contract
-        run: python3 tests/python/review_artifacts_test.py
+        run: make test-review-artifacts
+
+      - name: Test Make interface and execution paths
+        run: make test-make-interface
 
       - name: Test stats natives (x86, UBSan)
         shell: bash
         env:
           STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
-        run: TEST_CXXFLAGS=-m32 bash ./tests/runners/test-stats-natives.sh
+        run: make test-stats-natives
 
       - name: Test detour owner and wrappers (x86, UBSan)
         shell: bash
         env:
           STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
-        run: TEST_CXXFLAGS=-m32 bash ./tests/runners/test-detours.sh
+        run: make test-detours
 
       - name: Test init observer coexistence (x86, UBSan)
         shell: bash
         env:
           STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
-        run: TEST_CXXFLAGS=-m32 bash ./tests/runners/test-init-coexistence.sh
+        run: make test-init-coexistence
 
       - name: Test public IPv4 natives (x86, signed/unsigned char, UBSan)
         shell: bash
         env:
           STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
-        run: TEST_CXXFLAGS=-m32 bash ./tests/runners/test-public-ip.sh
+        run: make test-public-ip
 
       - name: Test SteamID string contract (x86, UBSan)
         shell: bash
         env:
           STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
           AMTL_DIR: ${{ github.workspace }}/.deps/exts-linux/sourcemod-1.12/public/amtl
-        run: TEST_CXXFLAGS=-m32 bash ./tests/runners/test-steamid-string.sh
+        run: make test-steamid-string
 
       - name: Test typed boundary and interface registry (x86, UBSan)
         shell: bash
         env:
           STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
-        run: TEST_CXXFLAGS=-m32 bash ./tests/runners/test-typed-boundary.sh
+        run: make test-typed-boundary
 
       - name: Test restart forward semantics (x86, UBSan)
         shell: bash
         env:
           STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
-        run: TEST_CXXFLAGS=-m32 bash ./tests/runners/test-restart-forward-semantics.sh
+        run: make test-restart-forward-semantics
 
       - name: Test resource lifecycle (x86, UBSan)
         shell: bash
         env:
           STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
-        run: TEST_CXXFLAGS=-m32 bash ./tests/runners/test-resource-lifecycle.sh
+        run: make test-resource-lifecycle
 
       - name: Test binary evidence and documentary profiles (x86)
         shell: bash
         env:
           STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
-        run: TEST_CXXFLAGS=-m32 bash ./tests/runners/test-binary-evidence.sh
+        run: make test-binary-evidence
 
       - name: Test opt-in diagnostic log (x86, UBSan)
         shell: bash
-        run: TEST_CXXFLAGS=-m32 bash ./tests/runners/test-debug-log.sh
+        run: make test-debug-log
 
       - name: Test typed auth binding with real SourceHook (x86, UBSan)
         shell: bash
         env:
           STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
           MMSOURCE_DIR: ${{ github.workspace }}/.deps/exts-linux/mmsource-1.12
-        run: TEST_CXXFLAGS=-m32 bash ./tests/runners/test-auth-binding.sh
+        run: make test-auth-binding
 
       - name: Test streaming HTTP context (x86, UBSan)
         shell: bash
         env:
           STEAMWORKS_SDK_DIR: ${{ steps.sdk.outputs.dir }}
-        run: TEST_CXXFLAGS=-m32 bash ./tests/runners/test-http-stream-context.sh
+        run: make test-http-stream-context
 
       - name: Build Linux extension
         shell: bash
@@ -211,12 +214,9 @@ jobs:
       - name: Test incremental SDK rejection (real x86 build)
         shell: bash
         run: |
-          .deps/exts-linux/.venv-linux/bin/python tests/runners/test-sdk-incremental.py \
-            --output .build/sdk-incremental-ci \
-            --sdk "${{ steps.sdk.outputs.dir }}" \
-            --sm-path .deps/exts-linux/sourcemod-1.12 \
-            --mms-path .deps/exts-linux/mmsource-1.12 \
-            --hl2sdk-root .deps/exts-linux
+          make test-sdk-incremental \
+            TEST_OUTPUT=.build/sdk-incremental-ci \
+            STEAMWORKS_SDK_DIR="${{ steps.sdk.outputs.dir }}"
 
       - name: Resolve Linux artifact name
         id: artifact
@@ -288,7 +288,7 @@ jobs:
         env:
           EXTS_ARTIFACT_DIR: ${{ github.workspace }}/dist/linux/artifact
           EXTS_PLATFORM: linux
-        run: bash ./scripts/ci/ci-validate-artifact.sh
+        run: make validate-artifact-linux
 
       - name: Upload Linux release zip
         uses: actions/upload-artifact@v7
@@ -453,7 +453,7 @@ jobs:
         env:
           EXTS_ARTIFACT_DIR: ${{ github.workspace }}/dist/windows/artifact
           EXTS_PLATFORM: windows
-        run: bash ./scripts/ci/ci-validate-artifact.sh
+        run: make validate-artifact-windows
 
       - name: Upload Windows release zip
         uses: actions/upload-artifact@v7

@@ -44,7 +44,7 @@ class DocumentationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix='steamworks Makefile ') as temp:
             root=Path(temp)/'sources with spaces';root.mkdir()
             shutil.copy2(ROOT/'Makefile',root/'Makefile')
-            result=subprocess.run(['make','-n','-f',str(root/'Makefile'),'package-exts-linux'],
+            result=subprocess.run(['make','--no-print-directory','-n','-f',str(root/'Makefile'),'package-exts-linux'],
                                   cwd=temp,capture_output=True,text=True)
             self.assertEqual(result.returncode,0,result.stderr)
             command=shlex.split(result.stdout.strip())

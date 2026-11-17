@@ -11,7 +11,9 @@
 Los ejecutores y ayudantes de pruebas viven en `tests/runners/` y
 `tests/helpers/`, fuera de este directorio. Sus nombres, CLI y variables se
 conservan; no hay wrappers con rutas antiguas. Cada script resuelve su raíz desde su propio archivo.
-Desde otro cwd usa su ruta absoluta y entrecomilla rutas con espacios. Una fuente
+Los scripts son backends internos; toda ejecución del proyecto entra por el
+Makefile raíz, también en CI. Desde otro cwd usa
+`make -f "/ruta/con espacios/SteamWorks/Makefile" <target>`. Una fuente
 extraída no requiere `.git` para tests, build o paquetes; el inventario informa
 revisión desconocida en ese caso, sin atribuir el Git de un directorio padre.
 

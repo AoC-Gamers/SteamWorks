@@ -28,7 +28,7 @@ Extrae el SDK y señala el directorio que contiene `public/steam` y
 `redistributable_bin` mediante `STEAMWORKS_SDK_DIR`. Por ejemplo, desde la raíz:
 
 ```bash
-python3 scripts/build/validate-steamworks-sdk.py /ruta/al/sdk_155
+make validate-sdk STEAMWORKS_SDK_DIR=/ruta/al/sdk_155
 make build-exts-linux STEAMWORKS_SDK_DIR=/ruta/al/sdk_155
 ```
 
