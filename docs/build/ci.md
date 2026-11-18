@@ -47,9 +47,11 @@ lee desde las fuentes, no desde el ZIP generado, y también forma parte de las
 claves de caché. El lock distingue finales de línea de texto de bytes binarios
 y entra en las claves de caché de dependencias.
 
-Las fases Linux usan la variable de organización `L4D2_EXT_LINUX_RUNNER`.
-El workflow falla al validar la configuración si la variable falta o está
-vacía. La etiqueta del runner forma parte de la clave de caché Linux.
+Las fases de Linux y Windows usan las variables de organización
+`L4D2_EXT_LINUX_RUNNER` y `L4D2_EXT_WINDOWS_RUNNER`, respectivamente.
+Si la variable de una plataforma falta, está vacía o solo contiene espacios,
+su validación falla antes de asignar el runner de compilación. La etiqueta
+resuelta forma parte de la clave de caché de dependencias de su plataforma.
 Las ejecuciones manuales guardan los ZIP como artefactos. Activa
 `publish_release` en la ejecución manual para publicar el canal o la versión.
 
