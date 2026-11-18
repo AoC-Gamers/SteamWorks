@@ -23,7 +23,7 @@ class SonarToolingTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name) / "sources with spaces"
         self.root.mkdir()
-        for relative in ("Makefile", "scripts/tools/make_sonar.py", "sonar-project.properties", "tests/helpers/native_coverage.py"):
+        for relative in ("Makefile", "scripts/tools/make_sonar.py", "tests/helpers/native_coverage.py"):
             dest = self.root / relative
             dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(ROOT / relative, dest)
@@ -36,7 +36,7 @@ class SonarToolingTests(unittest.TestCase):
                       "arguments": ["g++", "-m32", "-DTEST=1", "-c", str(self.source)]}
         self.db.write_text(json.dumps([self.entry]))
         (self.root / ".env").write_text('SONAR_HOST_URL=https://sonar.example.invalid\nSONAR_PROJECT_KEY=SteamWorks-test\n')
-        (self.root / "env.secret").write_text('SONAR_TOKEN="test-only-token"\n')
+        (self.root / ".env.secret").write_text('SONAR_TOKEN="test-only-token"\n')
         self.bin = self.root / "bin"
         self.bin.mkdir()
         self.trace = self.root / "calls.jsonl"
@@ -79,6 +79,14 @@ sys.exit(int(os.environ.get('SCANNER_CODE','0')))
 
     def calls(self):
         return [json.loads(line) for line in self.trace.read_text().splitlines()] if self.trace.exists() else []
+
+    def test_legacy_secret_file_is_ignored(self):
+        (self.root / ".env.secret").unlink()
+        (self.root / "env.secret").write_text("SONAR_TOKEN=legacy-test-token\n")
+        result = self.make()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Falta SONAR_TOKEN", result.stderr)
+        self.assertEqual(self.calls(), [])
 
     def test_real_gcc_context_keeps_machine_and_feature_flags_without_build_outputs(self):
         compiler = shutil.which('g++', path=os.defpath)
@@ -205,6 +213,12 @@ sys.exit(int(os.environ.get('SCANNER_CODE','0')))
         self.assertEqual(remote['cwd'], str(self.root))
         self.assertNotIn('test-only-token', result.stdout + result.stderr + ' '.join(remote['argv']))
         self.assertIn('-Dsonar.projectKey=SteamWorks-test', remote['argv'])
+        self.assertIn('-Dsonar.projectName=SteamWorks', remote['argv'])
+        self.assertIn('-Dsonar.sourceEncoding=UTF-8', remote['argv'])
+        self.assertIn('-Dsonar.sources=extension,scripts', remote['argv'])
+        self.assertIn('-Dsonar.exclusions=**/__pycache__/**', remote['argv'])
+        self.assertIn('-Dsonar.cxx.file.suffixes=.c,.cc,.cpp,.cxx,.h,.hh,.hpp,.hxx', remote['argv'])
+        self.assertIn('-Dsonar.cxx.errorRecoveryEnabled=false', remote['argv'])
         self.assertIn('-Dsonar.qualitygate.wait=true', remote['argv'])
         self.assertIn('--platform=unix32', local['argv'])
         database = Path(next(a.split('=', 1)[1] for a in local['argv'] if a.startswith('--project=')))
@@ -224,7 +238,7 @@ sys.exit(int(os.environ.get('SCANNER_CODE','0')))
 
     def test_local_cppcheck_needs_no_server_or_token(self):
         (self.root / '.env').unlink()
-        (self.root / 'env.secret').unlink()
+        (self.root / '.env.secret').unlink()
         result = self.make('sonar-cppcheck')
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual([c['tool'] for c in self.calls()], ['cppcheck'])

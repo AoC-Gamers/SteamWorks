@@ -1,33 +1,27 @@
 """Distribution allowlist shared by staging, ZIP preparation and CI."""
+import json
 from pathlib import Path, PurePosixPath
-import re
 
-ROOT_FILES = ("README.md", "CHANGELOG.md", "LICENSE")
-FEATURES = {"installation", "build", "architecture", "runtime", "authentication",
-            "identity", "server", "stats", "http", "game-coordinator", "diagnostics", "maintenance"}
+PACKAGE_MAP = Path(__file__).with_name("package-map.json")
+ROOT_FILES = tuple(json.loads(PACKAGE_MAP.read_text(encoding="utf-8"))["artifact"]["documentation"])
 RUNTIME = {"addons/sourcemod/extensions/steamworks.ext.2.l4d2.so",
            "addons/sourcemod/extensions/steamworks.ext.2.l4d2.dll",
            "addons/sourcemod/scripting/include/steamworks.inc"}
 
 
-def documentation(name):
-    parts = PurePosixPath(name).parts
-    if re.search(r"(?:^|[-_])(p[0-9]+|r[0-9]+|results?|logs?|snapshots?|acceptance|execution|reports?|checkpoints?)(?:[-_.]|$)", parts[-1].lower()):
-        return False
-    return (name == "docs/README.md" or
-            len(parts) == 3 and parts[0] == "docs" and parts[1] in FEATURES
-            and parts[2].endswith(".md") and parts[2] != "AGENTS.md")
-
-
 def allowed(name):
-    return name in ROOT_FILES or name in RUNTIME or documentation(name)
+    return name in ROOT_FILES or name in RUNTIME
 
 
 def validate_tree(root):
     root = Path(root)
     if not root.is_dir():
         raise ValueError("Missing artifact directory: " + str(root))
-    directories = {"docs", *("docs/" + feature for feature in FEATURES)}
+    for name in ROOT_FILES:
+        path = root / name
+        if path.is_symlink() or not path.is_file() or path.stat().st_size == 0:
+            raise ValueError("Missing or empty packaged documentation: " + name)
+    directories = set()
     for name in RUNTIME:
         directories.update(str(p) for p in PurePosixPath(name).parents if str(p) != ".")
     for path in sorted(Path(root).rglob("*")):

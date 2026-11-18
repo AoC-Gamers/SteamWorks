@@ -10,9 +10,6 @@ _contract_spec = importlib.util.spec_from_file_location("artifact_contract", Pat
 _contract = importlib.util.module_from_spec(_contract_spec)
 _contract_spec.loader.exec_module(_contract)
 
-ROOT_FILES = _contract.ROOT_FILES
-
-
 def copy_tree(src: Path, dst: Path) -> None:
     if dst.exists():
         shutil.rmtree(dst)
@@ -49,22 +46,12 @@ def main() -> int:
             raise SystemExit("Unexpected build payload: " + name)
     copy_tree(addons_src, output_dir / "addons")
 
-    for file_name in ROOT_FILES:
+    for file_name in _contract.ROOT_FILES:
         src = root / file_name
-        if src.exists():
-            shutil.copy2(src, output_dir / file_name)
+        if src.is_symlink() or not src.is_file() or src.stat().st_size == 0:
+            raise SystemExit("Missing or empty source documentation: " + file_name)
+        shutil.copy2(src, output_dir / file_name)
 
-    for src in sorted((root / "docs").rglob("*")):
-        if src.is_symlink():
-            raise SystemExit("Symlink in documentation: " + str(src))
-        if not src.is_file() or src.name == "AGENTS.md":
-            continue
-        name = src.relative_to(root).as_posix()
-        if not _contract.documentation(name):
-            raise SystemExit("Unexpected documentation payload: " + name)
-        target = output_dir / name
-        target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(src, target)
     _contract.validate_tree(output_dir)
 
     print(f"SteamWorks artifacts generated in {output_dir}")

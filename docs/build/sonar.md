@@ -12,11 +12,14 @@ en PATH o mediante rutas absolutas/relativas a las fuentes.
 
 ## Configuración local
 
-Copia `.env.example` a `.env` y `env.secret.example` a `env.secret`.
-Configura `SONAR_HOST_URL` con la URL de tu instancia y guarda `SONAR_TOKEN`
-únicamente en `env.secret`, con permisos 600 en Linux, o en el entorno del proceso.
-Ambos archivos reales están ignorados por Git. Los ejemplos no contienen tokens
-ni direcciones de instalaciones concretas.
+Copia `.env.example` a `.env` y configura `SONAR_HOST_URL` con la URL de tu
+instancia. Para una instalación nueva, copia `.env.secret.example` a
+`.env.secret` y guarda allí `SONAR_TOKEN`, con permisos 600 en Linux, o
+inyéctalo en el entorno del proceso. Los archivos reales están ignorados por Git.
+Los ejemplos no contienen tokens ni direcciones de instalaciones concretas.
+
+Si aún guardas el token en `env.secret`, renombra ese archivo a `.env.secret`
+sin sobrescribir un destino existente. Sonar solo lee el nombre nuevo.
 
 `SONAR_PROJECT_KEY` y `SONAR_PROJECT_NAME` permiten cambiar la identidad del
 proyecto. `SONAR_QUALITY_GATE_WAIT=true` espera el resultado del quality gate;
@@ -64,10 +67,10 @@ También captura los includes implícitos del compilador. Para CXX genera una ba
 separada con el contexto C++ común `__global__`: los headers indexados no tienen
 su propia orden de compilación. Las órdenes de cada unidad conservan prioridad;
 la base usada por Cppcheck no contiene esa entrada específica de CXX.
-`sonar-project.properties` limita las fuentes a `extension/` y
-`scripts/`; no indexa SDK, dependencias descargadas, tests ni resultados. SourcePawn
-no se presenta como C++. Los sufijos CXX se configuran para este proyecto, sin
-cambiar globalmente los demás proyectos del servidor.
+El script pasa al scanner la configuración de `.env` y del entorno, junto con
+las reglas fijas del proyecto. El análisis usa UTF-8 y cubre `extension/` y
+`scripts/`, con las cachés de Python excluidas. Los sufijos CXX se limitan a C/C++
+y la recuperación de errores sintácticos queda desactivada para este proyecto.
 
 Cada ejecución guarda base filtrada, XML y trabajo del scanner bajo un directorio
 nuevo de `.build/sonar/`. Un fallo de Cppcheck o un XML inválido impiden ejecutar

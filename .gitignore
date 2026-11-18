@@ -44,5 +44,7 @@ node_modules/
 # Generated archives and local configuration
 *.zip
 .env
-/env.secret
+/.env.*
+!/.env.example
+!/.env.secret.example
 /.scannerwork/

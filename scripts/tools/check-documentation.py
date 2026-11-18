@@ -5,7 +5,7 @@ Uses only Python's standard library; does not publish or operate a server.
 """
 import argparse
 import importlib.util
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import re
 import unicodedata
 from urllib.parse import unquote, urlsplit
@@ -14,6 +14,19 @@ ROOT = Path(__file__).resolve().parents[2]
 _spec = importlib.util.spec_from_file_location('artifact_contract', ROOT / 'scripts/package/artifact_contract.py')
 _contract = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_contract)
+
+
+FEATURES = {"installation", "build", "architecture", "runtime", "authentication",
+            "identity", "server", "stats", "http", "game-coordinator", "diagnostics", "maintenance"}
+
+
+def documentation(name):
+    parts = PurePosixPath(name).parts
+    if re.search(r"(?:^|[-_])(p[0-9]+|r[0-9]+|results?|logs?|snapshots?|acceptance|execution|reports?|checkpoints?)(?:[-_.]|$)", parts[-1].lower()):
+        return False
+    return (name == "docs/README.md" or
+            len(parts) == 3 and parts[0] == "docs" and parts[1] in FEATURES
+            and parts[2].endswith(".md") and parts[2] != "AGENTS.md")
 
 
 def anchors(text):
@@ -40,7 +53,7 @@ def check(root=ROOT):
         if not path.is_file():
             continue
         rel = path.relative_to(root / 'docs')
-        if not (str(rel) == 'AGENTS.md' or _contract.documentation('docs/' + rel.as_posix())):
+        if not (str(rel) == 'AGENTS.md' or documentation('docs/' + rel.as_posix())):
             errors.append('Unexpected docs payload: ' + str(rel))
     for page in pages:
         if not page.is_file():
