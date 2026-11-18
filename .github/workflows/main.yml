@@ -87,7 +87,7 @@ jobs:
           repository: AoC-Gamers/Steamworks-SDK
           ref: a7aaa2754d9cda244d0cd9d7523c1144a1c472d2
           path: steamworks-sdk
-          token: ${{ secrets.GHCR_DEPLOY_TOKEN }}
+          token: ${{ secrets.STEAMWORKS_SDK_TOKEN }}
 
       - name: Install Linux dependencies
         shell: bash
@@ -372,7 +372,7 @@ jobs:
           repository: AoC-Gamers/Steamworks-SDK
           ref: a7aaa2754d9cda244d0cd9d7523c1144a1c472d2
           path: steamworks-sdk
-          token: ${{ secrets.GHCR_DEPLOY_TOKEN }}
+          token: ${{ secrets.STEAMWORKS_SDK_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v6
