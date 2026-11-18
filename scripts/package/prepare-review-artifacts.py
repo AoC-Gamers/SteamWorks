@@ -64,7 +64,7 @@ def prepare(candidate, baseline, output, label="p5"):
             if not allowed:
                 raise ValueError("Unexpected candidate payload: " + name)
             files[name] = path.read_bytes()
-    for required in ("LICENSE", "README.md", "CHANGELOG.md",
+    for required in (*_contract.ROOT_FILES,
                      "addons/sourcemod/" + OWNED[0], "addons/sourcemod/" + OWNED[1]):
         if required not in files:
             raise ValueError("Missing candidate payload: " + required)

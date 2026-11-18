@@ -28,7 +28,7 @@ class SonarError(Exception):
 def configuration(root):
     # Read values as data, never source shell commands. Explicit environment wins.
     env = os.environ.copy()
-    for name, allowed in ((".env", SETTINGS), ("env.secret", {"SONAR_TOKEN"})):
+    for name, allowed in ((".env", SETTINGS), (".env.secret", {"SONAR_TOKEN"})):
         path = root / name
         if not path.is_file():
             continue
@@ -38,7 +38,7 @@ def configuration(root):
                 continue
             key, value = (part.strip() for part in line.split("=", 1))
             if name == ".env" and key == "SONAR_TOKEN":
-                raise SonarError("SONAR_TOKEN debe estar en env.secret o en el entorno.")
+                raise SonarError("SONAR_TOKEN debe estar en .env.secret o en el entorno.")
             if key in allowed:
                 if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
                     value = value[1:-1]
@@ -55,7 +55,7 @@ def scanner_context(env):
     if url.scheme == "http" and url.hostname not in {"localhost", "127.0.0.1", "::1"}:
         raise SonarError("Usa HTTPS para SonarQube; HTTP solo se admite en loopback.")
     if not env.get("SONAR_TOKEN", "").strip():
-        raise SonarError("Falta SONAR_TOKEN en env.secret o en el entorno.")
+        raise SonarError("Falta SONAR_TOKEN en .env.secret o en el entorno.")
     wait = env.get("SONAR_QUALITY_GATE_WAIT", "true")
     timeout = env.get("SONAR_QUALITY_GATE_TIMEOUT", "300")
     if wait not in {"true", "false"} or not timeout.isdecimal() or int(timeout) < 1:
@@ -262,6 +262,11 @@ def run(action, default_database, root=ROOT):
     # The token travels only in the scanner environment, never in argv/properties.
     result = subprocess.run([scanner, f"-Dsonar.host.url={base}", f"-Dsonar.projectKey={project}",
                              f"-Dsonar.projectName={name}",
+                             "-Dsonar.sourceEncoding=UTF-8",
+                             "-Dsonar.sources=extension,scripts",
+                             "-Dsonar.exclusions=**/__pycache__/**",
+                             "-Dsonar.cxx.file.suffixes=.c,.cc,.cpp,.cxx,.h,.hh,.hpp,.hxx",
+                             "-Dsonar.cxx.errorRecoveryEnabled=false",
                              f"-Dsonar.cxx.jsonCompilationDatabase={cxx_database}",
                              f"-Dsonar.cxx.cppcheck.reportPaths={report}",
                              f"-Dsonar.working.directory={output / 'scanner'}",

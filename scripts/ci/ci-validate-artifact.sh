@@ -96,10 +96,5 @@ artifact_root = os.path.join(artifact_dir, "addons", "sourcemod", "scripting")
 artifact_manifest = package_map.get("artifact", {}).get("addons", {}).get("sourcemod", {}).get("scripting", {})
 validate_manifest_tree(source_root, artifact_root, artifact_manifest)
 
-for rel_path in ("README.md", "CHANGELOG.md", "LICENSE"):
-    artifact_path = os.path.join(artifact_dir, rel_path)
-    if not os.path.exists(artifact_path):
-        raise SystemExit(f"Missing packaged project asset: {artifact_path}")
-
 print("ARTIFACT_VALIDATION_OK")
 PY

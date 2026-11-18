@@ -83,7 +83,7 @@ class DocumentationTests(unittest.TestCase):
                 good=subprocess.run(command,env=env,capture_output=True,text=True,cwd=temp)
                 self.assertEqual(good.returncode,0,good.stderr)
                 self.assertFalse(list(artifact.rglob('AGENTS.md')))
-                for bad in ('docs/http/results.json','docs/http/run-report.md','docs/runtime-compatibility/p5/log.md',
+                for bad in ('docs/http/README.md','docs/http/results.json','docs/http/run-report.md','docs/runtime-compatibility/p5/log.md',
                             'tests/fixtures/input.json','addons/sourcemod/extensions/diagnostic.so',
                             'plugin-package-map.json','steamworks-sdk.lock.json',
                             'scripts/package/package-map.json','scripts/build/steamworks-sdk.lock.json',
@@ -101,7 +101,9 @@ class DocumentationTests(unittest.TestCase):
                                         '--root',str(temp/platform),'--artifact-dir',str(artifact),'--basename','fixture'],capture_output=True,text=True,cwd=temp)
                 self.assertEqual(release.returncode,0,release.stderr)
                 with zipfile.ZipFile(temp/platform/'dist/release/fixture.zip') as archive:
-                    self.assertIn('docs/http/README.md',archive.namelist())
+                    for name in ('README.md', 'LICENSE', 'CHANGELOG.md'):
+                        self.assertEqual(archive.read(name), (ROOT / name).read_bytes())
+                    self.assertFalse(any(name.startswith('docs/') for name in archive.namelist()))
                     self.assertFalse(any(name.endswith('.json') for name in archive.namelist()))
                     self.assertIn(f'addons/sourcemod/extensions/steamworks.ext.2.l4d2.{suffix}', archive.namelist())
                     self.assertNotIn(f'addons/sourcemod/extensions/steamworks.ext.{suffix}', archive.namelist())
@@ -125,14 +127,16 @@ class DocumentationTests(unittest.TestCase):
             self.assertNotEqual(result.returncode,0)
             self.assertFalse((root/'dist/release/bad.zip').exists())
 
-    def test_stage_rejects_generated_document_under_feature(self):
+    def test_stage_requires_declared_root_documentation(self):
         with tempfile.TemporaryDirectory() as temp:
-            root=Path(temp);source=root/'source';(source/'docs/http').mkdir(parents=True)
-            (source/'docs/http/run.json').write_text('{}')
+            root=Path(temp);source=root/'source';source.mkdir()
+            for name in ('README.md', 'CHANGELOG.md'):
+                (source/name).write_text('documentation fixture')
+            (source/'LICENSE').touch()
             build=root/'build';(build/'addons').mkdir(parents=True)
             result=subprocess.run([sys.executable,str(ROOT/'scripts/package/stage-artifact.py'),str(source),str(build),str(root/'artifact')],capture_output=True,text=True)
             self.assertNotEqual(result.returncode,0)
-            self.assertIn('Unexpected documentation payload',result.stderr)
+            self.assertIn('Missing or empty source documentation: LICENSE',result.stderr)
 
 
 

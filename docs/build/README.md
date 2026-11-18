@@ -45,9 +45,9 @@ identidad lógica. Usa una salida de build nueva al migrar desde el nombre gené
 Los harnesses de diagnóstico viven en `tests/runtime/` y no se empaquetan.
 
 El mapa `scripts/package/package-map.json` es una entrada de validación del
-empaquetado y permanece solo en las fuentes. El staging admite únicamente
-extensión/include, README, CHANGELOG, LICENSE y Markdown estable de
-`docs/`, excluyendo instrucciones AGENTS. El validador rechaza SDK, tests,
+empaquetado y permanece en las fuentes. Su lista `artifact.documentation` exige
+`README.md`, `LICENSE` y `CHANGELOG.md` en la raíz del ZIP, junto a la extensión
+y su include en `addons/`. El manual técnico de `docs/` se consulta en el repositorio. El validador rechaza SDK, tests,
 fixtures, gamedata inventado, binarios de diagnóstico y logs. Los resultados de
 validación se guardan en `.build/` y los paquetes en `dist/`, fuera de Git.
 Compilar Windows no equivale a aceptar su ejecución en SRCDS.
