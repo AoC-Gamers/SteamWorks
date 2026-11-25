@@ -263,8 +263,7 @@ public:
 #ifndef TEST_REAL_LIFECYCLE_PROFILE_POLICY
 #define STEAMWORKS_LIFECYCLE_PROFILE_H_
 namespace steamworks {
-inline bool HasVerifiedLifecycleProfile() { return true; }
-constexpr const char* LifecycleProfileId="synthetic-test-profile";
+inline const char* VerifiedLifecycleProfileId() { return "synthetic-test-profile"; }
 constexpr const char* LifecycleInitSymbol="SteamInternal_GameServer_Init";
 constexpr const char* LifecycleShutdownSymbol="SteamGameServer_Shutdown";
 enum class LifecycleEntry { Init, Shutdown };

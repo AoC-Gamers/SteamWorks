@@ -25,6 +25,8 @@
 
 ### Corregido
 
+- **Ciclo de vida Steam:** la extensión reconoce también el motor dedicado
+  Linux x86 del build de Steam 26770943.
 - **Stats:** los lectores conservan sus parámetros de salida si Steam devuelve
   un error. `SteamWorks_RequestStats*` usa el AppID real del juego. Los plugins
   que pasaban un universo en ese argumento deben sustituirlo por el AppID.
