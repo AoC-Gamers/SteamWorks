@@ -56,7 +56,8 @@ DETOUR_DECL_STATIC6(SteamGameServer_InitLegacyDetour, bool, uint32, unIP, uint16
 
 SteamWorksGSDetours::SteamWorksGSDetours()
 {
-	if (!steamworks::HasVerifiedLifecycleProfile()) {
+	const char* profileId = steamworks::VerifiedLifecycleProfileId();
+	if (profileId == nullptr) {
 		g_pSM->LogError(myself, "No verified Steam lifecycle binary profile; internal init/shutdown detours unavailable");
 		return;
 	}
@@ -109,7 +110,7 @@ SteamWorksGSDetours::SteamWorksGSDetours()
 	}
 	// Shared SDK init entry belongs to its existing consumers, e.g. SourceTVSupport.
 	m_pShutdownDetour->EnableDetour();
-	g_pSM->LogMessage(myself, "Steam lifecycle profile installed: %s", steamworks::LifecycleProfileId);
+	g_pSM->LogMessage(myself, "Steam lifecycle profile installed: %s", profileId);
 }
 
 SteamWorksGSDetours::~SteamWorksGSDetours()

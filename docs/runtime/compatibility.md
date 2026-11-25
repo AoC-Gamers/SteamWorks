@@ -1,7 +1,9 @@
 # Compatibilidad y alcance
 
 El entorno runtime acreditado es L4D2 dedicado Linux x86 con SourceMod/Metamod y
-los módulos identificados por el perfil nativo. Windows dispone de compilación
+los módulos identificados por los perfiles nativos de los builds de Steam
+`23990100` y `26770943`. Ambos perfiles requieren el mismo `libsteam_api.so`
+verificado y la llamada de inicialización propia de cada motor. Windows dispone de compilación
 y controles offline, pero no de aceptación SRCDS equivalente. Los sondeos x64
 históricos no acreditan el motor x86. Un perfil JSON documental no habilita ABI.
 

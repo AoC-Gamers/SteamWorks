@@ -15,15 +15,30 @@ constexpr const char* LifecycleProfileId = "l4d2-23990100-linux-x86";
 constexpr const char* LifecycleInitSymbol = "SteamInternal_GameServer_Init";
 constexpr const char* LifecycleShutdownSymbol = "SteamGameServer_Shutdown";
 constexpr const char* LifecycleEngineBuildId = "b152439170af081a0d31fc357364a4cd4caa56ac";
+constexpr const char* LifecycleEngineBuildId26770943 = "4b8e22a6fb77947ad41b05d74f2bcb5a7e0e2424";
 constexpr const char* LifecycleSteamBuildId = "0d18f257d51538a7b34c594a31e042b04001fb1c";
 enum class LifecycleEntry { Init, Shutdown };
 
-inline bool MatchesLifecycleIdentity(bool linuxX86, const char* engine, const char* steam,
-                                    size_t engineCount, size_t steamCount)
+struct LifecycleProfile {
+ const char* id;
+ const char* engineBuildId;
+ uintptr_t initCallRva;
+};
+
+inline const LifecycleProfile* SelectLifecycleProfile(bool linuxX86, const char* engine, const char* steam,
+                                                      size_t engineCount, size_t steamCount)
 {
- return linuxX86 && engineCount == 1 && steamCount == 1 && engine != nullptr && steam != nullptr
-     && std::strcmp(engine, LifecycleEngineBuildId) == 0
-     && std::strcmp(steam, LifecycleSteamBuildId) == 0;
+ if (!linuxX86 || engineCount != 1 || steamCount != 1 || engine == nullptr || steam == nullptr
+     || std::strcmp(steam, LifecycleSteamBuildId) != 0) return nullptr;
+
+ static constexpr LifecycleProfile profiles[] = {
+  {LifecycleProfileId, LifecycleEngineBuildId, 0x2018eb},
+  {"l4d2-26770943-linux-x86", LifecycleEngineBuildId26770943, 0x201aab},
+ };
+ for (const auto& profile : profiles) {
+  if (std::strcmp(engine, profile.engineBuildId) == 0) return &profile;
+ }
+ return nullptr;
 }
 
 struct LifecycleModules {
@@ -107,13 +122,14 @@ inline LifecycleModules FindLifecycleModules()
  return result;
 }
 
-inline bool HasVerifiedLifecycleProfile()
+inline const char* VerifiedLifecycleProfileId()
 {
- const auto modules = FindLifecycleModules();
 #if defined(__linux__) && defined(__i386__)
- return MatchesLifecycleIdentity(true, modules.engineId, modules.steamId, modules.engineCount, modules.steamCount);
+ const auto modules = FindLifecycleModules();
+ const auto* profile = SelectLifecycleProfile(true, modules.engineId, modules.steamId, modules.engineCount, modules.steamCount);
+ return profile ? profile->id : nullptr;
 #else
- (void)modules; return false;
+ return nullptr;
 #endif
 }
 
@@ -121,7 +137,7 @@ inline bool IsVerifiedLifecycleAddress(void* candidate, LifecycleEntry entry)
 {
 #if defined(__linux__) && defined(__i386__)
  const auto modules = FindLifecycleModules();
- if (!MatchesLifecycleIdentity(true, modules.engineId, modules.steamId, modules.engineCount, modules.steamCount)) { return false; }
+ if (!SelectLifecycleProfile(true, modules.engineId, modules.steamId, modules.engineCount, modules.steamCount)) { return false; }
  const uintptr_t rva = entry == LifecycleEntry::Init ? 0x1b430 : 0x1b690;
  static const unsigned char init[] = {0x55,0x57,0x56,0x53,0xe8,0x42,0xaa,0xff,0xff};
  static const unsigned char shutdown[] = {0x57,0x56,0x53,0xe8,0xe3,0xa7,0xff,0xff};
@@ -146,19 +162,26 @@ inline void* VerifiedLifecycleInitCall(void* sdkInit)
 {
 #if defined(__linux__) && defined(__i386__)
  const auto modules = FindLifecycleModules();
- if (!MatchesLifecycleIdentity(true, modules.engineId, modules.steamId, modules.engineCount, modules.steamCount)
-     || reinterpret_cast<uintptr_t>(sdkInit) != modules.steamBase + 0x1b430) return nullptr;
- struct Check { uintptr_t engine, steam; bool caller=false, target=false; } check{modules.engineBase, modules.steamBase};
+ const auto* profile = SelectLifecycleProfile(true, modules.engineId, modules.steamId, modules.engineCount, modules.steamCount);
+ if (!profile || reinterpret_cast<uintptr_t>(sdkInit) != modules.steamBase + 0x1b430) return nullptr;
+
+ static const unsigned char before[]={0x8b,0x83,0xb4,0,0,0,0x89,0x04,0x24};
+ static const unsigned char after[]={0x84,0xc0,0x0f,0x84};
+ const auto callAddress = modules.engineBase + profile->initCallRva;
+ struct Check {
+  uintptr_t engine, steam, callAddress;
+  bool caller=false, target=false;
+ } check{modules.engineBase, modules.steamBase, callAddress};
  dl_iterate_phdr([](dl_phdr_info* module, size_t, void* data)->int {
   auto& c=*static_cast<Check*>(data);
-  if (module->dlpi_addr==c.engine) c.caller=ProfileMappedRange(module,c.engine+0x2018e2,18,true);
+  if (module->dlpi_addr==c.engine) {
+   c.caller=ProfileMappedRange(module,c.callAddress-sizeof(before),sizeof(before)+5+sizeof(after),true);
+  }
   if (module->dlpi_addr==c.steam) c.target=ProfileMappedRange(module,c.steam+0x1b430,9,true);
   return 0;
  }, &check);
  if (!check.caller || !check.target) return nullptr;
- auto* call=reinterpret_cast<unsigned char*>(modules.engineBase+0x2018eb);
- static const unsigned char before[]={0x8b,0x83,0xb4,0,0,0,0x89,0x04,0x24};
- static const unsigned char after[]={0x84,0xc0,0x0f,0x84};
+ auto* call=reinterpret_cast<unsigned char*>(callAddress);
  if (std::memcmp(call-sizeof(before),before,sizeof(before))!=0 || call[0]!=0xe8
      || std::memcmp(call+5,after,sizeof(after))!=0
      || InitCallSite::DecodeTarget(call)!=reinterpret_cast<uintptr_t>(sdkInit)) return nullptr;
